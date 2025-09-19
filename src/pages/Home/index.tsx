@@ -1845,8 +1845,9 @@ const Home = () => {
         appId: '643e46acb15c24012c963951',
         appKey: 'b329b39ca8df4b5185078f29d8d8025f',
         roomId: roomInfo.data.roomId || loginParams.coCreationId.toString(),
-        userId: roomInfo.data.userId || loginParams.userId
-        // userId:loginParams.userId
+        //update by chao 2025.09.19
+        // userId: roomInfo.data.userId || loginParams.userId
+        userId:loginParams.userId
       };
       
       const config = {
