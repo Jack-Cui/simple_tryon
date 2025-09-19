@@ -27,7 +27,6 @@ import shoesIcon from '../../assets/鞋子.png';
 import shareIcon from '../../assets/相机.png';
 import shareCoverImage from '../../assets/分享封面.png';
 import realSceneIcon from '../../assets/实景.png';
-import realSceneActionIcon from '../../assets/实景动作.png';
 import heatMapIcon from '../../assets/松紧热图片.png';
 import { apiService, authAPI } from '../../services/api';
 import DownloadAppModal from '../../components/DownloadAppModal';
@@ -398,12 +397,6 @@ const Home = () => {
 
   // 实景图标数组，对应不同的地图 - 动态从服务器获取
   const [realSceneIcons, setRealSceneIcons] = useState<Array<{icon: string, name: string, mapName: string}>>([
-    // 默认场景，在服务器数据加载前显示（已注释，只从接口返回）
-    // { icon: realSceneActionIcon, name: '教堂', mapName: 'Maps_jiaotang' },
-    // { icon: realSceneActionIcon, name: '广场', mapName: 'Maps_guangchang' },
-    // { icon: realSceneActionIcon, name: '博物馆', mapName: 'Maps_Museum' },
-    // { icon: realSceneActionIcon, name: '沙滩', mapName: 'Maps_shatan' },
-    // { icon: realSceneActionIcon, name: '其他', mapName: 'Maps_udraper' }
   ]);
 
   // 衣服管理相关状态
@@ -1344,20 +1337,20 @@ const Home = () => {
       
       if (scenesListFromService && Object.keys(scenesListFromService).length > 0) {
         // 将服务器返回的场景数据转换为UI需要的格式
-        const newRealSceneIcons = Object.entries(scenesListFromService).map(([id, scene]: [string, any], index) => {
-          const iconData = {
-            icon: realSceneActionIcon, // 使用默认图标
-            name: scene.name || '未知场景',
-            mapName: scene.code || 'Maps_unknown'
-          };
-          console.log(`场景 ${index}:`, iconData);
-          return iconData;
-        });
+        // const newRealSceneIcons = Object.entries(scenesListFromService).map(([id, scene]: [string, any], index) => {
+        //   const iconData = {
+        //     icon: realSceneActionIcon, // 使用默认图标
+        //     name: scene.name || '未知场景',
+        //     mapName: scene.code || 'Maps_unknown'
+        //   };
+        //   console.log(`场景 ${index}:`, iconData);
+        //   return iconData;
+        // });
         
-        console.log('✅ 从 tryonService 获取到场景列表');
-        console.log('场景数量:', Object.keys(scenesListFromService).length);
-        console.log('转换后的场景列表:', newRealSceneIcons);
-        setRealSceneIcons(newRealSceneIcons);
+        // console.log('✅ 从 tryonService 获取到场景列表');
+        // console.log('场景数量:', Object.keys(scenesListFromService).length);
+        // console.log('转换后的场景列表:', newRealSceneIcons);
+        // setRealSceneIcons(newRealSceneIcons);
       } else {
         console.log('⚠️ tryonService 中没有场景列表，等待服务器数据');
       }
@@ -1940,29 +1933,24 @@ const Home = () => {
       
       if (scenesList && typeof scenesList === 'object' && Object.keys(scenesList).length > 0) {
         // 将服务器返回的场景数据转换为UI需要的格式
-        const newRealSceneIcons = Object.entries(scenesList).map(([id, scene]: [string, any], index) => {
-          const iconData = {
-            icon: realSceneActionIcon, // 使用默认图标
-            name: scene.name || '未知场景',
-            mapName: scene.code || 'Maps_unknown'
-          };
-          console.log(`场景 ${index}:`, iconData);
-          return iconData;
-        });
+        // const newRealSceneIcons = Object.entries(scenesList).map(([id, scene]: [string, any], index) => {
+        //   const iconData = {
+        //     icon: realSceneActionIcon, // 使用默认图标
+        //     name: scene.name || '未知场景',
+        //     mapName: scene.code || 'Maps_unknown'
+        //   };
+        //   console.log(`场景 ${index}:`, iconData);
+        //   return iconData;
+        // });
         
-        console.log('转换后的场景列表:', newRealSceneIcons);
-        setRealSceneIcons(newRealSceneIcons);
+        // console.log('转换后的场景列表:', newRealSceneIcons);
+        // setRealSceneIcons(newRealSceneIcons);
         
         // 设置默认场景名称和音乐
         const cachedLoginData = getLoginCache();
         if (cachedLoginData && cachedLoginData.defaultSceneName) {
           setCurrentSceneName(cachedLoginData.defaultSceneName);
           switchSceneMusic(cachedLoginData.defaultSceneName);
-        } else if (newRealSceneIcons.length > 0) {
-          // 如果没有默认场景名称，使用第一个场景
-          const firstScene = newRealSceneIcons[0];
-          setCurrentSceneName(firstScene.name);
-          switchSceneMusic(firstScene.name);
         }
       } else {
         console.log('场景列表为空或格式不正确，保持默认场景');
@@ -3097,38 +3085,6 @@ const Home = () => {
                     e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px', // 缩小尺寸
-                    height: '40px',
-                    borderRadius: '10px',
-                    backgroundColor: isRealSceneExpanded ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                    border: isRealSceneExpanded ? '2px solid #52c41a' : '2px solid transparent'
-                  }}>
-                    <img 
-                      src={realSceneIcons[selectedRealSceneIndex]?.icon || realSceneActionIcon} 
-                      alt={realSceneIcons[selectedRealSceneIndex]?.name || '实景'} 
-                      style={{
-                        width: '24px', // 缩小图标尺寸
-                        height: '24px',
-                        objectFit: 'contain'
-                      }}
-                    />
-                  </div>
-                  <div style={{
-                    fontSize: '10px', // 缩小字体
-                    color: '#fff',
-                    fontWeight: 'normal',
-                    textAlign: 'center',
-                    lineHeight: '1',
-                    whiteSpace: 'nowrap',
-                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                  }}>
-                    {realSceneIcons[selectedRealSceneIndex]?.name || '实景'}
-                  </div>
                 </div>
 
               {/* 展开的实景选项 */}
