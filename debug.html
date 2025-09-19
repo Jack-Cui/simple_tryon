@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Simple Tryon</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>Simple Tryon Debug Page</h1>
+    
+    <div class="info">
+        <h3>当前URL参数：</h3>
+        <div id="params"></div>
+    </div>
+    
+    <div class="info">
+        <h3>静态资源检查：</h3>
+        <div id="resources"></div>
+    </div>
+    
+    <div class="info">
+        <h3>API测试：</h3>
+        <div id="api-test"></div>
+    </div>
+    
+    <script>
+        // 显示URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {
+            co_creation_id: urlParams.get('co_creation_id'),
+            phone: urlParams.get('phone'),
+            verfiy_code: urlParams.get('verfiy_code')
+        };
+        document.getElementById('params').innerHTML = JSON.stringify(params, null, 2);
+        
+        // 检查静态资源
+        const resources = document.getElementById('resources');
+        const jsUrl = '/simple/static/js/main.ae8b5ce3.js';
+        const cssUrl = '/simple/static/css/main.347a69ab.css';
+        
+        fetch(jsUrl)
+            .then(response => {
+                if (response.ok) {
+                    resources.innerHTML += `<div class="success">✅ JavaScript文件加载成功: ${jsUrl}</div>`;
+                } else {
+                    resources.innerHTML += `<div class="error">❌ JavaScript文件加载失败: ${jsUrl} (${response.status})</div>`;
+                }
+            })
+            .catch(error => {
+                resources.innerHTML += `<div class="error">❌ JavaScript文件加载错误: ${error.message}</div>`;
+            });
+            
+        fetch(cssUrl)
+            .then(response => {
+                if (response.ok) {
+                    resources.innerHTML += `<div class="success">✅ CSS文件加载成功: ${cssUrl}</div>`;
+                } else {
+                    resources.innerHTML += `<div class="error">❌ CSS文件加载失败: ${cssUrl} (${response.status})</div>`;
+                }
+            })
+            .catch(error => {
+                resources.innerHTML += `<div class="error">❌ CSS文件加载错误: ${error.message}</div>`;
+            });
+        
+        // 测试API
+        const apiTest = document.getElementById('api-test');
+        const apiUrl = '/simple/api/oauth/token?mobile=SMS@13500003000&code=8888&grant_type=mobile';
+        
+        fetch(apiUrl, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'isToken': 'false',
+                'TENANT-ID': '1',
+                'Authorization': 'Basic cGlnOnBpZw=='
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error(`API请求失败: ${response.status}`);
+            }
+        })
+        .then(data => {
+            try {
+                const jsonData = JSON.parse(data);
+                apiTest.innerHTML += `<div class="success">✅ API请求成功，返回access_token: ${jsonData.access_token ? '是' : '否'}</div>`;
+            } catch (e) {
+                apiTest.innerHTML += `<div class="error">❌ API返回非JSON数据: ${data.substring(0, 100)}...</div>`;
+            }
+        })
+        .catch(error => {
+            apiTest.innerHTML += `<div class="error">❌ API请求错误: ${error.message}</div>`;
+        });
+    </script>
+</body>
+</html>
