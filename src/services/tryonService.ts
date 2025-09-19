@@ -311,8 +311,8 @@ export class TryonService {
     }
 
     const response = await roomAPI.getSceneList(this.accessToken);
-    console.log('场景列表响应:', response);
-    console.log('场景列表响应数据:', response.data);
+    // console.log('场景列表响应:', response);
+    // console.log('场景列表响应数据:', response.data);
 
     if (!response.ok) {
       // 检查响应数据中是否包含code 424

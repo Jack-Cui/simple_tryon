@@ -167,7 +167,7 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router basename="/simple">
       <div className="App">
         <Routes>
           <Route path="/test-nav" element={<TestNavigation />} />

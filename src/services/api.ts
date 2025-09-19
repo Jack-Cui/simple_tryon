@@ -48,12 +48,12 @@ class ApiService {
         credentials: 'omit' // 不发送cookies
       });
 
-      console.log('GET请求状态码:', response.status);
-      console.log('GET请求状态文本:', response.statusText);
-      console.log('GET请求响应头:', Object.fromEntries(response.headers.entries()));
+      // console.log('GET请求状态码:', response.status);
+      // console.log('GET请求状态文本:', response.statusText);
+      // console.log('GET请求响应头:', Object.fromEntries(response.headers.entries()));
       
       const responseText = await response.text();
-      console.log('GET请求响应内容:', responseText);
+      // console.log('GET请求响应内容:', responseText);
 
       return {
         status: response.status,

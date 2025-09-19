@@ -1292,6 +1292,7 @@ const Home = () => {
   const loginParamsInitializedRef = useRef(false);
   
   useEffect(() => {
+    console.log('🏠 Home组件初始化，检查登录参数...');
     if (loginParamsInitializedRef.current) return;
     loginParamsInitializedRef.current = true;
     
@@ -1322,9 +1323,11 @@ const Home = () => {
 
     // 如果路由state没有参数，优先从URL获取coCreationId
     const urlCoCreationId = getCoCreationIdWithUrlPriority();
+    console.log('🔍 URL中的coCreationId:', urlCoCreationId);
     
     // 尝试从缓存获取
     const cachedLoginData = getLoginCache();
+    console.log('🔍 缓存中的登录数据:', cachedLoginData);
     
     if (cachedLoginData) {
       // 优先使用URL参数，如果没有URL参数则使用缓存
@@ -1461,6 +1464,7 @@ const Home = () => {
     // 自动执行登台流程（只有在用户没有离开过舞台时才执行）
     const autoStartTryon = async () => {
       console.log('🔍 autoStartTryon 被调用，hasLeftStage:', hasLeftStage);
+      console.log('🔍 loginParams:', loginParams);
       console.log('🔍 RTC连接状态:', rtcVideoService.getConnectionStatus());
       
       // 延迟一点时间确保页面完全加载
