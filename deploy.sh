@@ -48,7 +48,7 @@ sudo cp /etc/nginx/sites-available/tryon /etc/nginx/sites-available/tryon.backup
 
 # 6. 复制nginx配置到系统目录（需要sudo权限）
 echo "配置nginx..."
-sudo cp nginx.conf /etc/nginx/sites-available/tryon
+sudo cp ../nginx.conf /etc/nginx/sites-available/tryon
 
 # 6.1 删除冲突的配置文件
 echo "删除冲突的nginx配置文件..."
