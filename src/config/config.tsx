@@ -123,7 +123,7 @@ export const SCHEDULE_CONFIG = {
 // 默认测试数据
 export const DEFAULT_TEST_DATA = {
   // 默认手机号
-  DEFAULT_PHONE: '13500003000',
+  DEFAULT_PHONE: '13500000805',
   
   // 默认用户ID
   DEFAULT_USER_ID: '1754092805389819906',

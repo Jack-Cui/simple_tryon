@@ -201,7 +201,7 @@ const SimpleTryonTest: React.FC<SimpleTryonTestProps> = () => {
           form={form}
           layout="vertical"
           initialValues={{
-            phone: '13500003000',
+            phone: '13500000805',
             coCreationId: '2',
             userId: '1754092805389819906'
           }}
