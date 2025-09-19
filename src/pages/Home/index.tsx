@@ -3348,7 +3348,7 @@ const Home = () => {
       )}
 
             {/* 离开舞台按钮 - 完全透明，在底部中间 */}
-            {!showSelectionScreen && (
+            {/* {!showSelectionScreen && (
               <div style={{
                 position: 'fixed',
                 bottom: '30px',
@@ -3423,7 +3423,7 @@ const Home = () => {
                   离开舞台
                 </button>
               </div>
-            )}
+            )} */}
 
 
 
@@ -3451,7 +3451,7 @@ const Home = () => {
         />
 
         {/* 固定下载APP提示 */}
-        <FixedDownloadPrompt />
+        {/* <FixedDownloadPrompt /> */}
       </div>
     );
   };

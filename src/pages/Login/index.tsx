@@ -329,7 +329,7 @@ const Login = () => {
       )}
       
       {/* 固定下载APP提示 */}
-      <FixedDownloadPrompt />
+      {/* <FixedDownloadPrompt /> */}
     </div>
   );
 };
