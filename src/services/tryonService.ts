@@ -564,9 +564,9 @@ export class TryonService {
         appId: RTC_CONFIG.APP_ID,
         appKey: RTC_CONFIG.APP_KEY,
         roomId: this.roomPrimaryId?.toString() || '',
-        //update by chao 2025.09.09
-        // userId: this.config.userId,
-        userId: this.config.rtcConfig?.userId || '',
+        //update by chao 2025.09.09 09.19
+        userId: this.config.userId,
+        // userId: this.config.rtcConfig?.userId || '',
         token: this.generateRTCToken() // 动态生成token
       }
     };
