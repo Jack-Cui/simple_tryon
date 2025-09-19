@@ -144,7 +144,7 @@ export const authAPI = {
     console.log('开始登录，手机号:', phone, '验证码:', code);
     const endpoint = API_ENDPOINTS.LOGIN(phone, code);
     console.log('登录请求端点:', endpoint);
-    return await apiService.post(endpoint, undefined, API_CONFIG.LOGIN_HEADERS);
+    return await apiService.get(endpoint, API_CONFIG.LOGIN_HEADERS);
   },
 
   // 解析登录响应
