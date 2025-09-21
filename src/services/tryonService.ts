@@ -59,9 +59,10 @@ export class TryonService {
     const appId = RTC_CONFIG.APP_ID;
     const appKey = RTC_CONFIG.APP_KEY;
     const roomId = this.roomPrimaryId.toString();
-    // const userId = this.config.userId;
-    // update by chao 2025.09.09
-    const userId = this.config.rtcConfig?.userId;
+
+    // update by chao 2025.09.09 09.19
+    const userId = this.config.userId;
+    // const userId = this.config.rtcConfig?.userId;
     if(userId===undefined){
       alert('缺少必要参数：userId');
       throw new Error('缺少必要参数：userId');
@@ -564,9 +565,9 @@ export class TryonService {
         appId: RTC_CONFIG.APP_ID,
         appKey: RTC_CONFIG.APP_KEY,
         roomId: this.roomPrimaryId?.toString() || '',
-        //update by chao 2025.09.09
-        // userId: this.config.userId,
-        userId: this.config.rtcConfig?.userId || '',
+        //update by chao 2025.09.09 09.19
+        userId: this.config.userId,
+        // userId: this.config.rtcConfig?.userId || '',
         token: this.generateRTCToken() // 动态生成token
       }
     };

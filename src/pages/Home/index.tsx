@@ -27,7 +27,6 @@ import shoesIcon from '../../assets/鞋子.png';
 import shareIcon from '../../assets/相机.png';
 import shareCoverImage from '../../assets/分享封面.png';
 import realSceneIcon from '../../assets/实景.png';
-import realSceneActionIcon from '../../assets/实景动作.png';
 import heatMapIcon from '../../assets/松紧热图片.png';
 import { apiService, authAPI } from '../../services/api';
 import DownloadAppModal from '../../components/DownloadAppModal';
@@ -398,12 +397,6 @@ const Home = () => {
 
   // 实景图标数组，对应不同的地图 - 动态从服务器获取
   const [realSceneIcons, setRealSceneIcons] = useState<Array<{icon: string, name: string, mapName: string}>>([
-    // 默认场景，在服务器数据加载前显示（已注释，只从接口返回）
-    // { icon: realSceneActionIcon, name: '教堂', mapName: 'Maps_jiaotang' },
-    // { icon: realSceneActionIcon, name: '广场', mapName: 'Maps_guangchang' },
-    // { icon: realSceneActionIcon, name: '博物馆', mapName: 'Maps_Museum' },
-    // { icon: realSceneActionIcon, name: '沙滩', mapName: 'Maps_shatan' },
-    // { icon: realSceneActionIcon, name: '其他', mapName: 'Maps_udraper' }
   ]);
 
   // 衣服管理相关状态
@@ -1145,101 +1138,6 @@ const Home = () => {
     }
   };
 
-  // 分享到朋友圈
-  const handleShareToTimeline = async () => {
-    try {
-      console.log('📤 分享到朋友圈...');
-      
-      // 检测是否在微信浏览器中
-      const isWechatBrowser = /MicroMessenger/i.test(navigator.userAgent);
-      
-      if (isWechatBrowser) {
-        // 微信浏览器：使用微信分享功能
-        console.log('📱 检测到微信浏览器，使用微信分享到朋友圈');
-        
-        // 检查微信分享服务是否已初始化
-        if (!wechatShareService.isInitialized()) {
-          console.log('🔧 初始化微信分享服务...');
-          
-          // 初始化微信分享服务
-          await wechatShareService.initialize({
-            appId: WECHAT_CONFIG.APP_ID,
-            title: WECHAT_CONFIG.DEFAULT_SHARE.title,
-            desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
-            link: WECHAT_CONFIG.DEFAULT_SHARE.link,
-            imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
-          });
-        }
-        
-        // 执行微信分享到朋友圈
-        try {
-          await wechatShareService.shareToTimeline({
-            title: WECHAT_CONFIG.DEFAULT_SHARE.title,
-            link: WECHAT_CONFIG.DEFAULT_SHARE.link,
-            imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
-          });
-          
-          console.log('✅ 微信分享到朋友圈配置完成');
-          setShowShareModal(false);
-        } catch (error) {
-          console.warn('⚠️ 微信分享到朋友圈配置失败，显示手动分享提示:', error);
-          // 不抛出错误，让微信分享服务显示友好的提示
-        }
-        
-      } else {
-        // 手机浏览器：复制链接并提示
-        console.log('🌐 检测到手机浏览器，复制分享链接');
-        
-        const shareData = {
-          title: 'airU APP - 您的私人试衣间',
-          desc: '超多品牌等你来体验，AI试穿技术让您轻松找到完美搭配！',
-          link: 'https://xxx',
-          imgUrl: 'https://xxx'
-        };
-        
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(shareData.link);
-            console.log('✅ 分享链接已复制到剪贴板');
-          } else {
-            // 降级方案：使用传统方法
-            const textArea = document.createElement('textarea');
-            textArea.value = shareData.link;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            console.log('✅ 分享链接已复制到剪贴板（降级方案）');
-          }
-          
-          // 显示成功提示
-          setShareTipMessage('分享链接已复制到剪贴板！');
-          setShareTipType('success');
-          setShowShareTip(true);
-          setTimeout(() => setShowShareTip(false), 3000);
-          setShowShareModal(false);
-          
-        } catch (copyError) {
-          console.error('❌ 复制分享链接失败:', copyError);
-          setShareTipMessage('复制失败，请手动复制链接');
-          setShareTipType('error');
-          setShowShareTip(true);
-          setTimeout(() => setShowShareTip(false), 3000);
-        }
-      }
-      
-    } catch (error) {
-      console.error('❌ 分享到朋友圈失败:', error);
-      setShareTipMessage(`分享失败: ${error instanceof Error ? error.message : String(error)}`);
-      setShareTipType('error');
-      setShowShareTip(true);
-      setTimeout(() => setShowShareTip(false), 3000);
-    }
-  };
 
   // 监听微信分享准备就绪事件
   useEffect(() => {
@@ -1439,20 +1337,20 @@ const Home = () => {
       
       if (scenesListFromService && Object.keys(scenesListFromService).length > 0) {
         // 将服务器返回的场景数据转换为UI需要的格式
-        const newRealSceneIcons = Object.entries(scenesListFromService).map(([id, scene]: [string, any], index) => {
-          const iconData = {
-            icon: realSceneActionIcon, // 使用默认图标
-            name: scene.name || '未知场景',
-            mapName: scene.code || 'Maps_unknown'
-          };
-          console.log(`场景 ${index}:`, iconData);
-          return iconData;
-        });
+        // const newRealSceneIcons = Object.entries(scenesListFromService).map(([id, scene]: [string, any], index) => {
+        //   const iconData = {
+        //     icon: realSceneActionIcon, // 使用默认图标
+        //     name: scene.name || '未知场景',
+        //     mapName: scene.code || 'Maps_unknown'
+        //   };
+        //   console.log(`场景 ${index}:`, iconData);
+        //   return iconData;
+        // });
         
-        console.log('✅ 从 tryonService 获取到场景列表');
-        console.log('场景数量:', Object.keys(scenesListFromService).length);
-        console.log('转换后的场景列表:', newRealSceneIcons);
-        setRealSceneIcons(newRealSceneIcons);
+        // console.log('✅ 从 tryonService 获取到场景列表');
+        // console.log('场景数量:', Object.keys(scenesListFromService).length);
+        // console.log('转换后的场景列表:', newRealSceneIcons);
+        // setRealSceneIcons(newRealSceneIcons);
       } else {
         console.log('⚠️ tryonService 中没有场景列表，等待服务器数据');
       }
@@ -1947,8 +1845,9 @@ const Home = () => {
         appId: '643e46acb15c24012c963951',
         appKey: 'b329b39ca8df4b5185078f29d8d8025f',
         roomId: roomInfo.data.roomId || loginParams.coCreationId.toString(),
-        userId: roomInfo.data.userId || loginParams.userId
-        // userId:loginParams.userId
+        //update by chao 2025.09.19
+        // userId: roomInfo.data.userId || loginParams.userId
+        userId:loginParams.userId
       };
       
       const config = {
@@ -2035,29 +1934,24 @@ const Home = () => {
       
       if (scenesList && typeof scenesList === 'object' && Object.keys(scenesList).length > 0) {
         // 将服务器返回的场景数据转换为UI需要的格式
-        const newRealSceneIcons = Object.entries(scenesList).map(([id, scene]: [string, any], index) => {
-          const iconData = {
-            icon: realSceneActionIcon, // 使用默认图标
-            name: scene.name || '未知场景',
-            mapName: scene.code || 'Maps_unknown'
-          };
-          console.log(`场景 ${index}:`, iconData);
-          return iconData;
-        });
+        // const newRealSceneIcons = Object.entries(scenesList).map(([id, scene]: [string, any], index) => {
+        //   const iconData = {
+        //     icon: realSceneActionIcon, // 使用默认图标
+        //     name: scene.name || '未知场景',
+        //     mapName: scene.code || 'Maps_unknown'
+        //   };
+        //   console.log(`场景 ${index}:`, iconData);
+        //   return iconData;
+        // });
         
-        console.log('转换后的场景列表:', newRealSceneIcons);
-        setRealSceneIcons(newRealSceneIcons);
+        // console.log('转换后的场景列表:', newRealSceneIcons);
+        // setRealSceneIcons(newRealSceneIcons);
         
         // 设置默认场景名称和音乐
         const cachedLoginData = getLoginCache();
         if (cachedLoginData && cachedLoginData.defaultSceneName) {
           setCurrentSceneName(cachedLoginData.defaultSceneName);
           switchSceneMusic(cachedLoginData.defaultSceneName);
-        } else if (newRealSceneIcons.length > 0) {
-          // 如果没有默认场景名称，使用第一个场景
-          const firstScene = newRealSceneIcons[0];
-          setCurrentSceneName(firstScene.name);
-          switchSceneMusic(firstScene.name);
         }
       } else {
         console.log('场景列表为空或格式不正确，保持默认场景');
@@ -2571,420 +2465,10 @@ const Home = () => {
                 )}
               </div>
 
-              {/* 实景区域 - 只在有场景数据时显示 */}
-              {realSceneIcons.length > 0 && (
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  position: 'relative' // 为绝对定位的展开选项提供定位基准
-                }}>
-                  {/* 主实景图标 */}
-                  <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: '8px',
-                    cursor: 'pointer',
-                    transition: 'transform 0.2s ease'
-                  }}
-                    onClick={() => handleRealSceneClick()}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                  >
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '40px', // 缩小尺寸
-                      height: '40px',
-                      borderRadius: '10px',
-                      backgroundColor: isRealSceneExpanded ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                      border: isRealSceneExpanded ? '2px solid #52c41a' : '2px solid transparent'
-                    }}>
-                      <img 
-                        src={realSceneIcons[selectedRealSceneIndex]?.icon || realSceneActionIcon} 
-                        alt={realSceneIcons[selectedRealSceneIndex]?.name || '实景'} 
-                        style={{
-                          width: '24px', // 缩小图标尺寸
-                          height: '24px',
-                          objectFit: 'contain'
-                        }}
-                      />
-                    </div>
-                    <div style={{
-                      fontSize: '10px', // 缩小字体
-                      color: '#333',
-                      fontWeight: 'normal',
-                      textAlign: 'center',
-                      lineHeight: '1',
-                      whiteSpace: 'nowrap'
-                    }}>
-                      {realSceneIcons[selectedRealSceneIndex]?.name || '实景'}
-                    </div>
-                  </div>
-
-                {/* 展开的实景选项 */}
-                {isRealSceneExpanded && (
-                  <div style={{
-                    position: 'absolute',
-                    left: '70px', // 向右展开
-                    top: '0',
-                    display: 'flex',
-                    gap: '8px', // 减少间距，确保不超出屏幕
-                    animation: 'slideInFromLeft 0.3s ease',
-                    zIndex: 20
-                  }}>
-                    {realSceneIcons.map((scene, index) => (
-                      <div key={index} style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '4px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          console.log(`🎯 点击实景按钮 ${index}:`, scene);
-                          handleRealSceneClick(index);
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }}
-                      >
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '40px', // 缩小尺寸
-                          height: '40px',
-                          borderRadius: '10px', // 与主图标保持一致
-                          backgroundColor: selectedRealSceneIndex === index ? 'rgba(82,196,26,0.2)' : 'rgba(255,255,255,0.8)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                          border: selectedRealSceneIndex === index ? '2px solid #52c41a' : '2px solid transparent'
-                        }}>
-                          <img 
-                            src={scene.icon} 
-                            alt={scene.name} 
-                            style={{
-                              width: '20px', // 缩小图标尺寸
-                              height: '20px',
-                              objectFit: 'contain'
-                            }}
-                          />
-                        </div>
-                        <div style={{
-                          fontSize: '9px', // 缩小字体
-                          color: selectedRealSceneIndex === index ? '#52c41a' : '#333',
-                          fontWeight: selectedRealSceneIndex === index ? 'bold' : 'normal',
-                          textAlign: 'center',
-                          lineHeight: '1',
-                          whiteSpace: 'nowrap'
-                        }}>
-                          {scene.name}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                  </div>
-                )}
+              {/* 实景区域已删除 */}
               </div>
 
-            {/* 右侧服装展示区域 - 纵向排列 */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '15px', // 进一步减少间距，给衣服列表更多空间
-              alignItems: 'center',
-              height: '100%',
-              justifyContent: 'flex-start', // 改为顶部对齐，给衣服列表更多空间
-              overflow: 'hidden',
-              paddingTop: '20px' // 添加顶部间距
-            }}>
-                             {/* 1. 顶部：当前选中服装的缩略图 */}
-               {getCurrentDisplayClothes() && (
-                 <div style={{
-                   display: 'flex',
-                   alignItems: 'center',
-                   justifyContent: 'center',
-                   width: '50px',
-                   height: '50px',
-                   borderRadius: '12px',
-                   overflow: 'hidden',
-                   backgroundColor: '#fff',
-                   boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                   border: '2px solid #333'
-                 }}>
-                   <img 
-                     src={getCurrentDisplayClothes()?.clothesImageUrl} 
-                     alt={getCurrentDisplayClothes()?.clothesName || getCurrentDisplayClothes()?.classifyName || ''} 
-                     style={{
-                       width: '100%',
-                       height: '100%',
-                       objectFit: 'cover'
-                     }}
-                     onError={(e) => {
-                       // 如果图片加载失败，使用分类图标
-                       const target = e.target as HTMLImageElement;
-                       const displayClothes = getCurrentDisplayClothes();
-                       if (displayClothes) {
-                         // 如果是具体服装，使用其分类的图标；如果是分类，使用分类图标
-                         const categoryName = displayClothes.classifyName || selectedCategory || '';
-                         target.src = getCategoryIcon(categoryName);
-                       }
-                       console.log('❌ 顶部服装图片加载失败，使用分类图标');
-                       console.log('❌ 失败的图片URL:', getCurrentDisplayClothes()?.clothesImageUrl);
-                       console.log('❌ 衣服对象:', getCurrentDisplayClothes());
-                       console.log('❌ 分类名称:', displayClothes?.classifyName || selectedCategory);
-                     }}
-                     onLoad={() => {
-                       console.log('✅ 顶部服装图片加载成功');
-                       console.log('✅ 图片URL:', getCurrentDisplayClothes()?.clothesImageUrl);
-                       console.log('✅ 衣服对象:', getCurrentDisplayClothes());
-                     }}
-                   />
-                 </div>
-               )}
-
-              {/* 2. 中间：服装分类或具体服装列表 */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '15px',
-                alignItems: 'center',
-                flex: 1,
-                overflow: 'hidden',
-                maxHeight: '280px' // 与视频页面保持一致
-              }}>
-                {!isBrowsingClothes ? (
-                  // 显示服装分类图标
-                  <>
-                    {getUniqueCategories().map((category, index) => (
-                      <div key={index} style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '8px',
-                        cursor: 'pointer',
-                        transition: 'transform 0.2s ease'
-                      }}
-                        onClick={() => handleCategoryClick(category)}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }}
-                      >
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '40px', // 缩小尺寸
-                          height: '40px',
-                          borderRadius: '10px',
-                          backgroundColor: 'rgba(255,255,255,0.8)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                        }}>
-                          <img 
-                            src={getCategoryIcon(category)} 
-                            alt={category} 
-                            style={{
-                              width: '24px', // 缩小图标尺寸
-                              height: '24px',
-                              objectFit: 'contain'
-                            }}
-                            onError={(e) => {
-                              // 如果服务器图片加载失败，使用本地图标
-                              const target = e.target as HTMLImageElement;
-                              target.src = getClothesIcon(category);
-                              console.log('分类图片加载失败，使用本地图标:', category);
-                            }}
-                            onLoad={() => {
-                              console.log('分类图片加载成功:', category, getCategoryIcon(category));
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  // 显示具体服装列表
-                  <>
-                                      {/* 可滚动的服装缩略图列表 */}
-                  <div 
-                    className="clothes-scroll-container"
-                    style={{
-                      position: 'relative', // 为伪元素定位
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '10px',
-                      alignItems: 'center',
-                      maxHeight: '320px', // 增加高度，显示更多衣服
-                      overflowY: 'auto', // 允许垂直滚动
-                      overflowX: 'hidden',
-                      paddingRight: '8px', // 为滚动条留出空间
-                      // 自定义滚动条样式（Webkit浏览器）
-                      WebkitOverflowScrolling: 'touch'
-                    }}>
-                      {selectedCategory && getClothesForCategory(selectedCategory)
-                        .map((clothes, index) => (
-                        <div key={clothes.id || index} 
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: '40px', // 缩小尺寸
-                            height: '40px',
-                            borderRadius: '8px',
-                            overflow: 'hidden',
-                            backgroundColor: '#fff',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s ease',
-                            flexShrink: 0 // 防止在滚动容器中收缩
-                          }}
-                          onClick={() => handleClothesClick(clothes, index)}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'scale(1.1)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'scale(1)';
-                          }}
-                        >
-                          <img 
-                            src={clothes.clothesImageUrl} 
-                            alt={clothes.clothesName || clothes.classifyName || selectedCategory} 
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover'
-                            }}
-                            onError={(e) => {
-                              // 如果图片加载失败，使用分类图标
-                              const target = e.target as HTMLImageElement;
-                              target.src = getCategoryIcon(selectedCategory || '');
-                              console.log('服装图片加载失败，使用分类图标:', clothes.clothesImageUrl, '服装名:', clothes.clothesName);
-                            }}
-                            onLoad={() => {
-                              console.log('服装图片加载成功:', clothes.clothesImageUrl, '服装名:', clothes.clothesName);
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* 返回按钮 - 固定在底部 */}
-                    <button
-                      onClick={handleBackToCategories}
-                      style={{
-                        backgroundColor: 'rgba(255,255,255,0.9)',
-                        border: 'none',
-                        borderRadius: '8px',
-                        padding: '8px 16px',
-                        cursor: 'pointer',
-                        fontSize: '12px',
-                        color: '#333',
-                        fontWeight: 'bold',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                        marginTop: '12px',
-                        flexShrink: 0 // 确保按钮不会被挤压
-                      }}
-                    >
-                      返回
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {/* 3. 底部：尺码图标 */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
-                {/* <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '60px',
-                  height: '60px',
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255,255,255,0.8)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                }}>
-                  <img 
-                    src={sizeIcon} 
-                    alt="尺码" 
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      objectFit: 'contain'
-                    }}
-                  />
-                </div> */}
-              </div>
-
-              {/* 4. 微信分享图标 */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '8px',
-                marginTop: '20px'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s ease'
-                }}
-                  onClick={handleShareClick}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                >
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px', // 缩小尺寸
-                    height: '40px',
-                    borderRadius: '10px',
-                    backgroundColor: 'rgba(255,255,255,0.8)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                    border: '2px solid #07c160'
-                  }}>
-                    <img 
-                      src={shareIcon} 
-                      alt="微信分享" 
-                      style={{
-                        width: '24px', // 缩小图标尺寸
-                        height: '24px',
-                        objectFit: 'contain'
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* 右侧服装展示区域已删除 */}
           </div>
         </div>
 
@@ -3053,7 +2537,7 @@ const Home = () => {
 
 
         {/* 右上角重新登录按钮 */}
-        <button
+        {/* <button
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -3108,10 +2592,10 @@ const Home = () => {
           }}
         >
           🔄 重新登录
-        </button>
+        </button> */}
 
         {/* 开发环境测试微信分享按钮 */}
-        {process.env.NODE_ENV === 'development' && (
+        {/* {process.env.NODE_ENV === 'development' && (
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -3154,7 +2638,7 @@ const Home = () => {
           >
             📤 测试分享
           </button>
-        )}
+        )} */}
 
         {/* 开发环境调试双指缩放按钮 */}
         {process.env.NODE_ENV === 'development' && (
@@ -3602,38 +3086,6 @@ const Home = () => {
                     e.currentTarget.style.transform = 'scale(1)';
                   }}
                 >
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px', // 缩小尺寸
-                    height: '40px',
-                    borderRadius: '10px',
-                    backgroundColor: isRealSceneExpanded ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                    border: isRealSceneExpanded ? '2px solid #52c41a' : '2px solid transparent'
-                  }}>
-                    <img 
-                      src={realSceneIcons[selectedRealSceneIndex]?.icon || realSceneActionIcon} 
-                      alt={realSceneIcons[selectedRealSceneIndex]?.name || '实景'} 
-                      style={{
-                        width: '24px', // 缩小图标尺寸
-                        height: '24px',
-                        objectFit: 'contain'
-                      }}
-                    />
-                  </div>
-                  <div style={{
-                    fontSize: '10px', // 缩小字体
-                    color: '#fff',
-                    fontWeight: 'normal',
-                    textAlign: 'center',
-                    lineHeight: '1',
-                    whiteSpace: 'nowrap',
-                    textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                  }}>
-                    {realSceneIcons[selectedRealSceneIndex]?.name || '实景'}
-                  </div>
                 </div>
 
               {/* 展开的实景选项 */}
@@ -3818,290 +3270,6 @@ const Home = () => {
           ))
         )}
 
-        {/* 右侧服装图标区域 - 常驻显示 */}
-        <div style={{
-          position: 'fixed',
-          right: '10px', // 更靠近右边缘
-          top: '50%',
-          transform: 'translateY(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start', // 改为顶部对齐，与首页保持一致
-          alignItems: 'center',
-          gap: '15px', // 与首页保持一致
-          height: '400px', // 增加高度，与首页保持一致
-          overflow: 'hidden',
-          zIndex: 200, // 提高z-index确保显示在视频上方
-          pointerEvents: 'auto', // 确保点击事件正常工作
-          touchAction: 'none', // 防止触摸事件被阻止
-          paddingTop: '20px' // 添加顶部间距，与首页保持一致
-        }}>
-            {/* 顶部：当前选中服装的缩略图 */}
-            {getCurrentDisplayClothes() && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '50px',
-                height: '50px',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                backgroundColor: '#fff',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                border: '2px solid #fff'
-              }}>
-                <img 
-                  src={getCurrentDisplayClothes()?.clothesImageUrl} 
-                  alt={getCurrentDisplayClothes()?.clothesName || getCurrentDisplayClothes()?.classifyName || ''} 
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
-                  }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    const displayClothes = getCurrentDisplayClothes();
-                    if (displayClothes) {
-                      const categoryName = displayClothes.classifyName || selectedCategory || '';
-                      target.src = getCategoryIcon(categoryName);
-                    }
-                  }}
-                />
-              </div>
-            )}
-
-            {/* 中间：服装分类或具体服装列表 */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '15px',
-              alignItems: 'center',
-              flex: 1,
-              overflow: 'hidden',
-              maxHeight: '280px' // 与首页保持一致
-            }}>
-              {!isBrowsingClothes ? (
-                // 显示服装分类图标
-                <>
-                  {getUniqueCategories().map((category, index) => (
-                    <div key={index} style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '8px',
-                      cursor: 'pointer',
-                      transition: 'transform 0.2s ease'
-                    }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleVideoCategoryClick(category);
-                      }}
-                      onTouchStart={(e) => {
-                        // 只处理单指触摸，双指触摸让给缩放处理
-                        if (e.touches.length === 1) {
-                          e.stopPropagation();
-                        }
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                      }}
-                    >
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '12px',
-                        backgroundColor: 'rgba(255,255,255,0.8)',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
-                      }}>
-                        <img 
-                          src={getCategoryIcon(category)} 
-                          alt={category} 
-                          style={{
-                            width: '30px',
-                            height: '30px',
-                            objectFit: 'contain'
-                          }}
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = getClothesIcon(category);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                  
-
-                </>
-              ) : (
-                // 显示具体服装列表
-                <>
-                  {/* 可滚动的服装缩略图列表 */}
-                  <div 
-                    className="clothes-scroll-container"
-                    style={{
-                      position: 'relative',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '10px',
-                      alignItems: 'center',
-                      maxHeight: '320px', // 与首页保持一致
-                      overflowY: 'auto',
-                      overflowX: 'hidden',
-                      paddingRight: '8px',
-                      WebkitOverflowScrolling: 'touch'
-                    }}>
-                    {selectedCategory && getClothesForCategory(selectedCategory)
-                      .map((clothes, index) => (
-                      <div key={clothes.id || index} 
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '50px',
-                          height: '50px',
-                          borderRadius: '8px',
-                          overflow: 'hidden',
-                          backgroundColor: '#fff',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                          cursor: 'pointer',
-                          transition: 'transform 0.2s ease',
-                          flexShrink: 0
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleVideoClothesClick(clothes, index);
-                        }}
-                        onTouchStart={(e) => {
-                          // 只处理单指触摸，双指触摸让给缩放处理
-                          if (e.touches.length === 1) {
-                            e.stopPropagation();
-                          }
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }}
-                      >
-                        <img 
-                          src={clothes.clothesImageUrl} 
-                          alt={clothes.clothesName || clothes.classifyName || selectedCategory} 
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
-                          }}
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = getCategoryIcon(selectedCategory || '');
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* 返回按钮 */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleVideoBackToCategories();
-                    }}
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.9)',
-                      border: 'none',
-                      borderRadius: '8px',
-                      padding: '8px 16px',
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                      color: '#333',
-                      fontWeight: 'bold',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                      marginTop: '12px',
-                      flexShrink: 0
-                    }}
-                  >
-                    返回
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* 微信分享图标 */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '8px',
-              marginTop: '20px'
-            }}>
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                transition: 'transform 0.2s ease'
-              }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleShareClick();
-                }}
-                onTouchStart={(e) => {
-                  // 只处理单指触摸，双指触摸让给缩放处理
-                  if (e.touches.length === 1) {
-                    e.stopPropagation();
-                  }
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(255,255,255,0.8)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                  border: '2px solid #07c160'
-                }}>
-                  <img 
-                    src={shareIcon} 
-                    alt="微信分享" 
-                    style={{
-                      width: '30px',
-                      height: '30px',
-                      objectFit: 'contain'
-                    }}
-                  />
-                </div>
-                <div style={{
-                  color: '#fff',
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                }}>
-                  分享
-                </div>
-              </div>
-            </div>
-          </div>
       </div>
 
       {/* 底部控制区域 - 已移除，按钮现在在录制按钮旁边 */}
@@ -4181,7 +3349,7 @@ const Home = () => {
       )}
 
             {/* 离开舞台按钮 - 完全透明，在底部中间 */}
-            {!showSelectionScreen && (
+            {/* {!showSelectionScreen && (
               <div style={{
                 position: 'fixed',
                 bottom: '30px',
@@ -4256,7 +3424,7 @@ const Home = () => {
                   离开舞台
                 </button>
               </div>
-            )}
+            )} */}
 
 
 
@@ -4284,7 +3452,7 @@ const Home = () => {
         />
 
         {/* 固定下载APP提示 */}
-        <FixedDownloadPrompt />
+        {/* <FixedDownloadPrompt /> */}
       </div>
     );
   };
