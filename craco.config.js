@@ -3,9 +3,11 @@ const webpack = require('webpack');
 
 module.exports = {
   webpack: {
-    configure: (webpackConfig) => {
-      // 设置 publicPath 为 /simple/
-      webpackConfig.output.publicPath = '/simple/';
+    configure: (webpackConfig, { env }) => {
+      // 只在生产环境中设置 publicPath 为 /simple/
+      if (env === 'production') {
+        webpackConfig.output.publicPath = '/simple/';
+      }
       
       // 添加 fallback 配置
       webpackConfig.resolve.fallback = {

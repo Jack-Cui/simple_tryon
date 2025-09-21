@@ -21,4 +21,22 @@ module.exports = function(app) {
       }
     })
   );
+
+  // 代理其他API请求到本地后端服务器
+  app.use(
+    '/api',
+    createProxyMiddleware({
+      target: 'http://localhost:9998',
+      changeOrigin: true,
+      onProxyReq: (proxyReq, req, res) => {
+        console.log('[代理] API请求:', req.method, req.url);
+      },
+      onProxyRes: (proxyRes, req, res) => {
+        console.log('[代理] API响应:', proxyRes.statusCode);
+      },
+      onError: (err, req, res) => {
+        console.error('[代理] API服务错误:', err.message);
+      }
+    })
+  );
 }; 
