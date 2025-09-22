@@ -140,11 +140,11 @@ export const authAPI = {
   },
 
   // 登录
-  async login(phone: string, code: string): Promise<ApiResponse> {
-    console.log('开始登录，手机号:', phone, '验证码:', code);
-    const endpoint = API_ENDPOINTS.LOGIN(phone, code);
+  async login(user_id: string, tenant_id: string): Promise<ApiResponse> {
+    console.log('开始登录，手机号:', user_id, 'tenant_id:', tenant_id);
+    const endpoint = API_ENDPOINTS.LOGIN(user_id, tenant_id);
     console.log('登录请求端点:', endpoint);
-    return await apiService.get(endpoint, API_CONFIG.LOGIN_HEADERS);
+    return await apiService.post(endpoint, undefined, API_CONFIG.LOGIN_HEADERS);
   },
 
   // 解析登录响应

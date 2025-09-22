@@ -4,8 +4,9 @@ import { ClothesItem } from '../types/api';
 export interface LoginCacheData {
   token: string;
   userId: string;
-  phone: string;
-  coCreationId: string;
+  // phone: string;
+  // coCreationId: string;
+  tenantId: string;
   roomId?: string; // 房间ID，可选
   roomName?: string; // 房间名称，可选
   clothesList?: ClothesItem[]; // 服饰列表，可选

@@ -58,9 +58,11 @@ export const API_ENDPOINTS = {
   GET_VERIFY_CODE: (phone: string) => `/admin/mobile/${phone}`,
   
   // 登录
-  LOGIN: (phone: string, code: string) => 
-    `/admin/oauth/token?mobile=SMS@${phone}&code=${code}&grant_type=mobile`,
+  // LOGIN: (phone: string, code: string) => 
+  //   `/admin/oauth/token?mobile=SMS@${phone}&code=${code}&grant_type=mobile`,
   
+  LOGIN: (user_id: string, tenant_id: string) => 
+    `/admin/oauth/token?mobile=OCL@${user_id}&id_token=AUTHMINIAPP@${tenant_id}&grant_type=mobile`,
   // 获取房间信息
   GET_SYSROOMSHARE: (co_creation_id: string) => `/admin/sysroomshare/${co_creation_id}`,
   

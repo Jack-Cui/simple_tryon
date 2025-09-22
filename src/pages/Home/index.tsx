@@ -62,8 +62,8 @@ const Home = () => {
   const [loginParams, setLoginParams] = useState<{
     token: string;
     userId: string;
-    phone: string;
-    coCreationId: string;
+    // phone: string;
+    tenantId: string;
   } | null>(null);
 
   // 新增状态：服装浏览相关
@@ -1200,8 +1200,9 @@ const Home = () => {
       setLoginParams({
         token: locationState.token,
         userId: locationState.userId,
-        phone: locationState.phone,
-        coCreationId: locationState.coCreationId
+        // phone: locationState.phone,
+        // coCreationId: locationState.coCreationId
+        tenantId: locationState.tenantId
       });
       
       // 如果路由state中有房间名称，也设置到状态中
@@ -1229,19 +1230,18 @@ const Home = () => {
     
     if (cachedLoginData) {
       // 优先使用URL参数，如果没有URL参数则使用缓存
-      const finalCoCreationId = isValidCoCreationId(urlCoCreationId) ? urlCoCreationId! : cachedLoginData.coCreationId;
+      // const finalCoCreationId = isValidCoCreationId(urlCoCreationId) ? urlCoCreationId! : cachedLoginData.coCreationId;
 
       if (isValidCoCreationId(urlCoCreationId)) {
         console.log('✅ 从URL获取到coCreationId:', urlCoCreationId);
-      } else {
-        console.log('✅ 从缓存获取登录参数成功, coCreationId:', cachedLoginData.coCreationId);
       }
       
       setLoginParams({
         token: cachedLoginData.token,
         userId: cachedLoginData.userId,
-        phone: cachedLoginData.phone,
-        coCreationId: finalCoCreationId,
+        // phone: cachedLoginData.phone,
+        // coCreationId: finalCoCreationId,
+        tenantId: cachedLoginData.tenantId
       });
       
       // 如果缓存中有房间名称，也设置到状态中
@@ -1323,11 +1323,11 @@ const Home = () => {
       console.log('🔄 开始预加载衣服详情到缓存');
       
       // 异步预加载，不阻塞UI
-      import('../../services/api').then(({ roomAPI }) => {
-        roomAPI.preloadClothesDetails(loginParams.coCreationId, loginParams.token);
-      }).catch(error => {
-        console.error('❌ 预加载衣服详情失败:', error);
-      });
+      // import('../../services/api').then(({ roomAPI }) => {
+      //   roomAPI.preloadClothesDetails(loginParams.coCreationId, loginParams.token);
+      // }).catch(error => {
+      //   console.error('❌ 预加载衣服详情失败:', error);
+      // });
     }
 
     // 获取场景列表（只有当前状态为空时才尝试从服务获取）
@@ -1372,10 +1372,10 @@ const Home = () => {
         
         // 强制检查：如果URL参数变化了，重置hasLeftStage状态
         const urlCoCreationId = getCoCreationIdWithUrlPriority();
-        if (isValidCoCreationId(urlCoCreationId) && urlCoCreationId !== loginParams?.coCreationId) {
-          console.log('🔄 检测到URL参数变化，重置hasLeftStage状态');
-          setHasLeftStage(false);
-        }
+        // if (isValidCoCreationId(urlCoCreationId) && urlCoCreationId !== loginParams?.coCreationId) {
+        //   console.log('🔄 检测到URL参数变化，重置hasLeftStage状态');
+        //   setHasLeftStage(false);
+        // }
         
         if (!hasLeftStage) {
           console.log('🚀 自动开始登台流程...');
@@ -1788,7 +1788,7 @@ const Home = () => {
       // 获取房间信息以获取userId
       console.log('🔍 开始获取房间信息...');
       const { roomAPI } = await import('../../services/api');
-      const roomResponse = await roomAPI.getSysRoomShare(loginParams.coCreationId, loginParams.token);
+      const roomResponse = await roomAPI.getSysRoomShare(loginParams.tenantId, loginParams.token);
       
       if (!roomResponse.ok || !roomResponse.data) {
         console.warn('⚠️ 获取房间信息失败，使用默认userId');
@@ -1796,13 +1796,14 @@ const Home = () => {
         const rtcConfig: RTCVideoConfig = {
           appId: '643e46acb15c24012c963951',
           appKey: 'b329b39ca8df4b5185078f29d8d8025f',
-          roomId: loginParams.coCreationId,
+          roomId: loginParams.tenantId,
           userId: loginParams.userId
         };
         
         const config = {
-          phone: loginParams.phone,
-          coCreationId: loginParams.coCreationId,
+          // phone: loginParams.phone,
+          tenantId: loginParams.tenantId,
+          // coCreationId: loginParams.coCreationId,
           userId: loginParams.userId,
           accessToken: loginParams.token,
           rtcConfig,
@@ -1820,13 +1821,14 @@ const Home = () => {
         const rtcConfig: RTCVideoConfig = {
           appId: '643e46acb15c24012c963951',
           appKey: 'b329b39ca8df4b5185078f29d8d8025f',
-          roomId: loginParams.coCreationId.toString(),
+          roomId: loginParams.tenantId.toString(),
           userId: loginParams.userId
         };
         
         const config = {
-          phone: loginParams.phone,
-          coCreationId: loginParams.coCreationId,
+          // phone: loginParams.phone,
+          tenantId: loginParams.tenantId,
+          // coCreationId: loginParams.coCreationId,
           userId: loginParams.userId,
           accessToken: loginParams.token,
           rtcConfig,
@@ -1844,15 +1846,16 @@ const Home = () => {
       const rtcConfig: RTCVideoConfig = {
         appId: '643e46acb15c24012c963951',
         appKey: 'b329b39ca8df4b5185078f29d8d8025f',
-        roomId: roomInfo.data.roomId || loginParams.coCreationId.toString(),
+        roomId: roomInfo.data.roomId || loginParams.tenantId.toString(),
         //update by chao 2025.09.19
         // userId: roomInfo.data.userId || loginParams.userId
         userId:loginParams.userId
       };
       
       const config = {
-        phone: loginParams.phone,
-        coCreationId: loginParams.coCreationId,
+        tenantId: loginParams.tenantId,
+        // phone: loginParams.phone,
+        // coCreationId: loginParams.coCreationId,
         //update by chao 2025.09.09
         //  userId: roomInfo.data.userId || loginParams.userId,
         userId:loginParams.userId,

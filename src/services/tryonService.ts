@@ -8,8 +8,9 @@ import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, u
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 
 export interface TryonConfig {
-  phone: string;
-  coCreationId: string;
+  // phone: string;
+  tenantId: string;
+  // coCreationId: string;
   userId: string;
   accessToken: string;
   rtcConfig?: RTCVideoConfig;
@@ -236,7 +237,7 @@ export class TryonService {
       throw new Error('未配置参数或未提供accessToken');
     }
 
-    const response = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
+    const response = await roomAPI.getSysRoomShare("1", this.accessToken);
     console.log('房间信息响应:', response);
     console.log('房间信息响应数据:', response.data);
 
@@ -290,7 +291,7 @@ export class TryonService {
     }
 
     // 重新获取房间信息用于构建登台信息
-    const response = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
+    const response = await roomAPI.getSysRoomShare("1", this.accessToken);
     if (!response.ok) {
       throw new Error(`获取房间信息失败: HTTP ${response.status}`);
     }
@@ -374,11 +375,11 @@ export class TryonService {
 
   // 创建房间
   private async createRoom(): Promise<number> {
-    if (!this.config || !this.accessToken || !this.roomId || this.config.coCreationId === '') {
+    if (!this.config || !this.accessToken || !this.roomId) {
       throw new Error('未配置参数、未登录或未获取房间信息');
     }
     
-    const response = await roomAPI.createRoom(this.roomId, this.config.coCreationId, this.accessToken);
+    const response = await roomAPI.createRoom(this.roomId, "1", this.accessToken);
     // console.log('创建房间响应:', response);
     // console.log('创建房间响应数据:', response.data);
     
@@ -774,10 +775,9 @@ export class TryonService {
     try {
       console.log('开始创建分享...');
       console.log('  - roomPrimaryId:', this.roomPrimaryId);
-      console.log('  - coCreationId:', this.config.coCreationId);
 
       // 1. 获取房间信息以获取必要的数据
-      const roomResponse = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
+      const roomResponse = await roomAPI.getSysRoomShare("1", this.accessToken);
       if (!roomResponse.ok || !roomResponse.data) {
         throw new Error('获取房间信息失败');
       }
