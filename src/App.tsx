@@ -8,6 +8,7 @@ import TryonTest from './components/TryonTest';
 import SimpleTryonTest from './components/SimpleTryonTest';
 import TestNavigation from './components/TestNavigation';
 import RTCVideoTest from './pages/RTCVideoTest';
+import Upload from './pages/Upload';
 import { authAPI } from './services/api';
 import { saveTokens } from './utils/auth';
 import { saveLoginCache } from './utils/loginCache';
@@ -174,6 +175,7 @@ function App() {
           <Route path="/tryon-test" element={<TryonTest />} />
           <Route path="/simple-tryon-test" element={<SimpleTryonTest />} />
           <Route path="/rtc-video-test" element={<RTCVideoTest />} />
+          <Route path="/upload" element={<Upload />} />
           <Route 
             path="/home" 
             element={
