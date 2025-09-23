@@ -98,6 +98,9 @@ export const API_ENDPOINTS = {
 
   // 获取⽕⼭上传图片临时token
   GET_UPLOAD_IMAGE_TOKEN: () => `/admin/sys-file/uploadVodSt`,
+
+  // 创建模型
+  CREATE_MODEL: () => `/admin/model/createOrUpdate`,
 };
 
 // RTC配置

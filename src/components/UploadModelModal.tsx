@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { uploadAPI } from '../services/api';
+import { uploadAPI, modelAPI } from '../services/api';
 import { getLoginCache } from '../utils/loginCache';
 import { tosUploadService, TosCredentials } from '../services/tosUploadService';
 import './UploadModelModal.css';
@@ -72,6 +72,16 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
 
       console.log('开始上传流程，图片数量:', selectedImages.length, '视频数量:', selectedVideos.length);
       
+      // 初始化模型URL
+      let modelPictureUrl = '';
+      let modelVideoUrl = '';
+      
+      // 检查是否至少有一个文件
+      if (selectedImages.length === 0 && selectedVideos.length === 0) {
+        alert('请至少选择一个图片或视频文件');
+        return;
+      }
+      
       let uploadResults: any[] = [];
       
       // 处理视频上传
@@ -124,6 +134,12 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
             uploadResults.push(...videoResults);
             
             console.log('视频上传结果:', videoResults);
+            
+            // 如果视频上传成功，使用第一个视频的URL
+            if (videoResults.length > 0 && videoResults[0].success && videoResults[0].url) {
+              modelVideoUrl = videoResults[0].url;
+              console.log('设置视频URL:', modelVideoUrl);
+            }
           } else {
             throw new Error(tokenResult.message || '获取视频上传token失败');
           }
@@ -181,6 +197,12 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
             uploadResults.push(...imageResults);
             
             console.log('图片上传结果:', imageResults);
+            
+            // 如果图片上传成功，使用第一个图片的URL
+            if (imageResults.length > 0 && imageResults[0].success && imageResults[0].url) {
+              modelPictureUrl = imageResults[0].url;
+              console.log('设置图片URL:', modelPictureUrl);
+            }
           } else {
             throw new Error(tokenResult.message || '获取图片上传token失败');
           }
@@ -188,7 +210,14 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
           throw new Error(`获取图片上传token失败: HTTP ${tokenResponse.status}`);
         }
       }
-      
+
+      // 创建模型
+      const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl);
+      if (createModelResponse.ok) {
+        console.log('创建模型成功:', createModelResponse.data);
+      } else {
+        throw new Error(`创建模型失败333: HTTP ${createModelResponse.status}`);
+      }
       // 检查上传结果
       const failedUploads = uploadResults.filter(result => !result.success);
       if (failedUploads.length > 0) {
@@ -196,17 +225,45 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
         alert(`部分文件上传失败: ${failedUploads.map(f => f.error).join(', ')}`);
       } else {
         console.log('所有文件上传成功:', uploadResults);
-        alert(`上传成功！共上传 ${uploadResults.length} 个文件`);
+        console.log('模型图片URL:', modelPictureUrl);
+        console.log('模型视频URL:', modelVideoUrl);
         
-        // 调用原来的上传回调
-        await onUpload({
-          images: selectedImages,
-          videos: selectedVideos
-        });
+        // 检查是否至少有一个URL
+        if (!modelPictureUrl && !modelVideoUrl) {
+          alert('上传失败，无法获取文件URL');
+          return;
+        }
         
-        // 上传成功后清空选择
-        setSelectedImages([]);
-        setSelectedVideos([]);
+        // 调用创建模型API
+        console.log('开始创建模型...');
+        const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl);
+        
+        if (createModelResponse.ok) {
+          const createResult = JSON.parse(createModelResponse.data);
+          console.log('创建模型响应:', createResult);
+          
+          if (createResult.code === 0) {
+            console.log('创建模型成功:', createResult.data);
+            alert(`模型创建成功！\n图片: ${modelPictureUrl ? '已上传' : '无'}\n视频: ${modelVideoUrl ? '已上传' : '无'}`);
+            
+            // 调用原来的上传回调
+            await onUpload({
+              images: selectedImages,
+              videos: selectedVideos
+            });
+            
+            // 上传成功后清空选择
+            setSelectedImages([]);
+            setSelectedVideos([]);
+          } else {
+            console.error('创建模型失败，响应数据:', createResult);
+            const errorMsg = createResult.msg || createResult.message || '创建模型失败';
+            throw new Error(`创建模型失败: ${errorMsg} (code: ${createResult.code})`);
+          }
+        } else {
+          console.error('创建模型HTTP错误:', createModelResponse.status, createModelResponse.data);
+          throw new Error(`创建模型失败: HTTP ${createModelResponse.status} - ${createModelResponse.data}`);
+        }
       }
       
     } catch (error) {
