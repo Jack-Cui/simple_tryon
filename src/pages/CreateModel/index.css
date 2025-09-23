@@ -1,0 +1,33 @@
+.create-Model {
+    width: 100vw;
+    height: 100vh;
+    /* padding-top: var(--td-navbar-height, 48px);
+    height: calc(100vh - 80px - var(--td-navbar-height, 48px)); */
+    background: #eee;
+    position: relative;
+}
+.create-Model > .content {
+    height: calc(100vh - 80px - var(--td-navbar-height, 48px - 30px));
+     
+    overflow: auto;  
+}
+.create-Model-navbar {
+    margin-bottom: 20px;
+}
+.create-Model-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 0 5vw;
+    height: 80px;
+    background: #fff;
+    box-shadow: 0px -4px 8px 0px #0000000D;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+.create-Model-btn-skip {
+    margin-right: 10px;
+}
