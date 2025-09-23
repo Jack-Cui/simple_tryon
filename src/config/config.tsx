@@ -66,6 +66,8 @@ export const API_ENDPOINTS = {
   // 获取房间信息
   GET_SYSROOMSHARE: (co_creation_id: string) => `/admin/sysroomshare/${co_creation_id}`,
   
+  GET_MODEL_LIST: (user_id: string) => `/admin/model/list?user_id=${user_id}`,
+
   // 创建房间
   CREATE_ROOM: () => `/admin/room/create`,
   

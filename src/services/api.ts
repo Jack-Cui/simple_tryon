@@ -859,3 +859,14 @@ export const roomAPI = {
     }
   }
 }; 
+
+export const modelAPI = {
+  async getModelList(access_token: string, user_id: string): Promise<ApiResponse> {
+    console.log('开始获取模型列表');
+    const endpoint = API_ENDPOINTS.GET_MODEL_LIST(user_id);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  }
+};

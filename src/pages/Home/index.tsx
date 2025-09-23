@@ -32,6 +32,7 @@ import { apiService, authAPI } from '../../services/api';
 import DownloadAppModal from '../../components/DownloadAppModal';
 import FixedDownloadPrompt from '../../components/FixedDownloadPrompt';
 import ShareModal from '../../components/ShareModal';
+import CreateModelModal from '../../components/CreateModelModal';
 import ReactHowler from 'react-howler';
 
 const Long = require('long');
@@ -96,6 +97,9 @@ const Home = () => {
   
   // 余额弹窗状态
   const [showBalanceModal, setShowBalanceModal] = useState(false);
+
+  // 创建模型弹窗状态
+  const [showCreateModelModal, setShowCreateModelModal] = useState(false);
 
 
 
@@ -1184,6 +1188,13 @@ const Home = () => {
     return () => {
       window.removeEventListener('updateTopRightClothesImage', handleUpdateTopRightClothesImage as EventListener);
     };
+  }, []);
+
+  // 设置创建模型回调函数
+  useEffect(() => {
+    tryonService.setOnCreateModelCallback(() => {
+      setShowCreateModelModal(true);
+    });
   }, []);
 
   // 初始化登录参数
@@ -3451,6 +3462,17 @@ const Home = () => {
             desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
             link: WECHAT_CONFIG.DEFAULT_SHARE.link,
             imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
+          }}
+        />
+
+        {/* 创建模型弹窗 */}
+        <CreateModelModal
+          isOpen={showCreateModelModal}
+          onClose={() => setShowCreateModelModal(false)}
+          onCreateModel={() => {
+            setShowCreateModelModal(false);
+            // 这里可以添加跳转到创建模型页面的逻辑
+            console.log('跳转到创建模型页面');
           }}
         />
 

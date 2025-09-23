@@ -1,4 +1,4 @@
-import { authAPI, roomAPI } from './api';
+import { authAPI, roomAPI, modelAPI } from './api';
 import { scheduleService } from './scheduleService';
 import { webSocketService, WebSocketConfig } from './websocketService';
 import { RTCVideoService, RTCVideoConfig, rtcVideoService } from './rtcVideoService';
@@ -27,10 +27,16 @@ export class TryonService {
   private enterStageInfo: string | null = null;
   private rtcVideoService: RTCVideoService | null = null;
   private rtcStarted: boolean = false; // 防止重复启动RTC
+  private onCreateModelCallback: (() => void) | null = null; // 添加创建模型回调函数
 
   constructor() {
     // 监听登台成功事件
     this.setupEventListeners();
+  }
+
+  // 设置创建模型回调函数
+  setOnCreateModelCallback(callback: () => void) {
+    this.onCreateModelCallback = callback;
   }
 
   // 设置事件监听器
@@ -99,7 +105,49 @@ export class TryonService {
     this.accessToken = config.accessToken;
     
     try {
-      console.log('🏠 开始初始化房间信息...');
+      console.log('校验模型列表...');
+      modelAPI.getModelList(this.accessToken, this.config.userId).then((response) => {
+        console.log('模型列表校验完成', response);
+        if (response.ok) {
+          console.log('模型列表校验完成', response.data);
+          
+          // 解析返回的数据
+          try {
+            const dataObj = JSON.parse(response.data);
+            // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+            if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+              if (this.onCreateModelCallback) {
+                this.onCreateModelCallback();
+              } else {
+                alert('请创建模型');
+              }
+              return;
+            }
+          } catch (parseError) {
+            console.error('解析模型列表数据失败', parseError);
+            if (this.onCreateModelCallback) {
+              this.onCreateModelCallback();
+            } else {
+              alert('请创建模型');
+            }
+            return;
+          }
+        } else {
+          console.error('模型列表校验失败', response.data);
+          if (this.onCreateModelCallback) {
+            this.onCreateModelCallback();
+          } else {
+            alert('请创建模型');
+          }
+        }
+      }).catch((error) => {
+        console.error('模型列表校验失败', error);
+        if (this.onCreateModelCallback) {
+          this.onCreateModelCallback();
+        } else {
+          alert('请创建模型');
+        }
+      });
       
       // 1. 获取房间信息（但不构建登台信息）
       console.log('步骤1: 获取房间信息');
