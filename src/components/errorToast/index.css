@@ -1,0 +1,49 @@
+.error-toast-tips {
+    width: 40%;
+    height: auto;
+    margin: 0 auto;
+    margin-top: 40vh;
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 24px;
+    color: rgba(23, 23, 23, 1);
+    font-size: 16px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    text-align: justify;
+    /* white-space: nowrap; */
+    line-height: 22px;   
+}
+.error-toast-tips > svg {
+    margin-right: 20px;
+}
+
+.error-toast-confirm {
+    width: 60%;
+    height: auto;
+    margin: 0 auto;
+    margin-top: 30vh;
+    background: #fff;
+    background: linear-gradient(to bottom, #F2FFF9 30%, #fff 100%);
+    border-radius: 12px;
+    padding: 16px 24px 24px;
+    color: rgba(23, 23, 23, 1);
+    font-size: 16px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    text-align: justify;
+    line-height: 22px;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; 
+    position: relative;
+}
+.error-toast-confirm > .content {
+    margin: 20px 0;
+}
+.error-toast-confirm > .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
