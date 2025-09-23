@@ -106,49 +106,46 @@ export class TryonService {
     
     try {
       console.log('校验模型列表...');
-      modelAPI.getModelList(this.accessToken, this.config.userId).then((response) => {
-        console.log('模型列表校验完成', response);
-        if (response.ok) {
-          console.log('模型列表校验完成', response.data);
-          
-          // 解析返回的数据
-          try {
-            const dataObj = JSON.parse(response.data);
-            // 判断如果失败或者data长度是空，则弹窗提示请创建模型
-            if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
-              if (this.onCreateModelCallback) {
-                this.onCreateModelCallback();
-              } else {
-                alert('请创建模型');
-              }
-              return;
-            }
-          } catch (parseError) {
-            console.error('解析模型列表数据失败', parseError);
+      const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+      console.log('模型列表校验完成', response);
+      
+      if (response.ok) {
+        console.log('模型列表校验完成', response.data);
+        
+        // 解析返回的数据
+        try {
+          const dataObj = JSON.parse(response.data);
+          // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+          if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
             if (this.onCreateModelCallback) {
               this.onCreateModelCallback();
-            } else {
-              alert('请创建模型');
             }
             return;
           }
-        } else {
-          console.error('模型列表校验失败', response.data);
+        } catch (parseError) {
+          console.error('解析模型列表数据失败', parseError);
           if (this.onCreateModelCallback) {
             this.onCreateModelCallback();
-          } else {
-            alert('请创建模型');
           }
+          return;
         }
-      }).catch((error) => {
-        console.error('模型列表校验失败', error);
+      } else {
+        console.error('模型列表校验失败', response.data);
         if (this.onCreateModelCallback) {
           this.onCreateModelCallback();
-        } else {
-          alert('请创建模型');
         }
-      });
+        return;
+      }
       
+    } catch (error) {
+      console.error('模型列表校验失败', error);
+      if (this.onCreateModelCallback) {
+        this.onCreateModelCallback();
+      }
+      return;
+    }
+    
+    try {
       // 1. 获取房间信息（但不构建登台信息）
       console.log('步骤1: 获取房间信息');
       await this.getRoomInfoWithoutStageInfo();
@@ -237,6 +234,48 @@ export class TryonService {
     try {
       console.log('开始完整试穿流程...');
       
+      // 0. 校验模型列表
+      console.log('校验模型列表...');
+      const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+      console.log('模型列表校验完成', response);
+      
+      if (response.ok) {
+        console.log('模型列表校验完成', response.data);
+        
+        // 解析返回的数据
+        try {
+          const dataObj = JSON.parse(response.data);
+          // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+          if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+            if (this.onCreateModelCallback) {
+              this.onCreateModelCallback();
+            }
+            return;
+          }
+        } catch (parseError) {
+          console.error('解析模型列表数据失败', parseError);
+          if (this.onCreateModelCallback) {
+            this.onCreateModelCallback();
+          }
+          return;
+        }
+      } else {
+        console.error('模型列表校验失败', response.data);
+        if (this.onCreateModelCallback) {
+          this.onCreateModelCallback();
+        }
+        return;
+      }
+      
+    } catch (error) {
+      console.error('模型列表校验失败', error);
+      if (this.onCreateModelCallback) {
+        this.onCreateModelCallback();
+      }
+      return;
+    }
+    
+    try {
       // 1. 获取房间信息（但不构建登台信息）
       console.log('步骤1: 获取房间信息');
       await this.getRoomInfoWithoutStageInfo();

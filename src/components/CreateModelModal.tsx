@@ -17,30 +17,33 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
   return (
     <div className="create-model-modal-overlay" onClick={onClose}>
       <div className="create-model-modal" onClick={(e) => e.stopPropagation()}>
-        {/* 关闭按钮 */}
-        <button className="close-button" onClick={onClose}>×</button>
+        {/* 标题栏 */}
+        <div className="modal-header">
+          <span className="modal-title">dev-h5.ai1010.cn 显示</span>
+        </div>
         
         {/* 内容区域 */}
         <div className="modal-content">
-          {/* 警告图标 */}
-          <div className="warning-icon">
-            <div className="icon-inner">
-              <span className="exclamation-mark">!</span>
-            </div>
-          </div>
-
           {/* 消息文本 */}
           <div className="modal-text">
-            <p className="modal-message">你还未创建模型</p>
+            <p className="modal-message">您还没有制作自己的3D美颜模型</p>
           </div>
 
-          {/* 创建按钮 */}
-          <button 
-            className="create-button"
-            onClick={onCreateModel}
-          >
-            去创建
-          </button>
+          {/* 按钮区域 */}
+          <div className="modal-footer">
+            <button 
+              className="cancel-button"
+              onClick={onClose}
+            >
+              再想想
+            </button>
+            <button 
+              className="confirm-button"
+              onClick={onCreateModel}
+            >
+              去建模
+            </button>
+          </div>
         </div>
       </div>
     </div>
