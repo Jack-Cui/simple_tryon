@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { checkVideo } from '../../utils/videoCheck';
 import UploadFile from '../../components/uploadFile';
 import ErrorToast from '../../components/errorToast';
+import { useNavigate } from 'react-router-dom';
 const infoList1 = [
   '1.光线与背景：光线明亮均匀，背景简洁非纯白；避免镜面反光和他人入镜。',
   '2.形象与着装：露额耳，无刘海，不戴眼镜饰品；穿贴身无装饰背心短裤，赤脚。',
@@ -18,6 +19,8 @@ const infoList2 = [
     '4. 清晰与整洁： 面部五官清晰无遮挡，表情自然。'
 ]
 const CreateModel = () => {
+  
+  const navigate = useNavigate();
   const uploadFileEl = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
   const [showError, setShowError] = useState(false);
@@ -35,9 +38,10 @@ const CreateModel = () => {
     }
   }, [showError])
   const handleClick = () => {
-    console.log('back');
     if (step === 1) {
         setStep(0)
+    } else {
+      navigate(-1);
     }
   }
 
@@ -54,6 +58,8 @@ const CreateModel = () => {
         return;
       }
     }
+    console.log('模型视频', (ringRefEl?.current as any).getFile());
+    console.log('身高', (ringRefEl?.current as any).getPerHeight());
     setStep(1);
   }
 
@@ -66,12 +72,15 @@ const CreateModel = () => {
         return;
       }
     }
+    console.log('美颜照', (ringRefEl?.current as any).getFile());
     // next
+    navigate('/my-model');
   }
 
   const onSkip = () => {
     // 跳过
     // next
+    navigate('/my-model');
   }
 
   const uploadFile = () => {

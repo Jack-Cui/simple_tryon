@@ -1,13 +1,15 @@
 import './index.css';
 import { Button, Navbar, Progress, CountDown } from 'tdesign-mobile-react';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 const MyModel = () => {
+    const navigate = useNavigate();
     const [status, setStatus] = useState(1); // 0 成功 1上传中 2审核中 3 审核失败
     const [loadRogress, setLoadRogress] = useState(0); // 上传进度
     const [countdown, setCountdown] = useState(24 * 60 * 60 * 1000);
     // 返回
     const handleClick = () => {
-        setStatus(status === 2 ? 1 : 2)
+        navigate(-1);
     }
 
     useEffect(() => {
