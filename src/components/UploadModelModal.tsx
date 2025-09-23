@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { uploadAPI } from '../services/api';
 import { getLoginCache } from '../utils/loginCache';
+import { tosUploadService, TosCredentials } from '../services/tosUploadService';
 import './UploadModelModal.css';
 
 interface UploadModelModalProps {
@@ -69,52 +70,145 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
         throw new Error('用户未登录或登录信息缺失');
       }
 
-      console.log('开始获取上传视频临时token');
+      console.log('开始上传流程，图片数量:', selectedImages.length, '视频数量:', selectedVideos.length);
       
+      let uploadResults: any[] = [];
+      
+      // 处理视频上传
       if (selectedVideos.length > 0) {
-        // 调用获取上传视频临时token接口
+        console.log('开始处理视频上传');
         const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
         
         if (tokenResponse.ok) {
           const tokenResult = JSON.parse(tokenResponse.data);
-          console.log('获取上传token成功:', tokenResult);
+          console.log('获取视频上传token成功:', tokenResult);
           
           if (tokenResult.code === 0) {
-            console.log('上传token:', tokenResult.data);
+            console.log('视频token数据结构:', tokenResult);
+            console.log('credentials路径:', tokenResult.data?.result?.credentials);
             
-            // 继续调用原来的上传逻辑
-            await onUpload({
-              images: selectedImages,
-              videos: selectedVideos
-            });
+            const credentials: TosCredentials = {
+              accessKeyId: tokenResult.data.result.credentials.accessKeyId,
+              secretAccessKey: tokenResult.data.result.credentials.secretAccessKey,
+              sessionToken: tokenResult.data.result.credentials.sessionToken,
+              expiredTime: tokenResult.data.result.credentials.expiredTime
+            };
             
-            // 上传成功后清空选择
-            setSelectedImages([]);
-            setSelectedVideos([]);
+            console.log('构建的credentials:', credentials);
+            
+            // 对比视频和图片的凭证差异
+            console.log('=== 视频上传凭证信息 ===');
+            console.log('accessKeyId:', credentials.accessKeyId);
+            console.log('secretAccessKey长度:', credentials.secretAccessKey?.length);
+            console.log('sessionToken长度:', credentials.sessionToken?.length);
+            console.log('expiredTime:', credentials.expiredTime);
+            
+            // 检查sessionToken是否包含正确的权限
+            if (credentials.sessionToken) {
+              try {
+                const tokenParts = credentials.sessionToken.split('.');
+                if (tokenParts.length >= 2) {
+                  const payload = JSON.parse(atob(tokenParts[1]));
+                  console.log('视频sessionToken payload:', payload);
+                }
+              } catch (e) {
+                console.log('无法解析视频sessionToken payload');
+              }
+            }
+            
+            console.log('初始化TOS客户端用于视频上传');
+            tosUploadService.initialize(credentials);
+            
+            console.log('开始上传视频文件');
+            const videoResults = await tosUploadService.uploadFiles(selectedVideos);
+            uploadResults.push(...videoResults);
+            
+            console.log('视频上传结果:', videoResults);
           } else {
-            throw new Error(tokenResult.message || '获取上传token失败');
+            throw new Error(tokenResult.message || '获取视频上传token失败');
           }
         } else {
-          throw new Error(`获取上传token失败: HTTP ${tokenResponse.status}`);
+          throw new Error(`获取视频上传token失败: HTTP ${tokenResponse.status}`);
         }
       }
       
+      // 处理图片上传
       if (selectedImages.length > 0) {
+        console.log('开始处理图片上传');
         const tokenResponse = await uploadAPI.getUploadImageToken(loginCache.token);
+        
         if (tokenResponse.ok) {
           const tokenResult = JSON.parse(tokenResponse.data);
-          console.log('获取上传图片token成功:', tokenResult);
+          console.log('获取图片上传token成功:', tokenResult);
+          
           if (tokenResult.code === 0) {
-            console.log('上传图片token:', tokenResult.data);
+            console.log('图片token数据结构:', tokenResult);
+            
+            const credentials: TosCredentials = {
+              accessKeyId: tokenResult.data.accessKeyId,
+              secretAccessKey: tokenResult.data.secretAccessKey,
+              sessionToken: tokenResult.data.sessionToken,
+              expiredTime: tokenResult.data.expiredTime
+            };
+            
+            console.log('构建的图片credentials:', credentials);
+            
+            // 对比视频和图片的凭证差异
+            console.log('=== 图片上传凭证信息 ===');
+            console.log('accessKeyId:', credentials.accessKeyId);
+            console.log('secretAccessKey长度:', credentials.secretAccessKey?.length);
+            console.log('sessionToken长度:', credentials.sessionToken?.length);
+            console.log('expiredTime:', credentials.expiredTime);
+            
+            // 检查sessionToken是否包含正确的权限
+            if (credentials.sessionToken) {
+              try {
+                const tokenParts = credentials.sessionToken.split('.');
+                if (tokenParts.length >= 2) {
+                  const payload = JSON.parse(atob(tokenParts[1]));
+                  console.log('图片sessionToken payload:', payload);
+                }
+              } catch (e) {
+                console.log('无法解析图片sessionToken payload');
+              }
+            }
+            
+            console.log('初始化TOS客户端用于图片上传');
+            tosUploadService.initialize(credentials);
+            
+            console.log('开始上传图片文件');
+            const imageResults = await tosUploadService.uploadFiles(selectedImages);
+            uploadResults.push(...imageResults);
+            
+            console.log('图片上传结果:', imageResults);
           } else {
-            throw new Error(tokenResult.message || '获取上传图片token失败');
+            throw new Error(tokenResult.message || '获取图片上传token失败');
           }
         } else {
-          throw new Error(`获取上传图片token失败: HTTP ${tokenResponse.status}`);
+          throw new Error(`获取图片上传token失败: HTTP ${tokenResponse.status}`);
         }
-      } else {
-        throw new Error('请至少选择一个图片文件');
       }
+      
+      // 检查上传结果
+      const failedUploads = uploadResults.filter(result => !result.success);
+      if (failedUploads.length > 0) {
+        console.error('部分文件上传失败:', failedUploads);
+        alert(`部分文件上传失败: ${failedUploads.map(f => f.error).join(', ')}`);
+      } else {
+        console.log('所有文件上传成功:', uploadResults);
+        alert(`上传成功！共上传 ${uploadResults.length} 个文件`);
+        
+        // 调用原来的上传回调
+        await onUpload({
+          images: selectedImages,
+          videos: selectedVideos
+        });
+        
+        // 上传成功后清空选择
+        setSelectedImages([]);
+        setSelectedVideos([]);
+      }
+      
     } catch (error) {
       console.error('上传失败:', error);
       alert(`上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
