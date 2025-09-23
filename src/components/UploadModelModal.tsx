@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { uploadAPI } from '../services/api';
+import { getLoginCache } from '../utils/loginCache';
 import './UploadModelModal.css';
 
 interface UploadModelModalProps {
@@ -61,16 +63,61 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
 
     setIsUploading(true);
     try {
-      await onUpload({
-        images: selectedImages,
-        videos: selectedVideos
-      });
-      // 上传成功后清空选择
-      setSelectedImages([]);
-      setSelectedVideos([]);
+      // 获取登录缓存中的用户信息
+      const loginCache = getLoginCache();
+      if (!loginCache?.token) {
+        throw new Error('用户未登录或登录信息缺失');
+      }
+
+      console.log('开始获取上传视频临时token');
+      
+      if (selectedVideos.length > 0) {
+        // 调用获取上传视频临时token接口
+        const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
+        
+        if (tokenResponse.ok) {
+          const tokenResult = JSON.parse(tokenResponse.data);
+          console.log('获取上传token成功:', tokenResult);
+          
+          if (tokenResult.code === 0) {
+            console.log('上传token:', tokenResult.data);
+            
+            // 继续调用原来的上传逻辑
+            await onUpload({
+              images: selectedImages,
+              videos: selectedVideos
+            });
+            
+            // 上传成功后清空选择
+            setSelectedImages([]);
+            setSelectedVideos([]);
+          } else {
+            throw new Error(tokenResult.message || '获取上传token失败');
+          }
+        } else {
+          throw new Error(`获取上传token失败: HTTP ${tokenResponse.status}`);
+        }
+      }
+      
+      if (selectedImages.length > 0) {
+        const tokenResponse = await uploadAPI.getUploadImageToken(loginCache.token);
+        if (tokenResponse.ok) {
+          const tokenResult = JSON.parse(tokenResponse.data);
+          console.log('获取上传图片token成功:', tokenResult);
+          if (tokenResult.code === 0) {
+            console.log('上传图片token:', tokenResult.data);
+          } else {
+            throw new Error(tokenResult.message || '获取上传图片token失败');
+          }
+        } else {
+          throw new Error(`获取上传图片token失败: HTTP ${tokenResponse.status}`);
+        }
+      } else {
+        throw new Error('请至少选择一个图片文件');
+      }
     } catch (error) {
       console.error('上传失败:', error);
-      alert('上传失败，请重试');
+      alert(`上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
     } finally {
       setIsUploading(false);
     }

@@ -90,7 +90,14 @@ export const API_ENDPOINTS = {
   CHECK_LOGIN: (access_token: string) => `/admin/oauth/check_token?token=${access_token}`,
   
   // 创建分享
-  CREATE_SYSROOMSHARE: () => `/admin/sysroomshare`
+  CREATE_SYSROOMSHARE: () => `/admin/sysroomshare`,
+
+
+  // 获取⽕⼭上传视频临时token
+  GET_UPLOAD_VEDIO_TOKEN: () => `/admin/sys-file/uploadSt`,
+
+  // 获取⽕⼭上传图片临时token
+  GET_UPLOAD_IMAGE_TOKEN: () => `/admin/sys-file/uploadVodSt`,
 };
 
 // RTC配置

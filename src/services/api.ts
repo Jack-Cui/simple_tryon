@@ -989,3 +989,23 @@ export const modelAPI = {
     }
   }
 };
+
+export const uploadAPI = {
+  async getUploadVedioToken(access_token: string): Promise<ApiResponse> {
+    console.log('开始获取上传视频临时token');
+    const endpoint = API_ENDPOINTS.GET_UPLOAD_VEDIO_TOKEN();
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.post(endpoint, undefined, headers);
+  },
+
+  async getUploadImageToken(access_token: string): Promise<ApiResponse> {
+    console.log('开始获取上传图片临时token');
+    const endpoint = API_ENDPOINTS.GET_UPLOAD_IMAGE_TOKEN();
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.post(endpoint, undefined, headers);
+  }
+};
