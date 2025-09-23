@@ -868,5 +868,124 @@ export const modelAPI = {
       'Authorization': `Bearer ${access_token}`
     };
     return await apiService.get(endpoint, headers);
+  },
+
+  // 上传模型素材（图片和视频）
+  async uploadModelMaterials(
+    access_token: string, 
+    user_id: string, 
+    files: { images: File[]; videos: File[] }
+  ): Promise<ApiResponse> {
+    console.log('开始上传模型素材');
+    console.log('图片数量:', files.images.length);
+    console.log('视频数量:', files.videos.length);
+    
+    // 创建FormData
+    const formData = new FormData();
+    
+    // 添加用户ID
+    formData.append('user_id', user_id);
+    
+    // 添加图片文件
+    files.images.forEach((file, index) => {
+      formData.append(`images[${index}]`, file);
+    });
+    
+    // 添加视频文件
+    files.videos.forEach((file, index) => {
+      formData.append(`videos[${index}]`, file);
+    });
+    
+    // TODO: 这里需要实际的API端点
+    // 暂时使用占位端点
+    const endpoint = '/api/model/upload'; // 占位端点
+    
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+      // 注意：不要设置Content-Type，让浏览器自动设置multipart/form-data
+    };
+    
+    try {
+      // 模拟API调用
+      console.log('模拟上传模型素材到:', endpoint);
+      console.log('FormData内容:', Array.from(formData.entries()));
+      
+      // 模拟上传延迟
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // 返回模拟成功响应
+      return {
+        status: 200,
+        ok: true,
+        data: JSON.stringify({
+          code: 0,
+          message: '上传成功',
+          data: {
+            model_id: 'model_' + Date.now(),
+            uploaded_images: files.images.length,
+            uploaded_videos: files.videos.length,
+            processing_status: 'processing'
+          }
+        })
+      };
+    } catch (error) {
+      console.error('上传模型素材失败:', error);
+      return {
+        status: 500,
+        ok: false,
+        data: JSON.stringify({
+          code: 500,
+          message: '上传失败',
+          error: error instanceof Error ? error.message : '未知错误'
+        })
+      };
+    }
+  },
+
+  // 获取模型处理状态
+  async getModelProcessingStatus(access_token: string, model_id: string): Promise<ApiResponse> {
+    console.log('获取模型处理状态:', model_id);
+    
+    // TODO: 这里需要实际的API端点
+    const endpoint = `/api/model/status/${model_id}`;
+    
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    
+    try {
+      // 模拟API调用
+      console.log('模拟获取模型处理状态:', endpoint);
+      
+      // 模拟处理延迟
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // 返回模拟状态响应
+      return {
+        status: 200,
+        ok: true,
+        data: JSON.stringify({
+          code: 0,
+          message: '获取状态成功',
+          data: {
+            model_id: model_id,
+            status: 'completed', // processing, completed, failed
+            progress: 100,
+            result_url: 'https://example.com/model_result.jpg'
+          }
+        })
+      };
+    } catch (error) {
+      console.error('获取模型处理状态失败:', error);
+      return {
+        status: 500,
+        ok: false,
+        data: JSON.stringify({
+          code: 500,
+          message: '获取状态失败',
+          error: error instanceof Error ? error.message : '未知错误'
+        })
+      };
+    }
   }
 };

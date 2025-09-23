@@ -3470,9 +3470,8 @@ const Home = () => {
           isOpen={showCreateModelModal}
           onClose={() => setShowCreateModelModal(false)}
           onCreateModel={() => {
-            setShowCreateModelModal(false);
-            // 这里可以添加跳转到创建模型页面的逻辑
-            console.log('跳转到创建模型页面');
+            // 不要在这里关闭弹窗，让CreateModelModal内部处理
+            console.log('开始创建模型流程');
           }}
         />
 
