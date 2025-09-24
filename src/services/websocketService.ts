@@ -72,7 +72,13 @@ export class WebSocketService {
   }
 
   // 设置RTC事件处理器
-  setRTCEventHandlers(handlers: typeof this.rtcEventHandlers): void {
+  setRTCEventHandlers(handlers: Partial<{
+    onUserJoin?: (userId: string) => void;
+    onUserLeave?: (userId: string) => void;
+    onUserPublishStream?: (userId: string, hasVideo: boolean, hasAudio: boolean) => void;
+    onUserUnpublishStream?: (userId: string) => void;
+    onError?: (error: any) => void;
+  }>): void {
     this.rtcEventHandlers = { ...this.rtcEventHandlers, ...handlers };
   }
 
