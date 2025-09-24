@@ -193,16 +193,18 @@ const Login = () => {
           saveLoginCache({
             token: loginData.access_token,
             userId: user_id,
-            phone: phoneNumber,
-            coCreationId: finalCoCreationId,
+            // phone: phoneNumber,
+            // coCreationId: finalCoCreationId,
+            tenantId: '2',
           });
           
           // 登录成功后立即初始化房间信息
           try {
             console.log('🏠 登录成功，开始初始化房间信息...');
             await tryonService.initializeAfterLogin({
-              phone: phoneNumber,
-              coCreationId: finalCoCreationId,
+              // phone: phoneNumber,
+              // coCreationId: finalCoCreationId,
+              tenantId: '2',
               userId: user_id,
               accessToken: loginData.access_token,
             });
@@ -236,8 +238,9 @@ const Login = () => {
               state: {
                 token: loginData.access_token,
                 userId: user_id,
-                phone: phoneNumber,
-                coCreationId: finalCoCreationId,
+                // phone: phoneNumber,
+                // coCreationId: finalCoCreationId,
+                tenantId: '2',
                 roomName: roomName, // 传递房间名称
               }
             });

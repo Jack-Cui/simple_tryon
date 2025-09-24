@@ -29,31 +29,21 @@ function App() {
       try {
         // 解析URL参数
         const urlParams = new URLSearchParams(window.location.search);
-        const phone = urlParams.get('phone');
-        const verifyCode = urlParams.get('verfiy_code'); // 注意原URL中的拼写错误
-        const coCreationId = urlParams.get('co_creation_id');
+        const user_id = urlParams.get('user_id');
+        const tenant_id = urlParams.get('tenant_id');
 
-        console.log('🔍 解析URL参数:', { phone, verifyCode, coCreationId });
+        console.log('🔍 解析URL参数:', { user_id, tenant_id });
 
         // 验证必要参数
-        if (!phone || !verifyCode || !coCreationId) {
-          setError('缺少必要的URL参数：phone, verfiy_code, co_creation_id');
-          setIsLoading(false);
-          return;
-        }
-
-        // 验证coCreationId
-        if (!isValidCoCreationId(coCreationId)) {
-          console.error('❌ 无效的coCreationId:', coCreationId);
-          showCoCreationIdError();
-          setError('无效的共创ID');
+        if (!user_id || !tenant_id) {
+          setError('缺少必要的URL参数：user_id, tenant_id');
           setIsLoading(false);
           return;
         }
 
         // 执行登录
         console.log('🚀 开始自动登录...');
-        const response = await authAPI.login(phone, verifyCode);
+        const response = await authAPI.login(user_id, tenant_id);
         
         if (response.ok) {
           console.log('✅ 自动登录成功:', response.data);
@@ -71,16 +61,17 @@ function App() {
             saveLoginCache({
               token: loginData.access_token,
               userId: user_id,
-              phone: phone,
-              coCreationId: coCreationId,
+              // phone: phone,
+              tenantId: tenant_id,
             });
             
             // 登录成功后立即初始化房间信息
             try {
               console.log('🏠 开始初始化房间信息...');
               await tryonService.initializeAfterLogin({
-                phone: phone,
-                coCreationId: coCreationId,
+                tenantId: tenant_id,
+                // phone: phone,
+                // coCreationId: coCreationId,
                 userId: user_id,
                 accessToken: loginData.access_token,
               });
@@ -90,9 +81,9 @@ function App() {
               try {
                 console.log('🔄 开始预加载衣服详情到缓存...');
                 import('./services/api').then(({ roomAPI }) => {
-                  if (loginData.access_token) {
-                    roomAPI.preloadClothesDetails(coCreationId, loginData.access_token);
-                  }
+                  // if (loginData.access_token) {
+                  //   roomAPI.preloadClothesDetails(coCreationId, loginData.access_token);
+                  // }
                 }).catch(error => {
                   console.error('❌ 预加载衣服详情失败:', error);
                 });

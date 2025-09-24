@@ -70,8 +70,9 @@ const TryonTest: React.FC<TryonTestProps> = () => {
       };
       
       const config = {
-        phone: values.phone,
-        coCreationId: values.coCreationId, // 直接使用字符串，不再转换为数字
+        // phone: values.phone,
+        tenantId: values.tenantId,
+        // coCreationId: values.coCreationId, // 直接使用字符串，不再转换为数字
         userId: values.userId,
         accessToken: values.accessToken
       };
@@ -118,8 +119,9 @@ const TryonTest: React.FC<TryonTestProps> = () => {
           form={form}
           layout="vertical"
           initialValues={{
-            phone: '13500003000',
-            coCreationId: '2',
+            // phone: '13500003000',
+            tenantId: '2',
+            // coCreationId: '2',
             userId: '1754092805389819906'
           }}
         >

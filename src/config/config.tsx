@@ -58,12 +58,16 @@ export const API_ENDPOINTS = {
   GET_VERIFY_CODE: (phone: string) => `/admin/mobile/${phone}`,
   
   // 登录
-  LOGIN: (phone: string, code: string) => 
-    `/admin/oauth/token?mobile=SMS@${phone}&code=${code}&grant_type=mobile`,
+  // LOGIN: (phone: string, code: string) => 
+  //   `/admin/oauth/token?mobile=SMS@${phone}&code=${code}&grant_type=mobile`,
   
+  LOGIN: (user_id: string, tenant_id: string) => 
+    `/admin/oauth/token?mobile=OCL@${user_id}&id_token=AUTHMINIAPP@${tenant_id}&grant_type=mobile`,
   // 获取房间信息
   GET_SYSROOMSHARE: (co_creation_id: string) => `/admin/sysroomshare/${co_creation_id}`,
   
+  GET_MODEL_LIST: (user_id: string) => `/admin/model/list?user_id=${user_id}`,
+
   // 创建房间
   CREATE_ROOM: () => `/admin/room/create`,
   
@@ -86,7 +90,23 @@ export const API_ENDPOINTS = {
   CHECK_LOGIN: (access_token: string) => `/admin/oauth/check_token?token=${access_token}`,
   
   // 创建分享
-  CREATE_SYSROOMSHARE: () => `/admin/sysroomshare`
+  CREATE_SYSROOMSHARE: () => `/admin/sysroomshare`,
+
+
+  // 获取⽕⼭上传视频临时token
+  GET_UPLOAD_VEDIO_TOKEN: () => `/admin/sys-file/uploadSt`,
+
+  // 获取⽕⼭上传图片临时token
+  GET_UPLOAD_IMAGE_TOKEN: () => `/admin/sys-file/uploadVodSt`,
+
+  // 创建模型
+  CREATE_MODEL: () => `/admin/model/createOrUpdate`,
+
+  // 上传动作视频
+  UPLOAD_ACTION_VIDEO: () => `/admin/sysactions`,
+
+  // 获取⽤⼾的⽣成动作列表（也就是历史）
+  GET_ACTION_VIDEO_RESULT: (current: number, size: number) => `/admin/sysactions/pageByUser?current=${current}&size=${size}`,
 };
 
 // RTC配置

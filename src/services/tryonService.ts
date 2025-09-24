@@ -1,4 +1,4 @@
-import { authAPI, roomAPI } from './api';
+import { authAPI, roomAPI, modelAPI } from './api';
 import { scheduleService } from './scheduleService';
 import { webSocketService, WebSocketConfig } from './websocketService';
 import { RTCVideoService, RTCVideoConfig, rtcVideoService } from './rtcVideoService';
@@ -8,8 +8,9 @@ import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, u
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 
 export interface TryonConfig {
-  phone: string;
-  coCreationId: string;
+  // phone: string;
+  tenantId: string;
+  // coCreationId: string;
   userId: string;
   accessToken: string;
   rtcConfig?: RTCVideoConfig;
@@ -26,10 +27,17 @@ export class TryonService {
   private enterStageInfo: string | null = null;
   private rtcVideoService: RTCVideoService | null = null;
   private rtcStarted: boolean = false; // 防止重复启动RTC
+  private onCreateModelCallback: (() => void) | null = null; // 添加创建模型回调函数
+  private modelListChecked: boolean = false; // 添加模型列表校验标志
 
   constructor() {
     // 监听登台成功事件
     this.setupEventListeners();
+  }
+
+  // 设置创建模型回调函数
+  setOnCreateModelCallback(callback: () => void) {
+    this.onCreateModelCallback = callback;
   }
 
   // 设置事件监听器
@@ -98,8 +106,71 @@ export class TryonService {
     this.accessToken = config.accessToken;
     
     try {
-      console.log('🏠 开始初始化房间信息...');
+      console.log('校验模型列表...');
+      const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+      console.log('模型列表校验完成', response);
       
+      if (response.ok) {
+        console.log('模型列表校验完成', response.data);
+        
+        // 解析返回的数据
+        try {
+          const dataObj = JSON.parse(response.data);
+          // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+          if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+            if (this.onCreateModelCallback) {
+              this.onCreateModelCallback();
+            }
+            return;
+          }
+          
+          // 检查是否有 modelStatus=4 的模型
+          // const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+          // if (!hasValidModel) {
+          //   console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
+          //   if (this.onCreateModelCallback) {
+          //     this.onCreateModelCallback();
+          //   }
+          //   return;
+          // }
+          
+          // 检查最后一个元素的 modelStatus 是否为 4
+          const lastModel = dataObj.data[dataObj.data.length - 1];
+          if (!lastModel || lastModel.modelStatus !== 4) {
+            console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
+            if (this.onCreateModelCallback) {
+              this.onCreateModelCallback();
+            }
+            return;
+          }
+          
+          console.log('找到有效的模型（modelStatus=4），继续流程');
+          // 标记模型列表已校验
+          this.modelListChecked = true;
+        } catch (parseError) {
+          console.error('解析模型列表数据失败', parseError);
+          if (this.onCreateModelCallback) {
+            this.onCreateModelCallback();
+          }
+          return;
+        }
+      } else {
+        console.error('模型列表校验失败', response.data);
+        if (this.onCreateModelCallback) {
+          this.onCreateModelCallback();
+        }
+        return;
+      }
+      
+    } catch (error) {
+      console.error('模型列表校验失败', error);
+      if (this.onCreateModelCallback) {
+        this.onCreateModelCallback();
+      }
+      return;
+    }
+    
+    try {
       // 1. 获取房间信息（但不构建登台信息）
       console.log('步骤1: 获取房间信息');
       await this.getRoomInfoWithoutStageInfo();
@@ -188,6 +259,76 @@ export class TryonService {
     try {
       console.log('开始完整试穿流程...');
       
+      // 0. 校验模型列表（如果已经校验过则跳过）
+      if (!this.modelListChecked) {
+        console.log('校验模型列表...');
+        const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+        console.log('模型列表校验完成', response);
+        
+        if (response.ok) {
+          console.log('模型列表校验完成', response.data);
+          
+          // 解析返回的数据
+          try {
+            const dataObj = JSON.parse(response.data);
+            // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+            if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+              if (this.onCreateModelCallback) {
+                this.onCreateModelCallback();
+              }
+              return;
+            }
+            
+            // 检查是否有 modelStatus=4 的模型
+            // const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+            // if (!hasValidModel) {
+            //   console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
+            //   if (this.onCreateModelCallback) {
+            //     this.onCreateModelCallback();
+            //   }
+            //   return;
+            // }
+
+            const lastModel = dataObj.data[dataObj.data.length - 1];
+            if (!lastModel || lastModel.modelStatus !== 4) {
+              console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
+              if (this.onCreateModelCallback) {
+                this.onCreateModelCallback();
+              }
+              return;
+            }
+            
+            
+            console.log('找到有效的模型（modelStatus=4），继续流程');
+            // 标记模型列表已校验
+            this.modelListChecked = true;
+          } catch (parseError) {
+            console.error('解析模型列表数据失败', parseError);
+            if (this.onCreateModelCallback) {
+              this.onCreateModelCallback();
+            }
+            return;
+          }
+        } else {
+          console.error('模型列表校验失败', response.data);
+          if (this.onCreateModelCallback) {
+            this.onCreateModelCallback();
+          }
+          return;
+        }
+      } else {
+        console.log('模型列表已校验过，跳过重复校验');
+      }
+      
+    } catch (error) {
+      console.error('模型列表校验失败', error);
+      if (this.onCreateModelCallback) {
+        this.onCreateModelCallback();
+      }
+      return;
+    }
+    
+    try {
       // 1. 获取房间信息（但不构建登台信息）
       console.log('步骤1: 获取房间信息');
       await this.getRoomInfoWithoutStageInfo();
@@ -236,7 +377,7 @@ export class TryonService {
       throw new Error('未配置参数或未提供accessToken');
     }
 
-    const response = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
+    const response = await roomAPI.getSysRoomShare("1", this.accessToken);
     console.log('房间信息响应:', response);
     console.log('房间信息响应数据:', response.data);
 
@@ -290,7 +431,7 @@ export class TryonService {
     }
 
     // 重新获取房间信息用于构建登台信息
-    const response = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
+    const response = await roomAPI.getSysRoomShare("1", this.accessToken);
     if (!response.ok) {
       throw new Error(`获取房间信息失败: HTTP ${response.status}`);
     }
@@ -374,11 +515,11 @@ export class TryonService {
 
   // 创建房间
   private async createRoom(): Promise<number> {
-    if (!this.config || !this.accessToken || !this.roomId || this.config.coCreationId === '') {
+    if (!this.config || !this.accessToken || !this.roomId) {
       throw new Error('未配置参数、未登录或未获取房间信息');
     }
     
-    const response = await roomAPI.createRoom(this.roomId, this.config.coCreationId, this.accessToken);
+    const response = await roomAPI.createRoom(this.roomId, "1", this.accessToken);
     // console.log('创建房间响应:', response);
     // console.log('创建房间响应数据:', response.data);
     
@@ -774,10 +915,9 @@ export class TryonService {
     try {
       console.log('开始创建分享...');
       console.log('  - roomPrimaryId:', this.roomPrimaryId);
-      console.log('  - coCreationId:', this.config.coCreationId);
 
       // 1. 获取房间信息以获取必要的数据
-      const roomResponse = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
+      const roomResponse = await roomAPI.getSysRoomShare("1", this.accessToken);
       if (!roomResponse.ok || !roomResponse.data) {
         throw new Error('获取房间信息失败');
       }
@@ -869,6 +1009,7 @@ export class TryonService {
     this.enterStageInfo = null;
     this.clothesList = []; // 清理服饰列表
     this.scenesList = {}; // 清理场景列表
+    this.modelListChecked = false; // 重置模型列表校验标志
   }
 
   // 获取连接状态
