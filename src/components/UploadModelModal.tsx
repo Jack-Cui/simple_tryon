@@ -151,7 +151,7 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
       // 处理图片上传
       if (selectedImages.length > 0) {
         console.log('开始处理图片上传');
-        const tokenResponse = await uploadAPI.getUploadImageToken(loginCache.token);
+        const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
         
         if (tokenResponse.ok) {
           const tokenResult = JSON.parse(tokenResponse.data);
@@ -161,10 +161,10 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
             console.log('图片token数据结构:', tokenResult);
             
             const credentials: TosCredentials = {
-              accessKeyId: tokenResult.data.accessKeyId,
-              secretAccessKey: tokenResult.data.secretAccessKey,
-              sessionToken: tokenResult.data.sessionToken,
-              expiredTime: tokenResult.data.expiredTime
+              accessKeyId: tokenResult.data.result.credentials.accessKeyId,
+              secretAccessKey: tokenResult.data.result.credentials.secretAccessKey,
+              sessionToken: tokenResult.data.result.credentials.sessionToken,
+              expiredTime: tokenResult.data.result.credentials.expiredTime
             };
             
             console.log('构建的图片credentials:', credentials);
