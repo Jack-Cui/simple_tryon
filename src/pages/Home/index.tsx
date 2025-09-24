@@ -42,21 +42,21 @@ const Home = () => {
   const navigate = useNavigate();
   const locationState = location.state || {};
   const hasStartedTryon = useRef(false);
-  const [videoStreams, setVideoStreams] = useState<Array<{userId: string, domId: string}>>([]);
-  const [videoPlayingStatus, setVideoPlayingStatus] = useState<{[key: string]: boolean}>({});
+  const [videoStreams, setVideoStreams] = useState<Array<{ userId: string, domId: string }>>([]);
+  const [videoPlayingStatus, setVideoPlayingStatus] = useState<{ [key: string]: boolean }>({});
   const [showSelectionScreen, setShowSelectionScreen] = useState(true); // 新增状态控制显示选择界面
   const [roomName, setRoomName] = useState<string>('PADA2024秀款礼服系列'); // 添加房间名称状态，默认值为原来的文本
-  
+
   // 触摸事件相关状态
   const [isDragging, setIsDragging] = useState(false);
   const [lastTouchPos, setLastTouchPos] = useState<{ x: number, y: number } | null>(null);
   const [touchStartTime, setTouchStartTime] = useState<number>(0); // 触摸开始时间
   const [isProcessingClick, setIsProcessingClick] = useState(false); // 是否正在处理点击
-  
+
   // 缩放事件相关状态
   const [initialDistance, setInitialDistance] = useState<number | null>(null);
   const [lastScaleDistance, setLastScaleDistance] = useState<number | null>(null);
-  
+
   // 视频暂停状态
   const [isVideoPaused, setIsVideoPaused] = useState(false);
   const [clothesList, setClothesList] = useState<ClothesItem[]>([]); // 添加服饰列表状态
@@ -79,6 +79,9 @@ const Home = () => {
   const [selectedRealSceneIndex, setSelectedRealSceneIndex] = useState(0); // 当前选中的实景索引
   const [isHeatMapEnabled, setIsHeatMapEnabled] = useState(false); // 热力图开关状态
 
+  const [isMoveExpanded, setIsMoveExpanded] = useState(false); // 是否展开
+  const [selectedMoveIndex, setSelectedMoveIndex] = useState(NaN); // 当前选中的更多索引（0: 动作.png, 1: 芭蕾.png）
+
   // 新增状态：视频播放界面的图标控制
   const [showVideoIcons, setShowVideoIcons] = useState(true); // 视频播放时是否显示左右侧图标 - 常驻显示
   const [iconHideTimer, setIconHideTimer] = useState<NodeJS.Timeout | null>(null); // 图标自动隐藏定时器
@@ -88,13 +91,13 @@ const Home = () => {
   const [showShareTip, setShowShareTip] = useState(false); // 是否显示分享提示
   const [shareTipMessage, setShareTipMessage] = useState(''); // 分享提示消息
   const [shareTipType, setShareTipType] = useState(''); // 分享提示类型
-  
+
   // 分享弹窗状态
   const [showShareModal, setShowShareModal] = useState(false);
 
   // 新增状态：用户是否已离开过舞台
   const [hasLeftStage, setHasLeftStage] = useState(false);
-  
+
   // 余额弹窗状态
   const [showBalanceModal, setShowBalanceModal] = useState(false);
 
@@ -133,7 +136,7 @@ const Home = () => {
         }
       }
     }
-    
+
     // 如果找不到视频流，尝试从所有video元素中获取
     const allVideos = document.querySelectorAll('video');
     for (const video of allVideos) {
@@ -141,7 +144,7 @@ const Home = () => {
         return video;
       }
     }
-    
+
     // 尝试从所有canvas元素中获取
     const allCanvases = document.querySelectorAll('canvas');
     for (const canvas of allCanvases) {
@@ -149,7 +152,7 @@ const Home = () => {
         return canvas;
       }
     }
-    
+
     return null;
   };
 
@@ -158,12 +161,12 @@ const Home = () => {
   useEffect(() => {
     if (loginParams?.token) {
       let intervalId: NodeJS.Timeout;
-      
+
       const checkLoginStatus = async () => {
         try {
           const response = await authAPI.checkLogin(loginParams?.token);
           const parsed = authAPI.parseCheckLoginResponse(response);
-          
+
           if (parsed?.status === 424) {
             console.log('账号在其他地方登录');
             // 立即清理定时器，防止重复弹窗
@@ -182,10 +185,10 @@ const Home = () => {
       };
       // Initial check
       checkLoginStatus();
-      
+
       // Set up interval for periodic checks
       intervalId = setInterval(checkLoginStatus, 5000);
-      
+
       // Cleanup interval on unmount
       return () => {
         if (intervalId) {
@@ -193,15 +196,15 @@ const Home = () => {
         }
       };
     }
-    
-    
+
+
   }, [loginParams?.token]);
 
 
 
   // 服饰分类名称映射到图标
   const getClothesIcon = (classifyName: string) => {
-    const iconMap: {[key: string]: string} = {
+    const iconMap: { [key: string]: string } = {
       '套装': suitIcon,
       '裙子': skirtIcon,
       '帽子': hatIcon,
@@ -217,7 +220,7 @@ const Home = () => {
 
   // 获取分类ID
   const getClassifyId = (classifyName: string): number => {
-    const classifyIdMap: {[key: string]: number} = {
+    const classifyIdMap: { [key: string]: number } = {
       '上衣': 1,
       '下装': 2,
       '外套': 3,
@@ -260,9 +263,9 @@ const Home = () => {
 
       // 发送更换服装消息
       rtcVideoService.sendChangeGarment(garment1Id, garment2Id, garment3Id, garment1Size, garment2Size, garment3Size);
-      
+
       console.log('✅ 更换服装RTC消息发送成功');
-      
+
     } catch (error) {
       console.error('❌ 发送更换服装RTC消息失败:', error);
     }
@@ -272,7 +275,7 @@ const Home = () => {
   const handleClothesManagement = async (clothesItem: any) => {
     const classifyId = selectedClassifyId || getClassifyId(clothesItem.classifyName);
     const clothesId = clothesItem.clothesId;
-    
+
     console.log('👕 开始处理衣服管理逻辑:', {
       classifyId: classifyId,
       clothesId: clothesId,
@@ -286,11 +289,11 @@ const Home = () => {
     if (classifyId === 4) {
       // 套装
       newMClothesSuit = true;
-      
+
       // 处理套装逻辑
       const suitIds = clothesItem.suitIds || '';
       const arr = suitIds.split(',');
-      
+
       if (suitIds === '' || arr.length === 0) {
         const item = {
           classifyId: classifyId,
@@ -308,27 +311,27 @@ const Home = () => {
           newClothesItemInfoList.push(item);
         }
       }
-      
+
       console.log('👕 套装处理完成:', newClothesItemInfoList);
-      
+
     } else {
       // 非套装
       if (mClothesSuit) {
         // 之前是套装
         newMClothesSuit = false;
-        
+
         const item = {
           classifyId: classifyId,
           clothesId: clothesId
         };
         newClothesItemInfoList.push(item);
-        
+
         console.log('👕 从套装切换到非套装:', newClothesItemInfoList);
-        
+
       } else {
         // 之前不是套装
         newClothesItemInfoList = [...mClothesItemInfoList];
-        
+
         // 1. 删除存储的同类型衣服
         for (let i = newClothesItemInfoList.length - 1; i >= 0; --i) {
           const item = newClothesItemInfoList[i];
@@ -377,15 +380,15 @@ const Home = () => {
           clothesId: clothesId
         };
         newClothesItemInfoList.push(cii);
-        
+
         console.log('👕 非套装处理完成:', newClothesItemInfoList);
       }
     }
-    
+
     // 更新状态
     setMClothesSuit(newMClothesSuit);
     setMClothesItemInfoList(newClothesItemInfoList);
-    
+
     // 发送RTC请求，直接传递最新的数据
     await sendChangeGarmentRequest(newClothesItemInfoList, newMClothesSuit);
   };
@@ -399,8 +402,17 @@ const Home = () => {
   // 默认动作图标（未展开时显示）
   const defaultActionIcon = { icon: actionIcon, name: '动作' };
 
+  // 动作图标数组
+  const moveIcons = [
+    { icon: actionIcon, name: '去建模' },
+    { icon: balletIcon, name: '上传动作视频' }
+  ];
+
+  // 默认动作图标（未展开时显示）
+  const defaultMoveIcon = { icon: actionIcon, name: '更多' };
+
   // 实景图标数组，对应不同的地图 - 动态从服务器获取
-  const [realSceneIcons, setRealSceneIcons] = useState<Array<{icon: string, name: string, mapName: string}>>([
+  const [realSceneIcons, setRealSceneIcons] = useState<Array<{ icon: string, name: string, mapName: string }>>([
   ]);
 
   // 衣服管理相关状态
@@ -425,12 +437,12 @@ const Home = () => {
 
   // 处理热力图图标点击
   const handleHeatMapClick = async () => {
-    console.log('🔥 热力图图标被点击，当前状态:', isHeatMapEnabled);
-    
+    console.log('🔥 111热力图图标被点击，当前状态:', isHeatMapEnabled);
+
     // 切换热力图开关状态
     const newHeatMapState = !isHeatMapEnabled;
     setIsHeatMapEnabled(newHeatMapState);
-    
+
     // 检查RTC连接状态
     if (!rtcVideoService.getConnectionStatus()) {
       console.error('❌ RTC未连接，无法发送热力图请求');
@@ -443,13 +455,13 @@ const Home = () => {
       console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
       return;
     }
-    
+
     // 检查是否在视频播放状态（已登台）
     if (showSelectionScreen) {
       console.error('❌ 未在视频播放状态，无法发送热力图请求');
       return;
     }
-    
+
     // 发送热力图RTC消息
     try {
       console.log('🚀 开始发送热力图RTC消息...', newHeatMapState);
@@ -473,13 +485,13 @@ const Home = () => {
       // 点击具体的实景，更新选中状态和主图标，然后自动收起
       setSelectedRealSceneIndex(index);
       setIsRealSceneExpanded(false); // 自动收起
-      
+
       const selectedScene = realSceneIcons[index];
       console.log('选中实景:', selectedScene.name, '地图名称:', selectedScene.mapName);
-      
+
       // 切换场景音乐
       switchSceneMusic(selectedScene.name);
-      
+
       // 检查RTC连接状态
       if (!rtcVideoService.getConnectionStatus()) {
         console.error('❌ RTC未连接，无法切换地图');
@@ -492,13 +504,13 @@ const Home = () => {
         console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
         return;
       }
-      
+
       // 检查是否在视频播放状态（已登台）
       if (showSelectionScreen) {
         console.error('❌ 未在视频播放状态，无法切换地图');
         return;
       }
-      
+
       // 发送切换地图的RTC消息
       try {
         console.log('🚀 开始发送切换地图RTC消息...');
@@ -546,10 +558,10 @@ const Home = () => {
   // 获取第一个分类的第一个服装（用于顶部显示）
   const getFirstClothesOfFirstCategory = (): any | null => {
     if (clothesList.length === 0) return null;
-    
+
     const firstCategory = getUniqueCategories()[0];
     if (!firstCategory) return null;
-    
+
     const firstCategoryClothes = getClothesForCategory(firstCategory);
     return firstCategoryClothes.length > 0 ? firstCategoryClothes[0] : null;
   };
@@ -561,7 +573,7 @@ const Home = () => {
     console.log('🔍 isBrowsingClothes:', isBrowsingClothes);
     console.log('🔍 selectedCategory:', selectedCategory);
     console.log('🔍 selectedClothesIndex:', selectedClothesIndex);
-    
+
     // 优先显示从房间信息获取的衣服
     if (lastSelectedClothes) {
       console.log('✅ 返回从房间信息获取的衣服:', lastSelectedClothes);
@@ -575,7 +587,7 @@ const Home = () => {
       console.log('✅ 标准化后的衣服对象:', normalizedClothes);
       return normalizedClothes;
     }
-    
+
     // 如果正在浏览某个分类，显示选中的服装
     if (isBrowsingClothes && selectedCategory) {
       const categoryClothes = getClothesForCategory(selectedCategory);
@@ -583,7 +595,7 @@ const Home = () => {
       console.log('✅ 返回分类中选中的衣服:', result);
       return result;
     }
-    
+
     // 否则显示第一个分类的第一个服装
     const result = getFirstClothesOfFirstCategory();
     console.log('✅ 返回第一个分类的第一个衣服:', result);
@@ -605,11 +617,11 @@ const Home = () => {
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
     setIsBrowsingClothes(true);
-    
+
     // 设置当前选中的分类ID
     const classifyId = getClassifyId(category);
     setSelectedClassifyId(classifyId);
-    
+
     // 调试：打印分类下的服装数量
     const categoryClothes = getClothesForCategory(category);
     console.log(`分类 "${category}" 下的服装数量:`, categoryClothes.length);
@@ -627,10 +639,10 @@ const Home = () => {
   const handleClothesClick = async (clothesItem: any, index: number) => {
     // 更新顶部显示的服装 - 使用在当前分类下的相对索引
     setSelectedClothesIndex(index);
-    
+
     // 更新右侧顶部图片显示的衣服
     setLastSelectedClothes(clothesItem);
-    
+
     // 打印详细的衣服信息日志
     console.log('👕 选中服装详细信息:', {
       服装名称: clothesItem.clothesName || '未知',
@@ -640,10 +652,10 @@ const Home = () => {
       分类内索引: index,
       完整对象: clothesItem
     });
-    
+
     console.log('选中服装:', clothesItem, '分类内索引:', index);
     console.log('选中服装图片URL:', clothesItem.clothesImageUrl);
-    
+
     // 处理衣服管理逻辑
     await handleClothesManagement(clothesItem);
   };
@@ -654,13 +666,13 @@ const Home = () => {
     if (iconHideTimer) {
       clearTimeout(iconHideTimer);
     }
-    
+
     // 设置新的定时器，3秒后隐藏图标
     const timer = setTimeout(() => {
       setShowVideoIcons(false);
       setIconHideTimer(null);
     }, 3000);
-    
+
     setIconHideTimer(timer);
   };
 
@@ -668,12 +680,12 @@ const Home = () => {
   const handleVideoAreaClick = () => {
     console.log('🎬 视频区域被点击');
     console.log('🎬 当前视频暂停状态:', isVideoPaused);
-    
+
     // 直接切换暂停状态，不检查RTC连接
     const newPausedState = !isVideoPaused;
     setIsVideoPaused(newPausedState);
     console.log('⏸️ 切换视频暂停状态:', newPausedState);
-    
+
     // 直接控制视频元素暂停/播放
     const videoElement = getCurrentVideoElement();
     if (videoElement && videoElement.tagName === 'VIDEO') {
@@ -690,7 +702,7 @@ const Home = () => {
     } else {
       console.log('⚠️ 未找到可控制的视频元素，元素类型:', videoElement?.tagName);
     }
-    
+
     // 尝试发送RTC消息（不阻塞UI）
     try {
       if (rtcVideoService.getConnectionStatus()) {
@@ -709,6 +721,26 @@ const Home = () => {
     }
   };
 
+  // 处理视频播放界面的更多点击
+  const handleVideoMoveClick = (index?: number) => {
+    if (index === undefined) {
+      // 点击主动作图标，切换展开/收起状态
+      setIsMoveExpanded(!isMoveExpanded);
+      // 收起实景展开状态
+      setIsRealSceneExpanded(false);
+    } else {
+      // 点击具体的动作，更新选中状态和主图标，然后自动收起
+      setSelectedMoveIndex(index);
+      setIsMoveExpanded(false); // 自动收起
+
+      console.log('选中更多， 跳转:', moveIcons[index].name);
+      navigate('/upload');
+    }
+
+    // 移除隐藏定时器，让icon常驻显示
+    // startIconHideTimer();
+  };
+
   // 处理视频播放界面的动作点击
   const handleVideoActionClick = (index?: number) => {
     if (index === undefined) {
@@ -722,7 +754,7 @@ const Home = () => {
       setIsActionExpanded(false); // 自动收起
       console.log('选中动作:', actionIcons[index].name);
     }
-    
+
     // 移除隐藏定时器，让icon常驻显示
     // startIconHideTimer();
   };
@@ -738,13 +770,13 @@ const Home = () => {
       // 点击具体的实景，更新选中状态和主图标，然后自动收起
       setSelectedRealSceneIndex(index);
       setIsRealSceneExpanded(false); // 自动收起
-      
+
       const selectedScene = realSceneIcons[index];
       console.log('选中实景:', selectedScene.name, '地图名称:', selectedScene.mapName);
-      
+
       // 切换场景音乐
       switchSceneMusic(selectedScene.name);
-      
+
       // 检查RTC连接状态
       if (!rtcVideoService.getConnectionStatus()) {
         console.error('❌ RTC未连接，无法切换地图');
@@ -757,7 +789,7 @@ const Home = () => {
         console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
         return;
       }
-      
+
       // 发送切换地图的RTC消息
       try {
         console.log('🚀 开始发送切换地图RTC消息...');
@@ -769,7 +801,7 @@ const Home = () => {
         alert(`切换地图失败: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
-    
+
     // 移除隐藏定时器，让icon常驻显示
     // startIconHideTimer();
   };
@@ -778,14 +810,14 @@ const Home = () => {
   const handleVideoCategoryClick = (category: string) => {
     setSelectedCategory(category);
     setIsBrowsingClothes(true);
-    
+
     // 设置当前选中的分类ID
     const classifyId = getClassifyId(category);
     setSelectedClassifyId(classifyId);
-    
+
     // 移除隐藏定时器，让icon常驻显示
     // startIconHideTimer();
-    
+
     // 调试：打印分类下的服装数量
     const categoryClothes = getClothesForCategory(category);
     console.log(`分类 "${category}" 下的服装数量:`, categoryClothes.length);
@@ -797,7 +829,7 @@ const Home = () => {
     setIsBrowsingClothes(false);
     setSelectedCategory(null);
     setSelectedClothesIndex(0); // 重置到第一个服装
-    
+
     // 移除隐藏定时器，让icon常驻显示
     // startIconHideTimer();
   };
@@ -806,10 +838,10 @@ const Home = () => {
   const handleVideoClothesClick = async (clothesItem: any, index: number) => {
     // 更新顶部显示的服装 - 使用在当前分类下的相对索引
     setSelectedClothesIndex(index);
-    
+
     // 更新右侧顶部图片显示的衣服
     setLastSelectedClothes(clothesItem);
-    
+
     // 打印详细的衣服信息日志
     console.log('🎬 视频界面选中服装详细信息:', {
       服装名称: clothesItem.clothesName || '未知',
@@ -819,13 +851,13 @@ const Home = () => {
       分类内索引: index,
       完整对象: clothesItem
     });
-    
+
     console.log('选中服装:', clothesItem, '分类内索引:', index);
     console.log('选中服装图片URL:', clothesItem.clothesImageUrl);
-    
+
     // 处理衣服管理逻辑
     await handleClothesManagement(clothesItem);
-    
+
     // 移除隐藏定时器，让icon常驻显示
     // startIconHideTimer();
   };
@@ -833,12 +865,12 @@ const Home = () => {
   // 处理触摸开始事件
   const handleTouchStart = (event: React.TouchEvent | React.MouseEvent) => {
     console.log('👆 handleTouchStart 被调用');
-    
+
     const pos = getEventPosition(event);
     setLastTouchPos(pos);
     setIsDragging(false);
     setTouchStartTime(Date.now()); // 记录触摸开始时间
-    
+
     // 检测多点触摸（缩放手势）
     if ('touches' in event && event.touches.length === 2) {
       // 双指触摸时阻止默认行为
@@ -847,8 +879,8 @@ const Home = () => {
       const distance = getDistance(positions[0], positions[1]);
       setInitialDistance(distance);
       setLastScaleDistance(distance);
-      console.log('🔍 缩放开始:', { 
-        distance: distance.toFixed(2), 
+      console.log('🔍 缩放开始:', {
+        distance: distance.toFixed(2),
         positions: positions.map(p => ({ x: p.x.toFixed(0), y: p.y.toFixed(0) })),
         touchCount: event.touches.length
       });
@@ -857,7 +889,7 @@ const Home = () => {
       setLastScaleDistance(null);
       console.log('👆 单点触摸开始，触摸点数量:', 'touches' in event ? event.touches.length : 0);
     }
-    
+
     console.log('👆 触摸开始:', pos);
   };
 
@@ -879,7 +911,7 @@ const Home = () => {
             { x: scaleDelta * scaleFactor, y: 0, z: 0 },
             Date.now()
           );
-        } catch {}
+        } catch { }
         setLastScaleDistance(currentDistance);
       }
       return; // 只要是双指缩放，后面单指逻辑都不走
@@ -903,7 +935,7 @@ const Home = () => {
           Date.now()
         );
         if (!isVideoPaused) setIsVideoPaused(true);
-      } catch {}
+      } catch { }
     }
   };
 
@@ -985,7 +1017,7 @@ const Home = () => {
     console.log('  - 浏览器用户代理:', navigator.userAgent);
     console.log('  - 是否支持触摸事件:', 'ontouchstart' in window);
     console.log('  - 是否支持多点触摸:', 'ontouchstart' in window && 'touches' in TouchEvent.prototype);
-    
+
     // 检查触摸事件处理器
     const videoContainer = document.querySelector('[style*="touchAction: none"]');
     if (videoContainer) {
@@ -994,7 +1026,7 @@ const Home = () => {
     } else {
       console.log('  - 未找到视频容器元素');
     }
-    
+
     // 测试触摸事件
     try {
       const testEvent = new TouchEvent('touchstart', {
@@ -1007,7 +1039,7 @@ const Home = () => {
     } catch (error) {
       console.log('  - 测试双指触摸事件创建失败:', error);
     }
-    
+
     // 检查是否有其他元素阻止了触摸事件
     const allElements = document.querySelectorAll('*');
     const elementsWithTouchAction = Array.from(allElements).filter(el => {
@@ -1024,15 +1056,15 @@ const Home = () => {
   const handleShareClick = async () => {
     try {
       console.log('📤 点击分享按钮，开始创建分享...');
-      
+
       // 调用创建分享接口
       const shareResult = await tryonService.createShare();
-      
+
       console.log('✅ 创建分享成功:', shareResult);
-      
+
       // 显示分享弹窗
       setShowShareModal(true);
-      
+
     } catch (error) {
       console.error('❌ 创建分享失败:', error);
       // 即使创建分享失败，也显示分享弹窗
@@ -1049,18 +1081,18 @@ const Home = () => {
   const handleShareToFriend = async () => {
     try {
       console.log('📤 分享给好友...');
-      
+
       // 检测是否在微信浏览器中
       const isWechatBrowser = /MicroMessenger/i.test(navigator.userAgent);
-      
+
       if (isWechatBrowser) {
         // 微信浏览器：使用微信选择好友发送功能
         console.log('📱 检测到微信浏览器，使用微信选择好友发送');
-        
+
         // 检查微信分享服务是否已初始化
         if (!wechatShareService.isInitialized()) {
           console.log('🔧 初始化微信分享服务...');
-          
+
           // 初始化微信分享服务
           await wechatShareService.initialize({
             appId: WECHAT_CONFIG.APP_ID,
@@ -1070,7 +1102,7 @@ const Home = () => {
             imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
           });
         }
-        
+
         // 执行微信选择好友发送
         try {
           await wechatShareService.chooseAndShareToFriend({
@@ -1079,25 +1111,25 @@ const Home = () => {
             link: WECHAT_CONFIG.DEFAULT_SHARE.link,
             imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
           });
-          
+
           console.log('✅ 微信选择好友发送完成');
           setShowShareModal(false);
         } catch (error) {
           console.warn('⚠️ 微信选择好友发送失败，显示手动分享提示:', error);
           // 不抛出错误，让微信分享服务显示友好的提示
         }
-        
+
       } else {
         // 手机浏览器：复制链接并提示
         console.log('🌐 检测到手机浏览器，复制分享链接');
-        
+
         const shareData = {
           title: 'airU-3D试衣间',
           desc: '快来和我一起共创动画',
           link: window.location.href.split('#')[0],
           imgUrl: 'https://dev-h5.ai1010.cn/logo192.png'
         };
-        
+
         try {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             await navigator.clipboard.writeText(shareData.link);
@@ -1116,14 +1148,14 @@ const Home = () => {
             document.body.removeChild(textArea);
             console.log('✅ 分享链接已复制到剪贴板（降级方案）');
           }
-          
+
           // 显示成功提示
           setShareTipMessage('分享链接已复制到剪贴板！');
           setShareTipType('success');
           setShowShareTip(true);
           setTimeout(() => setShowShareTip(false), 3000);
           setShowShareModal(false);
-          
+
         } catch (copyError) {
           console.error('❌ 复制分享链接失败:', copyError);
           setShareTipMessage('复制失败，请手动复制链接');
@@ -1132,7 +1164,7 @@ const Home = () => {
           setTimeout(() => setShowShareTip(false), 3000);
         }
       }
-      
+
     } catch (error) {
       console.error('❌ 分享给好友失败:', error);
       setShareTipMessage(`分享失败: ${error instanceof Error ? error.message : String(error)}`);
@@ -1148,15 +1180,15 @@ const Home = () => {
     const handleWechatShareReady = (event: CustomEvent) => {
       console.log('📤 微信分享准备就绪:', event.detail);
       setIsWechatShareReady(true);
-      
+
       // 根据不同类型显示不同的提示信息
       const { message, type } = event.detail;
       console.log('📤 分享提示类型:', type, '消息:', message);
-      
+
       setShareTipMessage(message || '请在微信中点击右上角菜单进行分享');
       setShareTipType(type || 'wechat');
       setShowShareTip(true);
-      
+
       // 3秒后自动隐藏提示
       setTimeout(() => {
         setShowShareTip(false);
@@ -1175,7 +1207,7 @@ const Home = () => {
     const handleUpdateTopRightClothesImage = (event: CustomEvent) => {
       console.log('🖼️ 收到更新右侧顶部图片事件:', event.detail);
       const { clothesData } = event.detail;
-      
+
       if (clothesData) {
         // 更新右侧顶部图片显示的衣服
         setLastSelectedClothes(clothesData);
@@ -1199,12 +1231,12 @@ const Home = () => {
 
   // 初始化登录参数
   const loginParamsInitializedRef = useRef(false);
-  
+
   useEffect(() => {
     console.log('🏠 Home组件初始化，检查登录参数...');
     if (loginParamsInitializedRef.current) return;
     loginParamsInitializedRef.current = true;
-    
+
     // 首先尝试从路由state获取参数
     if (locationState.token && locationState.userId && locationState.phone && locationState.coCreationId) {
       console.log('✅ 从路由state获取登录参数, coCreationId:', locationState.coCreationId);
@@ -1215,13 +1247,13 @@ const Home = () => {
         // coCreationId: locationState.coCreationId
         tenantId: locationState.tenantId
       });
-      
+
       // 如果路由state中有房间名称，也设置到状态中
       if (locationState.roomName) {
         setRoomName(locationState.roomName);
         console.log('✅ 从路由state获取到房间名称:', locationState.roomName);
       }
-      
+
       // 即使从路由state获取登录参数，也要检查缓存中的服饰列表
       const cachedLoginData = getLoginCache();
       if (cachedLoginData && cachedLoginData.clothesList && cachedLoginData.clothesList.length > 0) {
@@ -1234,11 +1266,11 @@ const Home = () => {
     // 如果路由state没有参数，优先从URL获取coCreationId
     const urlCoCreationId = getCoCreationIdWithUrlPriority();
     console.log('🔍 URL中的coCreationId:', urlCoCreationId);
-    
+
     // 尝试从缓存获取
     const cachedLoginData = getLoginCache();
     console.log('🔍 缓存中的登录数据:', cachedLoginData);
-    
+
     if (cachedLoginData) {
       // 优先使用URL参数，如果没有URL参数则使用缓存
       // const finalCoCreationId = isValidCoCreationId(urlCoCreationId) ? urlCoCreationId! : cachedLoginData.coCreationId;
@@ -1246,7 +1278,7 @@ const Home = () => {
       if (isValidCoCreationId(urlCoCreationId)) {
         console.log('✅ 从URL获取到coCreationId:', urlCoCreationId);
       }
-      
+
       setLoginParams({
         token: cachedLoginData.token,
         userId: cachedLoginData.userId,
@@ -1254,17 +1286,17 @@ const Home = () => {
         // coCreationId: finalCoCreationId,
         tenantId: cachedLoginData.tenantId
       });
-      
+
       // 如果缓存中有房间名称，也设置到状态中
       if (cachedLoginData.roomName) {
         setRoomName(cachedLoginData.roomName);
       }
-      
+
       // 如果缓存中有服饰列表，也设置到状态中
       if (cachedLoginData.clothesList && cachedLoginData.clothesList.length > 0) {
         setClothesList(cachedLoginData.clothesList);
       }
-      
+
       // 如果缓存中有默认场景名称，设置到状态中
       if (cachedLoginData.defaultSceneName) {
         setCurrentSceneName(cachedLoginData.defaultSceneName);
@@ -1280,7 +1312,7 @@ const Home = () => {
         navigate('/login?redirect=' + encodeURIComponent(location.pathname));
         return;
       }
-      
+
       console.log('❌ 缓存中没有有效的登录参数，且URL中也没有coCreationId，跳转到登录页面');
       clearLoginCache();
       navigate('/login?redirect=' + encodeURIComponent(location.pathname));
@@ -1289,20 +1321,20 @@ const Home = () => {
 
   // 初始化房间名称和服饰列表
   const tryonInitializedRef = useRef(false);
-  
+
   useEffect(() => {
     console.log('🔍 第二个useEffect被触发');
     console.log('🔍 loginParams:', loginParams);
     console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);
-    
+
     if (!loginParams || tryonInitializedRef.current) {
       console.log('🔍 条件不满足，退出useEffect');
       return;
     }
-    
+
     console.log('🔍 设置tryonInitializedRef.current = true');
     tryonInitializedRef.current = true;
-    
+
     // 如果当前房间名称还是默认值，尝试从 tryonService 获取
     if (roomName === 'PADA2024秀款礼服系列') {
       const roomNameFromService = tryonService.getRoomName();
@@ -1332,7 +1364,7 @@ const Home = () => {
     // 预加载衣服详情到缓存
     if (loginParams?.token) {
       console.log('🔄 开始预加载衣服详情到缓存');
-      
+
       // 异步预加载，不阻塞UI
       // import('../../services/api').then(({ roomAPI }) => {
       //   roomAPI.preloadClothesDetails(loginParams.coCreationId, loginParams.token);
@@ -1345,7 +1377,7 @@ const Home = () => {
     if (realSceneIcons.length === 0) { // 如果场景列表为空
       const scenesListFromService = tryonService.getScenesList();
       console.log('🔍 尝试从 tryonService 获取场景列表:', scenesListFromService);
-      
+
       if (scenesListFromService && Object.keys(scenesListFromService).length > 0) {
         // 将服务器返回的场景数据转换为UI需要的格式
         // const newRealSceneIcons = Object.entries(scenesListFromService).map(([id, scene]: [string, any], index) => {
@@ -1357,7 +1389,7 @@ const Home = () => {
         //   console.log(`场景 ${index}:`, iconData);
         //   return iconData;
         // });
-        
+
         // console.log('✅ 从 tryonService 获取到场景列表');
         // console.log('场景数量:', Object.keys(scenesListFromService).length);
         // console.log('转换后的场景列表:', newRealSceneIcons);
@@ -1375,12 +1407,12 @@ const Home = () => {
       console.log('🔍 autoStartTryon 被调用，hasLeftStage:', hasLeftStage);
       console.log('🔍 loginParams:', loginParams);
       console.log('🔍 RTC连接状态:', rtcVideoService.getConnectionStatus());
-      
+
       // 延迟一点时间确保页面完全加载
       setTimeout(async () => {
         console.log('🔍 延迟后检查，hasLeftStage:', hasLeftStage);
         console.log('🔍 延迟后RTC连接状态:', rtcVideoService.getConnectionStatus());
-        
+
         // 强制检查：如果URL参数变化了，重置hasLeftStage状态
         const urlCoCreationId = getCoCreationIdWithUrlPriority();
         // if (isValidCoCreationId(urlCoCreationId) && urlCoCreationId !== loginParams?.coCreationId) {
@@ -1393,7 +1425,7 @@ const Home = () => {
           await handleStartTryon();
         } else {
           console.log('⚠️ 用户已离开过舞台，跳过自动登台');
-          
+
           // 即使离开过舞台，也要检查RTC连接状态
           if (!rtcVideoService.getConnectionStatus()) {
             console.log('🔄 检测到RTC未连接，尝试重新连接...');
@@ -1411,7 +1443,7 @@ const Home = () => {
   // 检查视频是否真正开始播放的函数
   const checkVideoPlayingStatus = (userId: string, domId: string, retryCount: number = 0) => {
     console.log(`🔍 checkVideoPlayingStatus: ${userId} -> ${domId}, 重试次数: ${retryCount}`);
-    
+
     const videoElement = document.getElementById(domId);
     if (videoElement) {
       // 尝试多种方式查找video标签
@@ -1424,15 +1456,15 @@ const Home = () => {
           videoTag = canvas as any; // 临时处理
         }
       }
-      
+
       if (videoTag) {
         console.log(`✅ 找到视频元素: ${domId}, 标签名: ${videoTag.tagName}`);
-        
+
         // 设置视频样式以适应容器
         videoTag.style.width = '100%';
         videoTag.style.height = '100%';
         videoTag.style.objectFit = 'cover';
-        
+
         const checkPlaying = () => {
           // 对于canvas，我们假设它总是"播放"的
           if (videoTag && (videoTag.tagName === 'CANVAS' || (!videoTag.paused && !videoTag.ended && videoTag.readyState > 2))) {
@@ -1449,13 +1481,13 @@ const Home = () => {
             return false; // 表示需要继续检查
           }
         };
-        
+
         // 监听视频事件（仅对video标签）
         if (videoTag && videoTag.tagName === 'VIDEO') {
           // 检查是否已经添加过事件监听器，避免重复添加
           if (!videoTag.hasAttribute('data-events-added')) {
             videoTag.setAttribute('data-events-added', 'true');
-            
+
             videoTag.addEventListener('playing', () => {
               console.log(`✅ 视频 ${userId} 播放事件触发`);
               setVideoPlayingStatus(prev => ({
@@ -1465,22 +1497,22 @@ const Home = () => {
               // 设置全局视频播放状态为true
               setIsVideoPlaying(true);
             });
-            
+
             videoTag.addEventListener('pause', () => {
               console.log(`⏸️ 视频 ${userId} 暂停事件触发`);
               setIsVideoPlaying(false);
             });
-            
+
             videoTag.addEventListener('ended', () => {
               console.log(`🔚 视频 ${userId} 结束事件触发`);
               setIsVideoPlaying(false);
             });
-            
+
             videoTag.addEventListener('loadeddata', () => {
               console.log(`✅ 视频 ${userId} 数据加载完成`);
               checkPlaying();
             });
-            
+
             videoTag.addEventListener('canplay', () => {
               console.log(`✅ 视频 ${userId} 可以播放`);
               setVideoPlayingStatus(prev => ({
@@ -1491,10 +1523,10 @@ const Home = () => {
             });
           }
         }
-        
+
         // 立即检查一次
         const isPlaying = checkPlaying();
-        
+
         // 如果视频还没开始播放且重试次数少于10次，继续检查
         if (!isPlaying && retryCount < 10) {
           setTimeout(() => checkVideoPlayingStatus(userId, domId, retryCount + 1), 1000);
@@ -1530,7 +1562,7 @@ const Home = () => {
           console.log('✅ 用户1加入房间');
         }
       },
-      
+
       onUserLeave: (userId: string) => {
         console.log('👤 用户离开RTC房间:', userId);
         setVideoStreams(prev => prev.filter(stream => stream.userId !== userId));
@@ -1539,13 +1571,13 @@ const Home = () => {
           delete newStatus[userId];
           return newStatus;
         });
-        
+
         // 如果没有其他用户，停止视频播放状态
         if (videoStreams.length <= 1) {
           setIsVideoPlaying(false);
         }
       },
-      
+
       onUserPublishStream: (userId: string, hasVideo: boolean, hasAudio: boolean) => {
         console.log('📹 用户发布流:', userId, { hasVideo, hasAudio });
         // 过滤掉userid=0的流
@@ -1556,7 +1588,7 @@ const Home = () => {
         }
         // 这个事件由tryonService处理，不需要在这里重复处理
       },
-      
+
       onUserUnpublishStream: (userId: string) => {
         console.log('📹 用户取消发布流:', userId);
         setVideoStreams(prev => prev.filter(stream => stream.userId !== userId));
@@ -1565,13 +1597,13 @@ const Home = () => {
           delete newStatus[userId];
           return newStatus;
         });
-        
+
         // 如果没有其他用户，停止视频播放状态
         if (videoStreams.length <= 1) {
           setIsVideoPlaying(false);
         }
       },
-      
+
       onError: (error: any) => {
         console.error('❌ RTC错误:', error);
       }
@@ -1581,11 +1613,11 @@ const Home = () => {
   // 设置余额扣费事件监听器（独立useEffect）
   useEffect(() => {
     console.log('🔧 设置余额扣费事件监听器');
-    
+
     const handleBalanceDeduction = (event: Event) => {
       const customEvent = event as CustomEvent;
       console.log('💰 收到余额扣费事件:', customEvent.detail);
-      
+
       // 异步执行余额扣费，不阻塞事件处理
       (async () => {
         try {
@@ -1607,7 +1639,7 @@ const Home = () => {
             loginParams?.token || '',
             loginParams?.userId || '' // 用户ID
           );
-          
+
           if (response.ok) {
             console.log('✅ 余额扣费请求成功:', response.data);
             // 解析返回的余额数据
@@ -1676,11 +1708,11 @@ const Home = () => {
       if (deductionTimerRef.current) {
         clearInterval(deductionTimerRef.current);
       }
-      
+
       deductionTimerRef.current = setInterval(async () => {
         if (isVideoPlaying && loginParams?.token && loginParams?.userId) {
           console.log('⏰ 执行定时扣费，视频播放时间:', videoPlayTime, '秒');
-          
+
           try {
             // 构建扣费数据
             const balanceRaw = {
@@ -1700,7 +1732,7 @@ const Home = () => {
               loginParams.token,
               loginParams.userId
             );
-            
+
             if (response.ok) {
               console.log('✅ 定时扣费请求成功:', response.data);
               // 解析返回的余额数据
@@ -1735,7 +1767,7 @@ const Home = () => {
       if (playTimeTimerRef.current) {
         clearInterval(playTimeTimerRef.current);
       }
-      
+
       playTimeTimerRef.current = setInterval(() => {
         if (isVideoPlaying) {
           setVideoPlayTime(prev => prev + 1);
@@ -1795,7 +1827,7 @@ const Home = () => {
     try {
       hasStartedTryon.current = true;
       setShowSelectionScreen(false); // 隐藏选择界面，显示视频播放界面
-      
+
       // 获取房间信息以获取userId
       console.log('🔍 开始获取房间信息...');
       const { roomAPI } = await import('../../services/api');
@@ -1810,7 +1842,7 @@ const Home = () => {
           roomId: loginParams.tenantId,
           userId: loginParams.userId
         };
-        
+
         const config = {
           // phone: loginParams.phone,
           tenantId: loginParams.tenantId,
@@ -1819,13 +1851,13 @@ const Home = () => {
           accessToken: loginParams.token,
           rtcConfig,
         };
-        
+
         console.log('开始自动试穿流程，配置:', config);
         await tryonService.startTryonFlow(config);
         console.log('✅ 试穿流程启动成功');
         return;
       }
-      
+
       const roomInfo = roomAPI.parseRoomInfoResponse(roomResponse);
       if (!roomInfo || !roomInfo.data) {
         console.warn('⚠️ 解析房间信息失败，使用默认userId');
@@ -1835,7 +1867,7 @@ const Home = () => {
           roomId: loginParams.tenantId.toString(),
           userId: loginParams.userId
         };
-        
+
         const config = {
           // phone: loginParams.phone,
           tenantId: loginParams.tenantId,
@@ -1844,41 +1876,41 @@ const Home = () => {
           accessToken: loginParams.token,
           rtcConfig,
         };
-        
+
         console.log('开始自动试穿流程，配置:', config);
         await tryonService.startTryonFlow(config);
         console.log('✅ 试穿流程启动成功');
         return;
       }
-      
+
       console.log('✅ 房间信息获取成功:', roomInfo);
       console.log('🔍 房间信息中的userId:', roomInfo.data.userId);
-      
+
       const rtcConfig: RTCVideoConfig = {
         appId: '643e46acb15c24012c963951',
         appKey: 'b329b39ca8df4b5185078f29d8d8025f',
         roomId: roomInfo.data.roomId || loginParams.tenantId.toString(),
         //update by chao 2025.09.19
         // userId: roomInfo.data.userId || loginParams.userId
-        userId:loginParams.userId
+        userId: loginParams.userId
       };
-      
+
       const config = {
         tenantId: loginParams.tenantId,
         // phone: loginParams.phone,
         // coCreationId: loginParams.coCreationId,
         //update by chao 2025.09.09
         //  userId: roomInfo.data.userId || loginParams.userId,
-        userId:loginParams.userId,
+        userId: loginParams.userId,
         accessToken: loginParams.token,
         rtcConfig,
       };
-      
+
       console.log('开始自动试穿流程，配置:', config);
       await tryonService.startTryonFlow(config);
-      
+
       console.log('✅ 试穿流程启动成功');
-      
+
     } catch (error) {
       console.error('试穿流程启动失败:', error);
       hasStartedTryon.current = false;
@@ -1892,7 +1924,7 @@ const Home = () => {
       // 进入视频播放界面时，显示图标并开始定时器
       setShowVideoIcons(true);
       startIconHideTimer();
-      
+
       return () => {
         // 清理定时器
         if (iconHideTimer) {
@@ -1918,7 +1950,7 @@ const Home = () => {
       const { clothesList } = event.detail;
       console.log('收到服饰列表更新事件');
       console.log('服饰分类数量:', clothesList?.length || 0);
-      
+
       // 避免重复设置相同的数据
       setClothesList(prevClothesList => {
         // 如果新数据与当前数据相同，则不更新
@@ -1945,7 +1977,7 @@ const Home = () => {
       console.log('收到场景列表更新事件');
       console.log('场景数量:', scenesList ? Object.keys(scenesList).length : 0);
       console.log('原始场景数据:', scenesList);
-      
+
       if (scenesList && typeof scenesList === 'object' && Object.keys(scenesList).length > 0) {
         // 将服务器返回的场景数据转换为UI需要的格式
         // const newRealSceneIcons = Object.entries(scenesList).map(([id, scene]: [string, any], index) => {
@@ -1957,10 +1989,10 @@ const Home = () => {
         //   console.log(`场景 ${index}:`, iconData);
         //   return iconData;
         // });
-        
+
         // console.log('转换后的场景列表:', newRealSceneIcons);
         // setRealSceneIcons(newRealSceneIcons);
-        
+
         // 设置默认场景名称和音乐
         const cachedLoginData = getLoginCache();
         if (cachedLoginData && cachedLoginData.defaultSceneName) {
@@ -1983,7 +2015,7 @@ const Home = () => {
   useEffect(() => {
     const handleVideoStreamUpdate = (event: CustomEvent) => {
       const { userId, domId, type } = event.detail;
-      
+
       // 过滤掉userid=0的流
       if (type === 'add' && userId !== '0') {
         setVideoStreams(prev => {
@@ -1993,24 +2025,24 @@ const Home = () => {
           return [...prev, { userId, domId }];
         });
         console.log('添加视频流:', userId, domId);
-        
 
-        
+
+
         // 开始检查视频播放状态 - 立即开始，不延迟
         console.log(`🔍 开始检查视频播放状态: ${userId} -> ${domId}`);
         checkVideoPlayingStatus(userId, domId);
-        
+
         // 使用更频繁的检查策略，因为RTC SDK渲染时间不确定
         const checkVideoElement = (attempt: number = 1) => {
           console.log(`🔍 第${attempt}次检查视频元素: ${domId}`);
-          
+
           const videoElement = document.getElementById(domId);
           if (videoElement) {
             console.log(`✅ 找到视频DOM元素: ${domId}`);
             console.log(`🔍 DOM元素内容:`, videoElement.innerHTML);
             console.log(`🔍 DOM元素标签名:`, videoElement.tagName);
             console.log(`🔍 DOM元素类名:`, videoElement.className);
-            
+
             // 尝试多种方式查找video标签
             let videoTag = videoElement.querySelector('video');
             if (!videoTag) {
@@ -2021,13 +2053,13 @@ const Home = () => {
                 videoTag = canvas as any; // 临时处理
               }
             }
-            
+
             if (videoTag) {
               console.log(`✅ 找到video标签: ${domId}`);
               videoTag.style.width = '100%';
               videoTag.style.height = '100%';
               videoTag.style.objectFit = 'cover';
-              
+
               // 添加更多调试信息
               console.log(`📹 视频元素信息:`, {
                 paused: videoTag.paused,
@@ -2037,13 +2069,13 @@ const Home = () => {
                 duration: videoTag.duration,
                 src: videoTag.src
               });
-              
+
               // 标记视频为播放状态
               setVideoPlayingStatus(prev => ({
                 ...prev,
                 [userId]: true
               }));
-              
+
               return true; // 找到视频元素，停止检查
             } else {
               console.log(`❌ 未找到video标签: ${domId}`);
@@ -2062,7 +2094,7 @@ const Home = () => {
           } else {
             console.log(`❌ 未找到视频DOM元素: ${domId}`);
           }
-          
+
           // 使用更频繁的检查，减少间隔时间
           if (attempt < 20) { // 增加检查次数
             setTimeout(() => checkVideoElement(attempt + 1), 500); // 减少间隔到500ms
@@ -2070,10 +2102,10 @@ const Home = () => {
             console.log(`⚠️ 视频元素检查超时: ${domId}`);
           }
         };
-        
+
         // 立即开始检查，然后定期检查
         checkVideoElement();
-        
+
         // 添加MutationObserver监听DOM变化，确保能及时检测到RTC SDK创建的video元素
         const observer = new MutationObserver((mutations) => {
           mutations.forEach((mutation) => {
@@ -2086,7 +2118,7 @@ const Home = () => {
                 }
                 return false;
               });
-              
+
               if (hasVideoElement) {
                 console.log(`🎬 检测到新的视频元素添加到 ${domId}，立即检查`);
                 checkVideoElement();
@@ -2094,7 +2126,7 @@ const Home = () => {
             }
           });
         });
-        
+
         // 开始观察DOM变化
         const videoElement = document.getElementById(domId);
         if (videoElement) {
@@ -2102,7 +2134,7 @@ const Home = () => {
             childList: true,
             subtree: true
           });
-          
+
           // 10秒后停止观察，避免内存泄漏
           setTimeout(() => {
             observer.disconnect();
@@ -2123,7 +2155,7 @@ const Home = () => {
     const handlePlayerEvent = (event: CustomEvent) => {
       const { eventType, userId } = event.detail;
       console.log('🎬 收到播放器事件:', eventType, userId);
-      
+
       if (eventType === 'onFirstFrame') {
         console.log('🎬 视频第一帧渲染完成，立即检查视频元素:', userId);
         const domId = `remoteStream_${userId}`;
@@ -2160,14 +2192,14 @@ const Home = () => {
   useEffect(() => {
     const handleMapChangeResult = (event: CustomEvent) => {
       const { success, code, mapName, errorText } = event.detail;
-      
+
       console.log('🗺️ 地图切换结果事件:', {
         success,
         code,
         mapName,
         errorText
       });
-      
+
       if (success) {
         console.log('✅ 地图切换成功!', mapName);
       } else {
@@ -2177,16 +2209,16 @@ const Home = () => {
 
     // 监听WebSocket的地图切换结果
     window.addEventListener('mapChangeResult', handleMapChangeResult as EventListener);
-    
+
     // 监听RTC的地图切换结果
     const handleRTCMapChangeResult = (event: CustomEvent) => {
       const { message, timestamp } = event.detail;
-      
+
       console.log('🗺️ RTC地图切换结果事件:', {
         message,
         timestamp
       });
-      
+
       // 解析消息内容
       if (message.includes('change_map')) {
         console.log('✅ RTC地图切换消息已收到:', message);
@@ -2339,9 +2371,9 @@ const Home = () => {
                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                     border: isHeatMapEnabled ? '2px solid #ff4d4f' : '2px solid transparent'
                   }}>
-                    <img 
-                      src={heatMapIcon} 
-                      alt="松紧热图" 
+                    <img
+                      src={heatMapIcon}
+                      alt="松紧热图"
                       style={{
                         width: '24px',
                         height: '24px',
@@ -2396,9 +2428,9 @@ const Home = () => {
                     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                     border: isActionExpanded ? '2px solid #1890ff' : '2px solid transparent'
                   }}>
-                    <img 
-                      src={isActionExpanded ? actionIcons[selectedActionIndex].icon : defaultActionIcon.icon} 
-                      alt={isActionExpanded ? actionIcons[selectedActionIndex].name : defaultActionIcon.name} 
+                    <img
+                      src={isActionExpanded ? actionIcons[selectedActionIndex].icon : defaultActionIcon.icon}
+                      alt={isActionExpanded ? actionIcons[selectedActionIndex].name : defaultActionIcon.name}
                       style={{
                         width: '24px',
                         height: '24px',
@@ -2453,9 +2485,9 @@ const Home = () => {
                           boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                           border: selectedActionIndex === index ? '2px solid #1890ff' : '2px solid transparent'
                         }}>
-                          <img 
-                            src={action.icon} 
-                            alt={action.name} 
+                          <img
+                            src={action.icon}
+                            alt={action.name}
                             style={{
                               width: '20px', // 缩小图标尺寸
                               height: '20px',
@@ -2480,8 +2512,7 @@ const Home = () => {
               </div>
 
               {/* 实景区域已删除 */}
-              </div>
-
+            </div>
             {/* 右侧服装展示区域已删除 */}
           </div>
         </div>
@@ -2764,10 +2795,10 @@ const Home = () => {
       position: 'relative'
     }}>
       {/* 音乐开始 */}
-        <ReactHowler
-          src={musicUrl}
-          playing={musicPlay}
-        />
+      <ReactHowler
+        src={musicUrl}
+        playing={musicPlay}
+      />
       {/* 音乐结束 */}
       {/* 顶部标题区域 - 放在正中间 */}
       <div style={{
@@ -2808,7 +2839,7 @@ const Home = () => {
         padding: '0', // 移除padding让视频铺满
         zIndex: 1,
         touchAction: 'none' // 屏蔽浏览器默认的触摸行为
-      }} 
+      }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -2818,7 +2849,7 @@ const Home = () => {
         onMouseLeave={handleTouchEnd}
         onTouchCancel={handleTouchEnd}
       >
-        
+
         {/* 暂停图标 - 显示在视频正中央 */}
         {/* {isVideoPaused && (
           <div style={{
@@ -2847,7 +2878,7 @@ const Home = () => {
             }} />
           </div>
         )} */}
-        
+
         {/* 左侧图标区域 - 常驻显示 */}
         <div style={{
           position: 'fixed',
@@ -2864,243 +2895,243 @@ const Home = () => {
           pointerEvents: 'auto', // 确保点击事件正常工作
           touchAction: 'none' // 防止触摸事件被阻止
         }}>
-            {/* 热力图区域 */}
+          {/* 热力图区域 */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
+          }}>
+            {/* 热力图图标 */}
             <div style={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              gap: '10px'
-            }}>
-              {/* 热力图图标 */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                transition: 'transform 0.2s ease'
+              gap: '8px',
+              cursor: 'pointer',
+              transition: 'transform 0.2s ease'
+            }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleHeatMapClick();
               }}
-                onClick={(e) => {
-                  e.preventDefault();
+              onTouchStart={(e) => {
+                // 只处理单指触摸，双指触摸让给缩放处理
+                if (e.touches.length === 1) {
                   e.stopPropagation();
-                  handleHeatMapClick();
-                }}
-                onTouchStart={(e) => {
-                  // 只处理单指触摸，双指触摸让给缩放处理
-                  if (e.touches.length === 1) {
-                    e.stopPropagation();
-                  }
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '10px',
-                  backgroundColor: isHeatMapEnabled ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                  border: isHeatMapEnabled ? '2px solid #ff4d4f' : '2px solid transparent'
-                }}>
-                  <img 
-                    src={heatMapIcon} 
-                    alt="松紧热图" 
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      objectFit: 'contain'
-                    }}
-                  />
-                </div>
-                <div style={{
-                  fontSize: '10px',
-                  color: '#fff',
-                  fontWeight: 'normal',
-                  textAlign: 'center',
-                  lineHeight: '1',
-                  whiteSpace: 'nowrap',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                }}>
-                  松紧热图
-                </div>
-              </div>
-            </div>
-
-            {/* 动作区域 */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px'
-            }}>
-              {/* 主动作图标 */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
-                transition: 'transform 0.2s ease'
+                }
               }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleVideoActionClick();
-                }}
-                onTouchStart={(e) => {
-                  // 只处理单指触摸，双指触摸让给缩放处理
-                  if (e.touches.length === 1) {
-                    e.stopPropagation();
-                  }
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.1)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '40px', // 缩小尺寸
-                  height: '40px',
-                  borderRadius: '10px',
-                  backgroundColor: isActionExpanded ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                  border: isActionExpanded ? '2px solid #1890ff' : '2px solid transparent'
-                }}>
-                  <img 
-                    src={isActionExpanded ? actionIcons[selectedActionIndex].icon : defaultActionIcon.icon} 
-                    alt={isActionExpanded ? actionIcons[selectedActionIndex].name : defaultActionIcon.name} 
-                    style={{
-                      width: '24px', // 缩小图标尺寸
-                      height: '24px',
-                      objectFit: 'contain'
-                    }}
-                  />
-                </div>
-                <div style={{
-                  fontSize: '10px', // 缩小字体
-                  color: '#fff',
-                  fontWeight: 'normal',
-                  textAlign: 'center',
-                  lineHeight: '1',
-                  whiteSpace: 'nowrap',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                }}>
-                  {isActionExpanded ? actionIcons[selectedActionIndex].name : defaultActionIcon.name}
-                </div>
-              </div>
-
-                              {/* 展开的动作选项 */}
-                {isActionExpanded && (
-                  <div style={{
-                    display: 'flex',
-                    gap: '8px', // 减少间距，确保不超出屏幕
-                    animation: 'slideInFromLeft 0.3s ease'
-                  }}>
-                    {actionIcons.map((action, index) => (
-                      <div key={index} style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '4px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                      }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleVideoActionClick(index);
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                        }}
-                      >
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '40px', // 缩小尺寸
-                          height: '40px',
-                          borderRadius: '10px', // 与主图标保持一致
-                          backgroundColor: selectedActionIndex === index ? 'rgba(24,144,255,0.2)' : 'rgba(255,255,255,0.8)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                          border: selectedActionIndex === index ? '2px solid #1890ff' : '2px solid transparent'
-                        }}>
-                          <img 
-                            src={action.icon} 
-                            alt={action.name} 
-                            style={{
-                              width: '20px', // 缩小图标尺寸
-                              height: '20px',
-                              objectFit: 'contain'
-                            }}
-                          />
-                        </div>
-                        <div style={{
-                          fontSize: '9px', // 缩小字体
-                          color: selectedActionIndex === index ? '#1890ff' : '#fff',
-                          fontWeight: selectedActionIndex === index ? 'bold' : 'normal',
-                          textAlign: 'center',
-                          lineHeight: '1',
-                          whiteSpace: 'nowrap',
-                          textShadow: '0 1px 2px rgba(0,0,0,0.8)'
-                        }}>
-                          {action.name}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-            </div>
-
-            {/* 实景区域 - 只在有场景数据时显示 */}
-            {realSceneIcons.length > 0 && (
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
-                position: 'relative' // 为绝对定位的展开选项提供定位基准
+                justifyContent: 'center',
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                backgroundColor: isHeatMapEnabled ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                border: isHeatMapEnabled ? '2px solid #ff4d4f' : '2px solid transparent'
               }}>
-                {/* 主实景图标 */}
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s ease'
-                }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleVideoRealSceneClick();
+                <img
+                  src={heatMapIcon}
+                  alt="松紧热图"
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    objectFit: 'contain'
                   }}
-                  onTouchStart={(e) => {
-                    // 只处理单指触摸，双指触摸让给缩放处理
-                    if (e.touches.length === 1) {
+                />
+              </div>
+              <div style={{
+                fontSize: '10px',
+                color: '#fff',
+                fontWeight: 'normal',
+                textAlign: 'center',
+                lineHeight: '1',
+                whiteSpace: 'nowrap',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+              }}>
+                松紧热图
+              </div>
+            </div>
+          </div>
+
+          {/* 动作区域 */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
+          }}>
+            {/* 主动作图标 */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              transition: 'transform 0.2s ease'
+            }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleVideoActionClick();
+              }}
+              onTouchStart={(e) => {
+                // 只处理单指触摸，双指触摸让给缩放处理
+                if (e.touches.length === 1) {
+                  e.stopPropagation();
+                }
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '40px', // 缩小尺寸
+                height: '40px',
+                borderRadius: '10px',
+                backgroundColor: isActionExpanded ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                border: isActionExpanded ? '2px solid #1890ff' : '2px solid transparent'
+              }}>
+                <img
+                  src={isActionExpanded ? actionIcons[selectedActionIndex].icon : defaultActionIcon.icon}
+                  alt={isActionExpanded ? actionIcons[selectedActionIndex].name : defaultActionIcon.name}
+                  style={{
+                    width: '24px', // 缩小图标尺寸
+                    height: '24px',
+                    objectFit: 'contain'
+                  }}
+                />
+              </div>
+              <div style={{
+                fontSize: '10px', // 缩小字体
+                color: '#fff',
+                fontWeight: 'normal',
+                textAlign: 'center',
+                lineHeight: '1',
+                whiteSpace: 'nowrap',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+              }}>
+                {isActionExpanded ? actionIcons[selectedActionIndex].name : defaultActionIcon.name}
+              </div>
+            </div>
+
+            {/* 展开的动作选项 */}
+            {isActionExpanded && (
+              <div style={{
+                display: 'flex',
+                gap: '8px', // 减少间距，确保不超出屏幕
+                animation: 'slideInFromLeft 0.3s ease'
+              }}>
+                {actionIcons.map((action, index) => (
+                  <div key={index} style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '4px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                    onClick={(e) => {
+                      e.preventDefault();
                       e.stopPropagation();
-                    }
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                >
-                </div>
+                      handleVideoActionClick(index);
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px', // 缩小尺寸
+                      height: '40px',
+                      borderRadius: '10px', // 与主图标保持一致
+                      backgroundColor: selectedActionIndex === index ? 'rgba(24,144,255,0.2)' : 'rgba(255,255,255,0.8)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                      border: selectedActionIndex === index ? '2px solid #1890ff' : '2px solid transparent'
+                    }}>
+                      <img
+                        src={action.icon}
+                        alt={action.name}
+                        style={{
+                          width: '20px', // 缩小图标尺寸
+                          height: '20px',
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </div>
+                    <div style={{
+                      fontSize: '9px', // 缩小字体
+                      color: selectedActionIndex === index ? '#1890ff' : '#fff',
+                      fontWeight: selectedActionIndex === index ? 'bold' : 'normal',
+                      textAlign: 'center',
+                      lineHeight: '1',
+                      whiteSpace: 'nowrap',
+                      textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                    }}>
+                      {action.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 实景区域 - 只在有场景数据时显示 */}
+          {realSceneIcons.length > 0 && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              position: 'relative' // 为绝对定位的展开选项提供定位基准
+            }}>
+              {/* 主实景图标 */}
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer',
+                transition: 'transform 0.2s ease'
+              }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleVideoRealSceneClick();
+                }}
+                onTouchStart={(e) => {
+                  // 只处理单指触摸，双指触摸让给缩放处理
+                  if (e.touches.length === 1) {
+                    e.stopPropagation();
+                  }
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+              </div>
 
               {/* 展开的实景选项 */}
               {isRealSceneExpanded && (
@@ -3146,9 +3177,9 @@ const Home = () => {
                         boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                         border: selectedRealSceneIndex === index ? '2px solid #52c41a' : '2px solid transparent'
                       }}>
-                        <img 
-                          src={scene.icon} 
-                          alt={scene.name} 
+                        <img
+                          src={scene.icon}
+                          alt={scene.name}
                           style={{
                             width: '20px', // 缩小图标尺寸
                             height: '20px',
@@ -3171,11 +3202,159 @@ const Home = () => {
                   ))}
                 </div>
               )}
-                  </div>
-                )}
-              </div>
-        
+            </div>
+          )}
+        </div>
+        {/* 右侧图标区域 - 常驻显示  */}
+        <div style={{
+          position: 'fixed',
+          right: '10px', // 更靠近左边缘
+          top: '50%',
+          transform: 'translateY(-20px)', // 向下移动，与选择界面保持一致
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center', // 居中对齐
+          alignItems: 'flex-start',
+          gap: '40px', // 与选择界面保持一致的间距
+          height: '200px', // 固定高度，确保对齐
+          zIndex: 200, // 提高z-index确保显示在视频上方
+          pointerEvents: 'auto', // 确保点击事件正常工作
+          touchAction: 'none' // 防止触摸事件被阻止
+        }}>
 
+          {/* 更多  环拍视频、美颜图、动作视频  */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
+          }}>
+
+            {/* 展开的动作选项 */}
+            {isMoveExpanded && (
+              <div style={{
+                display: 'flex',
+                gap: '8px', // 减少间距，确保不超出屏幕
+                animation: 'slideInFromLeft 0.3s ease'
+              }}>
+                {moveIcons.map((action, index) => (
+                  <div key={index} style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '4px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
+                  }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleVideoMoveClick(index);
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '40px', // 缩小尺寸
+                      height: '40px',
+                      borderRadius: '10px', // 与主图标保持一致
+                      backgroundColor: selectedMoveIndex === index ? 'rgba(24,144,255,0.2)' : 'rgba(255,255,255,0.8)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                      border: selectedMoveIndex === index ? '2px solid #1890ff' : '2px solid transparent'
+                    }}>
+                      <img
+                        src={action.icon}
+                        alt={action.name}
+                        style={{
+                          width: '20px', // 缩小图标尺寸
+                          height: '20px',
+                          objectFit: 'contain'
+                        }}
+                      />
+                    </div>
+                    <div style={{
+                      fontSize: '9px', // 缩小字体
+                      color: selectedMoveIndex === index ? '#1890ff' : '#fff',
+                      fontWeight: selectedMoveIndex === index ? 'bold' : 'normal',
+                      textAlign: 'center',
+                      lineHeight: '1',
+                      whiteSpace: 'nowrap',
+                      textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+                    }}>
+                      {action.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {/* 更多图标 */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '8px',
+              cursor: 'pointer',
+              transition: 'transform 0.2s ease'
+            }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleVideoMoveClick();
+              }}
+              onTouchStart={(e) => {
+                // 只处理单指触摸，双指触摸让给缩放处理
+                if (e.touches.length === 1) {
+                  e.stopPropagation();
+                }
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '40px', // 缩小尺寸
+                height: '40px',
+                borderRadius: '10px',
+                backgroundColor: isMoveExpanded ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.6)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                border: isMoveExpanded ? '2px solid #1890ff' : '2px solid transparent'
+              }}>
+                <img
+                  src={defaultMoveIcon.icon}
+                  alt={defaultMoveIcon.name}
+                  style={{
+                    width: '24px', // 缩小图标尺寸
+                    height: '24px',
+                    objectFit: 'contain'
+                  }}
+                />
+              </div>
+              <div style={{
+                fontSize: '10px', // 缩小字体
+                color: '#fff',
+                fontWeight: 'normal',
+                textAlign: 'center',
+                lineHeight: '1',
+                whiteSpace: 'nowrap',
+                textShadow: '0 1px 2px rgba(0,0,0,0.8)'
+              }}>
+                {defaultMoveIcon.name}
+              </div>
+            </div>
+          </div>
+        </div>
         {/* 视频播放区域 - 全屏显示 */}
         {videoStreams.length === 0 ? (
           <div style={{
@@ -3248,7 +3427,7 @@ const Home = () => {
               zIndex: 10,
               overflow: 'hidden'
             }}>
-              <div 
+              <div
                 id={stream.domId}
                 style={{
                   width: '100vw',
@@ -3308,8 +3487,8 @@ const Home = () => {
           maxWidth: '300px',
           minWidth: '250px'
         }}>
-          <div style={{ 
-            fontSize: '24px', 
+          <div style={{
+            fontSize: '24px',
             marginBottom: '10px',
             color: shareTipType === 'success' ? '#52c41a' : shareTipType === 'error' ? '#ff4d4f' : '#1890ff'
           }}>
@@ -3322,9 +3501,9 @@ const Home = () => {
             {shareTipMessage}
           </div>
           {shareTipType === 'success' && (
-            <div style={{ 
-              fontSize: '12px', 
-              color: '#52c41a', 
+            <div style={{
+              fontSize: '12px',
+              color: '#52c41a',
               marginTop: '8px',
               padding: '4px 8px',
               backgroundColor: 'rgba(82, 196, 26, 0.1)',
@@ -3362,8 +3541,8 @@ const Home = () => {
         </div>
       )}
 
-            {/* 离开舞台按钮 - 完全透明，在底部中间 */}
-            {/* {!showSelectionScreen && (
+      {/* 离开舞台按钮 - 完全透明，在底部中间 */}
+      {/* {!showSelectionScreen && (
               <div style={{
                 position: 'fixed',
                 bottom: '30px',
@@ -3442,28 +3621,28 @@ const Home = () => {
 
 
 
-        {/* 余额弹窗 */}
-        <DownloadAppModal
-          isOpen={showBalanceModal}
-          onClose={() => setShowBalanceModal(false)}
-          title="体验已结束"
-          description="请下载APP继续体验更多功能！"
-          buttonText="去下载APP"
-          showCloseButton={true}
-        />
+      {/* 余额弹窗 */}
+      <DownloadAppModal
+        isOpen={showBalanceModal}
+        onClose={() => setShowBalanceModal(false)}
+        title="体验已结束"
+        description="请下载APP继续体验更多功能！"
+        buttonText="去下载APP"
+        showCloseButton={true}
+      />
 
-        {/* 分享弹窗 */}
-        <ShareModal
-          isOpen={showShareModal}
-          onClose={handleCloseShareModal}
-          onShare={handleShareToFriend}
-          shareData={{
-            title: WECHAT_CONFIG.DEFAULT_SHARE.title,
-            desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
-            link: WECHAT_CONFIG.DEFAULT_SHARE.link,
-            imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
-          }}
-        />
+      {/* 分享弹窗 */}
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={handleCloseShareModal}
+        onShare={handleShareToFriend}
+        shareData={{
+          title: WECHAT_CONFIG.DEFAULT_SHARE.title,
+          desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
+          link: WECHAT_CONFIG.DEFAULT_SHARE.link,
+          imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
+        }}
+      />
 
         {/* 创建模型弹窗 */}
         <CreateModelModal

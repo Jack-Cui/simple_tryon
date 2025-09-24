@@ -8,11 +8,16 @@ import TryonTest from './components/TryonTest';
 import SimpleTryonTest from './components/SimpleTryonTest';
 import TestNavigation from './components/TestNavigation';
 import RTCVideoTest from './pages/RTCVideoTest';
+import Upload from './pages/Upload';
 import { authAPI } from './services/api';
 import { saveTokens } from './utils/auth';
 import { saveLoginCache } from './utils/loginCache';
 import { tryonService } from './services/tryonService';
 import { isValidCoCreationId, showCoCreationIdError } from './utils/coCreationIdHelper';
+import CreateModel from './pages/CreateModel';
+import MyModel from './pages/MyModel';
+import UploadAction from './pages/UploadAction';
+import MyAction from './pages/MyAction';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -165,6 +170,11 @@ function App() {
           <Route path="/tryon-test" element={<TryonTest />} />
           <Route path="/simple-tryon-test" element={<SimpleTryonTest />} />
           <Route path="/rtc-video-test" element={<RTCVideoTest />} />
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/create-model" element={<CreateModel />} />
+          <Route path="/my-model" element={<MyModel />} />
+          <Route path="/upload-action" element={<UploadAction />} />
+          <Route path="/my-action" element={<MyAction />} />
           <Route 
             path="/home" 
             element={
