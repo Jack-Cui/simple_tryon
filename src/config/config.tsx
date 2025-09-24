@@ -101,6 +101,12 @@ export const API_ENDPOINTS = {
 
   // 创建模型
   CREATE_MODEL: () => `/admin/model/createOrUpdate`,
+
+  // 上传动作视频
+  UPLOAD_ACTION_VIDEO: () => `/admin/sysactions`,
+
+  // 获取⽤⼾的⽣成动作列表（也就是历史）
+  GET_ACTION_VIDEO_RESULT: (current: number, size: number) => `/admin/sysactions/pageByUser?current=${current}&size=${size}`,
 };
 
 // RTC配置

@@ -1023,5 +1023,27 @@ export const uploadAPI = {
       'Authorization': `Bearer ${access_token}`
     };
     return await apiService.post(endpoint, undefined, headers);
+  },
+
+  async uploadActionVideo(access_token: string, action_name: string, video_url: string): Promise<ApiResponse> {
+    console.log('开始上传动作视频');
+    const endpoint = API_ENDPOINTS.UPLOAD_ACTION_VIDEO();
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    const data = {
+      remark: action_name,
+      videoUrl: video_url
+    }
+    return await apiService.post(endpoint, JSON.stringify(data), headers);
+  },
+
+  async getActionVideoResult(access_token: string, current: number, size: number): Promise<ApiResponse> {
+    console.log('开始获取动作视频结果');
+    const endpoint = API_ENDPOINTS.GET_ACTION_VIDEO_RESULT(current, size);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
   }
 };
