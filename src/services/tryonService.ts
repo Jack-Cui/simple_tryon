@@ -123,6 +123,18 @@ export class TryonService {
             }
             return;
           }
+          
+          // 检查是否有 modelStatus=4 的模型
+          const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+          if (!hasValidModel) {
+            console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
+            if (this.onCreateModelCallback) {
+              this.onCreateModelCallback();
+            }
+            return;
+          }
+          
+          console.log('找到有效的模型（modelStatus=4），继续流程');
           // 标记模型列表已校验
           this.modelListChecked = true;
         } catch (parseError) {
@@ -256,6 +268,18 @@ export class TryonService {
               }
               return;
             }
+            
+            // 检查是否有 modelStatus=4 的模型
+            const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+            if (!hasValidModel) {
+              console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
+              if (this.onCreateModelCallback) {
+                this.onCreateModelCallback();
+              }
+              return;
+            }
+            
+            console.log('找到有效的模型（modelStatus=4），继续流程');
             // 标记模型列表已校验
             this.modelListChecked = true;
           } catch (parseError) {
