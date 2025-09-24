@@ -1,0 +1,150 @@
+.subscribe-package {
+    width: 100vw;
+    height: 100vh;
+    /* padding-top: var(--td-navbar-height, 48px);
+    height: calc(100vh - 80px - var(--td-navbar-height, 48px)); */
+    background: #eee;
+    position: relative;
+}
+.subscribe-package > .content {
+    height: calc(100vh - 80px - var(--td-navbar-height, 48px - 30px));   
+    overflow: auto;  
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+.subscribe-package > .content > .item {
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 8px;
+    border: 2px solid #fff;
+    padding: 20px 16px;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    position: relative;
+}
+.subscribe-package > .content > .item > .triangle {
+    width: 38px;
+    height: 38px;
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+}
+.subscribe-package > .content > .check {
+    border: 2px solid #1BDD96;
+}
+.subscribe-package > .content > .item > .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.subscribe-package > .content > .item > .top > .title {
+    font-family: PingFang SC;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 20px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    text-align: center;
+}
+.subscribe-package > .content > .item > .top > .price {
+    font-family: PingFang SC;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 22px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    text-align: right;
+}
+.subscribe-package > .content > .item > .top > .price > span {
+    font-family: PingFang SC;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 13px;
+    leading-trim: NONE;
+    line-height: 13px;
+    letter-spacing: 0px;
+    text-align: center;
+}
+.subscribe-package > .content > .item > .center {
+    font-family: PingFang SC;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 12px;
+    leading-trim: NONE;
+    line-height: 18px;
+    letter-spacing: 0px;
+
+}
+.subscribe-package > .remember {
+    height: calc(100vh - 48px);  
+    width: 100%;
+    margin-top: -20px;
+    box-sizing: border-box;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 40%;
+}
+.subscribe-package > .remember > img {
+    width: 129px;
+    height: 124px;
+    margin-bottom: 20px;
+}
+.subscribe-package > .remember > div {
+    width: 198px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 16px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    text-align: center;
+}
+.subscribe-package-navbar {
+    margin-bottom: 20px;
+}
+.subscribe-package-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 0 5vw;
+    height: 80px;
+    background: #fff;
+    box-shadow: 0px -4px 8px 0px #0000000D;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+.subscribe-package-btn > .price {
+    flex-grow: 1;
+    margin-right: 10px;
+    font-family: PingFang SC;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 32px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    /* text-align: right; */
+
+}
+.subscribe-package-btn > .price > span {
+    font-family: PingFang SC;
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 13px;
+    leading-trim: NONE;
+    line-height: 13px;
+    letter-spacing: 0px;
+    text-align: center;
+
+}

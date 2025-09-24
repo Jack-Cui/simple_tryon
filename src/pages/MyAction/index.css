@@ -25,6 +25,7 @@
     justify-content: flex-start;
     position: relative;
     /* overflow: hidden; */
+    margin-bottom: 10px;
 }
 .my-action-content-detail-mask {
     position: absolute;
@@ -33,7 +34,7 @@
     top: 0;
     left: 0;
     /* background: red; */
-    backdrop-filter: blur(2px);
+    filter: blur(2px);
 }
 .my-action-content-detail-mask > .mask-upload-ing {
     width: 100%;
@@ -124,6 +125,14 @@
     align-items: flex-start;
     justify-content: flex-start;
     padding-top: 10px;
+    flex-grow: 1;
+    height: 90px;
+    position: relative;
+}
+.my-action-content-detail-info > .clear {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
 }
 .my-action-content-detail-info-item {
     font-family: PingFangSC, PingFang SC;
@@ -133,6 +142,8 @@
     line-height: 20px;
     text-align: justify;
     font-style: normal;
+    position: relative;
+    width: 100%;
 }
 .my-action-content-detail-info-item > span {
     font-family: PingFangSC, PingFang SC;
@@ -143,6 +154,9 @@
     text-align: justify;
     font-style: normal;
     margin-right: 10px;
+}
+.my-action-content-detail-info-item > .edit {
+    margin-left: 20px;
 }
 .my-action-btn {
     position: fixed;

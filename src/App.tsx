@@ -172,9 +172,9 @@ function App() {
           <Route path="/rtc-video-test" element={<RTCVideoTest />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/create-model" element={<CreateModel />} />
-          <Route path="/my-model" element={<MyModel />} />
+          {/* <Route path="/my-model" element={<MyModel />} /> */}
           <Route path="/upload-action" element={<UploadAction />} />
-          <Route path="/my-action" element={<MyAction />} />
+          {/* <Route path="/my-action" element={<MyAction />} /> */}
           <Route 
             path="/home" 
             element={

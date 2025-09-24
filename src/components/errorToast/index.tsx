@@ -7,23 +7,27 @@ interface Props {
     onClick?: React.MouseEventHandler<HTMLDivElement>;
     isConfirm?: boolean; // 是否确认提示
     btnName?: string;
-    // onBtnClick?: () => void;
+    onBtnClick?: any;
 }
 const ErrorToast = (props: Props) => {
 
-    // const btnClick = () => {
-    //     props?.onBtnClick();
-    // }
+    const onClose = (e: any) => {
+        // e.target.stopPropagation();
+        props?.onClick && props.onClick(e)
+    }
+    const btnClick = () => {
+        props?.onBtnClick && props.onBtnClick();
+    }
     return (
         <Overlay visible={props.visible} 
-        onClick={props?.onClick as any}
+        onClick={onClose}
         children={
             props?.isConfirm ? 
             <div className="error-toast-confirm">
                 <CheckCircleIcon className="close" size="large"/>
-                <CheckCircleIcon style={{color:'red'}} size="large"/>
+                <CheckCircleIcon style={{color:'red'}} size="large" onClick={props?.onClick as any}/>
                 <div className="content">
-                    {props?.info}很多次换行啦呀很多次换行啦呀很多次换行啦呀很多次换行啦呀很多次换行啦呀很多次换行啦呀很多次换行啦呀很多次换行啦呀很多次换行啦呀
+                    {props?.info}
                 </div>
                 <Button 
                     size="small" 
@@ -31,8 +35,8 @@ const ErrorToast = (props: Props) => {
                     theme="light" 
                     shape="round" 
                     style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }}
-                    // onClick={btnClick()}
-                >{props?.btnName}确认</Button>
+                    onClick={btnClick}
+                >{props?.btnName || '确认'}</Button>
             </div>
             :
             <div className="error-toast-tips">

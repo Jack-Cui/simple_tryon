@@ -33,7 +33,7 @@
     top: 0;
     left: 0;
     /* background: red; */
-    backdrop-filter: blur(2px);
+    filter: blur(2px);
 }
 .my-model-content-detail-mask > .mask-upload-ing {
     width: 100%;
@@ -123,6 +123,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: space-around;
+    flex-grow: 1;
 }
 .my-model-content-detail-info-item {
     font-family: PingFangSC, PingFang SC;
@@ -132,6 +133,8 @@
     line-height: 20px;
     text-align: justify;
     font-style: normal;
+    position: relative;
+    width: 100%;
 }
 .my-model-content-detail-info-item > span {
     font-family: PingFangSC, PingFang SC;
@@ -142,4 +145,9 @@
     text-align: justify;
     font-style: normal;
     margin-right: 10px;
+}
+.my-model-content-detail-info-item > .close {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
 }

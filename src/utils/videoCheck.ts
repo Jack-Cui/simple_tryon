@@ -57,13 +57,13 @@
         //     console.log('fps', fps);
         //   }, 100);
         // });
-        const gcd = getGcd(e.target.videoWidth, e.target.videoHeight);
+        // const gcd = getGcd(e.target.videoWidth, e.target.videoHeight);
         // console.log(gcd)
         let obj = {
           videoWidth: doms.videoWidth, // 尺寸宽 --- 分辨率
           videoHeight: doms.videoHeight, // 尺寸高 --- 分辨率
           duration: e.target.duration, // 视频时长 1表示一秒
-          ccbl: [e.target.videoWidth / gcd, e.target.videoHeight / gcd] // 计算尺寸比例
+          // ccbl: [e.target.videoWidth / gcd, e.target.videoHeight / gcd] // 计算尺寸比例
         }
         resolve(obj)
       })

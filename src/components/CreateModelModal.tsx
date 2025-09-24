@@ -3,6 +3,7 @@ import './CreateModelModal.css';
 import UploadModelModal from './UploadModelModal';
 import { modelAPI } from '../services/api';
 import { getLoginCache } from '../utils/loginCache';
+import { useNavigate } from 'react-router-dom';
 
 interface CreateModelModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
   onCreateModel
 }) => {
   const [showUploadModal, setShowUploadModal] = useState(false);
-
+  const navigate = useNavigate();
   if (!isOpen) return null;
 
   return (
@@ -54,6 +55,22 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
               }}
             >
               去建模
+            </button>
+            <button 
+              className="confirm-button"
+              onClick={() => {
+                navigate('/create-model');
+              }}
+            >
+              去建模plus
+            </button>
+            <button 
+              className="confirm-button"
+              onClick={() => {
+                navigate('/upload-action');
+              }}
+            >
+              个人视频
             </button>
           </div>
         </div>

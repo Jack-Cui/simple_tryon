@@ -1,0 +1,44 @@
+.data-safety-msg {
+    height: 455px;
+    box-sizing: border-box;
+    padding: 24px 16px;
+}
+.data-safety-msg > .title {
+    font-family: PingFang SC;
+    font-weight: 600;
+    font-style: Semibold;
+    font-size: 17px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.data-safety-msg > .msg {
+    height: 300px;
+    font-family: PingFang SC;
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 15px;
+    leading-trim: NONE;
+    line-height: 24px;
+    letter-spacing: 0px;
+    overflow: auto;
+}
+.data-safety-msg > .msg > p {
+    margin: 0;
+}
+.data-safety-msg-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 0 5vw;
+    height: 80px;
+    background: #fff;
+    box-shadow: 0px -4px 8px 0px #0000000D;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}

@@ -1,13 +1,21 @@
 import './index.css';
 import { Button, Navbar, Progress, CountDown } from 'tdesign-mobile-react';
 import { useEffect, useRef, useState } from 'react';
-const MyModel = () => {
-    const [status, setStatus] = useState(1); // 0 成功 1上传中 2审核中 3 审核失败
+import { CheckCircleIcon, IconFont } from 'tdesign-icons-react';
+import ErrorToast from '../../components/errorToast';
+interface Props {
+    status: number;
+    errorMsg?: string;
+    list?: any[];
+}
+const MyModel = (props: Props) => {
+    // const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
     const [loadRogress, setLoadRogress] = useState(0); // 上传进度
     const [countdown, setCountdown] = useState(24 * 60 * 60 * 1000);
+    const [showError, setShowError] = useState(false);
     // 返回
     const handleClick = () => {
-        setStatus(status === 2 ? 1 : 2)
+        // setStatus(status === 2 ? 1 : 2)
     }
 
     useEffect(() => {
@@ -22,7 +30,7 @@ const MyModel = () => {
     }, [loadRogress])
 
     useEffect(() => {
-        switch (status) {
+        switch (props.status) {
             case 0:
                 // 返回审核结果后删除存储数据
                 localStorage.removeItem('model_review_time_last');
@@ -49,15 +57,24 @@ const MyModel = () => {
                 break;
         };
         // return () => timer && clearInterval(timer);
-    }, [status])
+    }, [props.status])
+
+    const closeModel = () => {
+        setShowError(true);
+    }
+
+    const comfirmClear = () => {
+        console.log(12313);
+        // 跳转会创建页面
+    }
 
     return (
         <div className="my-model">
-            <Navbar className='my-model-navbar' fixed={false} leftArrow onLeftClick={handleClick}>我的模型</Navbar>
+            <Navbar className='my-model-navbar' leftArrow onLeftClick={handleClick} fixed={false}>我的模型</Navbar>
             <div className="my-model-content">
                 <div className='my-model-content-detail'>
-                    {status !== 0 && <div className='my-model-content-detail-mask'>
-                        {status === 1 && <div className='mask-upload-ing'>
+                    {props.status !== 0 && <div className='my-model-content-detail-mask'>
+                        {props.status === 1 && <div className='mask-upload-ing'>
                             <div className='center'>
                                 <div className='title'>
                                     <span>正在上传中...</span>
@@ -69,11 +86,11 @@ const MyModel = () => {
                                 <Button size="small" variant="outline" shape="round">取消上传</Button>
                             </div>
                         </div>}
-                        {status === 2 && <div className='mask-upload-review'>
+                        {props.status === 2 && <div className='mask-upload-review'>
                             <div className='info'>上传成功，正在审核中，预计等待时间</div>
                             <CountDown size='large' time={countdown} />
                         </div>}
-                        {status === 3 && <div className='mask-upload-error'>
+                        {props.status === 3 && <div className='mask-upload-error'>
                             <div className='info'>
                                 <span>审核失败</span>
                                 <div>失败原因，字很多</div>
@@ -90,19 +107,21 @@ const MyModel = () => {
                     <div className='my-model-content-detail-info'>
                         <div className='my-model-content-detail-info-item'>
                             <span>名称：</span>
-
+                            {props?.list && props.list[props.list.length - 1].modelName}
                         </div>
                         <div className='my-model-content-detail-info-item'>
                             <span>身高：</span>
-
+                            {props?.list && props.list[props.list.length - 1].height}
                         </div>
                         <div className='my-model-content-detail-info-item'>
                             <span>时间：</span>
-
+                            {props?.list && props.list[props.list.length - 1].createTime}
+                            {props.status === 0 && <IconFont name='delete-1' onClick={closeModel} className='close' style={{color:'red'}} size="large"/>}
                         </div>
                     </div>
                 </div>
             </div>
+            <ErrorToast isConfirm info={'确认删除该模型？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>
         </div>
     )
 }

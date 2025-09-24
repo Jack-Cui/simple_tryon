@@ -5,9 +5,10 @@ import HeightIcon from '../../assets/height.png';
 import ActionIcon from '../../assets//action.png';
 import UploadIcon from '../../assets//upload.png';
 import Example2Icon from '../../assets//example2.png';
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { checkVideo } from '../../utils/videoCheck';
 import { getVideoFirstFrame } from '../../utils/vedioToImg';
+import ErrorToast from '../errorToast';
 interface Props {
     title: String;
     info?: string[];
@@ -22,6 +23,18 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     const [file, setFile] = useState(''); // 文件
     const [perHeight, setPerHeight] = useState(''); // 身高
     const [perActionName, setPerActionName] = useState(''); // 动作名称
+    const [showError, setShowError] = useState(false);
+    const [errorInfo, setErrorInfo] = useState('');
+    useEffect(() => {
+        if (showError) {
+          const timer: any = setTimeout(() => {
+            setShowError(false);
+          }, 1500)
+          return () => {
+            clearTimeout(timer);
+          }
+        }
+      }, [showError])
     const getAccept = () => {
         let accept = '';
         if (props?.isRing) {
@@ -38,6 +51,18 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     }
 
     const fileChange = async (event: any) => {
+        if (!event.target.files[0]) return;
+        const res: any = await checkVideo(event.target.files[0]);
+        // if (props?.isRing) {
+        //     // 环拍视频
+        //     if (!(res.duration > 45 && res.duration < 60)) {
+        //         setErrorInfo('请上传时长45s-60s的视频');
+        //         setShowError(true);
+        //     }
+        //     setFile('');
+        //     setFirstFrame('');
+        //     return;
+        // }
         if (props?.isRing || props?.isPersonal) {
             const result = await getVideoFirstFrame(event.target.files[0], 'png');
             setFirstFrame(result.base64); // 显示 Base64 图片
@@ -45,7 +70,6 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         if (props?.is3DBeauty) {
             setFirstFrame(URL.createObjectURL(event.target.files[0])); // 显示 Base64 图片
         }
-        const res: any = await checkVideo(event.target.files[0]);
         setFile(event.target.files[0]);
     }
 
@@ -110,6 +134,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                     </div>
                 </div>
             </div>
+            <ErrorToast info={errorInfo} visible={showError} onClick={() => setShowError(false)}/>
         </div>
     )
 })
