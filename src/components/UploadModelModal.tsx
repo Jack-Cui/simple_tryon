@@ -210,14 +210,6 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
           throw new Error(`获取图片上传token失败: HTTP ${tokenResponse.status}`);
         }
       }
-
-      // 创建模型
-      const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl);
-      if (createModelResponse.ok) {
-        console.log('创建模型成功:', createModelResponse.data);
-      } else {
-        throw new Error(`创建模型失败333: HTTP ${createModelResponse.status}`);
-      }
       // 检查上传结果
       const failedUploads = uploadResults.filter(result => !result.success);
       if (failedUploads.length > 0) {

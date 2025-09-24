@@ -28,6 +28,7 @@ export class TryonService {
   private rtcVideoService: RTCVideoService | null = null;
   private rtcStarted: boolean = false; // 防止重复启动RTC
   private onCreateModelCallback: (() => void) | null = null; // 添加创建模型回调函数
+  private modelListChecked: boolean = false; // 添加模型列表校验标志
 
   constructor() {
     // 监听登台成功事件
@@ -122,6 +123,8 @@ export class TryonService {
             }
             return;
           }
+          // 标记模型列表已校验
+          this.modelListChecked = true;
         } catch (parseError) {
           console.error('解析模型列表数据失败', parseError);
           if (this.onCreateModelCallback) {
@@ -234,37 +237,43 @@ export class TryonService {
     try {
       console.log('开始完整试穿流程...');
       
-      // 0. 校验模型列表
-      console.log('校验模型列表...');
-      const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
-      console.log('模型列表校验完成', response);
-      
-      if (response.ok) {
-        console.log('模型列表校验完成', response.data);
+      // 0. 校验模型列表（如果已经校验过则跳过）
+      if (!this.modelListChecked) {
+        console.log('校验模型列表...');
+        const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+        console.log('模型列表校验完成', response);
         
-        // 解析返回的数据
-        try {
-          const dataObj = JSON.parse(response.data);
-          // 判断如果失败或者data长度是空，则弹窗提示请创建模型
-          if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+        if (response.ok) {
+          console.log('模型列表校验完成', response.data);
+          
+          // 解析返回的数据
+          try {
+            const dataObj = JSON.parse(response.data);
+            // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+            if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+              if (this.onCreateModelCallback) {
+                this.onCreateModelCallback();
+              }
+              return;
+            }
+            // 标记模型列表已校验
+            this.modelListChecked = true;
+          } catch (parseError) {
+            console.error('解析模型列表数据失败', parseError);
             if (this.onCreateModelCallback) {
               this.onCreateModelCallback();
             }
             return;
           }
-        } catch (parseError) {
-          console.error('解析模型列表数据失败', parseError);
+        } else {
+          console.error('模型列表校验失败', response.data);
           if (this.onCreateModelCallback) {
             this.onCreateModelCallback();
           }
           return;
         }
       } else {
-        console.error('模型列表校验失败', response.data);
-        if (this.onCreateModelCallback) {
-          this.onCreateModelCallback();
-        }
-        return;
+        console.log('模型列表已校验过，跳过重复校验');
       }
       
     } catch (error) {
@@ -956,6 +965,7 @@ export class TryonService {
     this.enterStageInfo = null;
     this.clothesList = []; // 清理服饰列表
     this.scenesList = {}; // 清理场景列表
+    this.modelListChecked = false; // 重置模型列表校验标志
   }
 
   // 获取连接状态
