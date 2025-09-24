@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { uploadAPI, modelAPI } from '../services/api';
 import { getLoginCache } from '../utils/loginCache';
 import { tosUploadService, TosCredentials } from '../services/tosUploadService';
+import { ttpUploadService, TTPCredentials } from '../services/ttpUploadService';
 import './UploadModelModal.css';
 
 interface UploadModelModalProps {
@@ -151,7 +152,7 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
       // 处理图片上传
       if (selectedImages.length > 0) {
         console.log('开始处理图片上传');
-        const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
+        const tokenResponse = await uploadAPI.getUploadImageToken(loginCache.token);
         
         if (tokenResponse.ok) {
           const tokenResult = JSON.parse(tokenResponse.data);
@@ -159,41 +160,30 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
           
           if (tokenResult.code === 0) {
             console.log('图片token数据结构:', tokenResult);
+            console.log('tokenResult.data:', tokenResult.data);
+            console.log('sessionToken:', tokenResult.data?.sessionToken);
             
-            const credentials: TosCredentials = {
-              accessKeyId: tokenResult.data.result.credentials.accessKeyId,
-              secretAccessKey: tokenResult.data.result.credentials.secretAccessKey,
-              sessionToken: tokenResult.data.result.credentials.sessionToken,
-              expiredTime: tokenResult.data.result.credentials.expiredTime
-            };
-            
-            console.log('构建的图片credentials:', credentials);
-            
-            // 对比视频和图片的凭证差异
-            console.log('=== 图片上传凭证信息 ===');
-            console.log('accessKeyId:', credentials.accessKeyId);
-            console.log('secretAccessKey长度:', credentials.secretAccessKey?.length);
-            console.log('sessionToken长度:', credentials.sessionToken?.length);
-            console.log('expiredTime:', credentials.expiredTime);
-            
-            // 检查sessionToken是否包含正确的权限
-            if (credentials.sessionToken) {
-              try {
-                const tokenParts = credentials.sessionToken.split('.');
-                if (tokenParts.length >= 2) {
-                  const payload = JSON.parse(atob(tokenParts[1]));
-                  console.log('图片sessionToken payload:', payload);
-                }
-              } catch (e) {
-                console.log('无法解析图片sessionToken payload');
-              }
+            // 检查 sessionToken 是否存在
+            if (!tokenResult.data?.sessionToken) {
+              throw new Error('获取到的 sessionToken 为空，请检查服务器返回的数据结构');
             }
             
-            console.log('初始化TOS客户端用于图片上传');
-            tosUploadService.initialize(credentials);
+            const credentials: TTPCredentials = {
+              stsToken: {
+                accessKeyId: tokenResult.data.accessKeyId,
+                secretAccessKey: tokenResult.data.secretAccessKey,
+                sessionToken: tokenResult.data.sessionToken,
+                expiredTime: tokenResult.data.expiredTime
+              },
+              userId: '1234567890', // 可以根据实际需要设置
+              appId: 653371 // 可以根据实际需要设置
+            };
+            
+            console.log('初始化TTP客户端用于图片上传');
+            ttpUploadService.initialize(credentials);
             
             console.log('开始上传图片文件');
-            const imageResults = await tosUploadService.uploadFiles(selectedImages);
+            const imageResults = await ttpUploadService.uploadFiles(selectedImages);
             uploadResults.push(...imageResults);
             
             console.log('图片上传结果:', imageResults);
