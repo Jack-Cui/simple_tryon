@@ -125,24 +125,24 @@ export class TryonService {
           }
           
           // 检查是否有 modelStatus=4 的模型
-          // const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
-          // if (!hasValidModel) {
-          //   console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
-          //   if (this.onCreateModelCallback) {
-          //     this.onCreateModelCallback();
-          //   }
-          //   return;
-          // }
-          
-          // 检查最后一个元素的 modelStatus 是否为 4
-          const lastModel = dataObj.data[dataObj.data.length - 1];
-          if (!lastModel || lastModel.modelStatus !== 4) {
-            console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
+          const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+          if (!hasValidModel) {
+            console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
             if (this.onCreateModelCallback) {
               this.onCreateModelCallback();
             }
             return;
           }
+          
+          // 检查最后一个元素的 modelStatus 是否为 4
+          // const lastModel = dataObj.data[dataObj.data.length - 1];
+          // if (!lastModel || lastModel.modelStatus !== 4) {
+          //   console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
+          //   if (this.onCreateModelCallback) {
+          //     this.onCreateModelCallback();
+          //   }
+          //   return;
+          // }
           
           console.log('找到有效的模型（modelStatus=4），继续流程');
           // 标记模型列表已校验
@@ -280,23 +280,23 @@ export class TryonService {
             }
             
             // 检查是否有 modelStatus=4 的模型
-            // const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
-            // if (!hasValidModel) {
-            //   console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
-            //   if (this.onCreateModelCallback) {
-            //     this.onCreateModelCallback();
-            //   }
-            //   return;
-            // }
-
-            const lastModel = dataObj.data[dataObj.data.length - 1];
-            if (!lastModel || lastModel.modelStatus !== 4) {
-              console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
+            const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+            if (!hasValidModel) {
+              console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
               if (this.onCreateModelCallback) {
                 this.onCreateModelCallback();
               }
               return;
             }
+
+            // const lastModel = dataObj.data[dataObj.data.length - 1];
+            // if (!lastModel || lastModel.modelStatus !== 4) {
+            //   console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
+            //   if (this.onCreateModelCallback) {
+            //     this.onCreateModelCallback();
+            //   }
+            //   return;
+            // }
             
             
             console.log('找到有效的模型（modelStatus=4），继续流程');
