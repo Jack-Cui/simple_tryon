@@ -43,7 +43,7 @@ export class TosUploadService {
       accessKeySecret: credentials.secretAccessKey,
       // 添加一些额外的配置
       secure: true, // 使用HTTPS
-      requestTimeout: 30000, // 30秒超时
+      requestTimeout: 300000, // 5分钟超时，适合大文件上传
       maxRetryCount: 3, // 重试3次
     });
     
@@ -51,7 +51,7 @@ export class TosUploadService {
   }
 
   // 上传文件到TOS
-  async uploadFile(file: File, key?: string): Promise<UploadResult> {
+  async uploadFile(file: File, key?: string, onProgress?: (progress: number) => void): Promise<UploadResult> {
     if (!this.tos) {
       throw new Error('TOS客户端未初始化');
     }
@@ -69,11 +69,12 @@ export class TosUploadService {
         region: 'cn-shanghai'
       });
 
-      // 尝试最简单的上传配置
+      // 使用putObject上传，TOS SDK会自动处理大文件的分片上传
+      console.log('开始上传文件到TOS');
       const uploadResult = await this.tos.putObject({
         key: fileKey,
         body: file,
-        contentType: file.type,
+        contentType: file.type
       });
 
       console.log('文件上传成功:', uploadResult);
@@ -115,11 +116,27 @@ export class TosUploadService {
   }
 
   // 批量上传文件
-  async uploadFiles(files: File[]): Promise<UploadResult[]> {
+  async uploadFiles(files: File[], onProgress?: (fileIndex: number, progress: number) => void): Promise<UploadResult[]> {
     console.log('开始批量上传文件，数量:', files.length);
     
-    const uploadPromises = files.map(file => this.uploadFile(file));
-    const results = await Promise.all(uploadPromises);
+    const results: UploadResult[] = [];
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      console.log(`正在上传第 ${i + 1}/${files.length} 个文件: ${file.name}`);
+      
+      const result = await this.uploadFile(file, undefined, (progress) => {
+        if (onProgress) {
+          onProgress(i, progress);
+        }
+      });
+      
+      results.push(result);
+      
+      if (!result.success) {
+        console.warn(`文件 ${file.name} 上传失败:`, result.error);
+      }
+    }
     
     console.log('批量上传完成，结果:', results);
     return results;
