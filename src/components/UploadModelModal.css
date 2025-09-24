@@ -251,6 +251,90 @@
   cursor: not-allowed;
 }
 
+.upload-action-video-button {
+  padding: 10px 20px;
+  border: none;
+  background: #10b981;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.upload-action-video-button:hover:not(:disabled) {
+  background: #059669;
+}
+
+.upload-action-video-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* 动作视频结果展示区域 */
+.action-video-results {
+  margin-top: 24px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+}
+
+.action-video-results h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+}
+
+.result-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.result-status {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #dbeafe;
+  color: #1e40af;
+  font-weight: 500;
+}
+
+.result-video {
+  display: flex;
+  justify-content: center;
+}
+
+.result-video video {
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* 响应式设计 */
 @media (max-width: 480px) {
   .upload-model-modal {
@@ -275,7 +359,13 @@
   }
   
   .cancel-button,
-  .upload-submit-button {
+  .upload-submit-button,
+  .upload-action-video-button {
     width: 100%;
+  }
+  
+  .result-video video {
+    width: 100%;
+    height: auto;
   }
 }

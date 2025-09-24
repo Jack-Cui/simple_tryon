@@ -18,10 +18,14 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
 }) => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedVideos, setSelectedVideos] = useState<File[]>([]);
+  const [selectedActionVideos, setSelectedActionVideos] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploadingActionVideo, setIsUploadingActionVideo] = useState(false);
+  const [actionVideoResults, setActionVideoResults] = useState<any[]>([]);
   
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  const actionVideoInputRef = useRef<HTMLInputElement>(null);
 
   console.log('UploadModelModal渲染，isOpen:', isOpen);
 
@@ -46,6 +50,13 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
     setSelectedVideos(prev => [...prev, ...videoFiles]);
   };
 
+  // 处理动作视频选择
+  const handleActionVideoSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    const videoFiles = files.filter(file => file.type.startsWith('video/'));
+    setSelectedActionVideos(prev => [...prev, ...videoFiles]);
+  };
+
   // 移除图片
   const removeImage = (index: number) => {
     setSelectedImages(prev => prev.filter((_, i) => i !== index));
@@ -54,6 +65,11 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
   // 移除视频
   const removeVideo = (index: number) => {
     setSelectedVideos(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // 移除动作视频
+  const removeActionVideo = (index: number) => {
+    setSelectedActionVideos(prev => prev.filter((_, i) => i !== index));
   };
 
   // 处理上传
@@ -256,6 +272,132 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
     }
   };
 
+  // 处理动作视频上传
+  const handleActionVideoUpload = async () => {
+    if (selectedActionVideos.length === 0) {
+      alert('请至少选择一个动作视频文件');
+      return;
+    }
+
+    setIsUploadingActionVideo(true);
+    try {
+      // 获取登录缓存中的用户信息
+      const loginCache = getLoginCache();
+      if (!loginCache?.token) {
+        throw new Error('用户未登录或登录信息缺失');
+      }
+
+      console.log('开始动作视频上传流程，视频数量:', selectedActionVideos.length);
+      
+      // 处理动作视频上传
+      console.log('开始处理动作视频上传');
+      const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
+      
+      if (tokenResponse.ok) {
+        const tokenResult = JSON.parse(tokenResponse.data);
+        console.log('获取动作视频上传token成功:', tokenResult);
+        
+        if (tokenResult.code === 0) {
+          console.log('动作视频token数据结构:', tokenResult);
+          
+          const credentials: TosCredentials = {
+            accessKeyId: tokenResult.data.result.credentials.accessKeyId,
+            secretAccessKey: tokenResult.data.result.credentials.secretAccessKey,
+            sessionToken: tokenResult.data.result.credentials.sessionToken,
+            expiredTime: tokenResult.data.result.credentials.expiredTime
+          };
+          
+          console.log('初始化TOS客户端用于动作视频上传');
+          tosUploadService.initialize(credentials);
+          
+          console.log('开始上传动作视频文件');
+          const videoResults = await tosUploadService.uploadFiles(selectedActionVideos);
+          
+          console.log('动作视频上传结果:', videoResults);
+          
+          // 检查上传结果
+          const failedUploads = videoResults.filter(result => !result.success);
+          if (failedUploads.length > 0) {
+            console.error('部分动作视频上传失败:', failedUploads);
+            alert(`部分动作视频上传失败: ${failedUploads.map(f => f.error).join(', ')}`);
+            return;
+          }
+          
+          // 上传成功后，调用 uploadActionVideo API
+          const successfulUploads = videoResults.filter(result => result.success);
+          console.log('成功上传的动作视频:', successfulUploads);
+          
+          for (const uploadResult of successfulUploads) {
+            if (uploadResult.url) {
+              console.log('开始调用 uploadActionVideo API，视频URL:', uploadResult.url);
+              
+              // 使用文件名作为动作名称
+              const actionName = selectedActionVideos.find(file => 
+                file.name.includes(uploadResult.key || '')
+              )?.name || '动作视频';
+              
+              const uploadActionResponse = await uploadAPI.uploadActionVideo(
+                loginCache.token,
+                actionName,
+                uploadResult.url
+              );
+              
+              if (uploadActionResponse.ok) {
+                const uploadActionResult = JSON.parse(uploadActionResponse.data);
+                console.log('uploadActionVideo API响应:', uploadActionResult);
+                
+                if (uploadActionResult.code === 0) {
+                  console.log('动作视频上传API调用成功');
+                  
+                  // 调用 getActionVideoResult 查看结果
+                  console.log('开始获取动作视频结果');
+                  const resultResponse = await uploadAPI.getActionVideoResult(loginCache.token, 1, 10);
+                  
+                  if (resultResponse.ok) {
+                    const resultData = JSON.parse(resultResponse.data);
+                    console.log('动作视频结果:', resultData);
+                    
+                    if (resultData.code === 0) {
+                      setActionVideoResults(resultData.data?.records || []);
+                      console.log('动作视频结果获取成功:', resultData.data?.records);
+                    } else {
+                      console.warn('获取动作视频结果失败:', resultData.message);
+                    }
+                  } else {
+                    console.warn('获取动作视频结果HTTP错误:', resultResponse.status);
+                  }
+                } else {
+                  console.error('动作视频上传API调用失败:', uploadActionResult.message);
+                  alert(`动作视频上传失败: ${uploadActionResult.message}`);
+                }
+              } else {
+                console.error('动作视频上传API HTTP错误:', uploadActionResponse.status);
+                alert(`动作视频上传失败: HTTP ${uploadActionResponse.status}`);
+              }
+            }
+          }
+          
+          // 显示成功消息
+          alert(`动作视频上传成功！\n成功上传: ${successfulUploads.length} 个文件`);
+          
+          // 上传成功后清空选择
+          setSelectedActionVideos([]);
+          
+        } else {
+          throw new Error(tokenResult.message || '获取动作视频上传token失败');
+        }
+      } else {
+        throw new Error(`获取动作视频上传token失败: HTTP ${tokenResponse.status}`);
+      }
+      
+    } catch (error) {
+      console.error('动作视频上传失败:', error);
+      alert(`动作视频上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    } finally {
+      setIsUploadingActionVideo(false);
+    }
+  };
+
   // 格式化文件大小
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes';
@@ -369,23 +511,101 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
                 </div>
               )}
             </div>
+
+            {/* 动作视频上传 */}
+            <div className="upload-group">
+              <h3>上传动作视频</h3>
+              <div className="upload-area">
+                <input
+                  ref={actionVideoInputRef}
+                  type="file"
+                  accept="video/*"
+                  multiple
+                  onChange={handleActionVideoSelect}
+                  style={{ display: 'none' }}
+                />
+                <button
+                  className="upload-button"
+                  onClick={() => actionVideoInputRef.current?.click()}
+                >
+                  <span className="upload-icon"></span>
+                  <span>选择动作视频</span>
+                </button>
+                <p className="upload-hint">支持 MP4、MOV、AVI 格式</p>
+              </div>
+              
+              {/* 已选择的动作视频 */}
+              {selectedActionVideos.length > 0 && (
+                <div className="selected-files">
+                  <h4>已选择的动作视频 ({selectedActionVideos.length})</h4>
+                  <div className="file-list">
+                    {selectedActionVideos.map((file, index) => (
+                      <div key={index} className="file-item">
+                        <div className="file-info">
+                          <span className="file-name">{file.name}</span>
+                          <span className="file-size">({formatFileSize(file.size)})</span>
+                        </div>
+                        <button
+                          className="remove-button"
+                          onClick={() => removeActionVideo(index)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
+
+          {/* 动作视频结果展示区域 */}
+          {actionVideoResults.length > 0 && (
+            <div className="action-video-results">
+              <h3>动作视频结果</h3>
+              <div className="results-list">
+                {actionVideoResults.map((result, index) => (
+                  <div key={index} className="result-item">
+                    <div className="result-info">
+                      <span className="result-name">{result.remark || `动作视频 ${index + 1}`}</span>
+                      <span className="result-status">{result.status || '处理中'}</span>
+                    </div>
+                    {result.videoUrl && (
+                      <div className="result-video">
+                        <video controls width="200" height="150">
+                          <source src={result.videoUrl} type="video/mp4" />
+                          您的浏览器不支持视频播放
+                        </video>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* 按钮区域 */}
           <div className="modal-footer">
             <button 
               className="cancel-button"
               onClick={onClose}
-              disabled={isUploading}
+              disabled={isUploading || isUploadingActionVideo}
             >
               取消
             </button>
             <button 
               className="upload-submit-button"
               onClick={handleUpload}
-              disabled={isUploading || (selectedImages.length === 0 && selectedVideos.length === 0)}
+              disabled={isUploading || isUploadingActionVideo || (selectedImages.length === 0 && selectedVideos.length === 0)}
             >
               {isUploading ? '上传中...' : '开始上传'}
+            </button>
+            <button 
+              className="upload-action-video-button"
+              onClick={handleActionVideoUpload}
+              disabled={isUploading || isUploadingActionVideo || selectedActionVideos.length === 0}
+            >
+              {isUploadingActionVideo ? '动作视频上传中...' : '上传动作视频'}
             </button>
           </div>
         </div>
