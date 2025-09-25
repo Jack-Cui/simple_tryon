@@ -172,15 +172,15 @@ export class TryonService {
     
     try {
       // 1. 获取房间信息（但不构建登台信息）
-      console.log('步骤1: 获取房间信息');
-      await this.getRoomInfoWithoutStageInfo();
+      // console.log('步骤1: 获取房间信息');
+      // await this.getRoomInfoWithoutStageInfo();
       
-      // 1.5. 获取场景列表
-      console.log('步骤1.5: 获取场景列表');
-      await this.getSceneList();
+      // // 1.5. 获取场景列表
+      // console.log('步骤1.5: 获取场景列表');
+      // await this.getSceneList();
       
       // 1.6. 构建登台信息（在获取场景列表之后）
-      console.log('步骤1.6: 构建登台信息');
+      // console.log('步骤1.6: 构建登台信息');
       await this.buildStageInfo();
       
       // 2. 创建房间
@@ -515,11 +515,13 @@ export class TryonService {
 
   // 创建房间
   private async createRoom(): Promise<number> {
-    if (!this.config || !this.accessToken || !this.roomId) {
+    // if (!this.config || !this.accessToken || !this.roomId) {
+    if (!this.config || !this.accessToken) {
       throw new Error('未配置参数、未登录或未获取房间信息');
     }
+    this.roomId = '1968207063776808961';
     
-    const response = await roomAPI.createRoom(this.roomId, "1", this.accessToken);
+    const response = await roomAPI.createRoom(this.roomId, this.accessToken);
     // console.log('创建房间响应:', response);
     // console.log('创建房间响应数据:', response.data);
     

@@ -358,8 +358,8 @@ export const roomAPI = {
   },
 
   // 创建房间
-  async createRoom(room_id: string, co_creation_id: string, access_token: string): Promise<ApiResponse> {
-    console.log('开始创建房间，房间ID:', room_id, '共创ID:', co_creation_id);
+  async createRoom(room_id: string, access_token: string): Promise<ApiResponse> {
+    console.log('开始创建房间，房间ID:', room_id);
     const endpoint = API_ENDPOINTS.CREATE_ROOM();
     const headers = {
       'Authorization': `Bearer ${access_token}`,
@@ -367,7 +367,7 @@ export const roomAPI = {
     };
     const data = JSON.stringify({
       sourceRoomId: room_id,
-      shareId: co_creation_id
+      // shareId: co_creation_id
     });
     return await apiService.post(endpoint, data, headers);
   },
