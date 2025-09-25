@@ -3,10 +3,14 @@ import { Button, Navbar, Progress, CountDown, Input } from 'tdesign-mobile-react
 import { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon, IconFont } from 'tdesign-icons-react';
 import ErrorToast from '../../components/errorToast';
+import { getLoginCache } from '../../utils/loginCache';
+import { uploadAPI } from '../../services/api';
 interface Props {
     status: number;
     errorMsg?: string;
     list?: any[];
+    setStep?: any;
+    upDateList?: any;
 }
 const MyAction= (props: Props) => {
     // const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
@@ -16,6 +20,7 @@ const MyAction= (props: Props) => {
     const [isEditAction, setIsEditAction] = useState(false); // 是否修改
     const [editNum, setEditNum] = useState(0); // 修改第几项
     const [editValue, setEditValue] = useState(''); // 修改第几项
+    const [deleteMsg, setDeleteMsg] = useState({});
     // 返回
     const handleClick = () => {
         // setStatus(status === 2 ? 1 : 2)
@@ -74,11 +79,29 @@ const MyAction= (props: Props) => {
         setIsEditAction(true);
     }
 
-    const comfirmClear = () => {
-        
+    const createAction = () => {
+        props?.setStep && props.setStep();
     }
 
-    const clearAction = () => {
+    const comfirmClear = async () => {
+        const loginCache: any = getLoginCache();
+        const response = await uploadAPI.deleteActionVideo(loginCache.token, (deleteMsg as any).id);
+        if (response.ok) {
+            const result = JSON.parse(response.data);
+            if (result.code === 0) {
+              console.log('删除动作视频成功:', result.data);
+              props?.upDateList && props.upDateList();
+            //   alert('动作视频删除成功！');
+            } else {
+              throw new Error(result.message || '删除失败');
+            }
+          } else {
+            throw new Error(`删除失败: HTTP ${response.status}`);
+          }
+    }
+
+    const clearAction = (msg: any) => {
+        setDeleteMsg(msg);
         setShowError(true);
     }
 
@@ -86,26 +109,7 @@ const MyAction= (props: Props) => {
         <div className="my-action">
             <Navbar className='my-action-navbar' fixed={false} leftArrow onLeftClick={handleClick}>我的动作</Navbar>
             <div className="my-action-content">
-                {(props?.list && props.list.length > 0) ? props.list.map((item: any) => {
-                    return <div className='my-action-content-detail'>
-                    <div className='my-action-content-detail-img'>
-                        <img src="" alt="" />
-                    </div>
-                    <div className='my-action-content-detail-info'>
-                        {isEditAction ? 
-                            <input maxLength={4} value={editValue} type="text" onChange={nameChange} autoFocus onBlur={keepName}/>
-                            :
-                            <div className='my-action-content-detail-info-item'>
-                            动作名称：{item.remark}
-                            <CheckCircleIcon onClick={editAction} className='edit' size="large"/>
-                        </div>}
-                        
-                        {props.status === 0 && <IconFont name='delete-1'  onClick={clearAction} className='clear' style={{color:'red'}} size="large"/>}
-                    </div>
-                </div>
-                })
-                :
-                <div className='my-action-content-detail'>
+            <div className='my-action-content-detail'>
                     {props.status !== 0 && <div className='my-action-content-detail-mask'>
                         {props.status === 1 && <div className='mask-upload-ing'>
                             <div className='center'>
@@ -137,23 +141,41 @@ const MyAction= (props: Props) => {
                     <div className='my-action-content-detail-img'>
                         <img src="" alt="" />
                     </div>
-                    <div className='my-action-content-detail-info'>
+                    <div className={props.status === 0 ? 'my-action-content-detail-info' : 'my-action-content--detail-blur'}>
                         {isEditAction ? 
                             <input maxLength={4} value={editValue} type="text" onChange={nameChange} autoFocus onBlur={keepName}/>
                             :
                             <div className='my-action-content-detail-info-item'>
                             动作名称：
+                            {/* <IconFont name='edit-2' onClick={editAction} className='edit' size="large"/> */}
+                        </div>}
+                        
+                        {/* {props.status === 0 && <IconFont name='delete-1'  onClick={() => clearAction()} className='clear' style={{color:'red'}} size="large"/>} */}
+                    </div>
+                </div>
+                {(props?.list && props.list.length > 0) && props.list.map((item: any) => {
+                    return <div className='my-action-content-detail'>
+                    <div className='my-action-content-detail-img'>
+                        <img src="" alt="" />
+                    </div>
+                    <div className='my-action-content-detail-info'>
+                        {isEditAction ? 
+                            <input maxLength={4} value={editValue} type="text" onChange={nameChange} autoFocus onBlur={keepName}/>
+                            :
+                            <div className='my-action-content-detail-info-item'>
+                            动作名称：{item.remark}
                             <IconFont name='edit-2' onClick={editAction} className='edit' size="large"/>
                         </div>}
                         
-                        {props.status === 0 && <IconFont name='delete-1'  onClick={clearAction} className='clear' style={{color:'red'}} size="large"/>}
+                        <IconFont name='delete-1'  onClick={() => clearAction(item)} className='clear' style={{color:'red'}} size="large"/>
                     </div>
                 </div>
+                })
             }
                 
             </div>
             <div className='my-action-btn'>
-                <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }}>创建个性化动作</Button>
+                <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={createAction}>创建个性化动作</Button>
             </div>
             <ErrorToast isConfirm info={'确认删除该动作？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>
         </div>

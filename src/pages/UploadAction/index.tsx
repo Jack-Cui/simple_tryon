@@ -40,6 +40,10 @@ const UploadAction = () => {
       setSelectedActionVideos([(personRefEl?.current as any).getFile()]);
     }
   }
+  
+  const createAction = () => {
+    setStep(0);
+  }
 
   useEffect(() => {
     if (selectedActionVideos.length > 0) {
@@ -155,7 +159,7 @@ const UploadAction = () => {
         setActionList(resultData.data?.records || []);
         if ((resultData.data?.records || []).length === 5) {
           setStep(1);
-          setStatus(0);
+          setStatus(NaN);
         }
         console.log('动作视频结果获取成功:', resultData.data?.records);
       } else {
@@ -169,7 +173,7 @@ const UploadAction = () => {
   return (
     <>
       {step === 1 ?
-        <MyAction status={status} list={actionList} />
+        <MyAction status={status} list={actionList} setStep={createAction} upDateList={getActionList} />
         :
         <div className="upload-action">
           <Navbar className='upload-action-navbar' fixed={false} leftArrow onLeftClick={handleClick}>上传个人视频</Navbar>

@@ -136,7 +136,7 @@ export class TryonService {
           
           // 检查最后一个元素的 modelStatus 是否为 4
           const lastModel = dataObj.data[dataObj.data.length - 1];
-          if (!lastModel || lastModel.modelStatus !== 4) {
+          if (!lastModel || lastModel.modelStatus !== -1) {
             console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
             if (this.onCreateModelCallback) {
               this.onCreateModelCallback();
@@ -290,7 +290,7 @@ export class TryonService {
             // }
 
             const lastModel = dataObj.data[dataObj.data.length - 1];
-            if (!lastModel || lastModel.modelStatus !== 4) {
+            if (!lastModel || lastModel.modelStatus !== -1) {
               console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
               if (this.onCreateModelCallback) {
                 this.onCreateModelCallback();

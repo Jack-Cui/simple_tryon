@@ -34,8 +34,8 @@ const CreateModel = () => {
   const ringRefEl = useRef(null);
   const beautyRefEl = useRef(null);
   useEffect(() => {
-    getModelList();
-  },[])
+    step === 0 && getModelList();
+  },[step])
   useEffect(() => {
     if (showError) {
       const timer: any = setTimeout(() => {
@@ -90,6 +90,10 @@ const CreateModel = () => {
     setStep(2);
   }
 
+  const goBackStep = () => {
+    setStep(0);
+  }
+
   const uploadFile = () => {
     uploadFileEl?.current?.click();
   }
@@ -111,7 +115,14 @@ const CreateModel = () => {
       setStep(2);
       setModelList(dataObj.data);
       if (dataObj.data[dataObj.data.length - 1].modelStatus === 4) {
-        setStatus(0);
+        setStatus(0); // 成功
+      } else if (dataObj.data[dataObj.data.length - 1].modelStatus === 0) {
+        if (dataObj.data[dataObj.data.length - 1].applyStatus === 4) {
+          // 审核失败
+          setStatus(3); // 失败
+        } else {
+          setStatus(2); // 审核中
+        }
       }
     }
   }
@@ -256,7 +267,7 @@ const CreateModel = () => {
   return (
     <>
     {step === 2 ?
-      <MyModel status={status} list={modelList}/>
+      <MyModel status={status} list={modelList} backStep={goBackStep}/>
       :
       <div className="create-Model">
       <Navbar className='create-Model-navbar' fixed={false} leftArrow onLeftClick={handleClick}>{step === 0 ? '创建模型' : '3D美颜'}</Navbar>

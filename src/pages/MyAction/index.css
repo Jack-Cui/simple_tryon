@@ -129,6 +129,9 @@
     height: 90px;
     position: relative;
 }
+.my-action-content--detail-blur {
+    filter: blur(5px);
+}
 .my-action-content-detail-info > .clear {
     position: absolute;
     bottom: 0px;
