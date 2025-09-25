@@ -1101,5 +1101,16 @@ export const uploadAPI = {
       'Authorization': `Bearer ${access_token}`
     };
     return await apiService.get(endpoint, headers);
-  }
+  },
+
+  async deleteActionVideo(access_token: string, model_id: Long): Promise<ApiResponse> {
+    console.log('开始删除动作视频，动作视频ID:', model_id.toString());
+    const endpoint = API_ENDPOINTS.DELETE_ACTION_VIDEO(model_id.toString());
+    const headers = {
+      'Authorization': `Bearer ${access_token}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    console.log('删除动作视频请求端点:', endpoint);
+    return await apiService.delete(endpoint, headers);
+  },
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './CreateModelModal.css';
 import UploadModelModal from './UploadModelModal';
-import { modelAPI } from '../services/api';
+import { modelAPI, uploadAPI } from '../services/api';
 import { getLoginCache } from '../utils/loginCache';
 import { useNavigate } from 'react-router-dom';
 const Long = require('long');
@@ -107,6 +107,41 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
               }}
             >
               删除模型
+            </button>
+            <button 
+              className="confirm-button"
+              onClick={async () => {
+                console.log('删除动作视频按钮被点击');
+                
+                try {
+                  // 获取登录缓存中的用户信息
+                  const loginCache = getLoginCache();
+                  if (!loginCache?.token) {
+                    throw new Error('用户未登录或登录信息缺失');
+                  }
+                  
+                  // 调用删除动作视频接口，使用写死的ID
+                  const actionVideoId = Long.fromString('1970824432554676225');
+                  const response = await uploadAPI.deleteActionVideo(loginCache.token, actionVideoId);
+                  
+                  if (response.ok) {
+                    const result = JSON.parse(response.data);
+                    if (result.code === 0) {
+                      console.log('删除动作视频成功:', result.data);
+                      alert('动作视频删除成功！');
+                    } else {
+                      throw new Error(result.message || '删除失败');
+                    }
+                  } else {
+                    throw new Error(`删除失败: HTTP ${response.status}`);
+                  }
+                } catch (error) {
+                  console.error('删除动作视频失败:', error);
+                  alert(`删除动作视频失败: ${error instanceof Error ? error.message : '未知错误'}`);
+                }
+              }}
+            >
+              删除动作视频
             </button>
           </div>
         </div>

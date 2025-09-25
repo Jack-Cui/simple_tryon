@@ -110,6 +110,9 @@ export const API_ENDPOINTS = {
 
   // 获取⽤⼾的⽣成动作列表（也就是历史）
   GET_ACTION_VIDEO_RESULT: (current: number, size: number) => `/admin/sysactions/pageByUser?current=${current}&size=${size}`,
+
+  // 删除动作视频
+  DELETE_ACTION_VIDEO: (action_id: string) => `/admin/sysactions/${action_id}`,
 };
 
 // RTC配置
