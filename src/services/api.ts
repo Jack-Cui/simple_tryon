@@ -478,6 +478,8 @@ export const roomAPI = {
     for (let i = 0; i < clothe_ids.length; i++) {
       const clothe_id = clothe_ids[i];
       console.log(`👕 处理衣服ID [${i + 1}/${clothe_ids.length}]: ${clothe_id}`);
+      console.log(`🔍 当前clothe_ids数组:`, clothe_ids);
+      console.log(`🔍 当前处理的clothe_id:`, clothe_id);
       
       if (!clothe_id || clothe_id === '' || clothe_id === '0') {
         console.log(`⚠️ 跳过无效的衣服ID: ${clothe_id}`);
@@ -563,6 +565,7 @@ export const roomAPI = {
                 clothesId: Long.fromString(clothesId)
               };
               clothesItemInfoList.push(item);
+              console.log(`👕 添加了套装衣服: ${clothesId}, classifyId: ${classifyId}`);
             } else {
               for (let j = 0; j < arr.length; ++j) {
                 const longValue = Long.fromString(arr[j]);
@@ -571,6 +574,7 @@ export const roomAPI = {
                   clothesId: longValue
                 };
                 clothesItemInfoList.push(item);
+                console.log(`👕 添加了套装衣服: ${clothesId}, classifyId: ${classifyId}`);
               }
             }
             
@@ -587,16 +591,23 @@ export const roomAPI = {
                 clothesId: Long.fromString(clothesId)
               };
               clothesItemInfoList.push(item);
-              
-              console.log('👕 从套装切换到非套装:', clothesItemInfoList);
+              console.log(`👕 添加了非套装衣服: ${clothesId}, classifyId: ${classifyId}`);
+              // console.log('👕 从套装切换到非套装:', clothesItemInfoList);
               
             } else {
               // 之前不是套装
-              // 1. 删除存储的同类型衣服
+              // 1. 删除存储的同类型衣服（但保留来自同一suitIds的衣服）
               for (let j = clothesItemInfoList.length - 1; j >= 0; --j) {
                 const item = clothesItemInfoList[j];
                 if (item.classifyId === classifyId) {
-                  clothesItemInfoList.splice(j, 1);
+                  // 检查是否来自同一个suitIds，如果是则不删除
+                  const isFromSameSuitIds = clothe_ids.includes(item.clothesId.toString());
+                  if (!isFromSameSuitIds) {
+                    clothesItemInfoList.splice(j, 1);
+                    console.log(`👕 删除不同suitIds的同类型衣服: ${item.clothesId.toString()}`);
+                  } else {
+                    console.log(`👕 保留同一suitIds的同类型衣服: ${item.clothesId.toString()}`);
+                  }
                 }
               }
 
@@ -607,6 +618,7 @@ export const roomAPI = {
                   const item = clothesItemInfoList[j];
                   if (item.classifyId === 1 || item.classifyId === 2) {
                     clothesItemInfoList.splice(j, 1);
+                    console.log(`👕 删除上下衣: ${item.clothesId.toString()}`);
                   }
                 }
               }
@@ -617,6 +629,7 @@ export const roomAPI = {
                   const item = clothesItemInfoList[j];
                   if (item.classifyId === 7) {
                     clothesItemInfoList.splice(j, 1);
+                    console.log(`👕 删除裙子: ${item.clothesId.toString()}`);
                   }
                 }
               }
@@ -625,23 +638,38 @@ export const roomAPI = {
               for (let j = 0; j < clothesItemInfoList.length; ++j) {
                 const item = clothesItemInfoList[j];
                 if (classifyId === item.classifyId) {
+                  // 如果 classifyId=0，允许多件，不更新直接跳过
+                  if (classifyId === '0') {
+                    index = -1;
+                    break;
+                  }
+
                   item.clothesId = Long.fromString(clothesId);
                   clothesItemInfoList[j] = item;
                   index = j;
+                  console.log(`👕 更新了同类型衣服[${j}]: ${clothesId}`);
+                  break;
                 }
               }
 
-              if (clothesItemInfoList.length >= 3) {
-                clothesItemInfoList.splice(0, 1);
-              }
 
-              const cii = {
-                classifyId: classifyId,
-                clothesId: Long.fromString(clothesId)
-              };
-              clothesItemInfoList.push(cii);
+              // 如果没有找到同类型的衣服，才添加新的
+              if (index === -1) {
+                if (clothesItemInfoList.length >= 3) {
+                  clothesItemInfoList.splice(0, 1);
+                  console.log(`👕 删除第一个衣服: ${clothesItemInfoList[0].clothesId.toString()}`);
+                }
+
+                const cii = {
+                  classifyId: classifyId,
+                  clothesId: Long.fromString(clothesId)
+                };
+                clothesItemInfoList.push(cii);
+                console.log(`👕 添加了新衣服: ${clothesId}, classifyId: ${classifyId}`);
+              }
               
               console.log('👕 非套装处理完成:', clothesItemInfoList);
+              console.log(`👕 添加了衣服: ${clothesId}, classifyId: ${classifyId}`);
             }
           }
           
@@ -657,6 +685,19 @@ export const roomAPI = {
       }
     }
     
+    console.log('🔍 所有衣服处理完成，最终结果:');
+    console.log('🔍 处理的clothe_ids:', clothe_ids);
+    console.log('🔍 最终clothesItemInfoList:', clothesItemInfoList);
+    console.log('🔍 最终isClothesSuit:', isClothesSuit);
+    
+    // 详细打印每个衣服的信息
+    clothesItemInfoList.forEach((item, index) => {
+      console.log(`🔍 衣服[${index}]:`, {
+        classifyId: item.classifyId,
+        clothesId: item.clothesId.toString()
+      });
+    });
+    
     // 参考 sendChangeGarmentRequest 的构建逻辑
     console.log('👕 准备构建服装参数:', {
       clothesItemInfoList: clothesItemInfoList,
@@ -664,9 +705,19 @@ export const roomAPI = {
     });
     
     // 构建服装参数
+    console.log('🔍 开始构建服装参数:');
+    console.log('🔍 clothesItemInfoList[0]:', clothesItemInfoList[0]);
+    console.log('🔍 clothesItemInfoList[1]:', clothesItemInfoList[1]);
+    
     const garment1Id = clothesItemInfoList.length >= 1 ? clothesItemInfoList[0].clothesId : Long.ZERO;
     const garment2Id = clothesItemInfoList.length >= 2 ? clothesItemInfoList[1].clothesId : Long.ZERO;
+    // const garment2Id = Long.fromString("1916792048612323330");
     const garment3Id = clothesItemInfoList.length >= 3 ? clothesItemInfoList[2].clothesId : Long.ZERO;
+    
+    console.log('🔍 构建的garment IDs:');
+    console.log('🔍 garment1Id:', garment1Id.toString());
+    console.log('🔍 garment2Id:', garment2Id.toString());
+    console.log('🔍 garment3Id:', garment3Id.toString());
     const garment1Size = "4"; // 默认尺寸，实际应该从服务器获取
     const garment2Size = garment2Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
     const garment3Size = garment3Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
