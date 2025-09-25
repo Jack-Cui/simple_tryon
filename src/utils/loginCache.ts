@@ -7,7 +7,7 @@ export interface LoginCacheData {
   // phone: string;
   // coCreationId: string;
   tenantId: string;
-  roomId?: string; // 房间ID，可选
+  roomId: string; // 房间ID，可选
   roomName?: string; // 房间名称，可选
   clothesList?: ClothesItem[]; // 服饰列表，可选
   clothesDetails?: { [key: string]: any }; // 衣服详情缓存，可选

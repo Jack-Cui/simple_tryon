@@ -96,7 +96,6 @@ export class WechatShareService {
 
       this.getWechatSignature(currentUrl)
         .then(signature => {
-          // alert('123');
           wx.config({
             debug: false, // 开启调试模式查看详细错误信息
             appId: this.config!.appId,

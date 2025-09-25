@@ -50,6 +50,7 @@ const SimpleTryonTest: React.FC<SimpleTryonTestProps> = () => {
         userId: values.userId,
         accessToken: values.accessToken || '', // 如果没有accessToken，使用空字符串
         rtcConfig, // 添加RTC配置
+        roomId: values.roomId
       };
       
       // 使用事件监听的方式来捕获日志

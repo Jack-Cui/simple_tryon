@@ -65,6 +65,7 @@ const Home = () => {
     userId: string;
     // phone: string;
     tenantId: string;
+    roomId: string;
   } | null>(null);
 
   // 新增状态：服装浏览相关
@@ -1245,7 +1246,8 @@ const Home = () => {
         userId: locationState.userId,
         // phone: locationState.phone,
         // coCreationId: locationState.coCreationId
-        tenantId: locationState.tenantId
+        tenantId: locationState.tenantId,
+        roomId: locationState.roomId
       });
 
       // 如果路由state中有房间名称，也设置到状态中
@@ -1282,9 +1284,8 @@ const Home = () => {
       setLoginParams({
         token: cachedLoginData.token,
         userId: cachedLoginData.userId,
-        // phone: cachedLoginData.phone,
-        // coCreationId: finalCoCreationId,
-        tenantId: cachedLoginData.tenantId
+        tenantId: cachedLoginData.tenantId,
+        roomId: cachedLoginData.roomId,
       });
 
       // 如果缓存中有房间名称，也设置到状态中
@@ -1839,17 +1840,16 @@ const Home = () => {
         const rtcConfig: RTCVideoConfig = {
           appId: '643e46acb15c24012c963951',
           appKey: 'b329b39ca8df4b5185078f29d8d8025f',
-          roomId: loginParams.tenantId,
+          roomId: loginParams.roomId,
           userId: loginParams.userId
         };
 
         const config = {
-          // phone: loginParams.phone,
           tenantId: loginParams.tenantId,
-          // coCreationId: loginParams.coCreationId,
           userId: loginParams.userId,
           accessToken: loginParams.token,
           rtcConfig,
+          roomId: loginParams.roomId,
         };
 
         console.log('开始自动试穿流程，配置:', config);
@@ -1864,17 +1864,16 @@ const Home = () => {
         const rtcConfig: RTCVideoConfig = {
           appId: '643e46acb15c24012c963951',
           appKey: 'b329b39ca8df4b5185078f29d8d8025f',
-          roomId: loginParams.tenantId.toString(),
+          roomId: loginParams.roomId,
           userId: loginParams.userId
         };
 
         const config = {
-          // phone: loginParams.phone,
           tenantId: loginParams.tenantId,
-          // coCreationId: loginParams.coCreationId,
           userId: loginParams.userId,
           accessToken: loginParams.token,
           rtcConfig,
+          roomId: loginParams.roomId,
         };
 
         console.log('开始自动试穿流程，配置:', config);
@@ -1889,7 +1888,7 @@ const Home = () => {
       const rtcConfig: RTCVideoConfig = {
         appId: '643e46acb15c24012c963951',
         appKey: 'b329b39ca8df4b5185078f29d8d8025f',
-        roomId: roomInfo.data.roomId || loginParams.tenantId.toString(),
+        roomId: roomInfo.data.roomId,
         //update by chao 2025.09.19
         // userId: roomInfo.data.userId || loginParams.userId
         userId: loginParams.userId
@@ -1897,13 +1896,10 @@ const Home = () => {
 
       const config = {
         tenantId: loginParams.tenantId,
-        // phone: loginParams.phone,
-        // coCreationId: loginParams.coCreationId,
-        //update by chao 2025.09.09
-        //  userId: roomInfo.data.userId || loginParams.userId,
         userId: loginParams.userId,
         accessToken: loginParams.token,
         rtcConfig,
+        roomId: roomInfo.data.roomId,
       };
 
       console.log('开始自动试穿流程，配置:', config);

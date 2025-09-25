@@ -30,8 +30,9 @@ function App() {
         const urlParams = new URLSearchParams(window.location.search);
         const user_id = urlParams.get('user_id');
         const tenant_id = urlParams.get('tenant_id');
+        const room_id = urlParams.get('room_id') || '';
 
-        console.log('🔍 解析URL参数:', { user_id, tenant_id });
+        console.log('🔍 解析URL参数:', { user_id, tenant_id, room_id });
 
         // 验证必要参数
         if (!user_id || !tenant_id) {
@@ -60,7 +61,7 @@ function App() {
             saveLoginCache({
               token: loginData.access_token,
               userId: user_id,
-              // phone: phone,
+              roomId: room_id,
               tenantId: tenant_id,
             });
             
@@ -69,6 +70,7 @@ function App() {
               console.log('🏠 开始初始化房间信息...');
               await tryonService.initializeAfterLogin({
                 tenantId: tenant_id,
+                roomId: room_id,
                 // phone: phone,
                 // coCreationId: coCreationId,
                 userId: user_id,

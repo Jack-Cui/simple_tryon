@@ -195,7 +195,8 @@ const Login = () => {
             userId: user_id,
             // phone: phoneNumber,
             // coCreationId: finalCoCreationId,
-            tenantId: '2',
+            tenantId: '',
+            roomId: '',
           });
           
           // 登录成功后立即初始化房间信息
@@ -207,6 +208,7 @@ const Login = () => {
               tenantId: '2',
               userId: user_id,
               accessToken: loginData.access_token,
+              roomId: '',
             });
             console.log('✅ 房间信息初始化成功');
             

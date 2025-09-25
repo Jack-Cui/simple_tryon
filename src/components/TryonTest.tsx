@@ -74,7 +74,8 @@ const TryonTest: React.FC<TryonTestProps> = () => {
         tenantId: values.tenantId,
         // coCreationId: values.coCreationId, // 直接使用字符串，不再转换为数字
         userId: values.userId,
-        accessToken: values.accessToken
+        accessToken: values.accessToken,
+        roomId: values.roomId
       };
       
       await tryonService.startTryonFlow(config);
