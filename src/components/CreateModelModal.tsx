@@ -4,6 +4,7 @@ import UploadModelModal from './UploadModelModal';
 import { modelAPI } from '../services/api';
 import { getLoginCache } from '../utils/loginCache';
 import { useNavigate } from 'react-router-dom';
+const Long = require('long');
 
 interface CreateModelModalProps {
   isOpen: boolean;
@@ -71,6 +72,41 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
               }}
             >
               个人视频
+            </button>
+            <button 
+              className="confirm-button"
+              onClick={async () => {
+                console.log('删除模型按钮被点击');
+                
+                try {
+                  // 获取登录缓存中的用户信息
+                  const loginCache = getLoginCache();
+                  if (!loginCache?.token) {
+                    throw new Error('用户未登录或登录信息缺失');
+                  }
+                  
+                  // 调用删除模型接口，使用写死的ID 111
+                  const modelId = Long.fromString('1965621617326092401');
+                  const response = await modelAPI.deleteModel(loginCache.token, modelId);
+                  
+                  if (response.ok) {
+                    const result = JSON.parse(response.data);
+                    if (result.code === 0) {
+                      console.log('删除模型成功:', result.data);
+                      alert('模型删除成功！');
+                    } else {
+                      throw new Error(result.message || '删除失败');
+                    }
+                  } else {
+                    throw new Error(`删除失败: HTTP ${response.status}`);
+                  }
+                } catch (error) {
+                  console.error('删除模型失败:', error);
+                  alert(`删除模型失败: ${error instanceof Error ? error.message : '未知错误'}`);
+                }
+              }}
+            >
+              删除模型
             </button>
           </div>
         </div>

@@ -73,6 +73,50 @@ class ApiService {
     }
   }
 
+  // DELETE请求
+  async delete(endpoint: string, headers?: Record<string, string>): Promise<ApiResponse> {
+    const url = this.baseURL + endpoint;
+    const requestHeaders = {
+      ...API_CONFIG.COMMON_HEADERS,
+      ...headers
+    };
+
+    console.log('发起DELETE请求:', url);
+    console.log('请求头:', requestHeaders);
+
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: requestHeaders,
+        mode: 'cors', // 明确指定CORS模式
+        credentials: 'omit' // 不发送cookies
+      });
+
+      console.log('DELETE请求状态码:', response.status);
+      console.log('DELETE请求状态文本:', response.statusText);
+      console.log('DELETE请求响应头:', Object.fromEntries(response.headers.entries()));
+      
+      const responseText = await response.text();
+      // console.log('DELETE请求响应内容:', responseText);
+
+      return {
+        status: response.status,
+        data: responseText,
+        ok: response.ok
+      };
+    } catch (error) {
+      console.error('DELETE请求详细错误:', error);
+      if (error instanceof Error) {
+        console.error('错误类型:', error.constructor.name);
+        console.error('错误消息:', error.message);
+        if (error instanceof TypeError) {
+          console.error('这可能是CORS错误或网络连接问题');
+        }
+      }
+      throw error;
+    }
+  }
+
   // POST请求
   async post(endpoint: string, data?: any, headers?: Record<string, string>): Promise<ApiResponse> {
     const url = this.baseURL + endpoint;
@@ -875,6 +919,18 @@ export const modelAPI = {
     };
     console.log('创建模型请求数据:', data);
     return await apiService.post(endpoint, JSON.stringify(data), headers);
+  },
+
+
+  async deleteModel(access_token: string, model_id: Long): Promise<ApiResponse> {
+    console.log('开始删除模型，模型ID:', model_id.toString());
+    const endpoint = API_ENDPOINTS.DELETE_MODEL(model_id.toString());
+    const headers = {
+      'Authorization': `Bearer ${access_token}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    console.log('删除模型请求端点:', endpoint);
+    return await apiService.delete(endpoint, headers);
   },
 
   async getModelList(access_token: string, user_id: string): Promise<ApiResponse> {

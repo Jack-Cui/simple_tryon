@@ -102,6 +102,9 @@ export const API_ENDPOINTS = {
   // 创建模型
   CREATE_MODEL: () => `/admin/model/createOrUpdate`,
 
+  // 删除模型
+  DELETE_MODEL: (model_id: string) => `/admin/model/delete/${model_id}`,
+
   // 上传动作视频
   UPLOAD_ACTION_VIDEO: () => `/admin/sysactions`,
 
