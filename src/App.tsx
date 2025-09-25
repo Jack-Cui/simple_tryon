@@ -17,6 +17,7 @@ import CreateModel from './pages/CreateModel';
 import MyModel from './pages/MyModel';
 import UploadAction from './pages/UploadAction';
 import MyAction from './pages/MyAction';
+import SubscribePackage from './pages/SubscribePackage';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -174,7 +175,7 @@ function App() {
           <Route path="/create-model" element={<CreateModel />} />
           {/* <Route path="/my-model" element={<MyModel />} /> */}
           <Route path="/upload-action" element={<UploadAction />} />
-          {/* <Route path="/my-action" element={<MyAction />} /> */}
+          <Route path="/subs-package" element={<SubscribePackage />} />
           <Route 
             path="/home" 
             element={

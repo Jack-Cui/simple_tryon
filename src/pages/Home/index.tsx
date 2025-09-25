@@ -34,6 +34,7 @@ import FixedDownloadPrompt from '../../components/FixedDownloadPrompt';
 import ShareModal from '../../components/ShareModal';
 import CreateModelModal from '../../components/CreateModelModal';
 import ReactHowler from 'react-howler';
+import HomeOpt from '../../components/HomeOpt';
 
 const Long = require('long');
 
@@ -2274,6 +2275,7 @@ const Home = () => {
         flexDirection: 'column',
         position: 'relative'
       }}>
+        <HomeOpt />
         {/* 音乐开始 */}
         <ReactHowler
           src={musicUrl}
