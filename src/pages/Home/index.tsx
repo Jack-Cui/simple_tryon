@@ -1833,7 +1833,7 @@ const Home = () => {
       // 获取房间信息以获取userId
       console.log('🔍 开始获取房间信息...');
       const { roomAPI } = await import('../../services/api');
-      const roomResponse = await roomAPI.getSysRoomShare(loginParams.tenantId, loginParams.token);
+      const roomResponse = await roomAPI.getSysRoomShare(loginParams.roomId, loginParams.token);
       
       if (!roomResponse.ok || !roomResponse.data) {
         console.warn('⚠️ 获取房间信息失败，使用默认userId');

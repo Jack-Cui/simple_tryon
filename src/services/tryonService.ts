@@ -182,7 +182,7 @@ export class TryonService {
       
       // 1.6. 构建登台信息（在获取场景列表之后）
       // console.log('步骤1.6: 构建登台信息');
-      await this.buildStageInfo(this.config.roomId || '');
+      await this.buildStageInfo('1968207063776808961');
       
       // 2. 创建房间
       console.log('步骤2: 创建房间');
@@ -340,7 +340,7 @@ export class TryonService {
       
       // 1.6. 构建登台信息（在获取场景列表之后）
       console.log('步骤1.6: 构建登台信息', this.config.roomId);
-      await this.buildStageInfo(this.config.roomId || '');
+      await this.buildStageInfo('1968207063776808961');
       
       // 2. 创建房间
       console.log('步骤2: 创建房间');
@@ -520,11 +520,19 @@ export class TryonService {
 
   // 创建房间
   private async createRoom(): Promise<number> {
-    // if (!this.config || !this.accessToken || !this.roomId) {
     if (!this.config || !this.accessToken || !this.config.roomId) {
-      throw new Error('未配置参数、未登录或未获取房间信息');
+      if (!this.config) {
+        throw new Error('未配置参数');
+      }
+      if (!this.accessToken) {
+        throw new Error('未登录');
+      }
+      this.config.roomId = '1968207063776808961';
+      if (!this.config.roomId) {
+        throw new Error('未配置房间ID');
+      }
+      // throw new Error('未配置参数、未登录或未获取房间信息');
     }
-    
     const response = await roomAPI.createRoom(this.config.roomId, this.accessToken);
     // console.log('创建房间响应:', response);
     // console.log('创建房间响应数据:', response.data);
@@ -696,7 +704,19 @@ export class TryonService {
 
   // 连接WebSocket并执行登台流程
   private async connectAndPerformStage(scheduleResult: any): Promise<void> {
-    if (!this.config || !this.accessToken || !this.roomId || !this.enterStageInfo) {
+    if (!this.config || !this.accessToken || !this.roomPrimaryId || !this.enterStageInfo) {
+      if (!this.config) {
+        throw new Error('未配置参数');
+      }
+      if (!this.accessToken) {
+        throw new Error('未登录');
+      }
+      if (!this.roomPrimaryId) {
+        throw new Error('未获取房间ID');
+      }
+      if (!this.enterStageInfo) {
+        throw new Error('未获取登台信息');
+      }
       throw new Error('缺少必要参数');
     }
     
@@ -705,16 +725,13 @@ export class TryonService {
       uid: this.config.userId,
       accessToken: this.accessToken,
       insToken: scheduleResult.data.inst_acc_info.token,
-      // roomId: this.roomId,
       roomId: this.roomPrimaryId?.toString() || '',
       enterStageInfo: this.enterStageInfo,
       rtcConfig: {
         appId: RTC_CONFIG.APP_ID,
         appKey: RTC_CONFIG.APP_KEY,
         roomId: this.roomPrimaryId?.toString() || '',
-        //update by chao 2025.09.09 09.19
         userId: this.config.userId,
-        // userId: this.config.rtcConfig?.userId || '',
         token: this.generateRTCToken() // 动态生成token
       }
     };

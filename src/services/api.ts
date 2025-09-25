@@ -339,7 +339,7 @@ export const roomAPI = {
 
   // 获取房间信息
   async getSysRoomShare(co_creation_id: string, access_token: string): Promise<ApiResponse> {
-    console.log('开始获取房间信息，共创ID:', co_creation_id);
+    console.log('开始获取房间信息，房间ID:', co_creation_id);
     const endpoint = API_ENDPOINTS.GET_SYSROOMSHARE(co_creation_id);
     const headers = {
       'Authorization': `Bearer ${access_token}`
