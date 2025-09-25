@@ -136,7 +136,7 @@ export class TryonService {
           
           // 检查最后一个元素的 modelStatus 是否为 4
           const lastModel = dataObj.data[dataObj.data.length - 1];
-          if (!lastModel || lastModel.modelStatus !== -1) {
+          if (!lastModel || lastModel.modelStatus !== 0) {
             console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
             if (this.onCreateModelCallback) {
               this.onCreateModelCallback();
@@ -290,7 +290,7 @@ export class TryonService {
             // }
 
             const lastModel = dataObj.data[dataObj.data.length - 1];
-            if (!lastModel || lastModel.modelStatus !== -1) {
+            if (!lastModel || lastModel.modelStatus !== 0) {
               console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
               if (this.onCreateModelCallback) {
                 this.onCreateModelCallback();
@@ -426,12 +426,13 @@ export class TryonService {
 
   // 构建登台信息（在获取场景列表之后）
   private async buildStageInfo(): Promise<void> {
+    console.log('构建登台信息...');
     if (!this.config || !this.accessToken) {
       throw new Error('未配置参数或未提供accessToken');
     }
-
+    console.log('重新获取房间信息用于构建登台信息...');
     // 重新获取房间信息用于构建登台信息
-    const response = await roomAPI.getSysRoomShare("1", this.accessToken);
+    const response = await roomAPI.getRoomInfoByRoomId("1968207063776808961", this.accessToken);
     if (!response.ok) {
       throw new Error(`获取房间信息失败: HTTP ${response.status}`);
     }
@@ -443,6 +444,9 @@ export class TryonService {
 
     // 构建登台信息
     this.enterStageInfo = await roomAPI.buildEnterStageInfo(roomInfo, this.accessToken);
+    if (this.enterStageInfo === '') {
+      throw new Error('构建登台信息失败');
+    }
     console.log('登台信息构建成功:', this.enterStageInfo);
   }
 

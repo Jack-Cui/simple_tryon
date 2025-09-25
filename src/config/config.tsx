@@ -65,6 +65,9 @@ export const API_ENDPOINTS = {
     `/admin/oauth/token?mobile=OCL@${user_id}&id_token=AUTHMINIAPP@${tenant_id}&grant_type=mobile`,
   // 获取房间信息
   GET_SYSROOMSHARE: (co_creation_id: string) => `/admin/sysroomshare/${co_creation_id}`,
+
+  // 获取房间信息
+  GET_ROOM_INFO_BY_ROOM_ID: (room_id: string) => `/admin/room/query?id=${room_id}`,
   
   GET_MODEL_LIST: (user_id: string) => `/admin/model/list?user_id=${user_id}`,
 

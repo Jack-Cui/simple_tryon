@@ -328,6 +328,16 @@ export const authAPI = {
 // 房间相关API方法
 export const roomAPI = {
   // 获取房间信息
+  async getRoomInfoByRoomId(room_id: string, access_token: string): Promise<ApiResponse> {
+    console.log('开始获取房间信息，房间ID:', room_id);
+    const endpoint = API_ENDPOINTS.GET_ROOM_INFO_BY_ROOM_ID(room_id);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  },
+
+  // 获取房间信息
   async getSysRoomShare(co_creation_id: string, access_token: string): Promise<ApiResponse> {
     console.log('开始获取房间信息，共创ID:', co_creation_id);
     const endpoint = API_ENDPOINTS.GET_SYSROOMSHARE(co_creation_id);
@@ -403,42 +413,62 @@ export const roomAPI = {
     console.log('🚀 开始构建进入舞台信息');
     console.log('🔍 房间信息:', room_info);
     console.log('🔍 access_token:', access_token ? '存在' : '不存在');
-    
+    if (!room_info) {
+      console.warn('⚠️ 房间信息为空');
+      return '';
+    }
+    if (!room_info.data) {
+      console.warn('⚠️ 房间信息中没有data');
+      return '';
+    }
+    if (room_info.data.clothesList.length === 0) {
+      console.warn('⚠️ 房间信息中没有衣服列表');
+      return '';
+    }
+    if (room_info.data.clothesList[0].clothesItems.length === 0) {
+      console.warn('⚠️ 房间信息中没有衣服列表');
+      return '';
+    }
+    const suitIds = room_info.data.clothesList[0].clothesItems[0].suitIds;
+    if (!suitIds) {
+      console.warn('⚠️ 房间信息中没有衣服ID');
+      return '';
+    }
     const room_info_data = room_info.data;
     console.log('🔍 房间数据:', room_info_data);
-    console.log('🔍 clothId:', room_info_data.clothId);
+    console.log('🔍 suitIds:', suitIds);
     console.log('🔍 userId:', room_info_data.userId);
     console.log('🔍 scenarioId:', room_info_data.scenarioId);
 
     // 安全检查：确保clothId存在
-    if (!room_info_data.clothId) {
-      console.warn('⚠️ 房间信息中没有clothId，使用空的服装列表');
-      const enter_stage_info: EnterStageInfo = {
-        AvatarId: 0,
-        UserId: String(room_info_data.userId || 0),
-        MapName: "Maps_jiaotang",
-        Garments: {
-          Garment1Id: "0",
-          Garment1Size: "1",
-          Garment2Id: "0",
-          Garment2Size: "1",
-          Garment3Id: "0",
-          Garment3Size: "1"
-        },
-        Animation: null,
-        Camera: true,
-        Voice: false,
-        isControl: true,
-        startTime: 0,
-        endTime: 0,
-        Size: 4,
-        CustomModelUrl: "12345"
-      };
-      console.log('进入舞台信息（无服装）:', enter_stage_info);
-      return JSON.stringify(enter_stage_info);
-    }
+    // if (!room_info_data.clothId) {
+    //   console.warn('⚠️ 房间信息中没有clothId，使用空的服装列表');
+    //   const enter_stage_info: EnterStageInfo = {
+    //     AvatarId: 0,
+    //     UserId: String(room_info_data.userId || 0),
+    //     MapName: "Maps_jiaotang",
+    //     Garments: {
+    //       Garment1Id: "0",
+    //       Garment1Size: "1",
+    //       Garment2Id: "0",
+    //       Garment2Size: "1",
+    //       Garment3Id: "0",
+    //       Garment3Size: "1"
+    //     },
+    //     Animation: null,
+    //     Camera: true,
+    //     Voice: false,
+    //     isControl: true,
+    //     startTime: 0,
+    //     endTime: 0,
+    //     Size: 4,
+    //     CustomModelUrl: "12345"
+    //   };
+    //   console.log('进入舞台信息（无服装）:', enter_stage_info);
+    //   return JSON.stringify(enter_stage_info);
+    // }
 
-    const clothe_ids = room_info_data.clothId.split(';');
+    const clothe_ids = suitIds.split(',');
     const garments: any = {};
     
     // 用于存储处理后的服装信息
@@ -661,40 +691,38 @@ export const roomAPI = {
     let scene_name = "";
     
     // 优先使用房间信息中的场景ID来查找场景代码和名称
-    if (room_info_data.scenarioId) {
-      console.log("🔍 房间信息中有场景ID:", room_info_data.scenarioId);
-      if (login_cache && login_cache.scenesList) {
-        const scene_list = login_cache.scenesList;
-        if (scene_list[room_info_data.scenarioId]) {
-          scene_code = scene_list[room_info_data.scenarioId].code;
-          scene_name = scene_list[room_info_data.scenarioId].name;
-          console.log("✅ 根据场景ID找到场景代码:", scene_code, "名称:", scene_name);
-        } else {
-          console.log("⚠️ 场景ID在缓存中未找到:", room_info_data.scenarioId);
-        }
-      }
-    }
+    // if (room_info_data.scenarioId) {
+    //   console.log("🔍 房间信息中有场景ID:", room_info_data.scenarioId);
+    //   if (login_cache && login_cache.scenesList) {
+    //     const scene_list = login_cache.scenesList;
+    //     if (scene_list[room_info_data.scenarioId]) {
+    //       scene_code = scene_list[room_info_data.scenarioId].code;
+    //       scene_name = scene_list[room_info_data.scenarioId].name;
+    //       console.log("✅ 根据场景ID找到场景代码:", scene_code, "名称:", scene_name);
+    //     } else {
+    //       console.log("⚠️ 场景ID在缓存中未找到:", room_info_data.scenarioId);
+    //     }
+    //   }
+    // }
     
     // 如果没有找到场景代码，使用缓存中的第一个场景
-    if (scene_code === "") {
-      if (login_cache && login_cache.scenesList) {
-        const scene_list = login_cache.scenesList;
-        const scene_list_keys = Object.keys(scene_list);
-        if (scene_list_keys.length > 0) {
-          const scene_id = scene_list_keys[0];
-          scene_name = scene_list[scene_id].name;
-          scene_code = scene_list[scene_id].code;
-          console.log("🔄 使用缓存中第一个场景:", scene_name, "代码:", scene_code);
-        }
-      }
-    }
+    // if (scene_code === "") {
+    //   if (login_cache && login_cache.scenesList) {
+    //     const scene_list = login_cache.scenesList;
+    //     const scene_list_keys = Object.keys(scene_list);
+    //     if (scene_list_keys.length > 0) {
+    //       const scene_id = scene_list_keys[0];
+    //       scene_name = scene_list[scene_id].name;
+    //       scene_code = scene_list[scene_id].code;
+    //       console.log("🔄 使用缓存中第一个场景:", scene_name, "代码:", scene_code);
+    //     }
+    //   }
+    // }
     
     // 如果还是没有场景代码，使用默认值
-    if (scene_code === "") {
-      scene_code = "Maps_jiaotang";
-      scene_name = "教堂";
-      console.log("⚠️ 场景代码为空，使用默认场景代码: Maps_jiaotang");
-    }
+    scene_code = "Maps_baimu";
+    scene_name = "白幕";
+    console.log("⚠️ 场景代码为空，使用默认场景代码: Maps_jiaotang");
     
     // 更新缓存中的默认场景名称
     if (scene_name && login_cache) {
@@ -708,7 +736,8 @@ export const roomAPI = {
     
     const enter_stage_info: EnterStageInfo = {
       AvatarId: 0,
-      UserId: String(room_info_data.userId || 0),
+      UserId: "1970059409683144705",
+      // UserId: String(room_info_data.userId || 0),
       // MapName: room_info_data.scenarioId,
       MapName: scene_code,
       Garments: garments,
