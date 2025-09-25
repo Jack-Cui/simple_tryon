@@ -20,19 +20,36 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLoginCache } from '../../utils/loginCache';
 import { uploadAPI } from '../../services/api';
-const HomeOpt = () => {
+interface Props {
+    hotClick?: (flag: boolean) => void;
+    actionClick?: (msg: any) => void;
+    sizeClick?: (size: string) => void;
+}
+const HomeOpt = (props: any) => {
     const navigate = useNavigate();
     const [showHot, setShowHot] = useState(false);
     const [showAction, setShowAction] = useState(false);
     const [actionList, setActionList] = useState([]);
+    const [showIcon, setShowIcon] = useState(false);
     const actionIconList = [Action1, Action2, Action3, Action4, Action5];
+    const sizeList = ['3XL', 'XXL', 'XL', 'L', 'M', 'S'];
 
     useEffect(() => {
         getActionList();
     }, [])
 
+    useEffect(() => {
+        props?.hotClick && props.hotClick(showHot);
+    }, [showHot])
+
     const checkAction = (msg: any) => {
         console.log('选中动作', msg);
+        props?.actionClick && props.actionClick(msg);
+    }
+
+    const checkSize = (item: string) => {
+        console.log('选中尺寸', item);
+        props?.sizeClick && props.sizeClick(item);
     }
 
     const goToModel = () => {
@@ -84,7 +101,12 @@ const HomeOpt = () => {
                     </>}
                     <img className="home-opt-list-img" onClick={() => setShowAction(!showAction)} src={showAction ? ActionOn : ActionOff} alt="" />
                 </div>
-                <img className="home-opt-list-img" src={Size} alt="" />
+                <div className='home-opt-list-item'>
+                   {showIcon && 
+                    sizeList.map(item => <div className='home-opt-list-item-size' onClick={() => checkSize(item)}>{item}</div> )
+                   }
+                    <img className="home-opt-list-img"  onClick={() => setShowIcon(!showIcon)} src={Size} alt="" />
+                </div>
                 <img className="home-opt-list-img" src={Model} alt="" onClick={goToModel} />
                 <img className="home-opt-list-img" src={UploadVoide} onClick={goToUpload} alt="" />
                 <img className="home-opt-list-img" src={Subscribe} onClick={goToSubs} alt="" />

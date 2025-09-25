@@ -476,6 +476,49 @@ const Home = () => {
     }
   };
 
+
+  const handleActionModelClick = (msg: any) => {
+    console.log('选中动作11111', msg);
+  }
+
+  const handleHotClick = (flag: boolean) => {
+    console.log('🔥 111热力图图标被点击，当前状态:', isHeatMapEnabled);
+
+    // 切换热力图开关状态
+    const newHeatMapState = flag;
+    setIsHeatMapEnabled(newHeatMapState);
+
+    // 检查RTC连接状态
+    if (!rtcVideoService.getConnectionStatus()) {
+      console.error('❌ RTC未连接，无法发送热力图请求');
+      console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
+      console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
+      console.log('🔧 调试信息：');
+      console.log('  - showSelectionScreen:', showSelectionScreen);
+      console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
+      console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
+      console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
+      return;
+    }
+
+    // 检查是否在视频播放状态（已登台）
+    if (showSelectionScreen) {
+      console.error('❌ 未在视频播放状态，无法发送热力图请求');
+      return;
+    }
+
+    // 发送热力图RTC消息
+    try {
+      console.log('🚀 开始发送热力图RTC消息...', newHeatMapState);
+      rtcVideoService.sendHeatMap(newHeatMapState);
+      console.log('✅ 热力图RTC消息已发送:', newHeatMapState);
+    } catch (error) {
+      console.error('❌ 发送热力图RTC消息失败:', error);
+      // 显示错误提示
+      alert(`热力图操作失败: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
   // 处理实景图标点击
   const handleRealSceneClick = async (index?: number) => {
     if (index === undefined) {
@@ -2275,7 +2318,7 @@ const Home = () => {
         flexDirection: 'column',
         position: 'relative'
       }}>
-        <HomeOpt />
+        <HomeOpt hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)}/>
         {/* 音乐开始 */}
         <ReactHowler
           src={musicUrl}
@@ -2342,7 +2385,7 @@ const Home = () => {
                 gap: '10px'
               }}>
                 {/* 热力图图标 */}
-                <div style={{
+                {/* <div style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -2389,7 +2432,7 @@ const Home = () => {
                   }}>
                     松紧热图
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* 动作区域 */}
@@ -2399,7 +2442,7 @@ const Home = () => {
                 gap: '10px'
               }}>
                 {/* 主动作图标 */}
-                <div style={{
+                {/* <div style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -2446,10 +2489,10 @@ const Home = () => {
                   }}>
                     {isActionExpanded ? actionIcons[selectedActionIndex].name : defaultActionIcon.name}
                   </div>
-                </div>
+                </div> */}
 
                 {/* 展开的动作选项 */}
-                {isActionExpanded && (
+                {/* {isActionExpanded && (
                   <div style={{
                     display: 'flex',
                     gap: '8px', // 减少间距，确保不超出屏幕
@@ -2506,7 +2549,7 @@ const Home = () => {
                       </div>
                     ))}
                   </div>
-                )}
+                )} */}
               </div>
 
               {/* 实景区域已删除 */}
@@ -2792,6 +2835,7 @@ const Home = () => {
       flexDirection: 'column',
       position: 'relative'
     }}>
+      <HomeOpt hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)}/>
       {/* 音乐开始 */}
       <ReactHowler
         src={musicUrl}
@@ -2900,7 +2944,7 @@ const Home = () => {
             gap: '10px'
           }}>
             {/* 热力图图标 */}
-            <div style={{
+            {/* <div style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -2958,7 +3002,7 @@ const Home = () => {
               }}>
                 松紧热图
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* 动作区域 */}
@@ -2968,7 +3012,7 @@ const Home = () => {
             gap: '10px'
           }}>
             {/* 主动作图标 */}
-            <div style={{
+            {/* <div style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -3026,10 +3070,10 @@ const Home = () => {
               }}>
                 {isActionExpanded ? actionIcons[selectedActionIndex].name : defaultActionIcon.name}
               </div>
-            </div>
+            </div> */}
 
             {/* 展开的动作选项 */}
-            {isActionExpanded && (
+            {/* {isActionExpanded && (
               <div style={{
                 display: 'flex',
                 gap: '8px', // 减少间距，确保不超出屏幕
@@ -3091,7 +3135,7 @@ const Home = () => {
                   </div>
                 ))}
               </div>
-            )}
+            )} */}
           </div>
 
           {/* 实景区域 - 只在有场景数据时显示 */}
@@ -3228,7 +3272,7 @@ const Home = () => {
           }}>
 
             {/* 展开的动作选项 */}
-            {isMoveExpanded && (
+            {/* {isMoveExpanded && (
               <div style={{
                 display: 'flex',
                 gap: '8px', // 减少间距，确保不超出屏幕
@@ -3290,9 +3334,9 @@ const Home = () => {
                   </div>
                 ))}
               </div>
-            )}
+            )} */}
             {/* 更多图标 */}
-            <div style={{
+            {/* <div style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -3350,7 +3394,7 @@ const Home = () => {
               }}>
                 {defaultMoveIcon.name}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* 视频播放区域 - 全屏显示 */}
