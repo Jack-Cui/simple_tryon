@@ -956,6 +956,9 @@ const Home = () => {
             { x: scaleDelta * scaleFactor, y: 0, z: 0 },
             Date.now()
           );
+          //update by chao 2025.09.25
+          if(!isVideoPaused) setIsVideoPaused(true);
+         
         } catch { }
         setLastScaleDistance(currentDistance);
       }
@@ -972,7 +975,8 @@ const Home = () => {
       setIsDragging(true);
       if (!rtcVideoService.getConnectionStatus()) return;
       try {
-        const rotationScale = 0.3;
+        //update by chao 2025.09.25 0.3
+        const rotationScale = 0.08;
         // 修复旋转方向：向上移动时Y值为负，向下移动时Y值为正
         rtcVideoService.sendTouchScreen(
           proto.eTouchType.rotate,
