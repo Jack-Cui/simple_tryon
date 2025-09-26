@@ -44,7 +44,7 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
             >
               再想想
             </button>
-            <button 
+            {/* <button 
               className="confirm-button"
               onClick={() => {
                 console.log('去建模按钮被点击');
@@ -56,24 +56,24 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
               }}
             >
               去建模
-            </button>
+            </button> */}
             <button 
               className="confirm-button"
               onClick={() => {
                 navigate('/create-model');
               }}
             >
-              去建模plus
+              去建模
             </button>
-            <button 
+            {/* <button 
               className="confirm-button"
               onClick={() => {
                 navigate('/upload-action');
               }}
             >
               个人视频
-            </button>
-            <button 
+            </button> */}
+            {/* <button 
               className="confirm-button"
               onClick={async () => {
                 console.log('删除模型按钮被点击');
@@ -107,8 +107,8 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
               }}
             >
               删除模型
-            </button>
-            <button 
+            </button> */}
+            {/* <button 
               className="confirm-button"
               onClick={async () => {
                 console.log('删除动作视频按钮被点击');
@@ -142,7 +142,7 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
               }}
             >
               删除动作视频
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

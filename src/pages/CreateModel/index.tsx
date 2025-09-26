@@ -10,6 +10,7 @@ import { modelAPI, uploadAPI } from '../../services/api';
 import { TosCredentials, tosUploadService } from '../../services/tosUploadService';
 import { TTPCredentials, ttpUploadService } from '../../services/ttpUploadService';
 import MyModel from '../MyModel';
+import { useNavigate } from 'react-router-dom';
 const infoList1 = [
   '1.光线与背景：光线明亮均匀，背景简洁非纯白；避免镜面反光和他人入镜。',
   '2.形象与着装：露额耳，无刘海，不戴眼镜饰品；穿贴身无装饰背心短裤，赤脚。',
@@ -23,6 +24,7 @@ const infoList2 = [
     '4. 清晰与整洁： 面部五官清晰无遮挡，表情自然。'
 ]
 const CreateModel = () => {
+  const navigate = useNavigate();
   const uploadFileEl = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
   const [showError, setShowError] = useState(false);
@@ -50,6 +52,8 @@ const CreateModel = () => {
     console.log('back');
     if (step === 1) {
         setStep(0)
+    } else {
+      navigate(-1);
     }
   }
 

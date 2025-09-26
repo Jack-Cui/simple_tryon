@@ -8,6 +8,7 @@ import MyAction from "../MyAction";
 import { getLoginCache } from "../../utils/loginCache";
 import { uploadAPI } from "../../services/api";
 import { TosCredentials, tosUploadService } from "../../services/tosUploadService";
+import { useNavigate } from "react-router-dom";
 const infoList1 = [
   '1.光线与背景：光线明亮均匀，背景简洁非纯白；避免镜面反光和他人入镜。',
   '2.形象与着装：露额耳，无刘海，不戴眼镜饰品；穿贴身无装饰背心短裤，赤脚。',
@@ -22,8 +23,9 @@ const UploadAction = () => {
   const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
   const [actionList, setActionList] = useState<any[]>([]);
   const [selectedActionVideos, setSelectedActionVideos] = useState<any[]>([]);
+  const navigate = useNavigate();
   const handleClick = () => {
-
+    navigate(-1);
   }
   useEffect(() => {
     getActionList();
