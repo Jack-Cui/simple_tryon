@@ -61,6 +61,7 @@ export enum eClientPID {
     LatencyReq = 1007,
     ChangeMapReq = 1008,
     HeatMapReq = 1009,
+    GetImagesInfoReq = 1012,
     HeartBeatReq = 1111
 }
 
@@ -5143,6 +5144,96 @@ export class oRoomSetMaxStageCountAsw implements IoRoomSetMaxStageCountAsw {
 
     /**
      * Gets the default type url for oRoomSetMaxStageCountAsw
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oGetImagesInfoReq. */
+export class oGetImagesInfoReq implements IoGetImagesInfoReq {
+
+    /**
+     * Constructs a new oGetImagesInfoReq.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoGetImagesInfoReq);
+
+    /** oGetImagesInfoReq videoId. */
+    public videoId: (number|Long);
+
+    /**
+     * Creates a new oGetImagesInfoReq instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oGetImagesInfoReq instance
+     */
+    public static create(properties?: IoGetImagesInfoReq): oGetImagesInfoReq;
+
+    /**
+     * Encodes the specified oGetImagesInfoReq message. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
+     * @param message oGetImagesInfoReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoGetImagesInfoReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oGetImagesInfoReq message, length delimited. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
+     * @param message oGetImagesInfoReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoGetImagesInfoReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oGetImagesInfoReq message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oGetImagesInfoReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oGetImagesInfoReq;
+
+    /**
+     * Decodes a oGetImagesInfoReq message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oGetImagesInfoReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oGetImagesInfoReq;
+
+    /**
+     * Verifies a oGetImagesInfoReq message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oGetImagesInfoReq message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oGetImagesInfoReq
+     */
+    public static fromObject(object: { [k: string]: any }): oGetImagesInfoReq;
+
+    /**
+     * Creates a plain object from a oGetImagesInfoReq message. Also converts values to other types if specified.
+     * @param message oGetImagesInfoReq
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oGetImagesInfoReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oGetImagesInfoReq to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oGetImagesInfoReq
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */

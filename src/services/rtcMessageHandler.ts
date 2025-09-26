@@ -1,5 +1,6 @@
 // RTC消息处理服务，参考C#代码实现
 import * as proto from '../proto/xproto';
+const Long = require('long');
 
 export interface RTCMessage {
   type: string;
@@ -313,6 +314,41 @@ export class RTCMessageHandler {
     }
   }
 
+  sendGetImagesInfo(videoId: string): void {
+    if (!this.engine) {
+      console.error('❌ [RTCMessageHandler:sendGetImagesInfo] engine is null');
+      return;
+    }
+
+    try {
+      console.log('👕 准备发送获取图片信息消息:', {
+        videoId: videoId,
+        messageType: 'oGetImagesInfoReq'
+      });
+
+      const message = proto.oGetImagesInfoReq.create({
+        videoId: Long.fromString(videoId)
+      });
+
+      const payload = proto.oGetImagesInfoReq.encode(message).finish();
+      const hexString = Array.from(payload).map((b: number) => b.toString(16).padStart(2, '0')).join('');
+
+      console.log('📤 发送获取图片信息proto消息:', {
+        id: proto.eClientPID.GetImagesInfoReq,
+        payloadSize: payload.length,
+        hexString: hexString
+      });
+
+      const messageStr = `cmd=proto&id=${proto.eClientPID.GetImagesInfoReq}&hex=${hexString}`;
+      this.engine.sendUserMessage("8888", messageStr);
+
+      console.log('✅ 获取图片信息proto消息发送成功:', proto.eClientPID.GetImagesInfoReq);
+      console.log('📤 发送的消息内容:', messageStr);
+    } catch (error) {
+      console.error('❌ 发送获取图片信息RTC消息失败:', error);
+    }
+  }
+
   // 发送更换服装尺寸消息
   sendChangeGarmentSize(size: number): void {
     if (!this.engine) {
@@ -325,32 +361,30 @@ export class RTCMessageHandler {
         size: size,
         messageType: 'oChangeGarmentSizeReq'
       });
-      
-      // 直接编码proto消息
+
       const message = proto.oChangeGarmentSizeReq.create({
         size: size
       });
-      
+
       const payload = proto.oChangeGarmentSizeReq.encode(message).finish();
       const hexString = Array.from(payload).map((b: number) => b.toString(16).padStart(2, '0')).join('');
-      
+
       console.log('📤 发送更换服装尺寸proto消息:', {
         id: proto.eClientPID.ChangeGarmentSizeReq,
         payloadSize: payload.length,
         hexString: hexString
       });
-      
-      // 使用正确的proto消息格式 (参考C#代码)
+
       const messageStr = `cmd=proto&id=${proto.eClientPID.ChangeGarmentSizeReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
-      
+
       console.log('✅ 更换服装尺寸proto消息发送成功:', proto.eClientPID.ChangeGarmentSizeReq);
       console.log('📤 发送的消息内容:', messageStr);
-      
     } catch (error) {
       console.error('❌ 发送更换服装尺寸RTC消息失败:', error);
     }
   }
+  
 
   // 发送触摸屏幕消息
   sendTouchScreen(touchType: proto.eTouchType, pos: { x: number, y: number, z: number }, timestamp: number): void {

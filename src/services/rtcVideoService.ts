@@ -50,6 +50,12 @@ export class RTCVideoService {
     this.eventHandlers = { ...this.eventHandlers, ...handlers };
   }
 
+
+  sendGetImagesInfo(videoId: string): void {
+    console.log('👕 发送获取图片信息消息:', videoId);
+    rtcMessageHandler.sendGetImagesInfo(videoId);
+  }
+
   // 初始化RTC引擎
   async initialize(config: RTCVideoConfig): Promise<void> {
     console.log('🎥 初始化RTC视频服务...');

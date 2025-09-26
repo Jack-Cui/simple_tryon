@@ -63,7 +63,19 @@ const HomeOpt = (props: any) => {
             // 没有视频需要生成
             const room_info = JSON.parse(sessionStorage.getItem('roomInfo') as any);
             const response: any = await modelAPI.generateAiVideo(loginCache.token, room_info.data.clothesList[0].clothesItems[0].suitIds, '1968207063776808961', msg.remark, msg.videoUrl);
+            if (response.ok) {
+                const dataObj = JSON.parse(response.data);
+                if (dataObj.code === 0) {
+                    console.log('生成AI视频成功', dataObj);
+                    setShowError(true); // 提示
+                } else {
+                    console.log('生成AI视频失败', dataObj);
+                }
+            }
             setShowError(true); // 提示
+        } else {
+            console.log('AI视频已生成', dataObj);
+            rtcVideoService.sendGetImagesInfo(msg.id);
         }
         props?.actionClick && props.actionClick(msg);
     }

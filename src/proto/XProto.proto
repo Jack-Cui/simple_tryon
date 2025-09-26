@@ -91,7 +91,7 @@ enum eClientPID {
     LatencyReq					            = 1007;
     ChangeMapReq                    = 1008;
     HeatMapReq                      = 1009;                             //热力图
-
+    GetImagesInfoReq				= 1012;
     // 客户端主动发起的心跳
     HeartBeatReq                    = 1111;
 }
@@ -558,6 +558,10 @@ message oRoomSetMaxStageCountAsw {
     eError code = 1;
     uint64 roomId = 2;
     uint64 maxStageCount = 3;
+}
+
+message oGetImagesInfoReq {
+	uint64 videoId					= 1;
 }
 
 message oRoomSetMaxStageCountPush {

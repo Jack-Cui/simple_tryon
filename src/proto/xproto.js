@@ -104,6 +104,7 @@ $root.eError = (function() {
  * @property {number} LatencyReq=1007 LatencyReq value
  * @property {number} ChangeMapReq=1008 ChangeMapReq value
  * @property {number} HeatMapReq=1009 HeatMapReq value
+ * @property {number} GetImagesInfoReq=1012 GetImagesInfoReq value
  * @property {number} HeartBeatReq=1111 HeartBeatReq value
  */
 $root.eClientPID = (function() {
@@ -137,6 +138,7 @@ $root.eClientPID = (function() {
     values[valuesById[1007] = "LatencyReq"] = 1007;
     values[valuesById[1008] = "ChangeMapReq"] = 1008;
     values[valuesById[1009] = "HeatMapReq"] = 1009;
+    values[valuesById[1012] = "GetImagesInfoReq"] = 1012;
     values[valuesById[1111] = "HeartBeatReq"] = 1111;
     return values;
 })();
@@ -16049,6 +16051,225 @@ $root.oRoomSetMaxStageCountAsw = (function() {
     };
 
     return oRoomSetMaxStageCountAsw;
+})();
+
+$root.oGetImagesInfoReq = (function() {
+
+    /**
+     * Properties of a oGetImagesInfoReq.
+     * @exports IoGetImagesInfoReq
+     * @interface IoGetImagesInfoReq
+     * @property {number|Long|null} [videoId] oGetImagesInfoReq videoId
+     */
+
+    /**
+     * Constructs a new oGetImagesInfoReq.
+     * @exports oGetImagesInfoReq
+     * @classdesc Represents a oGetImagesInfoReq.
+     * @implements IoGetImagesInfoReq
+     * @constructor
+     * @param {IoGetImagesInfoReq=} [properties] Properties to set
+     */
+    function oGetImagesInfoReq(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oGetImagesInfoReq videoId.
+     * @member {number|Long} videoId
+     * @memberof oGetImagesInfoReq
+     * @instance
+     */
+    oGetImagesInfoReq.prototype.videoId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+    /**
+     * Creates a new oGetImagesInfoReq instance using the specified properties.
+     * @function create
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {IoGetImagesInfoReq=} [properties] Properties to set
+     * @returns {oGetImagesInfoReq} oGetImagesInfoReq instance
+     */
+    oGetImagesInfoReq.create = function create(properties) {
+        return new oGetImagesInfoReq(properties);
+    };
+
+    /**
+     * Encodes the specified oGetImagesInfoReq message. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
+     * @function encode
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {IoGetImagesInfoReq} message oGetImagesInfoReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oGetImagesInfoReq.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.videoId != null && Object.hasOwnProperty.call(message, "videoId"))
+            writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.videoId);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oGetImagesInfoReq message, length delimited. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {IoGetImagesInfoReq} message oGetImagesInfoReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oGetImagesInfoReq.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oGetImagesInfoReq message from the specified reader or buffer.
+     * @function decode
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oGetImagesInfoReq.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oGetImagesInfoReq();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.videoId = reader.uint64();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oGetImagesInfoReq message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oGetImagesInfoReq.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oGetImagesInfoReq message.
+     * @function verify
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oGetImagesInfoReq.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.videoId != null && message.hasOwnProperty("videoId"))
+            if (!$util.isInteger(message.videoId) && !(message.videoId && $util.isInteger(message.videoId.low) && $util.isInteger(message.videoId.high)))
+                return "videoId: integer|Long expected";
+        return null;
+    };
+
+    /**
+     * Creates a oGetImagesInfoReq message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
+     */
+    oGetImagesInfoReq.fromObject = function fromObject(object) {
+        if (object instanceof $root.oGetImagesInfoReq)
+            return object;
+        var message = new $root.oGetImagesInfoReq();
+        if (object.videoId != null)
+            if ($util.Long)
+                (message.videoId = $util.Long.fromValue(object.videoId)).unsigned = true;
+            else if (typeof object.videoId === "string")
+                message.videoId = parseInt(object.videoId, 10);
+            else if (typeof object.videoId === "number")
+                message.videoId = object.videoId;
+            else if (typeof object.videoId === "object")
+                message.videoId = new $util.LongBits(object.videoId.low >>> 0, object.videoId.high >>> 0).toNumber(true);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oGetImagesInfoReq message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {oGetImagesInfoReq} message oGetImagesInfoReq
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oGetImagesInfoReq.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            if ($util.Long) {
+                var long = new $util.Long(0, 0, true);
+                object.videoId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+            } else
+                object.videoId = options.longs === String ? "0" : 0;
+        if (message.videoId != null && message.hasOwnProperty("videoId"))
+            if (typeof message.videoId === "number")
+                object.videoId = options.longs === String ? String(message.videoId) : message.videoId;
+            else
+                object.videoId = options.longs === String ? $util.Long.prototype.toString.call(message.videoId) : options.longs === Number ? new $util.LongBits(message.videoId.low >>> 0, message.videoId.high >>> 0).toNumber(true) : message.videoId;
+        return object;
+    };
+
+    /**
+     * Converts this oGetImagesInfoReq to JSON.
+     * @function toJSON
+     * @memberof oGetImagesInfoReq
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oGetImagesInfoReq.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oGetImagesInfoReq
+     * @function getTypeUrl
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oGetImagesInfoReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oGetImagesInfoReq";
+    };
+
+    return oGetImagesInfoReq;
 })();
 
 $root.oRoomSetMaxStageCountPush = (function() {
