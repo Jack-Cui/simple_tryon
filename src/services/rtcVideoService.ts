@@ -513,6 +513,12 @@ export class RTCVideoService {
     rtcMessageHandler.sendChangeGarment(garment1Id, garment2Id, garment3Id, garment1Size, garment2Size, garment3Size);
   }
 
+  // 发送更换服装尺寸消息
+  sendChangeGarmentSize(size: number): void {
+    console.log('👕 发送更换服装尺寸消息:', size);
+    rtcMessageHandler.sendChangeGarmentSize(size);
+  }
+
   // 发送触摸屏幕消息
   sendTouchScreen(touchType: proto.eTouchType, pos: { x: number, y: number, z: number }, timestamp: number): void {
     console.log('👆 发送触摸屏幕消息:', { touchType, pos, timestamp });

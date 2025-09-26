@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLoginCache } from '../../utils/loginCache';
 import { uploadAPI } from '../../services/api';
+import { rtcVideoService } from '../../services/rtcVideoService';
 interface Props {
     hotClick?: (flag: boolean) => void;
     actionClick?: (msg: any) => void;
@@ -49,6 +50,28 @@ const HomeOpt = (props: any) => {
 
     const checkSize = (item: string) => {
         console.log('选中尺寸', item);
+        
+        // 将尺寸字符串转换为数字
+        const sizeMap: { [key: string]: number } = {
+            'S': 1,
+            'M': 2,
+            'L': 3,
+            'XL': 4,
+            'XXL': 5,
+            '3XL': 6
+        };
+        
+        const sizeNumber = sizeMap[item];
+        if (sizeNumber) {
+            console.log('发送更换服装尺寸消息:', sizeNumber);
+            rtcVideoService.sendChangeGarmentSize(sizeNumber);
+        } else {
+            console.warn('未知的尺寸:', item);
+        }
+        
+        // 选中尺寸后自动折叠尺寸列表
+        setShowIcon(false);
+        
         props?.sizeClick && props.sizeClick(item);
     }
 
