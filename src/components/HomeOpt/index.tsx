@@ -36,8 +36,8 @@ const HomeOpt = (props: any) => {
     const sizeList = ['3XL', 'XXL', 'XL', 'L', 'M', 'S'];
 
     useEffect(() => {
-        getActionList();
-    }, [])
+        showAction && getActionList();
+    }, [showAction])
 
     useEffect(() => {
         props?.hotClick && props.hotClick(showHot);
