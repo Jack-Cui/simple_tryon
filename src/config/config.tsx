@@ -116,6 +116,12 @@ export const API_ENDPOINTS = {
 
   // 删除动作视频
   DELETE_ACTION_VIDEO: (action_id: string) => `/admin/sysactions/${action_id}`,
+
+  // 生成AI视频
+  GENERATE_AI_VIDEO: () => `/admin/sysaivideo/saveByUser`,
+
+  // 获取AI视频
+  GET_AI_VIDEO_RESULT: (id: string) => `/admin/sysaivideo/${id}`,
 };
 
 // RTC配置

@@ -98,6 +98,10 @@ const CreateModel = () => {
     setStep(0);
   }
 
+  const goToBack = () => {
+    navigate(-1);
+  }
+
   const uploadFile = () => {
     uploadFileEl?.current?.click();
   }
@@ -271,7 +275,7 @@ const CreateModel = () => {
   return (
     <>
     {step === 2 ?
-      <MyModel status={status} list={modelList} backStep={goBackStep}/>
+      <MyModel status={status} list={modelList} backStep={goBackStep} handleBack={goToBack}/>
       :
       <div className="create-Model">
       <Navbar className='create-Model-navbar' fixed={false} leftArrow onLeftClick={handleClick}>{step === 0 ? '创建模型' : '3D美颜'}</Navbar>

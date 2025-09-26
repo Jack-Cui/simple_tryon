@@ -1139,6 +1139,30 @@ export const modelAPI = {
         })
       };
     }
+  },
+
+  async generateAiVideo(access_token: string, colthe_id: string, room_id: string, title: string, action_path: string): Promise<ApiResponse> {
+    console.log('开始生成AI动作视频');
+    const endpoint = API_ENDPOINTS.GENERATE_AI_VIDEO();
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    const data = {
+      clothId: colthe_id,
+      roomId: room_id,
+      title: title,
+      actionPath: action_path
+    };
+    return await apiService.post(endpoint, JSON.stringify(data), headers);
+  },
+
+  async getAiVideoResult(access_token: string, id: string): Promise<ApiResponse> {
+    console.log('开始获取AI动作视频结果');
+    const endpoint = API_ENDPOINTS.GET_AI_VIDEO_RESULT(id);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
   }
 };
 

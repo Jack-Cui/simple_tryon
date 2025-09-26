@@ -798,6 +798,7 @@ const Home = () => {
       setSelectedActionIndex(index);
       setIsActionExpanded(false); // 自动收起
       console.log('选中动作:', actionIcons[index].name);
+      
     }
 
     // 移除隐藏定时器，让icon常驻显示

@@ -10,6 +10,7 @@ interface Props {
     errorMsg?: string;
     list?: any[];
     backStep?: any;
+    handleBack?: any;
 }
 const MyModel = (props: Props) => {
     // const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
@@ -20,6 +21,7 @@ const MyModel = (props: Props) => {
     // 返回
     const handleClick = () => {
         // setStatus(status === 2 ? 1 : 2)
+        props?.handleBack && props.handleBack();
     }
 
     useEffect(() => {
