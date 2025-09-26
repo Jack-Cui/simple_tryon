@@ -29,11 +29,27 @@ function App() {
       try {
         // 解析URL参数
         const urlParams = new URLSearchParams(window.location.search);
-        const user_id = urlParams.get('user_id');
+        var user_id = urlParams.get('user_id');
         const tenant_id = urlParams.get('tenant_id');
         const room_id = urlParams.get('room_id') || '';
 
-        console.log('🔍 解析URL参数:', { user_id, tenant_id, room_id });
+        //<---- update by chao 2025.09.27
+        //增加参数，支持小程序拉新操作
+        //注册时间 register_time ：小程序品牌方传入 10位unix时间戳
+        //邀请人ID inviteUserId ：A邀请B，B注册以后A再登录时输入
+        //场景模式 login_scene (onshare/ontry)：区分页面进入的操作，是B直接查看A的分享内容，还是B自己试穿的场景
+        const register_time = urlParams.get('register_time') || '';
+        const inviteUserId = urlParams.get('inviteUserId') || '';
+        const login_scene = urlParams.get('login_scene') || '';
+        console.log('🔍 解析URL参数:', { user_id, tenant_id, room_id, login_scene, inviteUserId, register_time });
+        if(login_scene==='onshare' && !inviteUserId){
+          alert('页面打开异常，请通过正确的分享链接打开！');  
+          return;
+        }else{
+          //如果是分享查看模式，直接将 userid 改为 inviteUserId
+            user_id = inviteUserId;
+        }
+        //update by chao 2025.09.27---->
 
         // 验证必要参数
         if (!user_id || !tenant_id) {
