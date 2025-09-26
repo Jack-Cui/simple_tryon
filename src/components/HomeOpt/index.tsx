@@ -59,10 +59,10 @@ const HomeOpt = (props: any) => {
         const loginCache: any = getLoginCache();
         const res: any = await modelAPI.getAiVideoResult(loginCache.token, msg.id);
         const dataObj = JSON.parse(res.data);
-        if (!dataObj) {
+        if (!dataObj.data) {
             // 没有视频需要生成
             const room_info = JSON.parse(sessionStorage.getItem('roomInfo') as any);
-            const response: any = await modelAPI.generateAiVideo(loginCache.token, room_info.data.clothesList[0].clothesItems[0].suitIds, '1968207063776808961', msg.remark, msg.videoUrl);
+            const response: any = await modelAPI.generateAiVideo(loginCache.token, room_info.data.clothesList[0].clothesItems[0].clothesId, '1968207063776808961', msg.remark, msg.videoUrl);
             if (response.ok) {
                 const dataObj = JSON.parse(response.data);
                 if (dataObj.code === 0) {

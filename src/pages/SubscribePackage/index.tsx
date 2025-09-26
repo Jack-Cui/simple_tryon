@@ -4,7 +4,9 @@ import { useState } from "react";
 import SubsCheck from '../../assets/subs-check.png';
 import Remember from '../../assets/remember.png';
 import DataSafetyMsg from "../../components/DataSafetyMsg";
+import { useNavigate } from "react-router-dom";
 const SubscribePackage = () => {
+    const navigate = useNavigate();
     const [subList, setSubList] = useState([
         {
             title: '建模订阅包',
@@ -25,7 +27,8 @@ const SubscribePackage = () => {
         setCheckSubNum(num);
     }
     const handleClick = () => {
-
+        console.log(12312);
+        navigate(-1);
     }
     const goToBuy = () => {
         setIsRemember(true);
