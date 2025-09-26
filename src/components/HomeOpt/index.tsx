@@ -53,12 +53,12 @@ const HomeOpt = (props: any) => {
         
         // 将尺寸字符串转换为数字
         const sizeMap: { [key: string]: number } = {
-            'S': 1,
-            'M': 2,
-            'L': 3,
-            'XL': 4,
-            'XXL': 5,
-            '3XL': 6
+            'S': 2,
+            'M': 3,
+            'L': 4,
+            'XL': 5,
+            'XXL': 6,
+            '3XL': 7
         };
         
         const sizeNumber = sizeMap[item];
