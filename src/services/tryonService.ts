@@ -439,6 +439,7 @@ export class TryonService {
     }
 
     const roomInfo = roomAPI.parseRoomInfoResponse(response);
+    sessionStorage.setItem('roomInfo', JSON.stringify(roomInfo));
     if (!roomInfo) {
       throw new Error('解析房间信息失败');
     }

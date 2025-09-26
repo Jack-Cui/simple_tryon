@@ -11,6 +11,7 @@ interface Props {
     list?: any[];
     setStep?: any;
     upDateList?: any;
+    handleBack?: any;
 }
 const MyAction= (props: Props) => {
     // const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败

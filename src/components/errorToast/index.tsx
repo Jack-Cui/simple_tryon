@@ -1,5 +1,5 @@
 import { Button, Overlay } from "tdesign-mobile-react";
-import { CheckCircleIcon } from 'tdesign-icons-react';
+import { CheckCircleIcon, IconFont } from 'tdesign-icons-react';
 import './index.css';
 interface Props {
     info?: string;
@@ -24,8 +24,8 @@ const ErrorToast = (props: Props) => {
         children={
             props?.isConfirm ? 
             <div className="error-toast-confirm">
-                <CheckCircleIcon className="close" size="large"/>
-                <CheckCircleIcon style={{color:'red'}} size="large" onClick={props?.onClick as any}/>
+                <IconFont name="close-circle" className="close" size="large"/>
+                <IconFont name="error-circle" style={{color:'red'}} size="large" onClick={props?.onClick as any}/>
                 <div className="content">
                     {props?.info}
                 </div>

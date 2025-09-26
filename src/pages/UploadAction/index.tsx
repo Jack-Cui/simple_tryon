@@ -27,6 +27,9 @@ const UploadAction = () => {
   const handleClick = () => {
     navigate(-1);
   }
+  const goToBack = () => {
+    actionList.length === 5 ? navigate(-1) : setStep(0);
+  }
   useEffect(() => {
     getActionList();
   }, [])
@@ -175,7 +178,7 @@ const UploadAction = () => {
   return (
     <>
       {step === 1 ?
-        <MyAction status={status} list={actionList} setStep={createAction} upDateList={getActionList} />
+        <MyAction status={status} list={actionList} setStep={createAction} upDateList={getActionList} handleBack={goToBack}/>
         :
         <div className="upload-action">
           <Navbar className='upload-action-navbar' fixed={false} leftArrow onLeftClick={handleClick}>上传个人视频</Navbar>

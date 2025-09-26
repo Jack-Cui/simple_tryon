@@ -51,6 +51,7 @@
     letter-spacing: 0%;
     color: #507265;
     margin-left: 5px;
+    position: relative;
 }
 .home-opt-list-item-size {
     display: flex;
@@ -75,4 +76,10 @@
     width: 34px;
     height: 34px;
     margin-bottom: 3px;
+}
+.home-opt-list-item-action-aigc {
+    width: 34px;
+    height: 34px;
+    position: absolute;
+    top: 0;
 }

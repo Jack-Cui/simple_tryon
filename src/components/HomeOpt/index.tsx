@@ -4,23 +4,31 @@ import HotOn from '../../assets/hot-on.png';
 import HotExm from '../../assets/hot-exm.png';
 import ActionOff from '../../assets/action-off.png';
 import ActionOn from '../../assets/action-on.png';
+import ActionAdd from '../../assets/action-add.png';
 import Size from '../../assets/size.png';
 import Model from '../../assets/model.png';
 import UploadVoide from '../../assets/upload-voide.png';
 import Subscribe from '../../assets/subscribe.png';
 import Aigc from '../../assets/aigc.png';
+import AigcTag from '../../assets/aigc-tag.png';
 
 import Action1 from '../../assets/action1.png';
 import Action2 from '../../assets/action2.png';
 import Action3 from '../../assets/action3.png';
 import Action4 from '../../assets/action4.png';
 import Action5 from '../../assets/action5.png';
+import Action1Check from '../../assets/action1.png';
+import Action2Check from '../../assets/action2-check.png';
+import Action3Check from '../../assets/action3-check.png';
+import Action4Check from '../../assets/action4-check.png';
+import Action5Check from '../../assets/action5-check.png';
 import './index.css';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLoginCache } from '../../utils/loginCache';
-import { uploadAPI } from '../../services/api';
+import { modelAPI, uploadAPI } from '../../services/api';
 import { rtcVideoService } from '../../services/rtcVideoService';
+import ErrorToast from '../errorToast';
 interface Props {
     hotClick?: (flag: boolean) => void;
     actionClick?: (msg: any) => void;
@@ -33,8 +41,10 @@ const HomeOpt = (props: any) => {
     const [actionList, setActionList] = useState([]);
     const [showIcon, setShowIcon] = useState(false);
     const actionIconList = [Action1, Action2, Action3, Action4, Action5];
+    const actionCheckIconList = [Action1Check, Action2Check, Action3Check, Action4Check, Action5Check];
     const sizeList = ['3XL', 'XXL', 'XL', 'L', 'M', 'S'];
-
+    const [aigcList, setAigcList] = useState<any[]>([]); // 点击过的动作
+    const [showError, setShowError] = useState(false);
     useEffect(() => {
         showAction && getActionList();
     }, [showAction])
@@ -43,9 +53,23 @@ const HomeOpt = (props: any) => {
         props?.hotClick && props.hotClick(showHot);
     }, [showHot])
 
-    const checkAction = (msg: any) => {
-        console.log('选中动作', msg);
+    const checkAction = async (msg: any) => {
+        if (aigcList.includes(msg.id)) return;
+        setAigcList([...aigcList, msg.id]);
+        const loginCache: any = getLoginCache();
+        const res: any = await modelAPI.getAiVideoResult(loginCache.token, msg.id);
+        const dataObj = JSON.parse(res.data);
+        if (!dataObj) {
+            // 没有视频需要生成
+            const room_info = JSON.parse(sessionStorage.getItem('roomInfo') as any);
+            const response: any = await modelAPI.generateAiVideo(loginCache.token, room_info.data.clothesList[0].clothesItems[0].suitIds, '1968207063776808961', msg.remark, msg.videoUrl);
+            setShowError(true); // 提示
+        }
         props?.actionClick && props.actionClick(msg);
+    }
+
+    const comfirmClear = () => {
+        setShowError(false);
     }
 
     const checkSize = (item: string) => {
@@ -113,10 +137,15 @@ const HomeOpt = (props: any) => {
             <div className="home-opt-list">
                 <div className="home-opt-list-item">
                     {showAction && <>
+                        <div  className='home-opt-list-item-atcion'>
+                            <img className="home-opt-list-item-action-img" onClick={goToUpload} src={ActionAdd} alt="" />
+                            <span>&nbsp;</span>
+                        </div>
                         {actionList.map((item: any, index: number) => {
                             return (
                                 <div className='home-opt-list-item-atcion' onClick={() => checkAction(item)}>
-                                    <img className="home-opt-list-item-action-img" src={actionIconList[index]} alt="" />
+                                    <img className="home-opt-list-item-action-img" src={aigcList.includes(item.id) ? actionCheckIconList[index] : actionIconList[index]} alt="" />
+                                    {aigcList.includes(item.id) && <img  className="home-opt-list-item-action-aigc" src={AigcTag}/>}
                                     <span>{item.remark}</span>
                                 </div>
                             )
@@ -131,10 +160,11 @@ const HomeOpt = (props: any) => {
                     <img className="home-opt-list-img"  onClick={() => setShowIcon(!showIcon)} src={Size} alt="" />
                 </div>
                 <img className="home-opt-list-img" src={Model} alt="" onClick={goToModel} />
-                <img className="home-opt-list-img" src={UploadVoide} onClick={goToUpload} alt="" />
+                {/* <img className="home-opt-list-img" src={UploadVoide} onClick={goToUpload} alt="" /> */}
                 <img className="home-opt-list-img" src={Subscribe} onClick={goToSubs} alt="" />
                 <img className="home-opt-list-img" src={Aigc} alt="" />
             </div>
+            <ErrorToast isConfirm info={`动态视频正在快马加鞭地生成中，预计2分钟后闪亮登场！您可以先去逛逛，别忘了在"收藏记录"里检阅成果哦~`} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>
         </div>
     )
 }
