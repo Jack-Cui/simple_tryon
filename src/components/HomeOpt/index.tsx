@@ -69,15 +69,13 @@ const HomeOpt = (props: Props) => {
                 const dataObj = JSON.parse(response.data);
                 if (dataObj.code === 0) {
                     console.log('生成AI视频成功', dataObj);
+                    rtcVideoService.sendGetImagesInfo(dataObj.data.id);
                     setShowError(true); // 提示
                 } else {
                     console.log('生成AI视频失败', dataObj);
                 }
             }
             setShowError(true); // 提示
-        } else {
-            console.log('AI视频已生成', dataObj);
-            rtcVideoService.sendGetImagesInfo(msg.id);
         }
         setShowAction(false);
         actionClick && actionClick(msg);
