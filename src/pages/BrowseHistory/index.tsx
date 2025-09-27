@@ -4,7 +4,7 @@ import { IconFont } from 'tdesign-icons-react';
 import './index.css';
 import { useEffect, useState } from "react";
 import { getLoginCache } from "../../utils/loginCache";
-import { uploadAPI } from "../../services/api";
+import { modelAPI, uploadAPI } from "../../services/api";
 import ErrorToast from "../../components/errorToast";
 const BrowseHistory = () => {
     const navigate = useNavigate();
@@ -45,18 +45,19 @@ const BrowseHistory = () => {
 
     const comfirmClear = async () => {
         const loginCache: any = getLoginCache();
-        // const response = await uploadAPI.deleteActionVideo(loginCache.token, (deleteMsg as any).id);
-        // if (response.ok) {
-        //     const result = JSON.parse(response.data);
-        //     if (result.code === 0) {
-        //       console.log('删除动作视频成功:', result.data);
-        //     //   alert('动作视频删除成功！');
-        //     } else {
-        //       throw new Error(result.message || '删除失败');
-        //     }
-        //   } else {
-        //     throw new Error(`删除失败: HTTP ${response.status}`);
-        //   }
+        const response = await modelAPI.deleteAigcVideo(loginCache.token, (deleteMsg as any).id);
+        if (response.ok) {
+            const result = JSON.parse(response.data);
+            if (result.code === 0) {
+              console.log('删除动作视频成功:', result.data);
+              getActionList();
+            //   alert('动作视频删除成功！');
+            } else {
+              throw new Error(result.message || '删除失败');
+            }
+          } else {
+            throw new Error(`删除失败: HTTP ${response.status}`);
+          }
     }
 
     const handleClick = () => {
@@ -70,7 +71,7 @@ const BrowseHistory = () => {
                 return (
                     <div className='browse-history-content-detail'>
                     <div className='browse-history-content-detail-img'>
-                        <img src={item.imgs || ''} alt="" />
+                        <img src={item.imgs ? item.imgs.split(',')[0] : ''} alt="" />
                     </div>
                     <div className='browse-history-content-detail-info'>
                     <div className='browse-history-content-detail-info-item'>

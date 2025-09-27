@@ -34,6 +34,10 @@
     background: #eee;
     margin-right: 22px;
 }
+.browse-history-content-detail-img > img {
+    width: 100%;
+    height: 100%;
+}
 .browse-history-content-detail-info {
     height: 90px;
     box-sizing: border-box;
