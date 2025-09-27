@@ -129,6 +129,9 @@ export const API_ENDPOINTS = {
 
   // 获取AI视频列表（也就是历史）
   GET_AI_VIDEO_RESULT_LIST: (current: number, size: number) => `/admin/sysaivideo/pageByUser?current=${current}&size=${size}`,
+
+  // 删除aigc视频
+  DELETE_AI_VIDEO: (id: string) => `/admin/sysaivideo/removeUserVideoById/${id}`,
 };
 
 // RTC配置

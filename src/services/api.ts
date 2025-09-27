@@ -16,6 +16,7 @@ import {
   CreateSysRoomShareResponse
 } from '../types/api';
 import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache, updateClothesDetailsInCache } from '../utils/loginCache';
+import { getEndpoint } from '@volcengine/tos-sdk/dist/utils';
 
 const Long = require('long');
 const crypto = require('crypto');
@@ -1018,6 +1019,16 @@ export const modelAPI = {
     };
     console.log('删除模型请求端点:', endpoint);
     return await apiService.delete(endpoint, headers);
+  },
+
+  async deleteAigcVideo(access_token: string, id: string): Promise<ApiResponse> {
+    console.log('删除aigc视频')
+    const endpoint = API_ENDPOINTS.DELETE_AI_VIDEO(id);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    return await apiService.delete(endpoint, headers)
   },
 
   async getModelList(access_token: string, user_id: string): Promise<ApiResponse> {
