@@ -417,6 +417,7 @@ export const roomAPI = {
   },
 
   // 构建进入舞台信息
+  // 构建进入舞台信息
   async buildEnterStageInfo(room_info: RoomInfoResponse, access_token: string): Promise<string> {
     console.log('🚀 开始构建进入舞台信息');
     console.log('🔍 房间信息:', room_info);
@@ -447,34 +448,6 @@ export const roomAPI = {
     console.log('🔍 suitIds:', suitIds);
     console.log('🔍 userId:', room_info_data.userId);
     console.log('🔍 scenarioId:', room_info_data.scenarioId);
-
-    // 安全检查：确保clothId存在
-    // if (!room_info_data.clothId) {
-    //   console.warn('⚠️ 房间信息中没有clothId，使用空的服装列表');
-    //   const enter_stage_info: EnterStageInfo = {
-    //     AvatarId: 0,
-    //     UserId: String(room_info_data.userId || 0),
-    //     MapName: "Maps_jiaotang",
-    //     Garments: {
-    //       Garment1Id: "0",
-    //       Garment1Size: "1",
-    //       Garment2Id: "0",
-    //       Garment2Size: "1",
-    //       Garment3Id: "0",
-    //       Garment3Size: "1"
-    //     },
-    //     Animation: null,
-    //     Camera: true,
-    //     Voice: false,
-    //     isControl: true,
-    //     startTime: 0,
-    //     endTime: 0,
-    //     Size: 4,
-    //     CustomModelUrl: "12345"
-    //   };
-    //   console.log('进入舞台信息（无服装）:', enter_stage_info);
-    //   return JSON.stringify(enter_stage_info);
-    // }
 
     const clothe_ids = suitIds.split(',');
     const garments: any = {};
@@ -795,8 +768,338 @@ export const roomAPI = {
     
     const enter_stage_info: EnterStageInfo = {
       AvatarId: 0,
-      UserId: "1970059409683144705",
+      UserId: login_cache?.userId || "",
       // UserId: String(room_info_data.userId || 0),
+      // MapName: room_info_data.scenarioId,
+      MapName: scene_code,
+      Garments: garments,
+      Animation: null,
+      Camera: true,
+      Voice: false,
+      isControl: true,
+      startTime: 0,
+      endTime: 0,
+      Size: 4,
+      CustomModelUrl: "12345"
+    };
+
+    console.log('✅ 进入舞台信息构建完成:', enter_stage_info);
+    const result = JSON.stringify(enter_stage_info);
+    console.log('✅ 返回的JSON字符串:', result);
+    return result;
+  },
+
+  // 构建进入舞台信息
+  async buildShareEnterStageInfo(room_info: RoomInfoResponse, access_token: string): Promise<string> {
+    console.log('🚀 开始构建进入舞台信息');
+    console.log('🔍 房间信息:', room_info);
+    console.log('🔍 access_token:', access_token ? '存在' : '不存在');
+    
+    const room_info_data = room_info.data;
+    console.log('🔍 房间数据:', room_info_data);
+    console.log('🔍 clothId:', room_info_data.clothId);
+    console.log('🔍 userId:', room_info_data.userId);
+    console.log('🔍 scenarioId:', room_info_data.scenarioId);
+
+    // 安全检查：确保clothId存在
+    if (!room_info_data.clothId) {
+      console.warn('⚠️ 房间信息中没有clothId，使用空的服装列表');
+      const enter_stage_info: EnterStageInfo = {
+        AvatarId: 0,
+        UserId: String(room_info_data.userId || 0),
+        MapName: "Maps_jiaotang",
+        Garments: {
+          Garment1Id: "0",
+          Garment1Size: "1",
+          Garment2Id: "0",
+          Garment2Size: "1",
+          Garment3Id: "0",
+          Garment3Size: "1"
+        },
+        Animation: null,
+        Camera: true,
+        Voice: false,
+        isControl: true,
+        startTime: 0,
+        endTime: 0,
+        Size: 4,
+        CustomModelUrl: "12345"
+      };
+      console.log('进入舞台信息（无服装）:', enter_stage_info);
+      return JSON.stringify(enter_stage_info);
+    }
+
+    const clothe_ids = room_info_data.clothId.split(';');
+    const garments: any = {};
+    
+    // 用于存储处理后的服装信息
+    let clothesItemInfoList: any[] = [];
+    let isClothesSuit = false;
+    
+    for (let i = 0; i < clothe_ids.length; i++) {
+      const clothe_id = clothe_ids[i];
+      console.log(`👕 处理衣服ID [${i + 1}/${clothe_ids.length}]: ${clothe_id}`);
+      
+      if (!clothe_id || clothe_id === '' || clothe_id === '0') {
+        console.log(`⚠️ 跳过无效的衣服ID: ${clothe_id}`);
+        continue;
+      }
+      
+      // 判断 clothe_id 是否大于0
+      const clotheIdNum = Long.fromString(clothe_id);
+      if (clotheIdNum.toNumber() <= 0) {
+        console.log(`⚠️ 跳过无效的衣服ID: ${clothe_id}`);
+        continue;
+      }
+      
+      console.log(`✅ 衣服ID ${clothe_id} 验证通过，开始获取详情...`);
+      
+      try {
+        // 获取衣服详情
+        console.log(`获取衣服详情: ${clothe_id}`);
+        let clothe_detail_data = getClothesDetailFromCache(clothe_id);
+        
+        // 如果缓存中没有，尝试实时获取
+        if (!clothe_detail_data) {
+          console.log(`⚠️ 缓存中没有衣服详情: ${clothe_id}，尝试实时获取...`);
+          console.log(`🔍 当前缓存状态:`, getLoginCache()?.clothesDetails ? '有衣服详情缓存' : '无衣服详情缓存');
+          try {
+            const response = await this.getClotheDetail(clothe_id, access_token);
+            if (response.ok && response.data) {
+              const parsed_response = JSON.parse(response.data) as ClotheDetailResponse;
+              clothe_detail_data = parsed_response.data;
+              console.log(`✅ 实时获取衣服详情成功: ${clothe_id}`);
+              
+              // 更新缓存
+              const clothesDetails: { [key: string]: any } = {};
+              clothesDetails[clothe_id] = clothe_detail_data;
+              updateClothesDetailsInCache(clothesDetails);
+              console.log(`✅ 已更新衣服详情到缓存: ${clothe_id}`);
+            } else {
+              console.warn(`⚠️ 实时获取衣服详情失败: ${clothe_id}`);
+              continue;
+            }
+          } catch (apiError) {
+            console.error(`❌ 实时获取衣服详情出错: ${clothe_id}`, apiError);
+            continue;
+          }
+        }
+        
+        if (clothe_detail_data) {
+          const clothe_detail = clothe_detail_data;
+          
+          console.log(`衣服详情获取成功:`, {
+            id: clothe_detail.id,
+            name: clothe_detail.name,
+            classifyId: clothe_detail.classifyId,
+            suitIds: clothe_detail.suitIds
+          });
+          
+          // 参考 handleClothesManagement 的逻辑处理服装
+          const classifyId = clothe_detail.classifyId;
+          const clothesId = clothe_detail.id;
+          const suitIds = clothe_detail.suitIds || '';
+
+          // const classifyId = 4;
+          // const clothesId = "1916394930865287170";
+          // const suitIds = "1916394256718999553";
+          
+          console.log('👕 处理衣服管理逻辑:', {
+            classifyId: classifyId,
+            clothesId: clothesId,
+            suitIds: suitIds
+          });
+          
+          if (classifyId === 4) {
+            // 套装
+            isClothesSuit = true;
+            
+            // 处理套装逻辑
+            const arr = suitIds.split(',');
+            
+            // if (suitIds === '' || arr.length === 0) {
+            if (arr.length === 0) {
+              const item = {
+                classifyId: classifyId,
+                clothesId: Long.fromString(clothesId)
+              };
+              clothesItemInfoList.push(item);
+            } else {
+              for (let j = 0; j < arr.length; ++j) {
+                const longValue = Long.fromString(arr[j]);
+                const item = {
+                  classifyId: classifyId,
+                  clothesId: longValue
+                };
+                clothesItemInfoList.push(item);
+              }
+            }
+            
+            console.log('👕 套装处理完成:', clothesItemInfoList);
+            
+          } else {
+            // 非套装
+            if (isClothesSuit) {
+              // 之前是套装，现在切换到非套装
+              isClothesSuit = false;
+              
+              const item = {
+                classifyId: classifyId,
+                clothesId: Long.fromString(clothesId)
+              };
+              clothesItemInfoList.push(item);
+              
+              console.log('👕 从套装切换到非套装:', clothesItemInfoList);
+              
+            } else {
+              // 之前不是套装
+              // 1. 删除存储的同类型衣服
+              for (let j = clothesItemInfoList.length - 1; j >= 0; --j) {
+                const item = clothesItemInfoList[j];
+                if (item.classifyId === classifyId) {
+                  clothesItemInfoList.splice(j, 1);
+                }
+              }
+
+              // 2. 特殊处理
+              // 穿裙子 脱下上下衣
+              if (classifyId === 7) {
+                for (let j = clothesItemInfoList.length - 1; j >= 0; --j) {
+                  const item = clothesItemInfoList[j];
+                  if (item.classifyId === 1 || item.classifyId === 2) {
+                    clothesItemInfoList.splice(j, 1);
+                  }
+                }
+              }
+
+              // 穿上下衣 脱下裙子
+              if (classifyId === 1 || classifyId === 2) {
+                for (let j = clothesItemInfoList.length - 1; j >= 0; --j) {
+                  const item = clothesItemInfoList[j];
+                  if (item.classifyId === 7) {
+                    clothesItemInfoList.splice(j, 1);
+                  }
+                }
+              }
+
+              let index = -1;
+              for (let j = 0; j < clothesItemInfoList.length; ++j) {
+                const item = clothesItemInfoList[j];
+                if (classifyId === item.classifyId) {
+                  item.clothesId = Long.fromString(clothesId);
+                  clothesItemInfoList[j] = item;
+                  index = j;
+                }
+              }
+
+              if (clothesItemInfoList.length >= 3) {
+                clothesItemInfoList.splice(0, 1);
+              }
+
+              const cii = {
+                classifyId: classifyId,
+                clothesId: Long.fromString(clothesId)
+              };
+              clothesItemInfoList.push(cii);
+              
+              console.log('👕 非套装处理完成:', clothesItemInfoList);
+            }
+          }
+          
+        } else {
+          console.warn(`⚠️ 缓存中没有衣服详情: ${clothe_id}，跳过处理`);
+          // 如果缓存中没有衣服详情，跳过这件衣服，继续处理下一件
+          continue;
+        }
+      } catch (error) {
+        console.error(`获取衣服详情失败: ${clothe_id}`, error);
+        // 如果出错，跳过这件衣服，继续处理下一件
+        continue;
+      }
+    }
+    
+    // 参考 sendChangeGarmentRequest 的构建逻辑
+    console.log('👕 准备构建服装参数:', {
+      clothesItemInfoList: clothesItemInfoList,
+      isClothesSuit: isClothesSuit
+    });
+    
+    // 构建服装参数
+    const garment1Id = clothesItemInfoList.length >= 1 ? clothesItemInfoList[0].clothesId : Long.ZERO;
+    const garment2Id = clothesItemInfoList.length >= 2 ? clothesItemInfoList[1].clothesId : Long.ZERO;
+    const garment3Id = clothesItemInfoList.length >= 3 ? clothesItemInfoList[2].clothesId : Long.ZERO;
+    const garment1Size = "4"; // 默认尺寸，实际应该从服务器获取
+    const garment2Size = garment2Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
+    const garment3Size = garment3Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
+
+    console.log('👕 构建的服装参数:', {
+      garment1Id: garment1Id.toString(), 
+      garment2Id: garment2Id.toString(), 
+      garment3Id: garment3Id.toString(),
+      garment1Size, garment2Size, garment3Size
+    });
+    
+    // 构建 garments 对象
+    garments.Garment1Id = garment1Id.toString();
+    garments.Garment1Size = garment1Size;
+    garments.Garment2Id = garment2Id.toString();
+    garments.Garment2Size = garment2Size;
+    garments.Garment3Id = garment3Id.toString();
+    garments.Garment3Size = garment3Size;
+
+    const login_cache = getLoginCache();
+    let scene_code = "";
+    let scene_name = "";
+    
+    // 优先使用房间信息中的场景ID来查找场景代码和名称
+    if (room_info_data.scenarioId) {
+      console.log("🔍 房间信息中有场景ID:", room_info_data.scenarioId);
+      if (login_cache && login_cache.scenesList) {
+        const scene_list = login_cache.scenesList;
+        if (scene_list[room_info_data.scenarioId]) {
+          scene_code = scene_list[room_info_data.scenarioId].code;
+          scene_name = scene_list[room_info_data.scenarioId].name;
+          console.log("✅ 根据场景ID找到场景代码:", scene_code, "名称:", scene_name);
+        } else {
+          console.log("⚠️ 场景ID在缓存中未找到:", room_info_data.scenarioId);
+        }
+      }
+    }
+    
+    // 如果没有找到场景代码，使用缓存中的第一个场景
+    if (scene_code === "") {
+      if (login_cache && login_cache.scenesList) {
+        const scene_list = login_cache.scenesList;
+        const scene_list_keys = Object.keys(scene_list);
+        if (scene_list_keys.length > 0) {
+          const scene_id = scene_list_keys[0];
+          scene_name = scene_list[scene_id].name;
+          scene_code = scene_list[scene_id].code;
+          console.log("🔄 使用缓存中第一个场景:", scene_name, "代码:", scene_code);
+        }
+      }
+    }
+    
+    // 如果还是没有场景代码，使用默认值
+    if (scene_code === "") {
+      scene_code = "Maps_jiaotang";
+      scene_name = "教堂";
+      console.log("⚠️ 场景代码为空，使用默认场景代码: Maps_jiaotang");
+    }
+    
+    // 更新缓存中的默认场景名称
+    if (scene_name && login_cache) {
+      updateDefaultSceneNameInCache(scene_name);
+    }
+    
+    console.log('🔍 准备构建最终进入舞台信息...');
+    console.log('🔍 场景代码:', scene_code);
+    console.log('🔍 场景名称:', scene_name);
+    console.log('🔍 服装信息:', garments);
+    
+    const enter_stage_info: EnterStageInfo = {
+      AvatarId: 0,
+      UserId: String(room_info_data.userId || 0),
       // MapName: room_info_data.scenarioId,
       MapName: scene_code,
       Garments: garments,

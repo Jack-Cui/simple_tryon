@@ -85,6 +85,7 @@ export interface JoinRoomResponse {
 
 // 创建分享请求类型
 export interface CreateSysRoomShareRequest {
+  id: string;
   roomId: string;
   userId: string;
   extra1: string;

@@ -6,11 +6,12 @@ import { RTC_CONFIG } from '../config/config';
 import { AccessToken, Privilege } from '../token/AccessToken';
 import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, getLoginCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
+const Long = require('long');
 
 export interface TryonConfig {
   // phone: string;
   tenantId: string;
-  // coCreationId: string;
+  coCreationId: string;
   userId: string;
   accessToken: string;
   rtcConfig?: RTCVideoConfig;
@@ -102,7 +103,7 @@ export class TryonService {
   }
 
   // 登录成功后初始化房间信息
-  async initializeAfterLogin(config: TryonConfig): Promise<void> {
+  async initializeAfterLogin(config: TryonConfig, shareScene: string): Promise<void> {
     this.config = config;
     this.accessToken = config.accessToken;
     
@@ -182,12 +183,16 @@ export class TryonService {
       
       // 1.6. 构建登台信息（在获取场景列表之后）
       // await this.buildStageInfo('1968207063776808961');
+      // const loginCache = getLoginCache();
+      // if (!loginCache?.roomId) {
+      //   throw new Error('用户未登录或登录信息缺失');
+      // }
       const loginCache = getLoginCache();
       if (!loginCache?.roomId) {
         throw new Error('用户未登录或登录信息缺失');
       }
-      console.log('步骤1.6: 构建登台信息222', this.config.roomId);
-      await this.buildStageInfo(loginCache.roomId);
+      console.log('步骤1.6: 构建登台信息222', loginCache.roomId);
+      await this.buildStageInfo(loginCache.roomId, shareScene);
       
       // 2. 创建房间
       console.log('步骤2: 创建房间');
@@ -203,6 +208,12 @@ export class TryonService {
       if (this.roomName) {
         updateRoomNameInCache(this.roomName);
       }
+
+      if (shareScene !== "onshare") {
+        const shareResult = await tryonService.createShare();
+        console.log('✅ 创建分享成功:', shareResult);
+      }
+
       
     } catch (error) {
       console.error('❌ 房间信息初始化失败:', error);
@@ -349,8 +360,8 @@ export class TryonService {
       if (!loginCache?.roomId) {
         throw new Error('用户未登录或登录信息缺失');
       }
-      console.log('步骤1.6: 构建登台信息', this.config.roomId);
-      await this.buildStageInfo(loginCache.roomId);
+      console.log('步骤1.6: 构建登台信息', loginCache.roomId);
+      await this.buildStageInfo(loginCache.roomId, "");
       
       // 2. 创建房间
       console.log('步骤2: 创建房间');
@@ -388,7 +399,7 @@ export class TryonService {
       throw new Error('未配置参数或未提供accessToken');
     }
 
-    const response = await roomAPI.getSysRoomShare("1", this.accessToken);
+    const response = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
     console.log('房间信息响应:', response);
     console.log('房间信息响应数据:', response.data);
 
@@ -436,29 +447,43 @@ export class TryonService {
   }
 
   // 构建登台信息（在获取场景列表之后）
-  private async buildStageInfo(room_id: string): Promise<void> {
-    console.log('构建登台信息...');
+  private async buildStageInfo(room_id: string, shareScene: string): Promise<void> {
     if (!this.config || !this.accessToken) {
       throw new Error('未配置参数或未提供accessToken');
     }
-    console.log('重新获取房间信息用于构建登台信息...');
-    // 重新获取房间信息用于构建登台信息
-    const response = await roomAPI.getRoomInfoByRoomId(room_id, this.accessToken);
-    if (!response.ok) {
-      throw new Error(`获取房间信息失败: HTTP ${response.status}`);
-    }
+    
+    const loginCache = getLoginCache();
+    if (shareScene == "onshare" && loginCache?.coCreationId !== "") {
+      console.log("构建分享登台信息");
+      // 重新获取房间信息用于构建登台信息
+      const response = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
+      if (!response.ok) {
+        throw new Error(`获取房间信息失败: HTTP ${response.status}`);
+      }
 
-    const roomInfo = roomAPI.parseRoomInfoResponse(response);
-    sessionStorage.setItem('roomInfo', JSON.stringify(roomInfo));
-    if (!roomInfo) {
-      throw new Error('解析房间信息失败');
-    }
+      const roomInfo = roomAPI.parseRoomInfoResponse(response);
+      if (!roomInfo) {
+        throw new Error('解析房间信息失败');
+      }
+      // 构建登台信息
+      this.enterStageInfo = await roomAPI.buildShareEnterStageInfo(roomInfo, this.accessToken);
+    } else {
+      console.log("构建普通登台信息");
+      // 重新获取房间信息用于构建登台信息
+      const response = await roomAPI.getRoomInfoByRoomId(room_id, this.accessToken);
+      if (!response.ok) {
+        throw new Error(`获取房间信息失败: HTTP ${response.status}`);
+      }
 
-    // 构建登台信息
-    this.enterStageInfo = await roomAPI.buildEnterStageInfo(roomInfo, this.accessToken);
-    if (this.enterStageInfo === '') {
-      throw new Error('构建登台信息失败');
+      const roomInfo = roomAPI.parseRoomInfoResponse(response);
+      sessionStorage.setItem('roomInfo', JSON.stringify(roomInfo));
+      if (!roomInfo) {
+        throw new Error('解析房间信息失败');
+      }
+      // 构建登台信息
+      this.enterStageInfo = await roomAPI.buildEnterStageInfo(roomInfo, this.accessToken);
     }
+    
     console.log('登台信息构建成功:', this.enterStageInfo);
   }
 
@@ -949,7 +974,7 @@ export class TryonService {
 
   // 创建分享
   async createShare(): Promise<any> {
-    if (!this.config || !this.accessToken || !this.roomPrimaryId) {
+    if (!this.config || !this.accessToken || !this.roomPrimaryId || !this.config.coCreationId) {
       throw new Error('缺少必要参数：config、accessToken 或 roomPrimaryId');
     }
 
@@ -969,11 +994,15 @@ export class TryonService {
       }
 
       console.log('✅ 房间信息获取成功:', roomInfo.data);
-
+      const loginCache = getLoginCache();
+      if (!loginCache?.userId) {
+        throw new Error('用户未登录或登录信息缺失');
+      }
       // 2. 构建分享数据
       const shareData: CreateSysRoomShareRequest = {
+        id: Long.fromString(this.config.coCreationId).toString(),
         roomId: this.roomPrimaryId.toString(),
-        userId: roomInfo.data.userId || this.config.userId,
+        userId: loginCache.userId,
         extra1: roomInfo.data.extra1 || '新视频',
         extra2: roomInfo.data.extra2 || '',
         clothId: roomInfo.data.clothId || '',

@@ -148,6 +148,7 @@ function App() {
         var user_id = urlParams.get('user_id');
         const tenant_id = urlParams.get('tenant_id');
         const room_id = urlParams.get('room_id') || '';
+        const co_creation_id = urlParams.get('co_creation_id') || '123';
 
         //<---- update by chao 2025.09.27
         //增加参数，支持小程序拉新操作
@@ -186,9 +187,9 @@ function App() {
         // 执行登录
         console.log('🚀 开始自动登录...');
         let access_token = ''
-
+        let response = null;
         // if(login_scene === 'onshare' && register_time !== '') {
-        //   const response = await authAPI.shareLogin(user_id, tenant_id, register_time, inviteUserId);
+        //   response = await authAPI.shareLogin(user_id, tenant_id, register_time, inviteUserId);
         //   if (response.ok) {
         //     const loginData = authAPI.parseLoginResponse(response);
         //     access_token = loginData?.access_token || '';
@@ -197,9 +198,10 @@ function App() {
         //     setIsLoading(false);
         //     return;
         //   }
+        // } else {
+        //   response = await authAPI.login(user_id, tenant_id);
         // }
-        const response = await authAPI.login(user_id, tenant_id);
-        
+        response = await authAPI.login(user_id, tenant_id);
         if (response.ok) {
           console.log('✅ 自动登录成功:', response.data);
           
@@ -220,6 +222,7 @@ function App() {
               userId: cur_user_id,
               roomId: room_id,
               tenantId: tenant_id,
+              coCreationId: co_creation_id,
             });
             
             // 登录成功后立即初始化房间信息
@@ -230,7 +233,8 @@ function App() {
                 roomId: room_id,
                 userId: user_id,
                 accessToken: loginData.access_token,
-              });
+                coCreationId: co_creation_id,
+              }, login_scene);
               console.log('✅ 房间信息初始化成功');
               
               // 预加载衣服详情到缓存

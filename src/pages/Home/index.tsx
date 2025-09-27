@@ -68,6 +68,7 @@ const Home = () => {
     userId: string;
     // phone: string;
     tenantId: string;
+    coCreationId: string;
     roomId: string;
   } | null>(null);
 
@@ -1302,9 +1303,9 @@ const Home = () => {
         token: locationState.token,
         userId: locationState.userId,
         // phone: locationState.phone,
-        // coCreationId: locationState.coCreationId
         tenantId: locationState.tenantId,
-        roomId: locationState.roomId
+        roomId: locationState.roomId,
+        coCreationId: locationState.coCreationId
       });
 
       // 如果路由state中有房间名称，也设置到状态中
@@ -1343,6 +1344,7 @@ const Home = () => {
         userId: cachedLoginData.userId,
         tenantId: cachedLoginData.tenantId,
         roomId: cachedLoginData.roomId,
+        coCreationId: cachedLoginData.coCreationId,
       });
 
       // 如果缓存中有房间名称，也设置到状态中
@@ -1907,6 +1909,7 @@ const Home = () => {
           accessToken: loginParams.token,
           rtcConfig,
           roomId: loginParams.roomId,
+          coCreationId: loginParams.coCreationId,
         };
 
         console.log('开始自动试穿流程，配置:', config);
@@ -1931,6 +1934,7 @@ const Home = () => {
           accessToken: loginParams.token,
           rtcConfig,
           roomId: loginParams.roomId,
+          coCreationId: loginParams.coCreationId,
         };
 
         console.log('开始自动试穿流程，配置:', config);
@@ -1957,6 +1961,7 @@ const Home = () => {
         accessToken: loginParams.token,
         rtcConfig,
         roomId: roomInfo.data.roomId,
+        coCreationId: loginParams.coCreationId,
       };
 
       console.log('开始自动试穿流程，配置:', config);

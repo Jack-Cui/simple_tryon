@@ -46,7 +46,7 @@ const SimpleTryonTest: React.FC<SimpleTryonTestProps> = () => {
       const config = {
         // phone: values.phone,
         tenantId: values.tenantId,
-        // coCreationId: values.coCreationId, // 直接使用字符串，不再转换为数字
+        coCreationId: values.coCreationId, // 直接使用字符串，不再转换为数字
         userId: values.userId,
         accessToken: values.accessToken || '', // 如果没有accessToken，使用空字符串
         rtcConfig, // 添加RTC配置

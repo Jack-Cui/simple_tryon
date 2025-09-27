@@ -197,6 +197,7 @@ const Login = () => {
             // coCreationId: finalCoCreationId,
             tenantId: '',
             roomId: '',
+            coCreationId: finalCoCreationId,
           });
           
           // 登录成功后立即初始化房间信息
@@ -209,7 +210,8 @@ const Login = () => {
               userId: user_id,
               accessToken: loginData.access_token,
               roomId: '',
-            });
+              coCreationId: finalCoCreationId,
+            }, "");
             console.log('✅ 房间信息初始化成功');
             
             // 预加载衣服详情到缓存
