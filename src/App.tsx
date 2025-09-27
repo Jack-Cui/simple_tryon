@@ -19,6 +19,7 @@ import UploadAction from './pages/UploadAction';
 import MyAction from './pages/MyAction';
 import SubscribePackage from './pages/SubscribePackage';
 import { LoginSceneProvider } from './contexts/LoginSceneContext';
+import BrowseHistory from './pages/BrowseHistory';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -206,6 +207,7 @@ function App() {
             {/* <Route path="/my-model" element={<MyModel />} /> */}
             <Route path="/upload-action" element={<UploadAction />} />
             <Route path="/subs-package" element={<SubscribePackage />} />
+            <Route path='/browse-history' element={<BrowseHistory />}/>
             <Route 
               path="/home" 
               element={

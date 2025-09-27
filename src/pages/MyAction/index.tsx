@@ -25,6 +25,7 @@ const MyAction= (props: Props) => {
     // 返回
     const handleClick = () => {
         // setStatus(status === 2 ? 1 : 2)
+        props?.handleBack && props.handleBack();
     }
 
     useEffect(() => {

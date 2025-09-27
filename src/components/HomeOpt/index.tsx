@@ -123,6 +123,10 @@ const HomeOpt = (props: Props) => {
         navigate('/subs-package');
     }
 
+    const goToHistory = () => {
+        navigate('/browse-history');
+    }
+
     const getActionList = async () => {
         const loginCache: any = getLoginCache();
         if (!loginCache?.token) {
@@ -182,7 +186,7 @@ const HomeOpt = (props: Props) => {
                 {loginScene !== 'onshare' && (
                     <img className="home-opt-list-img" src={Subscribe} onClick={goToSubs} alt="" />
                 )}
-                <img className="home-opt-list-img" src={Aigc} alt="" />
+                <img className="home-opt-list-img" src={Aigc} onClick={goToHistory} alt="" />
             </div>
             <ErrorToast isConfirm info={`动态视频正在快马加鞭地生成中，预计2分钟后闪亮登场！您可以先去逛逛，别忘了在"收藏记录"里检阅成果哦~`} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>
         </div>

@@ -1,0 +1,81 @@
+.browse-history {
+    width: 100vw;
+    height: 100vh;
+    /* padding-top: var(--td-navbar-height, 48px);
+    height: calc(100vh - 80px - var(--td-navbar-height, 48px)); */
+    background: #eee;
+    position: relative;
+    box-sizing: border-box;
+}
+.browse-history-navbar {
+    margin-bottom: 20px;
+}
+.browse-history-content {
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+.browse-history-content-detail {
+    /* width: 100%; */
+    border-radius: 12px;
+    background: #fff;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    /* overflow: hidden; */
+    margin-bottom: 10px;
+}
+.browse-history-content-detail-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    background: #eee;
+    margin-right: 22px;
+}
+.browse-history-content-detail-info {
+    height: 90px;
+    box-sizing: border-box;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 10px;
+    flex-grow: 1;
+    height: 90px;
+    position: relative;
+}
+.browse-history-content--detail-blur {
+    filter: blur(5px);
+}
+.browse-history-content-detail-info > .clear {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+}
+.browse-history-content-detail-info-item {
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 14px;
+    color: #171717;
+    line-height: 20px;
+    text-align: justify;
+    font-style: normal;
+    position: relative;
+    width: 100%;
+}
+.browse-history-content-detail-info-item > span {
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 14px;
+    color: #BABABA;
+    line-height: 20px;
+    text-align: justify;
+    font-style: normal;
+    margin-right: 10px;
+}
+.browse-history-content-detail-info-item > .edit {
+    margin-left: 20px;
+}
