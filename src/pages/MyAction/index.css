@@ -14,6 +14,8 @@
     width: 100%;
     padding: 0 10px;
     box-sizing: border-box;
+    height: calc(100vh - 80px - var(--td-navbar-height, 48px - 30px));
+    overflow: auto; 
 }
 .my-action-content-detail {
     /* width: 100%; */

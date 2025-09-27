@@ -169,7 +169,7 @@ const MyAction= (props: Props) => {
                             <IconFont name='edit-2' onClick={editAction} className='edit' size="large"/>
                         </div>}
                         
-                        <IconFont name='delete-1'  onClick={() => clearAction(item)} className='clear' style={{color:'red'}} size="large"/>
+                        <IconFont name='delete-1' onClick={() => clearAction(item)} className='clear' style={{color:'red'}} size="large"/>
                     </div>
                 </div>
                 })
@@ -177,7 +177,7 @@ const MyAction= (props: Props) => {
                 
             </div>
             <div className='my-action-btn'>
-                <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={createAction}>创建个性化动作</Button>
+                <Button size="large" theme="light" disabled={(props?.list && props.list.length === 4 && props.status > 0) ||( props?.list && props.list.length === 5)} block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={createAction}>创建个性化动作</Button>
             </div>
             <ErrorToast isConfirm info={'确认删除该动作？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>
         </div>
