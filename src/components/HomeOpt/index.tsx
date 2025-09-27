@@ -33,8 +33,10 @@ interface Props {
     hotClick?: (flag: boolean) => void;
     actionClick?: (msg: any) => void;
     sizeClick?: (size: string) => void;
+    loginScene?: string;
 }
-const HomeOpt = (props: any) => {
+const HomeOpt = (props: Props) => {
+    const { hotClick, actionClick, sizeClick, loginScene } = props;
     const navigate = useNavigate();
     const [showHot, setShowHot] = useState(false);
     const [showAction, setShowAction] = useState(false);
@@ -50,8 +52,8 @@ const HomeOpt = (props: any) => {
     }, [showAction])
 
     useEffect(() => {
-        props?.hotClick && props.hotClick(showHot);
-    }, [showHot])
+        hotClick && hotClick(showHot);
+    }, [showHot, hotClick])
 
     const checkAction = async (msg: any) => {
         if (aigcList.includes(msg.id)) return;
@@ -77,7 +79,7 @@ const HomeOpt = (props: any) => {
             console.log('AI视频已生成', dataObj);
             rtcVideoService.sendGetImagesInfo(msg.id);
         }
-        props?.actionClick && props.actionClick(msg);
+        actionClick && actionClick(msg);
     }
 
     const comfirmClear = () => {
@@ -108,7 +110,7 @@ const HomeOpt = (props: any) => {
         // 选中尺寸后自动折叠尺寸列表
         setShowIcon(false);
         
-        props?.sizeClick && props.sizeClick(item);
+        sizeClick && sizeClick(item);
     }
 
     const goToModel = () => {
@@ -163,7 +165,9 @@ const HomeOpt = (props: any) => {
                             )
                         })}
                     </>}
-                    <img className="home-opt-list-img" onClick={() => setShowAction(!showAction)} src={showAction ? ActionOn : ActionOff} alt="" />
+                    {loginScene !== 'onshare' && (
+                        <img className="home-opt-list-img" onClick={() => setShowAction(!showAction)} src={showAction ? ActionOn : ActionOff} alt="" />
+                    )}
                 </div>
                 <div className='home-opt-list-item'>
                    {showIcon && 
@@ -171,9 +175,13 @@ const HomeOpt = (props: any) => {
                    }
                     <img className="home-opt-list-img"  onClick={() => setShowIcon(!showIcon)} src={Size} alt="" />
                 </div>
-                <img className="home-opt-list-img" src={Model} alt="" onClick={goToModel} />
+                {loginScene !== 'onshare' && (
+                    <img className="home-opt-list-img" src={Model} alt="" onClick={goToModel} />
+                )}
                 {/* <img className="home-opt-list-img" src={UploadVoide} onClick={goToUpload} alt="" /> */}
-                <img className="home-opt-list-img" src={Subscribe} onClick={goToSubs} alt="" />
+                {loginScene !== 'onshare' && (
+                    <img className="home-opt-list-img" src={Subscribe} onClick={goToSubs} alt="" />
+                )}
                 <img className="home-opt-list-img" src={Aigc} alt="" />
             </div>
             <ErrorToast isConfirm info={`动态视频正在快马加鞭地生成中，预计2分钟后闪亮登场！您可以先去逛逛，别忘了在"收藏记录"里检阅成果哦~`} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>

@@ -18,10 +18,12 @@ import MyModel from './pages/MyModel';
 import UploadAction from './pages/UploadAction';
 import MyAction from './pages/MyAction';
 import SubscribePackage from './pages/SubscribePackage';
+import { LoginSceneProvider } from './contexts/LoginSceneContext';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loginScene, setLoginScene] = useState<string>('');
 
   useEffect(() => {
     // 自动登录逻辑
@@ -41,6 +43,7 @@ function App() {
         const register_time = urlParams.get('register_time') || '';
         const inviteUserId = urlParams.get('inviteUserId') || '';
         const login_scene = urlParams.get('login_scene') || '';
+        setLoginScene(login_scene);
         console.log('🔍 解析URL参数:', { user_id, tenant_id, room_id, login_scene, inviteUserId, register_time });
         if(login_scene==='onshare' && !inviteUserId){
           alert('页面打开异常，请通过正确的分享链接打开！');  
@@ -191,38 +194,40 @@ function App() {
   }
 
   return (
-    <Router basename="/simple">
-      <div className="App">
-        <Routes>
-          <Route path="/test-nav" element={<TestNavigation />} />
-          <Route path="/tryon-test" element={<TryonTest />} />
-          <Route path="/simple-tryon-test" element={<SimpleTryonTest />} />
-          <Route path="/rtc-video-test" element={<RTCVideoTest />} />
-          <Route path="/create-model" element={<CreateModel />} />
-          {/* <Route path="/my-model" element={<MyModel />} /> */}
-          <Route path="/upload-action" element={<UploadAction />} />
-          <Route path="/subs-package" element={<SubscribePackage />} />
-          <Route 
-            path="/home" 
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/" 
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
-        {/* 开发环境显示测试链接 */}
-        {process.env.NODE_ENV === 'development' && <TestLinks />}
-      </div>
-    </Router>
+    <LoginSceneProvider loginScene={loginScene}>
+      <Router basename="/simple">
+        <div className="App">
+          <Routes>
+            <Route path="/test-nav" element={<TestNavigation />} />
+            <Route path="/tryon-test" element={<TryonTest />} />
+            <Route path="/simple-tryon-test" element={<SimpleTryonTest />} />
+            <Route path="/rtc-video-test" element={<RTCVideoTest />} />
+            <Route path="/create-model" element={<CreateModel />} />
+            {/* <Route path="/my-model" element={<MyModel />} /> */}
+            <Route path="/upload-action" element={<UploadAction />} />
+            <Route path="/subs-package" element={<SubscribePackage />} />
+            <Route 
+              path="/home" 
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/" 
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+          {/* 开发环境显示测试链接 */}
+          {process.env.NODE_ENV === 'development' && <TestLinks />}
+        </div>
+      </Router>
+    </LoginSceneProvider>
   );
 }
 

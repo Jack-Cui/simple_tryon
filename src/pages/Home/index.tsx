@@ -35,6 +35,7 @@ import ShareModal from '../../components/ShareModal';
 import CreateModelModal from '../../components/CreateModelModal';
 import ReactHowler from 'react-howler';
 import HomeOpt from '../../components/HomeOpt';
+import { useLoginScene } from '../../contexts/LoginSceneContext';
 
 const Long = require('long');
 
@@ -42,6 +43,7 @@ const Home = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const locationState = location.state || {};
+  const { loginScene } = useLoginScene();
   const hasStartedTryon = useRef(false);
   const [videoStreams, setVideoStreams] = useState<Array<{ userId: string, domId: string }>>([]);
   const [videoPlayingStatus, setVideoPlayingStatus] = useState<{ [key: string]: boolean }>({});
@@ -2323,7 +2325,7 @@ const Home = () => {
         flexDirection: 'column',
         position: 'relative'
       }}>
-        <HomeOpt hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)}/>
+        <HomeOpt hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
         {/* 音乐开始 */}
         <ReactHowler
           src={musicUrl}
@@ -2840,7 +2842,7 @@ const Home = () => {
       flexDirection: 'column',
       position: 'relative'
     }}>
-      <HomeOpt hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)}/>
+      <HomeOpt hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
       {/* 音乐开始 */}
       <ReactHowler
         src={musicUrl}
