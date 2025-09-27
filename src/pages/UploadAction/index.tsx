@@ -28,7 +28,7 @@ const UploadAction = () => {
     navigate(-1);
   }
   const goToBack = () => {
-    actionList.length === 5 ? navigate(-1) : setStep(0);
+    (actionList.length === 4 && status > 0) || actionList.length === 5 ? navigate(-1) : setStep(0);
   }
   useEffect(() => {
     getActionList();
