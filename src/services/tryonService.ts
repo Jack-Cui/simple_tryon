@@ -4,7 +4,7 @@ import { webSocketService, WebSocketConfig } from './websocketService';
 import { RTCVideoService, RTCVideoConfig, rtcVideoService } from './rtcVideoService';
 import { RTC_CONFIG } from '../config/config';
 import { AccessToken, Privilege } from '../token/AccessToken';
-import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache } from '../utils/loginCache';
+import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, getLoginCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 
 export interface TryonConfig {
@@ -181,8 +181,13 @@ export class TryonService {
       // await this.getSceneList();
       
       // 1.6. 构建登台信息（在获取场景列表之后）
-      // console.log('步骤1.6: 构建登台信息');
-      await this.buildStageInfo('1968207063776808961');
+      // await this.buildStageInfo('1968207063776808961');
+      const loginCache = getLoginCache();
+      if (!loginCache?.roomId) {
+        throw new Error('用户未登录或登录信息缺失');
+      }
+      console.log('步骤1.6: 构建登台信息222', this.config.roomId);
+      await this.buildStageInfo(loginCache.roomId);
       
       // 2. 创建房间
       console.log('步骤2: 创建房间');
@@ -339,8 +344,13 @@ export class TryonService {
       // await this.getSceneList();
       
       // 1.6. 构建登台信息（在获取场景列表之后）
+      // await this.buildStageInfo('1968207063776808961');
+      const loginCache = getLoginCache();
+      if (!loginCache?.roomId) {
+        throw new Error('用户未登录或登录信息缺失');
+      }
       console.log('步骤1.6: 构建登台信息', this.config.roomId);
-      await this.buildStageInfo('1968207063776808961');
+      await this.buildStageInfo(loginCache.roomId);
       
       // 2. 创建房间
       console.log('步骤2: 创建房间');
@@ -521,20 +531,27 @@ export class TryonService {
 
   // 创建房间
   private async createRoom(): Promise<number> {
-    if (!this.config || !this.accessToken || !this.config.roomId) {
-      if (!this.config) {
-        throw new Error('未配置参数');
-      }
-      if (!this.accessToken) {
-        throw new Error('未登录');
-      }
-      this.config.roomId = '1968207063776808961';
-      if (!this.config.roomId) {
-        throw new Error('未配置房间ID');
-      }
-      // throw new Error('未配置参数、未登录或未获取房间信息');
+    // if (!this.config || !this.accessToken || !this.config.roomId) {
+    //   if (!this.config) {
+    //     throw new Error('未配置参数');
+    //   }
+    //   if (!this.accessToken) {
+    //     throw new Error('未登录');
+    //   }
+    //   // this.config.roomId = '1968207063776808961';
+    //   if (!this.config.roomId) {
+    //     throw new Error('未配置房间ID');
+    //   }
+    //   // throw new Error('未配置参数、未登录或未获取房间信息');
+    // }
+    const loginCache = getLoginCache();
+    if (!loginCache?.roomId) {
+      throw new Error('用户未登录或登录信息缺失');
     }
-    const response = await roomAPI.createRoom(this.config.roomId, this.accessToken);
+    if (!loginCache?.token) {
+      throw new Error('token missing');
+    }
+    const response = await roomAPI.createRoom(loginCache.roomId, loginCache.token);
     // console.log('创建房间响应:', response);
     // console.log('创建房间响应数据:', response.data);
     
