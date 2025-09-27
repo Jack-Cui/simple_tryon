@@ -178,9 +178,15 @@ const Home = () => {
               clearInterval(intervalId);
             }
             alert('账号在其他地方登录，请重新登录');
+
+            // //Update by chao 2025.09.27
+            // window.close();
+
             window.location.href = '/login';
             return; // 提前返回，不执行后续代码
           } else {
+            // //Update by chao 2025.09.27
+            // window.close();
             console.log('账号未在其他地方登录')
           }
         } catch (error) {
