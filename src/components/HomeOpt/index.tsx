@@ -154,10 +154,10 @@ const HomeOpt = (props: Props) => {
             <div className="home-opt-list">
                 <div className="home-opt-list-item">
                     {showAction && <>
-                        <div  className='home-opt-list-item-atcion'>
+                        {!(actionList.length === 5) && <div  className='home-opt-list-item-atcion'>
                             <img className="home-opt-list-item-action-img" onClick={goToUpload} src={ActionAdd} alt="" />
                             <span>&nbsp;</span>
-                        </div>
+                        </div>}
                         {actionList.map((item: any, index: number) => {
                             return (
                                 <div className='home-opt-list-item-atcion' onClick={() => checkAction(item)}>

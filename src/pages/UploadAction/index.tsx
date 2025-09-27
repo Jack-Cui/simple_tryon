@@ -186,7 +186,7 @@ const UploadAction = () => {
             <UploadFile ref={personRefEl} isPersonal title="请上传个人视频" info={infoList1} />
           </div>
           <div className='upload-action-btn'>
-            <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={onConfrim}>确认上传</Button>
+            <Button size="large" theme="light" disabled={actionList.length === 5} block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={onConfrim}>确认上传</Button>
           </div>
           <ErrorToast info={errorInfo} visible={showError} onClick={() => setShowError(false)} />
         </div>
