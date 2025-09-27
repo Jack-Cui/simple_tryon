@@ -79,6 +79,7 @@ const HomeOpt = (props: Props) => {
             console.log('AI视频已生成', dataObj);
             rtcVideoService.sendGetImagesInfo(msg.id);
         }
+        setShowAction(false);
         actionClick && actionClick(msg);
     }
 
@@ -170,14 +171,14 @@ const HomeOpt = (props: Props) => {
                         })}
                     </>}
                     {loginScene !== 'onshare' && (
-                        <img className="home-opt-list-img" onClick={() => setShowAction(!showAction)} src={showAction ? ActionOn : ActionOff} alt="" />
+                    <img className="home-opt-list-img" onClick={() => {setShowAction(!showAction);setShowIcon(false)}} src={showAction ? ActionOn : ActionOff} alt="" />
                     )}
                 </div>
                 <div className='home-opt-list-item'>
                    {showIcon && 
                     sizeList.map(item => <div className='home-opt-list-item-size' onClick={() => checkSize(item)}>{item}</div> )
                    }
-                    <img className="home-opt-list-img"  onClick={() => setShowIcon(!showIcon)} src={Size} alt="" />
+                    <img className="home-opt-list-img"  onClick={() => {setShowIcon(!showIcon);setShowAction(false)}} src={Size} alt="" />
                 </div>
                 {loginScene !== 'onshare' && (
                     <img className="home-opt-list-img" src={Model} alt="" onClick={goToModel} />

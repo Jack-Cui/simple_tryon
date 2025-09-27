@@ -21,7 +21,7 @@ const BrowseHistory = () => {
         if (!loginCache?.token) {
             throw new Error('用户未登录或登录信息缺失');
         }
-        const resultResponse = await uploadAPI.getActionVideoResult(loginCache.token, 1, 10);
+        const resultResponse = await uploadAPI.getAiVideoResult(loginCache.token, 1, 10);
         if (resultResponse.ok) {
             const resultData = JSON.parse(resultResponse.data);
             console.log('动作视频结果:', resultData);
@@ -74,7 +74,7 @@ const BrowseHistory = () => {
                     </div>
                     <div className='browse-history-content-detail-info'>
                     <div className='browse-history-content-detail-info-item'>
-                            <span>{item.remark || ''}</span>
+                            <span>{item.title || ''}</span>
                             {/* <IconFont name='edit-2' onClick={editAction} className='edit' size="large"/> */}
                         </div>
                         <div className='browse-history-detail-info-item'>

@@ -1224,4 +1224,13 @@ export const uploadAPI = {
     console.log('删除动作视频请求端点:', endpoint);
     return await apiService.delete(endpoint, headers);
   },
+
+  async getAiVideoResult(access_token: string, current: number, size: number): Promise<ApiResponse> {
+    console.log('开始获取ai视频结果');
+    const endpoint = API_ENDPOINTS.GET_AI_VIDEO_RESULT_LIST(current, size);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  },
 };

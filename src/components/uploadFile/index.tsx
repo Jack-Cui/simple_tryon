@@ -9,6 +9,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 're
 import { checkVideo } from '../../utils/videoCheck';
 import { getVideoFirstFrame } from '../../utils/vedioToImg';
 import ErrorToast from '../errorToast';
+import { setupWechatVideoCapture, wechatExtractVideoFrame } from '../../utils/wxVideoToImg';
 interface Props {
     title: String;
     info?: string[];
@@ -26,15 +27,18 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     const [showError, setShowError] = useState(false);
     const [errorInfo, setErrorInfo] = useState('');
     useEffect(() => {
+        // setupWechatVideoCapture();
+    },[])
+    useEffect(() => {
         if (showError) {
-          const timer: any = setTimeout(() => {
-            setShowError(false);
-          }, 1500)
-          return () => {
-            clearTimeout(timer);
-          }
+            const timer: any = setTimeout(() => {
+                setShowError(false);
+            }, 1500)
+            return () => {
+                clearTimeout(timer);
+            }
         }
-      }, [showError])
+    }, [showError])
     const getAccept = () => {
         let accept = '';
         if (props?.isRing) {
@@ -50,9 +54,33 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         uploadFileEl?.current?.click();
     }
 
+    const wxFileChange = async (file: any) => {
+        const btn = document.getElementById('selectVideoBtn');
+        if (!btn) return; // 修正：添加空值检查
+
+        btn.addEventListener('click', async () => {
+            // 显示加载UI
+            const preview = document.getElementById('preview') as HTMLImageElement | null;
+            if (preview) {
+                preview.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzRDQ0ZGRiIgZD0iTTExIDZoMnY2aC0ydi02em0xIDExaC0ydi02aDJ2NnoiLz48cGF0aCBkPSJNMjEgMTBoLTJWNmgtMnY0aC00VjZoLTJ2NGgtNHYtNGgtMnY0YTIgMiAwIDAgMCAyIDJoMnY0aDJ2LTRoNHY0aDJWMTRjMCAxLjEtLjkgMi0yIDJoLTJ2LTRoMnptLTkgM2gtNHYyaDR2LTJ6Ii8+PC9zdmc+';
+            }
+
+            try {
+                const { base64 } = await wechatExtractVideoFrame(file);
+                if (preview) preview.src = base64;
+            } catch (error) {
+                alert((error as Error).message);
+                if (preview) preview.src = '';
+            } finally {
+                // document.body.removeChild(input);
+            }
+        });
+    }
+
     const fileChange = async (event: any) => {
         if (!event.target.files[0]) return;
         const res: any = await checkVideo(event.target.files[0]);
+        alert(JSON.stringify(res));
         // if (props?.isRing) {
         //     // 环拍视频
         //     if (!(res.duration > 45 && res.duration < 60)) {
@@ -63,9 +91,15 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         //     setFirstFrame('');
         //     return;
         // }
+
         if (props?.isRing || props?.isPersonal) {
+            alert(6);
             const result = await getVideoFirstFrame(event.target.files[0], 'png');
+            // alert(JSON.stringify(result));
             setFirstFrame(result.base64); // 显示 Base64 图片
+            // const { base64 } = await wechatExtractVideoFrame(event.target.files[0]);
+            // alert(JSON.stringify(base64));
+            // setFirstFrame(base64); // 显示 Base64 图片
         }
         if (props?.is3DBeauty) {
             setFirstFrame(URL.createObjectURL(event.target.files[0])); // 显示 Base64 图片
@@ -74,25 +108,25 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     }
 
     // 使用useImperativeHandle自定义暴露给父组件的内容
-  useImperativeHandle(ref, () => ({
-    // 暴露给父组件的方法，用于获取数据
-    // 获取文件
-    getFile: () => {
-      return file; 
-    },
-    // 获取身高
-    getPerHeight: () => {
-        return perHeight; 
-      },
-      // 获取动作名称
-      getPerActionName: () => {
-        return perActionName; 
-      },
-  })); // 依赖项变化时更新暴露的方法
+    useImperativeHandle(ref, () => ({
+        // 暴露给父组件的方法，用于获取数据
+        // 获取文件
+        getFile: () => {
+            return file;
+        },
+        // 获取身高
+        getPerHeight: () => {
+            return perHeight;
+        },
+        // 获取动作名称
+        getPerActionName: () => {
+            return perActionName;
+        },
+    })); // 依赖项变化时更新暴露的方法
     return (
         <div className="upload-content">
             <div className="title">{props.title}</div>
-            <div className="btn" >
+            <div className="btn" id='selectVideoBtn'>
                 <img src={firstFrame || UploadIcon} onClick={uploadFile} />
                 <input ref={uploadFileEl} accept={getAccept()} type="file" style={{ display: 'none' }} onChange={fileChange} />
             </div>
@@ -134,7 +168,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                     </div>
                 </div>
             </div>
-            <ErrorToast info={errorInfo} visible={showError} onClick={() => setShowError(false)}/>
+            <ErrorToast info={errorInfo} visible={showError} onClick={() => setShowError(false)} />
         </div>
     )
 })

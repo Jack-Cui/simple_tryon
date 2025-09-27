@@ -27,10 +27,12 @@ export function getVideoFirstFrame(
 
     // 2. 创建隐藏的 video 元素
     const video = document.createElement("video");
-    video.style.display = "none"; // 不显示在页面上
+    // video.style.display = "none"; // 不显示在页面上
+    video.style.opacity = "0"; // 视觉上不可见，但被视为活跃元素
     video.crossOrigin = "anonymous"; // 避免跨域问题（针对远程视频，本地文件可省略）
     video.preload = "metadata"; // 仅加载元数据（无需加载完整视频，提升性能）
-
+    video.muted = true; // 关键：静音视频更易通过自动播放限制
+    video.playsInline = true; // 关键：iOS 中允许内联播放（非全屏）
     // 3. 视频加载完成后绘制第一帧
     video.addEventListener("loadeddata", () => {
       try {
@@ -44,7 +46,7 @@ export function getVideoFirstFrame(
           reject(new Error("Canvas 上下文创建失败，请检查浏览器兼容性"));
           return;
         }
-        video.currentTime = 0.1;
+        video.currentTime = 1;
         // 5. 绘制视频第 1 帧（currentTime 默认 0，即第一帧）
         // 定位到 0.1 秒（100 毫秒）
         video.addEventListener(
