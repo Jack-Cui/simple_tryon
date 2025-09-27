@@ -63,6 +63,10 @@ export const API_ENDPOINTS = {
   
   LOGIN: (user_id: string, tenant_id: string) => 
     `/admin/oauth/token?mobile=OCL@${user_id}&id_token=AUTHMINIAPP@${tenant_id}&grant_type=mobile`,
+
+  SHARE_LOGIN: (user_id: string, tenant_id: string, register_time: string, inviteUserId: string) => 
+    `/admin/oauth/token?mobile=OCL@${user_id}:${register_time}&id_token=AUTHMINIAPP@${tenant_id}&grant_type=mobile&inviteUserId=${inviteUserId}`,
+
   // 获取房间信息
   GET_SYSROOMSHARE: (co_creation_id: string) => `/admin/sysroomshare/${co_creation_id}`,
 

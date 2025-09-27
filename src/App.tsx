@@ -47,7 +47,7 @@ function App() {
           return;
         }else{
           //如果是分享查看模式，直接将 userid 改为 inviteUserId
-            user_id = inviteUserId;
+            // user_id = inviteUserId;
         }
         //update by chao 2025.09.27---->
 
@@ -60,6 +60,19 @@ function App() {
 
         // 执行登录
         console.log('🚀 开始自动登录...');
+        let access_token = ''
+
+        // if(login_scene === 'onshare' && register_time !== '') {
+        //   const response = await authAPI.shareLogin(user_id, tenant_id, register_time, inviteUserId);
+        //   if (response.ok) {
+        //     const loginData = authAPI.parseLoginResponse(response);
+        //     access_token = loginData?.access_token || '';
+        //   } else {
+        //     setError('分享登录失败');
+        //     setIsLoading(false);
+        //     return;
+        //   }
+        // }
         const response = await authAPI.login(user_id, tenant_id);
         
         if (response.ok) {
@@ -72,12 +85,14 @@ function App() {
             saveTokens(loginData.access_token, loginData.refresh_token);
             console.log('💾 Token已保存');
             
-            const user_id = loginData.user_id || 'default_user_id';
-            
+            const cur_user_id = loginData.user_id || 'default_user_id';
+            if(access_token === '') {
+              access_token = loginData.access_token;
+            }
             // 保存登录信息到缓存
             saveLoginCache({
-              token: loginData.access_token,
-              userId: user_id,
+              token: access_token,
+              userId: cur_user_id,
               roomId: room_id,
               tenantId: tenant_id,
             });
@@ -88,8 +103,6 @@ function App() {
               await tryonService.initializeAfterLogin({
                 tenantId: tenant_id,
                 roomId: room_id,
-                // phone: phone,
-                // coCreationId: coCreationId,
                 userId: user_id,
                 accessToken: loginData.access_token,
               });
@@ -99,9 +112,6 @@ function App() {
               try {
                 console.log('🔄 开始预加载衣服详情到缓存...');
                 import('./services/api').then(({ roomAPI }) => {
-                  // if (loginData.access_token) {
-                  //   roomAPI.preloadClothesDetails(coCreationId, loginData.access_token);
-                  // }
                 }).catch(error => {
                   console.error('❌ 预加载衣服详情失败:', error);
                 });

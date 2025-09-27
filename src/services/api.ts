@@ -187,7 +187,14 @@ export const authAPI = {
   async login(user_id: string, tenant_id: string): Promise<ApiResponse> {
     console.log('开始登录，手机号:', user_id, 'tenant_id:', tenant_id);
     const endpoint = API_ENDPOINTS.LOGIN(user_id, tenant_id);
-    console.log('登录请求端点:', endpoint);
+    console.log('自己登录请求端点:', endpoint);
+    return await apiService.post(endpoint, undefined, API_CONFIG.LOGIN_HEADERS);
+  },
+
+  async shareLogin(user_id: string, tenant_id: string, register_time: string, inviteUserId: string): Promise<ApiResponse> {
+    console.log('开始分享登录，手机号:', user_id, 'tenant_id:', tenant_id, 'register_time:', register_time);
+    const endpoint = API_ENDPOINTS.SHARE_LOGIN(user_id, tenant_id, register_time, inviteUserId);
+    console.log('分享登录请求端点:', endpoint);
     return await apiService.post(endpoint, undefined, API_CONFIG.LOGIN_HEADERS);
   },
 
