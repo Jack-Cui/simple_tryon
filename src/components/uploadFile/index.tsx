@@ -80,7 +80,6 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     const fileChange = async (event: any) => {
         if (!event.target.files[0]) return;
         const res: any = await checkVideo(event.target.files[0]);
-        alert(JSON.stringify(res));
         // if (props?.isRing) {
         //     // 环拍视频
         //     if (!(res.duration > 45 && res.duration < 60)) {
@@ -93,12 +92,9 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         // }
 
         if (props?.isRing || props?.isPersonal) {
-            alert(6);
             const result = await getVideoFirstFrame(event.target.files[0], 'png');
-            // alert(JSON.stringify(result));
             setFirstFrame(result.base64); // 显示 Base64 图片
             // const { base64 } = await wechatExtractVideoFrame(event.target.files[0]);
-            // alert(JSON.stringify(base64));
             // setFirstFrame(base64); // 显示 Base64 图片
         }
         if (props?.is3DBeauty) {
