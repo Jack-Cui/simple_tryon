@@ -1226,6 +1226,17 @@ export const uploadAPI = {
   },
 
   async getAiVideoResult(access_token: string, current: number, size: number): Promise<ApiResponse> {
+    //update by chao 2025.09.27
+    // FUNCA. 分享
+
+    // 关键：向小程序发送消息（小程序会在onWebviewMessage中接收）
+    // const shareData = {
+    //   coCreateID: '123'
+    // };
+    // wx.miniProgram.postMessage({ data: shareData });
+    // alert('已向小程序发送数据，请返回小程序查看效果');
+    
+
     console.log('开始获取ai视频结果');
     const endpoint = API_ENDPOINTS.GET_AI_VIDEO_RESULT_LIST(current, size);
     const headers = {
