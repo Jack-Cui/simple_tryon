@@ -7,6 +7,7 @@ import UploadIcon from '../../assets//upload.png';
 import Example2Icon from '../../assets//example2.png';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { checkVideo } from '../../utils/videoCheck';
+import {checkImg} from '../../utils/imgCheck';
 import { getVideoFirstFrame } from '../../utils/vedioToImg';
 import ErrorToast from '../errorToast';
 import { setupWechatVideoCapture, wechatExtractVideoFrame } from '../../utils/wxVideoToImg';
@@ -23,13 +24,19 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     const uploadFileEl = useRef<HTMLInputElement>(null);
     const [firstFrame, setFirstFrame] = useState(''); // 视频第一帧图片
     const [file, setFile] = useState(''); // 文件
-    const [perHeight, setPerHeight] = useState(''); // 身高
+    const [perHeight, setPerHeight] = useState<any>(''); // 身高
     const [perActionName, setPerActionName] = useState(''); // 动作名称
     const [showError, setShowError] = useState(false);
     const [errorInfo, setErrorInfo] = useState('');
     useEffect(() => {
         // setupWechatVideoCapture();
-    },[])
+
+        if (perHeight > 240 || perHeight < 100) {
+            setErrorInfo('身高输入异常，请重新输入');
+            setShowError(true); 
+            return;
+        }
+    },[perHeight])
     useEffect(() => {
         if (showError) {
             const timer: any = setTimeout(() => {
@@ -78,7 +85,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         });
     }
 
-    const verifyFiles = (file) => {
+    const verifyFiles = async (file: any) => {
         if (props?.isRing) {
             // 环拍视频
             const res: any = await checkVideo(file);
@@ -161,7 +168,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                 <img src={firstFrame || UploadIcon} onClick={uploadFile} />
                 <input ref={uploadFileEl} accept={getAccept()} type="file" style={{ display: 'none' }} onChange={fileChange} />
             </div>
-            {props.isRing && <Input className='input' value={perHeight} onChange={(value: any) => setPerHeight(value)} label={<img src={HeightIcon} />} max={240} min={100} suffix={<div>厘米</div>} type="number"  borderless placeholder="请输入您的身高" />}
+            {props.isRing && <Input className='input' value={perHeight} onChange={(value: any) => setPerHeight(value)} label={<img src={HeightIcon} />} suffix={<div>厘米</div>} type="number"  borderless placeholder="请输入您的身高" />}
             {props.isPersonal && <Input className='input' value={perActionName} onChange={(value: any) => setPerActionName(value)} maxlength={4} label={<img src={ActionIcon} />} borderless placeholder="请输入动作名称" />}
             <div className="info">
                 <div className='info_title'>环拍视频要求：</div>
