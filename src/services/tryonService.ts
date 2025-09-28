@@ -4,7 +4,7 @@ import { webSocketService, WebSocketConfig } from './websocketService';
 import { RTCVideoService, RTCVideoConfig, rtcVideoService } from './rtcVideoService';
 import { RTC_CONFIG } from '../config/config';
 import { AccessToken, Privilege } from '../token/AccessToken';
-import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, getLoginCache } from '../utils/loginCache';
+import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, getLoginCache, saveLoginCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 const Long = require('long');
 
@@ -469,6 +469,7 @@ export class TryonService {
       if (!roomInfo) {
         throw new Error('解析房间信息失败');
       }
+      updateRoomIdInCache(roomInfo.data.roomId)
       // 构建登台信息
       this.enterStageInfo = await roomAPI.buildShareEnterStageInfo(roomInfo, this.accessToken);
     } else {
@@ -581,7 +582,7 @@ export class TryonService {
       throw new Error('token missing');
     }
     const response = await roomAPI.createRoom(loginCache.roomId, loginCache.token);
-    // console.log('创建房间响应:', response);
+    console.log('创建房间响应:', response);
     // console.log('创建房间响应数据:', response.data);
     
     if (!response.ok) {

@@ -1386,8 +1386,6 @@ const Home = () => {
   const tryonInitializedRef = useRef(false);
 
   useEffect(() => {
-    console.log('🔍 第二个useEffect被触发');
-    console.log('🔍 loginParams:', loginParams);
     console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);
 
     if (!loginParams || tryonInitializedRef.current) {
@@ -1427,13 +1425,6 @@ const Home = () => {
     // 预加载衣服详情到缓存
     if (loginParams?.token) {
       console.log('🔄 开始预加载衣服详情到缓存');
-
-      // 异步预加载，不阻塞UI
-      // import('../../services/api').then(({ roomAPI }) => {
-      //   roomAPI.preloadClothesDetails(loginParams.coCreationId, loginParams.token);
-      // }).catch(error => {
-      //   console.error('❌ 预加载衣服详情失败:', error);
-      // });
     }
 
     // 获取场景列表（只有当前状态为空时才尝试从服务获取）
@@ -1467,28 +1458,17 @@ const Home = () => {
 
     // 自动执行登台流程（只有在用户没有离开过舞台时才执行）
     const autoStartTryon = async () => {
-      console.log('🔍 autoStartTryon 被调用，hasLeftStage:', hasLeftStage);
-      console.log('🔍 loginParams:', loginParams);
-      console.log('🔍 RTC连接状态:', rtcVideoService.getConnectionStatus());
 
       // 延迟一点时间确保页面完全加载
       setTimeout(async () => {
-        console.log('🔍 延迟后检查，hasLeftStage:', hasLeftStage);
-        console.log('🔍 延迟后RTC连接状态:', rtcVideoService.getConnectionStatus());
-
         // 强制检查：如果URL参数变化了，重置hasLeftStage状态
         const urlCoCreationId = getCoCreationIdWithUrlPriority();
-        // if (isValidCoCreationId(urlCoCreationId) && urlCoCreationId !== loginParams?.coCreationId) {
-        //   console.log('🔄 检测到URL参数变化，重置hasLeftStage状态');
-        //   setHasLeftStage(false);
-        // }
         
         if (!hasLeftStage) {
           console.log('🚀 自动开始登台流程...');
           await handleStartTryon();
         } else {
           console.log('⚠️ 用户已离开过舞台，跳过自动登台');
-
           // 即使离开过舞台，也要检查RTC连接状态
           if (!rtcVideoService.getConnectionStatus()) {
             console.log('🔄 检测到RTC未连接，尝试重新连接...');
