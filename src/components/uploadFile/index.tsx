@@ -133,6 +133,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     const fileChange = async (event: any) => {
         if (!event.target.files[0]) return;
         verifyFiles(event.target.files[0]);
+        setFile(event.target.files[0]);
         if (props?.isRing || props?.isPersonal) {
             const result = await getVideoFirstFrame(event.target.files[0], 'png');
             setFirstFrame(result.base64); // 显示 Base64 图片
@@ -142,7 +143,6 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         if (props?.is3DBeauty) {
             setFirstFrame(URL.createObjectURL(event.target.files[0])); // 显示 Base64 图片
         }
-        setFile(event.target.files[0]);
     }
 
     // 使用useImperativeHandle自定义暴露给父组件的内容
