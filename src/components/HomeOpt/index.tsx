@@ -44,7 +44,8 @@ const HomeOpt = (props: Props) => {
     const [showIcon, setShowIcon] = useState(false);
     const actionIconList = [Action1, Action2, Action3, Action4, Action5];
     const actionCheckIconList = [Action1Check, Action2Check, Action3Check, Action4Check, Action5Check];
-    const sizeList = ['3XL', 'XXL', 'XL', 'L', 'M', 'S'];
+    // const sizeList = ['3XL', 'XXL', 'XL', 'L', 'M', 'S'];
+    const sizeList = ['XXL', 'XL', 'L', 'M', 'S', 'XS'];
     const [aigcList, setAigcList] = useState<any[]>([]); // 点击过的动作
     const [showError, setShowError] = useState(false);
     useEffect(() => {
@@ -90,6 +91,7 @@ const HomeOpt = (props: Props) => {
         
         // 将尺寸字符串转换为数字
         const sizeMap: { [key: string]: number } = {
+            'XS': 1,
             'S': 2,
             'M': 3,
             'L': 4,
