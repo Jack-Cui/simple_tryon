@@ -28,15 +28,17 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     const [perActionName, setPerActionName] = useState(''); // 动作名称
     const [showError, setShowError] = useState(false);
     const [errorInfo, setErrorInfo] = useState('');
-    useEffect(() => {
-        // setupWechatVideoCapture();
 
-        if (perHeight > 240 || perHeight < 100) {
-            setErrorInfo('身高输入异常，请重新输入');
-            setShowError(true); 
-            return;
-        }
-    },[perHeight])
+    //update by chao 2025.09.28 修改校验报错问题， 注释该段
+    // useEffect(() => {
+    //     // setupWechatVideoCapture();
+
+    //     if (perHeight > 240 || perHeight < 100) {
+    //         setErrorInfo('身高输入异常，请重新输入');
+    //         setShowError(true); 
+    //         return;
+    //     }
+    // },[perHeight])
     useEffect(() => {
         if (showError) {
             const timer: any = setTimeout(() => {

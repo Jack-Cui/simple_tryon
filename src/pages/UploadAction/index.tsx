@@ -114,7 +114,9 @@ const UploadAction = () => {
 
               const uploadActionResponse = await uploadAPI.uploadActionVideo(
                 loginCache.token,
-                (personRefEl?.current as any).getPerActionName(), // 动作名称
+                //update by chao 2025.09.28 修改校验报错问题
+                //(personRefEl?.current as any).getPerActionName(), // 动作名称
+                '动作名称', // 动作名称
                 uploadResult.url
               );
 

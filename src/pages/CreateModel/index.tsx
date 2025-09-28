@@ -69,6 +69,14 @@ const CreateModel = () => {
         setShowError(true);
         return;
       }
+
+      //update by chao 2025.09.28 修改校验报错问题 直接在点击下一步时，进行校验
+      let perHeight = (ringRefEl?.current as any).getPerHeight();
+        if (perHeight > 240 || perHeight < 100) {
+            setErrorInfo('身高输入异常，请重新输入');
+            setShowError(true); 
+            return;
+        }
     }
     setSelectedVideos([(ringRefEl?.current as any).getFile()])
     setStep(1);
@@ -285,8 +293,10 @@ const CreateModel = () => {
               
               // 调用创建模型API
               console.log('开始创建模型...');
-              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl, (ringRefEl?.current as any).getPerHeight());
-              
+              // const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl, (ringRefEl?.current as any).getPerHeight());
+              //update by chao 2025.09.28 上传视频后报错：获取Cannot read properties of null (reading 'getPerHeight')
+              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl,185);
+
               if (createModelResponse.ok) {
                 const createResult = JSON.parse(createModelResponse.data);
                 console.log('创建模型响应:', createResult);
