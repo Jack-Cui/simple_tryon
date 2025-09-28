@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 import { getLoginCache } from "../../utils/loginCache";
 import { modelAPI, uploadAPI } from "../../services/api";
 import ErrorToast from "../../components/errorToast";
+import MediaView from "../../components/MediaView";
+import { checkVideo } from "../../utils/videoCheck";
 const BrowseHistory = () => {
     const navigate = useNavigate();
     const [aigcList, setAigcList] = useState<any[]>([]);
     const [showError, setShowError] = useState(false);
     const [deleteMsg, setDeleteMsg] = useState({});
-
+    const [showVideo, setShowVideo] = useState(false);
+    const [videoInfo, setVideoInfo] = useState<any>({});
     useEffect(() => {
         getActionList();
     }, [])
@@ -35,6 +38,11 @@ const BrowseHistory = () => {
         } else {
             console.warn('获取动作视频结果HTTP错误:', resultResponse.status);
         }
+    }
+
+    const checkVideo = (msg: any) => {
+        setVideoInfo(msg);
+        setShowVideo(true);
     }
 
     const clearAction = (msg: any) => {
@@ -70,7 +78,7 @@ const BrowseHistory = () => {
             {aigcList.map((item:any) => {
                 return (
                     <div className='browse-history-content-detail'>
-                    <div className='browse-history-content-detail-img'>
+                    <div className='browse-history-content-detail-img' onClick={() => checkVideo(item)}>
                         <img src={item.imgs ? item.imgs.split(',')[0] : ''} alt="" />
                     </div>
                     <div className='browse-history-content-detail-info'>
@@ -87,6 +95,7 @@ const BrowseHistory = () => {
                 )
             })}
             <ErrorToast isConfirm info={'确认删除该视频？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>
+            {showVideo && <MediaView src={videoInfo.videoPath} smallSrc={videoInfo.actionPath} onCloseClick={() => setShowVideo(false)} />}
             </div>
         </div>
     )

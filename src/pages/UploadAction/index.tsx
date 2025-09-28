@@ -114,7 +114,7 @@ const UploadAction = () => {
 
               const uploadActionResponse = await uploadAPI.uploadActionVideo(
                 loginCache.token,
-                actionName,
+                (personRefEl?.current as any).getPerActionName(), // 动作名称
                 uploadResult.url
               );
 

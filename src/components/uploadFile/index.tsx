@@ -17,6 +17,7 @@ interface Props {
     isRing?: Boolean; // 环拍视频
     isPersonal?: Boolean; // 个人视频
     is3DBeauty?: Boolean; // 3d美颜
+    isHide?: boolean; //
 }
 const UploadFile = forwardRef((props: Props, ref: any) => {
     const uploadFileEl = useRef<HTMLInputElement>(null);
@@ -120,7 +121,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         },
     })); // 依赖项变化时更新暴露的方法
     return (
-        <div className="upload-content">
+        <div className="upload-content" style={props?.isHide ? {display: 'none'} : {}}>
             <div className="title">{props.title}</div>
             <div className="btn" id='selectVideoBtn'>
                 <img src={firstFrame || UploadIcon} onClick={uploadFile} />

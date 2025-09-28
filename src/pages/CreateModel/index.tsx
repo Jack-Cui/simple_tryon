@@ -266,10 +266,94 @@ const CreateModel = () => {
           throw new Error(`获取图片上传token失败: HTTP ${tokenResponse.status}`);
         }
       }
+
+      // 检查上传结果
+            const failedUploads = uploadResults.filter(result => !result.success);
+            if (failedUploads.length > 0) {
+              console.error('部分文件上传失败:', failedUploads);
+              alert(`部分文件上传失败: ${failedUploads.map(f => f.error).join(', ')}`);
+            } else {
+              console.log('所有文件上传成功:', uploadResults);
+              console.log('模型图片URL:', modelPictureUrl);
+              console.log('模型视频URL:', modelVideoUrl);
+              
+              // 检查是否至少有一个URL
+              if (!modelPictureUrl && !modelVideoUrl) {
+                alert('上传失败，无法获取文件URL');
+                return;
+              }
+              
+              // 调用创建模型API
+              console.log('开始创建模型...');
+              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl, (ringRefEl?.current as any).getPerHeight());
+              
+              if (createModelResponse.ok) {
+                const createResult = JSON.parse(createModelResponse.data);
+                console.log('创建模型响应:', createResult);
+                
+                if (createResult.code === 0) {
+                  console.log('创建模型成功:', createResult.data);
+                  alert(`模型创建成功！\n图片: ${modelPictureUrl ? '已上传' : '无'}\n视频: ${modelVideoUrl ? '已上传' : '无'}`);
+                  
+                  // 调用原来的上传回调
+                  await onUpload({
+                    images: selectedImages,
+                    videos: selectedVideos
+                  });
+                  
+                  // 上传成功后清空选择
+                  setSelectedImages([]);
+                  setSelectedVideos([]);
+                } else {
+                  console.error('创建模型失败，响应数据:', createResult);
+                  const errorMsg = createResult.msg || createResult.message || '创建模型失败';
+                  throw new Error(`创建模型失败: ${errorMsg} (code: ${createResult.code})`);
+                }
+              } else {
+                console.error('创建模型HTTP错误:', createModelResponse.status, createModelResponse.data);
+                throw new Error(`创建模型失败: HTTP ${createModelResponse.status} - ${createModelResponse.data}`);
+              }
+            }
     }  catch (error) {
       console.error('上传失败:', error);
       alert(`上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
     } 
+  }
+
+  const onUpload = async (files: any) => {
+
+          try {
+            // 获取登录缓存中的用户信息
+            const loginCache = getLoginCache();
+            if (!loginCache?.token || !loginCache?.userId) {
+              throw new Error('用户未登录或登录信息缺失');
+            }
+            
+            console.log('上传的图片:', files.images);
+            console.log('上传的视频:', files.videos);
+            
+            // 调用实际的上传接口
+            const response = await modelAPI.uploadModelMaterials(
+              loginCache.token,
+              loginCache.userId,
+              files
+            );
+            
+            if (response.ok) {
+              const result = JSON.parse(response.data);
+              if (result.code === 0) {
+                console.log('上传成功:', result.data);
+                // alert(`模型素材上传成功！\n模型ID: ${result.data.model_id}\n处理状态: ${result.data.processing_status}`);
+              } else {
+                throw new Error(result.message || '上传失败');
+              }
+            } else {
+              throw new Error(`上传失败: HTTP ${response.status}`);
+            }
+          } catch (error) {
+            console.error('上传失败:', error);
+            // alert(`上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
+          }
   }
 
   return (
@@ -280,8 +364,8 @@ const CreateModel = () => {
       <div className="create-Model">
       <Navbar className='create-Model-navbar' fixed={false} leftArrow onLeftClick={handleClick}>{step === 0 ? '创建模型' : '3D美颜'}</Navbar>
       <div className='content'>
-        {step === 0 && <UploadFile ref={ringRefEl} isRing title="上传环拍视频"  info={infoList1}/>}
-        {step === 1 && <UploadFile ref={beautyRefEl} is3DBeauty title="上传清晰正面美颜照"  info={infoList2}/>}
+        <UploadFile isHide={!(step === 0)} ref={ringRefEl} isRing title="上传环拍视频"  info={infoList1}/>
+        <UploadFile isHide={!(step === 1)}  ref={beautyRefEl} is3DBeauty title="上传清晰正面美颜照"  info={infoList2}/>
       </div>
       <div className='create-Model-btn'>
         {step === 0 && <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={onNext}>下一步</Button>}

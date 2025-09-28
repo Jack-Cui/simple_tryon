@@ -1,0 +1,23 @@
+.media-view {
+    width: 100vw;
+    height: 100vh;
+    /* padding-top: var(--td-navbar-height, 48px);
+    height: calc(100vh - 80px - var(--td-navbar-height, 48px)); */
+    background: #eee;
+    position: fixed;
+    z-index: 99;
+    top: 0;
+    left: 0;
+}
+.media-view-samll-videl {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+}
+.media-view-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
