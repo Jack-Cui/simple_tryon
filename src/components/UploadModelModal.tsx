@@ -234,7 +234,7 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
         
         // 调用创建模型API
         console.log('开始创建模型...');
-        const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl);
+        const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl, 180);
         
         if (createModelResponse.ok) {
           const createResult = JSON.parse(createModelResponse.data);
