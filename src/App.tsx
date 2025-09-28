@@ -223,6 +223,7 @@ function App() {
               roomId: room_id,
               tenantId: tenant_id,
               coCreationId: co_creation_id,
+              shareScene: login_scene,
             });
             
             // 登录成功后立即初始化房间信息
@@ -234,6 +235,7 @@ function App() {
                 userId: user_id,
                 accessToken: loginData.access_token,
                 coCreationId: co_creation_id,
+                shareScene: login_scene,
               }, login_scene);
               console.log('✅ 房间信息初始化成功');
               

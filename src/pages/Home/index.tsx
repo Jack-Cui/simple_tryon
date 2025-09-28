@@ -70,6 +70,7 @@ const Home = () => {
     tenantId: string;
     coCreationId: string;
     roomId: string;
+    shareScene: string;
   } | null>(null);
 
   // 新增状态：服装浏览相关
@@ -1305,7 +1306,8 @@ const Home = () => {
         // phone: locationState.phone,
         tenantId: locationState.tenantId,
         roomId: locationState.roomId,
-        coCreationId: locationState.coCreationId
+        coCreationId: locationState.coCreationId,
+        shareScene: locationState.shareScene,
       });
 
       // 如果路由state中有房间名称，也设置到状态中
@@ -1345,6 +1347,7 @@ const Home = () => {
         tenantId: cachedLoginData.tenantId,
         roomId: cachedLoginData.roomId,
         coCreationId: cachedLoginData.coCreationId,
+        shareScene: cachedLoginData.shareScene,
       });
 
       // 如果缓存中有房间名称，也设置到状态中
@@ -1910,6 +1913,7 @@ const Home = () => {
           rtcConfig,
           roomId: loginParams.roomId,
           coCreationId: loginParams.coCreationId,
+          shareScene: loginParams.shareScene,
         };
 
         console.log('开始自动试穿流程，配置:', config);
@@ -1935,6 +1939,7 @@ const Home = () => {
           rtcConfig,
           roomId: loginParams.roomId,
           coCreationId: loginParams.coCreationId,
+          shareScene: loginParams.shareScene,
         };
 
         console.log('开始自动试穿流程，配置:', config);
@@ -1962,6 +1967,7 @@ const Home = () => {
         rtcConfig,
         roomId: roomInfo.data.roomId,
         coCreationId: loginParams.coCreationId,
+        shareScene: loginParams.shareScene,
       };
 
       console.log('开始自动试穿流程，配置:', config);

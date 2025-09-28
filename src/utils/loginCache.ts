@@ -14,6 +14,7 @@ export interface LoginCacheData {
   scenesList?: { [key: string]: { name: string; code: string; bgm?: string } }; // 场景列表映射，可选
   defaultSceneName?: string; // 默认场景名称，可选
   timestamp: number; // 缓存时间戳
+  shareScene: string;
 }
 
 const CACHE_KEY = 'loginCache';

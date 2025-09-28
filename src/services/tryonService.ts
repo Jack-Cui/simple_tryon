@@ -16,6 +16,7 @@ export interface TryonConfig {
   accessToken: string;
   rtcConfig?: RTCVideoConfig;
   roomId: string;
+  shareScene: string;
 }
 
 export class TryonService {
@@ -107,71 +108,72 @@ export class TryonService {
     this.config = config;
     this.accessToken = config.accessToken;
     
-    try {
-      console.log('校验模型列表...');
-      const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
-      console.log('模型列表校验完成', response);
-      
-      if (response.ok) {
-        console.log('模型列表校验完成', response.data);
+    if (shareScene !== "onshare") {
+      try {
+        console.log('校验模型列表...');
+        const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+        console.log('模型列表校验完成', response);
         
-        // 解析返回的数据
-        try {
-          const dataObj = JSON.parse(response.data);
-          // 判断如果失败或者data长度是空，则弹窗提示请创建模型
-          if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+        if (response.ok) {
+          console.log('模型列表校验完成', response.data);
+          
+          // 解析返回的数据
+          try {
+            const dataObj = JSON.parse(response.data);
+            // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+            if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+              if (this.onCreateModelCallback) {
+                this.onCreateModelCallback();
+              }
+              return;
+            }
+            
+            // 检查是否有 modelStatus=4 的模型
+            const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+            if (!hasValidModel) {
+              console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
+              if (this.onCreateModelCallback) {
+                this.onCreateModelCallback();
+              }
+              return;
+            }
+            
+            // 检查最后一个元素的 modelStatus 是否为 4
+            // const lastModel = dataObj.data[dataObj.data.length - 1];
+            // if (!lastModel || lastModel.modelStatus !== 0) {
+            //   console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
+            //   if (this.onCreateModelCallback) {
+            //     this.onCreateModelCallback();
+            //   }
+            //   return;
+            // }
+            
+            console.log('找到有效的模型（modelStatus=4），继续流程');
+            // 标记模型列表已校验
+            this.modelListChecked = true;
+          } catch (parseError) {
+            console.error('解析模型列表数据失败', parseError);
             if (this.onCreateModelCallback) {
               this.onCreateModelCallback();
             }
             return;
           }
-          
-          // 检查是否有 modelStatus=4 的模型
-          const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
-          if (!hasValidModel) {
-            console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
-            if (this.onCreateModelCallback) {
-              this.onCreateModelCallback();
-            }
-            return;
-          }
-          
-          // 检查最后一个元素的 modelStatus 是否为 4
-          // const lastModel = dataObj.data[dataObj.data.length - 1];
-          // if (!lastModel || lastModel.modelStatus !== 0) {
-          //   console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
-          //   if (this.onCreateModelCallback) {
-          //     this.onCreateModelCallback();
-          //   }
-          //   return;
-          // }
-          
-          console.log('找到有效的模型（modelStatus=4），继续流程');
-          // 标记模型列表已校验
-          this.modelListChecked = true;
-        } catch (parseError) {
-          console.error('解析模型列表数据失败', parseError);
+        } else {
+          console.error('模型列表校验失败', response.data);
           if (this.onCreateModelCallback) {
             this.onCreateModelCallback();
           }
           return;
         }
-      } else {
-        console.error('模型列表校验失败', response.data);
+        
+      } catch (error) {
+        console.error('模型列表校验失败', error);
         if (this.onCreateModelCallback) {
           this.onCreateModelCallback();
         }
         return;
       }
-      
-    } catch (error) {
-      console.error('模型列表校验失败', error);
-      if (this.onCreateModelCallback) {
-        this.onCreateModelCallback();
-      }
-      return;
     }
-    
     try {
       // 1. 获取房间信息（但不构建登台信息）
       // console.log('步骤1: 获取房间信息');
@@ -272,77 +274,79 @@ export class TryonService {
   private async startFullTryonFlow(config: TryonConfig): Promise<void> {
     this.config = config;
     this.accessToken = config.accessToken;
-    
-    try {
-      console.log('开始完整试穿流程...');
-      
-      // 0. 校验模型列表（如果已经校验过则跳过）
-      if (!this.modelListChecked) {
-        console.log('校验模型列表...');
-        const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
-        console.log('模型列表校验完成', response);
+    const loginCache = getLoginCache();
+    if (!loginCache?.shareScene || loginCache.shareScene !== "onshare") {
+      try {
+        console.log('开始完整试穿流程...');
         
-        if (response.ok) {
-          console.log('模型列表校验完成', response.data);
+        // 0. 校验模型列表（如果已经校验过则跳过）
+        if (!this.modelListChecked) {
+          console.log('校验模型列表...');
+          const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+          console.log('模型列表校验完成', response);
           
-          // 解析返回的数据
-          try {
-            const dataObj = JSON.parse(response.data);
-            // 判断如果失败或者data长度是空，则弹窗提示请创建模型
-            if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
-              if (this.onCreateModelCallback) {
-                this.onCreateModelCallback();
-              }
-              return;
-            }
+          if (response.ok) {
+            console.log('模型列表校验完成', response.data);
             
-            // 检查是否有 modelStatus=4 的模型
-            const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
-            if (!hasValidModel) {
-              console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
-              if (this.onCreateModelCallback) {
-                this.onCreateModelCallback();
+            // 解析返回的数据
+            try {
+              const dataObj = JSON.parse(response.data);
+              // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+              if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+                if (this.onCreateModelCallback) {
+                  this.onCreateModelCallback();
+                }
+                return;
               }
-              return;
-            }
+              
+              // 检查是否有 modelStatus=4 的模型
+              const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+              if (!hasValidModel) {
+                console.log('没有找到 modelStatus=4 的模型，弹窗提示创建模型');
+                if (this.onCreateModelCallback) {
+                  this.onCreateModelCallback();
+                }
+                return;
+              }
 
-            // const lastModel = dataObj.data[dataObj.data.length - 1];
-            // if (!lastModel || lastModel.modelStatus !== 4) {
-            //   console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
-            //   if (this.onCreateModelCallback) {
-            //     this.onCreateModelCallback();
-            //   }
-            //   return;
-            // }
-            
-            
-            console.log('找到有效的模型（modelStatus=4），继续流程');
-            // 标记模型列表已校验
-            this.modelListChecked = true;
-          } catch (parseError) {
-            console.error('解析模型列表数据失败', parseError);
+              // const lastModel = dataObj.data[dataObj.data.length - 1];
+              // if (!lastModel || lastModel.modelStatus !== 4) {
+              //   console.log('最后一个模型的 modelStatus 不是 4，弹窗提示创建模型');
+              //   if (this.onCreateModelCallback) {
+              //     this.onCreateModelCallback();
+              //   }
+              //   return;
+              // }
+              
+              
+              console.log('找到有效的模型（modelStatus=4），继续流程');
+              // 标记模型列表已校验
+              this.modelListChecked = true;
+            } catch (parseError) {
+              console.error('解析模型列表数据失败', parseError);
+              if (this.onCreateModelCallback) {
+                this.onCreateModelCallback();
+              }
+              return;
+            }
+          } else {
+            console.error('模型列表校验失败', response.data);
             if (this.onCreateModelCallback) {
               this.onCreateModelCallback();
             }
             return;
           }
         } else {
-          console.error('模型列表校验失败', response.data);
-          if (this.onCreateModelCallback) {
-            this.onCreateModelCallback();
-          }
-          return;
+          console.log('模型列表已校验过，跳过重复校验');
         }
-      } else {
-        console.log('模型列表已校验过，跳过重复校验');
+        
+      } catch (error) {
+        console.error('模型列表校验失败', error);
+        if (this.onCreateModelCallback) {
+          this.onCreateModelCallback();
+        }
+        return;
       }
-      
-    } catch (error) {
-      console.error('模型列表校验失败', error);
-      if (this.onCreateModelCallback) {
-        this.onCreateModelCallback();
-      }
-      return;
     }
     
     try {
