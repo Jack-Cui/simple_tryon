@@ -78,20 +78,54 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         });
     }
 
+    const verifyFiles = (file) => {
+        if (props?.isRing) {
+            // 环拍视频
+            const res: any = await checkVideo(file);
+            if (!(res.duration > 45 && res.duration < 60)) {
+                setErrorInfo('请上传时长45s-60s的视频');
+                setShowError(true);
+                return;
+            }
+            if (!(res.videoWidth === 2160 && res.videoHeight === 3840)) {
+                setErrorInfo('请上传分辨率为4k的视频');
+                setShowError(true);
+                return;
+            }
+            if (false) {
+                setErrorInfo('请上传帧率为60fps的视频');
+                setShowError(true); 
+                return;
+            }
+        }
+        if (props?.is3DBeauty) {
+        const res: any = await checkImg(file);
+        console.log(res);
+            // 美图
+            const short = res.fileInfo.width < res.fileInfo.height ? res.fileInfo.width : res.fileInfo.height;
+            const long = res.fileInfo.width < res.fileInfo.height ? res.fileInfo.height : res.fileInfo.width;
+            if (!((short > 1440 || short === 1440) && (long < 3840 || long === 3840))) {
+                // 短边≥1440，长边≤3840
+                setErrorInfo('请上传分辨率2k-4k的美颜照片');
+                setShowError(true); 
+                return;
+            }
+        }
+
+        if (props?.isPersonal) {
+            const res: any = await checkVideo(file);
+            // 个人视频
+            if (!(res.duration === 10 || res.duration < 10)) {
+                setErrorInfo('请上传时长小于等于10s的视频');
+                setShowError(true);
+                return;
+            }
+        }
+    }
+
     const fileChange = async (event: any) => {
         if (!event.target.files[0]) return;
-        const res: any = await checkVideo(event.target.files[0]);
-        // if (props?.isRing) {
-        //     // 环拍视频
-        //     if (!(res.duration > 45 && res.duration < 60)) {
-        //         setErrorInfo('请上传时长45s-60s的视频');
-        //         setShowError(true);
-        //     }
-        //     setFile('');
-        //     setFirstFrame('');
-        //     return;
-        // }
-
+        verifyFiles(event.target.files[0]);
         if (props?.isRing || props?.isPersonal) {
             const result = await getVideoFirstFrame(event.target.files[0], 'png');
             setFirstFrame(result.base64); // 显示 Base64 图片
@@ -127,7 +161,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                 <img src={firstFrame || UploadIcon} onClick={uploadFile} />
                 <input ref={uploadFileEl} accept={getAccept()} type="file" style={{ display: 'none' }} onChange={fileChange} />
             </div>
-            {props.isRing && <Input className='input' value={perHeight} onChange={(value: any) => setPerHeight(value)} label={<img src={HeightIcon} />} suffix={<div>厘米</div>} type="number" borderless placeholder="请输入您的身高" />}
+            {props.isRing && <Input className='input' value={perHeight} onChange={(value: any) => setPerHeight(value)} label={<img src={HeightIcon} />} max={240} min={100} suffix={<div>厘米</div>} type="number"  borderless placeholder="请输入您的身高" />}
             {props.isPersonal && <Input className='input' value={perActionName} onChange={(value: any) => setPerActionName(value)} maxlength={4} label={<img src={ActionIcon} />} borderless placeholder="请输入动作名称" />}
             <div className="info">
                 <div className='info_title'>环拍视频要求：</div>

@@ -11,6 +11,11 @@ export const checkImg = async (file: any) => {
     const fileSize: any = file.size / 1024 / 1024; // 大小 单位M
     const fileInfo: any = await getImageSize(file);
     console.log(fileType, fileSize, fileInfo);
+    return {
+      fileType,
+      fileSize,
+      fileInfo
+    }
 }
 
 const getImageSize = (file: any) => {
