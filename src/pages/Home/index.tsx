@@ -53,20 +53,23 @@ const Home = () => {
     if (location.pathname === '/') {
       // console.log('返回主页面');      
       if(locRouteNum>0){
+        const loginCache = getLoginCache();
         console.log('getLoginCache:', getLoginCache());
         console.log('locationState:', locationState);
         //重新执行登台操作
         // tryonInitializedRef.current = false;
 
-
+      if (!loginCache) {
+        alert("缓存失效")
+        return;
+      }
       // setLoginParams({
-      //   token: locationState.token,
-      //   userId: locationState.userId,
-      //   // phone: locationState.phone,
-      //   tenantId: locationState.tenantId,
-      //   roomId: locationState.roomId,
-      //   coCreationId: locationState.coCreationId,
-      //   shareScene: locationState.shareScene,
+      //   token: loginCache.token,
+      //   userId: loginCache.userId,
+      //   tenantId: loginCache.tenantId,
+      //   roomId: loginCache.roomId,
+      //   coCreationId: loginCache.coCreationId,
+      //   shareScene: loginCache.shareScene,
       // });
 
         console.log('🏠 Home组件登录参数更新:', loginParams);
