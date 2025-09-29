@@ -28,118 +28,6 @@ function App() {
   const [loginScene, setLoginScene] = useState<string>('');
 
   useEffect(() => {
-
-//       // var appId= 'wxad29d9017b989a07'; // 你的公众号APPID
-//       // var secret = 'd2bf5518963175514cdee2995188085c'; // 你的公众号密钥    
-//         var appId= 'wx57548bb90330c93e'; // 你的公众号APPID
-//         var secret = '07592fe655621b11af45dd30abea309e'; // 你的公众号密钥           
-//       var access_token = ''; // 这里需要获取到有效的access_token
-//       var jsapi_ticket = ''; // 这里需要获取到有效的jsapi_ticket
-//       var nonceStr = Math.random().toString(36).substr(2, 15);
-//       var timestamp = Math.floor(Date.now() / 1000);
-//       var strtimestamp = timestamp.toString();
-//       var url = window.location.href.split('#')[0]; // 获取当前页面的URL
-//       var signature = ''; // 这里需要根据实际情况生成签名
-
-//  // alert('appId:'+appId + ' secret:'+secret);
-        
-//         // 定义获取 jsapi_ticket 的函数
-//         const jt_fetchData = async (access_token: string) => {
-//           try {
-//             // 通过nginx代理调用微信API
-//             const jt_response = await fetch(`/wechat/cgi-bin/ticket/getticket?type=jsapi&access_token=${access_token}`);
-//             const jt_data = await jt_response.json();
-//             jsapi_ticket = jt_data.ticket;
-//             console.log('JSAPI Ticket:', jsapi_ticket);
-//           } catch (error) {
-//             console.error('API调用失败:', error);
-//           }
-//         };
-        
-//         // 定义生成签名的函数
-//         const generateSignature = (nonceStr: string, timestamp: string, url: string, jsapi_ticket: string) => {
-//           const stringToSign = `jsapi_ticket=${jsapi_ticket}&noncestr=${nonceStr}&timestamp=${timestamp}&url=${url}`;
-//           const crypto = require('crypto');
-//           return crypto.createHash('sha1').update(stringToSign).digest('hex');
-//         };
-        
-//         const at_fetchData = async (appId:string, secret: string) => {
-//           try {
-//             console.log('开始获取 access_token...');
-//             // 通过nginx代理调用微信API
-//             const at_response = await fetch(`/wechat/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${secret}`);
-            
-//             if (!at_response.ok) {
-//               throw new Error(`HTTP error! status: ${at_response.status}`);
-//             }
-            
-//             const at_data = await at_response.json();
-//             console.log('API 响应数据:', at_data);
-            
-//             if (at_data.access_token) {
-//               access_token = at_data.access_token;
-//               // alert('access_token1:'+access_token);
-//               console.log('Access Token:', access_token);
-//               return access_token;
-//             } else {
-//               throw new Error('API 响应中没有 access_token');
-//             }
-//           } catch (error: any) {
-//             console.error('API调用失败:', error);
-//             alert('获取 access_token 失败: ' + (error as Error).message);
-//             throw error;
-//           }
-//         };
-//   // 使用 async/await 确保正确的执行顺序
-//         (async () => {
-//           try {
-//             await at_fetchData(appId, secret);
-//             // alert('access_token2:'+access_token);
-            
-//             // 获取到 access_token 后再获取 jsapi_ticket
-//             await jt_fetchData(access_token);
-            
-//             // 生成签名
-//             signature = generateSignature(nonceStr, strtimestamp, url, jsapi_ticket);  
-//             console.log('signature:', signature);
-                      
-//             // alert('timestamp:'+timestamp+';nonceStr:'+nonceStr+';url:'+url+';jsapi_ticket:'+jsapi_ticket+';signature:'+signature);
-//                 wx.config({
-//                   debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印
-//                   appId: appId, // 必填，公众号的唯一标识
-//                   timestamp: timestamp, // 必填，生成签名的时间戳
-//                   nonceStr: nonceStr, // 必填，生成签名的随机串
-//                   signature: signature,// 必填，签名
-//                   jsApiList: [], // 必填，需要使用的JS接口列表
-//                   openTagList: [
-                   
-//                   ] // 可选，需要使用的开放标签列表，例如['wx-open-launch-app']
-//                 });                
-//           } catch (error: any) {
-//             console.error('处理失败:', error);
-//           }
-//         })(); 
-
-      //-------------------------------
-
-      // wx.miniProgram.postMessage({ data: 'init' });
-      // window.addEventListener('message', event => {
-      //   alert('Received message:'+ event.data);
-      //   alert("收到小程序调用！");
-      //   console.log('Received message:', event.data);
-      // });
-
-    // wx.miniProgram.onMessage(function(res) { 
-    // if (res.action === 'triggerEvent') {
-    //   // 执行目标事件
-    //   alert("收到小程序调用1！");
-    // }
-    //   alert("收到小程序调用2！");
-    //   console.log(res.miniprogram) ;
-    // })  
-    }, []);
-
-  useEffect(() => {
     // 自动登录逻辑
     const autoLogin = async () => {
       try {
@@ -163,18 +51,7 @@ function App() {
         if(login_scene==='onshare' && !inviteUserId){
           alert('页面打开异常，请通过正确的分享链接打开！');  
           return;
-        }else{
-          //如果是分享查看模式，直接将 userid 改为 inviteUserId
-            // user_id = inviteUserId;
         };
-
-        // 关键：向小程序发送消息（小程序会在onWebviewMessage中接收）
-        // const shareData = {
-        //   coCreateID: '123'
-        // };
-        // wx.miniProgram.postMessage({ data: shareData });
-        // alert('已向小程序发送数据，请返回小程序查看效果');
-
         //update by chao 2025.09.27---->
 
         // 验证必要参数
@@ -188,20 +65,23 @@ function App() {
         console.log('🚀 开始自动登录...');
         let access_token = ''
         let response = null;
-        // if(login_scene === 'onshare' && register_time !== '') {
-        //   response = await authAPI.shareLogin(user_id, tenant_id, register_time, inviteUserId);
-        //   if (response.ok) {
-        //     const loginData = authAPI.parseLoginResponse(response);
-        //     access_token = loginData?.access_token || '';
-        //   } else {
-        //     setError('分享登录失败');
-        //     setIsLoading(false);
-        //     return;
-        //   }
-        // } else {
-        //   response = await authAPI.login(user_id, tenant_id);
-        // }
-        response = await authAPI.login(user_id, tenant_id);
+
+        //update by chao 2025.09.29 登录接口传递分享参数
+        if(login_scene === 'onshare' && register_time !== '') {
+          response = await authAPI.shareLogin(user_id, tenant_id, register_time, inviteUserId);
+          if (response.ok) {
+            const loginData = authAPI.parseLoginResponse(response);
+            access_token = loginData?.access_token || '';
+          } else {
+            setError('分享登录失败');
+            setIsLoading(false);
+            return;
+          }
+        } else {
+          response = await authAPI.login(user_id, tenant_id);
+        }
+
+        // response = await authAPI.login(user_id, tenant_id);
         if (response.ok) {
           console.log('✅ 自动登录成功:', response.data);
           
@@ -266,7 +146,7 @@ function App() {
         setIsLoading(false);
       }
     };
-
+    
     autoLogin();
   }, []);
 

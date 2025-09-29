@@ -36,6 +36,7 @@ import CreateModelModal from '../../components/CreateModelModal';
 import ReactHowler from 'react-howler';
 import HomeOpt from '../../components/HomeOpt';
 import { useLoginScene } from '../../contexts/LoginSceneContext';
+import wx from 'weixin-js-sdk';
 
 const Long = require('long');
 
@@ -181,10 +182,12 @@ const Home = () => {
             }
             alert('账号在其他地方登录，请重新登录');
 
-            // //Update by chao 2025.09.27
+            // //Update by chao 2025.09.29
             // window.close();
-
-            window.location.href = '/login';
+            // 在H5页面中，当需要返回时
+            // wx.miniProgram.postMessage({ data: { action: 'back' } });
+            window.location.href = 'blank.html';
+            // window.location.href = '/login';
             return; // 提前返回，不执行后续代码
           } else {
             // //Update by chao 2025.09.27
@@ -1385,8 +1388,14 @@ const Home = () => {
   // 初始化房间名称和服饰列表
   const tryonInitializedRef = useRef(false);
 
+  // update by chao 2025.09.29 登台刷新问题：定位登台代码段
   useEffect(() => {
-    console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);
+    startUpDressUp();
+  }, [loginParams]); // 只依赖loginParams，避免重复执行
+
+  // add by chao 2025.09.29 登台刷新问题：将登台代码段独立成函数，方便控制执行时机
+  const startUpDressUp = () => {
+        console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);
 
     if (!loginParams || tryonInitializedRef.current) {
       console.log('🔍 条件不满足，退出useEffect');
@@ -1481,7 +1490,8 @@ const Home = () => {
     };
 
     autoStartTryon();
-  }, [loginParams]); // 只依赖loginParams，避免重复执行
+  }
+
 
   // 检查视频是否真正开始播放的函数
   const checkVideoPlayingStatus = (userId: string, domId: string, retryCount: number = 0) => {

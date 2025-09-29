@@ -963,7 +963,7 @@ export class WebSocketService {
       const loginOther = proto.oLoginOtherPush.decode(new Uint8Array(payload));
       console.log('收到顶号通知');
       // 这里可以触发UI提示用户
-      alert('您的账号在其他地方登录');
+      // alert('您的账号在其他地方登录');
     } catch (error) {
       console.error('处理顶号通知失败:', error);
     }
