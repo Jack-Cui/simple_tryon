@@ -53,6 +53,8 @@ const Home = () => {
     if (location.pathname === '/') {
       // console.log('返回主页面');      
       if(locRouteNum>0){
+        console.log('getLoginCache:', getLoginCache());
+        console.log('locationState:', locationState);
         //重新执行登台操作
         // tryonInitializedRef.current = false;
 
