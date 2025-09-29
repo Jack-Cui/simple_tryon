@@ -2867,7 +2867,7 @@ const Home = () => {
       />
       {/* 音乐结束 */}
       {/* 顶部标题区域 - 放在正中间 */}
-      <div style={{
+      {/* <div style={{
         position: 'fixed',
         top: '0',
         left: '0',
@@ -2890,7 +2890,7 @@ const Home = () => {
         }}>
           {roomName}
         </h1>
-      </div>
+      </div> */}
 
       {/* 主要内容区域 - 包含左侧图标、视频和右侧图标 */}
       <div style={{
