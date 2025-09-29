@@ -161,7 +161,7 @@ const HomeOpt = (props: Props) => {
                             <img className="home-opt-list-item-action-img" onClick={goToUpload} src={ActionAdd} alt="" />
                             <span>&nbsp;</span>
                         </div>
-                        {actionList.filter((item: any) => item.status === 1).map((item: any, index: number) => {
+                        {actionList.filter((item: any) => item.state === '1').map((item: any, index: number) => {
                             return (
                                 <div className='home-opt-list-item-atcion' onClick={() => checkAction(item)}>
                                     <img className="home-opt-list-item-action-img" src={aigcList.includes(item.id) ? actionCheckIconList[index] : actionIconList[index]} alt="" />
