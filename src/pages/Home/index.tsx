@@ -39,17 +39,38 @@ import { useLoginScene } from '../../contexts/LoginSceneContext';
 
 const Long = require('long');
 
+//add by chao 2025.09.29 增加路由监听事件
+let locRouteNum = 0;
+const MyContext = React.createContext({});
+
 const Home = () => {
   const location = useLocation();
-  let locRouteNum = 0;
+
 //add by chao 2025.09.29 增加路由监听事件
   useEffect(() => {    
     console.log('locRouteNum:' + locRouteNum);
     console.log('location： ' + location.pathname);
     if (location.pathname === '/') {
-      locRouteNum = locRouteNum + 1;
-      console.log('返回主页面');
-      // 执行刷新数据等操作
+      // console.log('返回主页面');      
+      if(locRouteNum>0){
+        //重新执行登台操作
+        // tryonInitializedRef.current = false;
+
+
+      // setLoginParams({
+      //   token: locationState.token,
+      //   userId: locationState.userId,
+      //   // phone: locationState.phone,
+      //   tenantId: locationState.tenantId,
+      //   roomId: locationState.roomId,
+      //   coCreationId: locationState.coCreationId,
+      //   shareScene: locationState.shareScene,
+      // });
+
+        console.log('🏠 Home组件登录参数更新:', loginParams);
+        startUpDressUp();
+      }
+      locRouteNum = locRouteNum + 1;      
     }
   }, [location]);  
 
@@ -1401,6 +1422,7 @@ const Home = () => {
 
   // update by chao 2025.09.29 登台刷新问题：定位登台代码段
   useEffect(() => {
+    console.log('🏠 Home组件登录参数更新:', loginParams);
     startUpDressUp();
   }, [loginParams]); // 只依赖loginParams，避免重复执行
   // add by chao 2025.09.29 登台刷新问题：将登台代码段独立成函数，方便控制执行时机
