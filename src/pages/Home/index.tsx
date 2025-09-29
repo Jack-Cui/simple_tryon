@@ -36,12 +36,23 @@ import CreateModelModal from '../../components/CreateModelModal';
 import ReactHowler from 'react-howler';
 import HomeOpt from '../../components/HomeOpt';
 import { useLoginScene } from '../../contexts/LoginSceneContext';
-import wx from 'weixin-js-sdk';
 
 const Long = require('long');
 
 const Home = () => {
   const location = useLocation();
+  let locRouteNum = 0;
+//add by chao 2025.09.29 增加路由监听事件
+  useEffect(() => {    
+    console.log('locRouteNum:' + locRouteNum);
+    console.log('location： ' + location.pathname);
+    if (location.pathname === '/') {
+      locRouteNum = locRouteNum + 1;
+      console.log('返回主页面');
+      // 执行刷新数据等操作
+    }
+  }, [location]);  
+
   const navigate = useNavigate();
   const locationState = location.state || {};
   const { loginScene } = useLoginScene();
