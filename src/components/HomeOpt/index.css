@@ -83,3 +83,15 @@
     position: absolute;
     top: 0;
 }
+
+.home-opt-bottom {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 60px;
+}
+.home-opt-bottom > .home-opt-btn {
+    
+}

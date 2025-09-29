@@ -112,16 +112,13 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
 
     const fileChange = async (event: any) => {
         if (!event.target.files[0]) return;
-        // const flag: boolean = await verifyFiles(event.target.files[0]);
-        // console.log('flag', flag);
-        // if (!flag) return;
+        const flag: boolean = await verifyFiles(event.target.files[0]);
+        console.log('flag', flag);
+        if (!flag) return;
         setFile(event.target.files[0]);
         if (props?.isRing || props?.isPersonal) {
-            // const result = await getVideoFirstFrame(event.target.files[0], 'png');
             const { base64 } = await wechatExtractVideoFrame(event.target.files[0]);
             setFirstFrame(base64); // 显示 Base64 图片
-            // const { base64 } = await wechatExtractVideoFrame(event.target.files[0]);
-            // setFirstFrame(base64); // 显示 Base64 图片
         }
         if (props?.is3DBeauty) {
             setFirstFrame(URL.createObjectURL(event.target.files[0])); // 显示 Base64 图片

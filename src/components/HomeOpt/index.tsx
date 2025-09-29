@@ -29,6 +29,7 @@ import { getLoginCache } from '../../utils/loginCache';
 import { modelAPI, uploadAPI } from '../../services/api';
 import { rtcVideoService } from '../../services/rtcVideoService';
 import ErrorToast from '../errorToast';
+import { Button } from 'tdesign-mobile-react';
 interface Props {
     hotClick?: (flag: boolean) => void;
     actionClick?: (msg: any) => void;
@@ -189,6 +190,9 @@ const HomeOpt = (props: Props) => {
                 )}
                 <img className="home-opt-list-img" src={Aigc} onClick={goToHistory} alt="" />
             </div>
+            {/* <div className='home-opt-bottom'>
+                <div className='home-opt-btn'>立即购买</div>
+            </div> */}
             <ErrorToast isConfirm info={`动态视频正在快马加鞭地生成中，预计2分钟后闪亮登场！您可以先去逛逛，别忘了在"收藏记录"里检阅成果哦~`} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>
         </div>
     )

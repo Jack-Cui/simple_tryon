@@ -328,45 +328,11 @@ const CreateModel = () => {
             }
     }  catch (error) {
       console.error('上传失败:', error);
+      setStep(1);
       alert(`上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
     } 
   }
 
-  const onUpload = async (files: any) => {
-
-          try {
-            // 获取登录缓存中的用户信息
-            const loginCache = getLoginCache();
-            if (!loginCache?.token || !loginCache?.userId) {
-              throw new Error('用户未登录或登录信息缺失');
-            }
-            
-            console.log('上传的图片:', files.images);
-            console.log('上传的视频:', files.videos);
-            
-            // 调用实际的上传接口
-            const response = await modelAPI.uploadModelMaterials(
-              loginCache.token,
-              loginCache.userId,
-              files
-            );
-            
-            if (response.ok) {
-              const result = JSON.parse(response.data);
-              if (result.code === 0) {
-                console.log('上传成功:', result.data);
-                // alert(`模型素材上传成功！\n模型ID: ${result.data.model_id}\n处理状态: ${result.data.processing_status}`);
-              } else {
-                throw new Error(result.message || '上传失败');
-              }
-            } else {
-              throw new Error(`上传失败: HTTP ${response.status}`);
-            }
-          } catch (error) {
-            console.error('上传失败:', error);
-            // alert(`上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
-          }
-  }
 
   return (
     <>
