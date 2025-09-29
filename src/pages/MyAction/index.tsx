@@ -177,7 +177,7 @@ const MyAction = (props: Props) => {
                                             <div>{item.extra2}</div>
                                         </div>
                                         <div className='btn'>
-                                            <Button size="small" variant="outline" shape="round" block>重新上传</Button>
+                                            {/* <Button size="small" variant="outline" shape="round" block>重新上传</Button> */}
                                             <Button size="small" variant="outline" shape="round" onClick={() => clearAction(item)} block>删除</Button>
                                         </div>
                                     </div>}

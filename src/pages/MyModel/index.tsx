@@ -105,7 +105,7 @@ const MyModel = (props: Props) => {
                                 <Progress label={false} percentage={loadRogress} />
                             </div>
                             <div className='btn'>
-                                <Button size="small" variant="outline" shape="round">取消上传</Button>
+                                {/* <Button size="small" variant="outline" shape="round">取消上传</Button> */}
                             </div>
                         </div>}
                         {props.status === 2 && <div className='mask-upload-review'>
@@ -118,7 +118,7 @@ const MyModel = (props: Props) => {
                                 <div>{props.list.length > 0 && props.list[props.list.length - 1].applyNote}</div>
                             </div>
                             <div className='btn'>
-                                <Button size="small" variant="outline" shape="round" block>重新上传</Button>
+                                {/* <Button size="small" variant="outline" shape="round" block>重新上传</Button> */}
                                 <Button size="small" variant="outline" shape="round" block onClick={() => closeModel(props.list.length > 0 ? props.list[props.list.length - 1] : {})}>删除</Button>
                             </div>
                         </div>}
