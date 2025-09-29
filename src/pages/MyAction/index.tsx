@@ -6,7 +6,7 @@ import ErrorToast from '../../components/errorToast';
 import { getLoginCache } from '../../utils/loginCache';
 import { uploadAPI } from '../../services/api';
 interface Props {
-    status: number;
+    status: any;
     errorMsg?: string;
     list?: any[];
     setStep?: any;
@@ -83,7 +83,7 @@ const MyAction = (props: Props) => {
 
     const listItemCountdown = (time: string) => {
         const createT = new Date(time).getTime();
-        const newT = new Date(time).getTime();
+        const newT = new Date().getTime();
         const num = createT + 24 * 60 * 60 * 1000 - newT;
         return num > 0 ? num : 0;
     }
@@ -118,7 +118,7 @@ const MyAction = (props: Props) => {
         <div className="my-action">
             <Navbar className='my-action-navbar' fixed={false} leftArrow onLeftClick={handleClick}>我的动作</Navbar>
             <div className="my-action-content">
-                <div className='my-action-content-detail'>
+                {props.status !== null && <div className='my-action-content-detail'>
                     {props.status !== 0 && <div className='my-action-content-detail-mask'>
                         {props.status === 1 && <div className='mask-upload-ing'>
                             <div className='center'>
@@ -161,17 +161,17 @@ const MyAction = (props: Props) => {
 
                         {/* {props.status === 0 && <IconFont name='delete-1'  onClick={() => clearAction()} className='clear' style={{color:'red'}} size="large"/>} */}
                     </div>
-                </div>
+                </div>}
                 {(props?.list && props.list.length > 0) && props.list.map((item: any) => {
                     // state 0：未审核，1审核通过, 2审核失败
                     return (
                         <div className='my-action-content-detail'>
-                                {item.status !== '1' && <div className='my-action-content-detail-mask'>
-                                    {item.status === '0' && <div className='mask-upload-review'>
+                                {item.state !== '1' && <div className='my-action-content-detail-mask'>
+                                    {item.state === '0' && <div className='mask-upload-review'>
                                         <div className='info'>上传成功，正在审核中，预计等待时间</div>
                                         <CountDown size='large' time={listItemCountdown(item.createTime)} />
                                     </div>}
-                                    {item.status === '2' && <div className='mask-upload-error'>
+                                    {item.state === '2' && <div className='mask-upload-error'>
                                         <div className='info'>
                                             <span>审核失败</span>
                                             <div>{item.extra2}</div>
@@ -185,7 +185,7 @@ const MyAction = (props: Props) => {
                                 <div className='my-action-content-detail-img'>
                                     <img src="" alt="" />
                                 </div>
-                                <div className={item.status === '1' ? 'my-action-content-detail-info' : 'my-action-content-detail-info my-action-content--detail-blur'}>
+                                <div className={item.state === '1' ? 'my-action-content-detail-info' : 'my-action-content-detail-info my-action-content--detail-blur'}>
                                     {isEditAction ?
                                         <input maxLength={4} value={editValue} type="text" onChange={nameChange} autoFocus onBlur={keepName} />
                                         :

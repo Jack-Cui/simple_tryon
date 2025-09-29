@@ -20,7 +20,7 @@ const UploadAction = () => {
   const [step, setStep] = useState(0);
   const [showError, setShowError] = useState(false);
   const [errorInfo, setErrorInfo] = useState('');
-  const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
+  const [status, setStatus] = useState<any>(0); // 0 成功 1上传中 2审核中 3 审核失败
   const [actionList, setActionList] = useState<any[]>([]);
   const [selectedActionVideos, setSelectedActionVideos] = useState<any[]>([]);
   const [actionName, setActionName] = useState('');
@@ -165,7 +165,7 @@ const UploadAction = () => {
         setActionList(resultData.data?.records || []);
         if ((resultData.data?.records || []).length === 5) {
           setStep(1);
-          setStatus(NaN);
+          setStatus(null);
         }
         console.log('动作视频结果获取成功:', resultData.data?.records);
       } else {

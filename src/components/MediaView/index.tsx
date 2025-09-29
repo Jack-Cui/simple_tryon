@@ -10,7 +10,7 @@ const MediaView = (props: Props) => {
     return (
         <div className="media-view">
             <IconFont name="close-circle" className="media-view-close" size="large" onClick={props?.onCloseClick as any} />
-            <video src={props.src || ''} width="100vw" height="100vh"
+            <video src={props.src || ''} width="100%" height="100%"
                 autoPlay
                 loop
                 muted

@@ -27,6 +27,86 @@
     /* overflow: hidden; */
     margin-bottom: 10px;
 }
+.browse-history-content-detail-mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+.browse-history-content-detail-mask > .mask-upload-ing {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+}
+.browse-history-content-detail-mask > .mask-upload-ing > .center {
+    width: 60%;
+    color: rgba(23, 23, 23, 1);
+    font-size: 12px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    text-align: justify;
+    white-space: nowrap;
+    line-height: 17px;
+}
+.browse-history-content-detail-mask > .mask-upload-ing > .center > .title {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.browse-history-content-detail-mask > .mask-upload-review {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 30px;
+}
+.browse-history-content-detail-mask > .mask-upload-review > .info {
+    color: rgba(23, 23, 23, 1);
+    font-size: 12px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    text-align: justify;
+    white-space: nowrap;
+    line-height: 17px;
+    margin-bottom: 20px;
+}
+.browse-history-content-detail-mask > .mask-upload-error {
+    width: 100%;
+    /* height: 100%; */
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 10px 30px;
+    border-radius: 12px;
+    background: linear-gradient(to bottom, transparent 100px, #fff 100px);
+}
+.browse-history-content-detail-mask > .mask-upload-error > .info {
+    overflow-wrap: break-word;
+    color: rgba(255, 33, 33, 1);
+    font-size: 12px;
+    font-family: PingFangSC-Regular;
+    font-weight: normal;
+    text-align: justify;
+    line-height: 17px;
+    margin-top: 8px;
+    margin-right: 10px;
+}
+.browse-history-content-detail-mask > .mask-upload-error > .info > div {
+    margin-top: 10px;
+}
+.browse-history-content-detail-mask > .mask-upload-error > .btn > button {
+    margin-bottom: 10px;
+}
 .browse-history-content-detail-img {
     width: 90px;
     height: 90px;
@@ -51,7 +131,7 @@
     height: 90px;
     position: relative;
 }
-.browse-history-content--detail-blur {
+.browse-history-content-detail-blur {
     filter: blur(5px);
 }
 .browse-history-content-detail-info > .clear {
