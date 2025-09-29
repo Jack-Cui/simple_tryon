@@ -33,6 +33,7 @@ const CreateModel = () => {
   const [modelList, setModelList] = useState<any[]>([]);
   const [selectedImages, setSelectedImages] = useState<any[]>([]);
   const [selectedVideos, setSelectedVideos] = useState<any[]>([]);
+  const [perHeight, setPerHeight] = useState<any>('');
   const ringRefEl = useRef(null);
   const beautyRefEl = useRef(null);
   useEffect(() => {
@@ -78,6 +79,7 @@ const CreateModel = () => {
             return;
         }
     }
+    setPerHeight((ringRefEl?.current as any).getPerHeight());
     setSelectedVideos([(ringRefEl?.current as any).getFile()])
     setStep(1);
   }
@@ -92,14 +94,14 @@ const CreateModel = () => {
       }
       setSelectedImages([(beautyRefEl?.current as any).getFile()]);
     }
-    handleUpload();
     setStep(2);
+    handleUpload();
   }
 
   const onSkip = () => {
     // 跳过
-    handleUpload();
     setStep(2);
+    handleUpload();
   }
 
   const goBackStep = () => {
@@ -294,8 +296,8 @@ const CreateModel = () => {
               // 调用创建模型API
               console.log('开始创建模型...');
               //update by chao 2025.09.28 上传视频后报错：获取Cannot read properties of null (reading 'getPerHeight')
-              const height = (ringRefEl?.current as any).getPerHeight();
-              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl,height);
+              // const height = (ringRefEl?.current as any).getPerHeight();
+              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl,perHeight);
 
               if (createModelResponse.ok) {
                 const createResult = JSON.parse(createModelResponse.data);

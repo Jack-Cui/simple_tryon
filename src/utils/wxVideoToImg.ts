@@ -10,20 +10,20 @@ export function wechatExtractVideoFrame(
     return new Promise((resolve, reject) => {
       // 1. 微信环境校验
       const isWechat = /MicroMessenger/i.test(navigator.userAgent);
-      if (!isWechat) {
-        reject(new Error('该函数仅用于微信环境'));
-        return;
-      }
+      // if (!isWechat) {
+      //   reject(new Error('该函数仅用于微信环境'));
+      //   return;
+      // }
   
       // 2. 文件限制校验
-      if (videoFile.size > 30 * 1024 * 1024) {
-        reject(new Error('视频过大，请选择30MB以内的MP4视频'));
-        return;
-      }
-      if (!videoFile.type.includes('mp4')) {
-        reject(new Error('请选择MP4格式视频（微信推荐格式）'));
-        return;
-      }
+      // if (videoFile.size > 30 * 1024 * 1024) {
+      //   reject(new Error('视频过大，请选择30MB以内的MP4视频'));
+      //   return;
+      // }
+      // if (!videoFile.type.includes('mp4')) {
+      //   reject(new Error('请选择MP4格式视频（微信推荐格式）'));
+      //   return;
+      // }
   
       // 3. 创建视频元素
       const video = document.createElement('video');
@@ -57,7 +57,7 @@ export function wechatExtractVideoFrame(
       const timeoutTimer = setTimeout(() => {
         cleanup();
         reject(new Error('提取超时，请关闭微信重新尝试'));
-      }, 25000);
+      }, 100000);
   
       // 6. 轮询定位状态
       const startPolling = (targetTime: number) => {

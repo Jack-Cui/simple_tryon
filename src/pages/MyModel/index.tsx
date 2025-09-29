@@ -9,7 +9,7 @@ import ModelDefault from '../../assets/model-default.jpg';
 interface Props {
     status: number;
     errorMsg?: string;
-    list?: any[];
+    list: any[];
     backStep?: any;
     handleBack?: any;
 }
@@ -115,30 +115,30 @@ const MyModel = (props: Props) => {
                         {props.status === 3 && <div className='mask-upload-error'>
                             <div className='info'>
                                 <span>审核失败</span>
-                                <div>{props?.list && props.list[props.list.length - 1].applyNote}</div>
+                                <div>{props.list.length > 0 && props.list[props.list.length - 1].applyNote}</div>
                             </div>
                             <div className='btn'>
                                 <Button size="small" variant="outline" shape="round" block>重新上传</Button>
-                                <Button size="small" variant="outline" shape="round" block onClick={() => closeModel(props?.list ? props.list[props.list.length - 1] : {})}>删除</Button>
+                                <Button size="small" variant="outline" shape="round" block onClick={() => closeModel(props.list.length > 0 ? props.list[props.list.length - 1] : {})}>删除</Button>
                             </div>
                         </div>}
                     </div>}
                     <div className='my-model-content-detail-img'>
-                        <img src={(props?.list && props.list[props.list.length - 1].modelPictureUrl) || ModelDefault} alt="" />
+                        <img src={(props.list.length > 0 && props.list[props.list.length - 1]?.modelPictureUrl) || ModelDefault} alt="" />
                     </div>
                     <div className={props.status === 0 ? 'my-model-content-detail-info' : 'my-model-content-detail-info my-model-content-detail-blur'}>
                         <div className='my-model-content-detail-info-item'>
                             <span>名称：</span>
-                            {props.status === 0 ? (props?.list && props.list[props.list.length - 1].modelName) : ''}
+                            {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].modelName) : ''}
                         </div>
                         <div className='my-model-content-detail-info-item'>
                             <span>身高：</span>
-                            {props.status === 0 ? (props?.list && props.list[props.list.length - 1].height) : ''}
+                            {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].height) : ''}
                         </div>
                         <div className='my-model-content-detail-info-item'>
                             <span>时间：</span>
-                            {props.status === 0 ? (props?.list && props.list[props.list.length - 1].createTime) : ''}
-                            {props.status === 0 && <IconFont name='delete-1' onClick={() => closeModel(props?.list ? props.list[props.list.length - 1] : {})} className='close' style={{ color: 'red' }} size="large" />}
+                            {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].createTime) : ''}
+                            {props.status === 0 && <IconFont name='delete-1' onClick={() => closeModel(props.list.length > 0 ? props.list[props.list.length - 1] : {})} className='close' style={{ color: 'red' }} size="large" />}
                         </div>
                     </div>
                 </div>

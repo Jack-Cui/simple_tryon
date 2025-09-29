@@ -64,29 +64,6 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         uploadFileEl?.current?.click();
     }
 
-    const wxFileChange = async (file: any) => {
-        const btn = document.getElementById('selectVideoBtn');
-        if (!btn) return; // 修正：添加空值检查
-
-        btn.addEventListener('click', async () => {
-            // 显示加载UI
-            const preview = document.getElementById('preview') as HTMLImageElement | null;
-            if (preview) {
-                preview.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzRDQ0ZGRiIgZD0iTTExIDZoMnY2aC0ydi02em0xIDExaC0ydi02aDJ2NnoiLz48cGF0aCBkPSJNMjEgMTBoLTJWNmgtMnY0aC00VjZoLTJ2NGgtNHYtNGgtMnY0YTIgMiAwIDAgMCAyIDJoMnY0aDJ2LTRoNHY0aDJWMTRjMCAxLjEtLjkgMi0yIDJoLTJ2LTRoMnptLTkgM2gtNHYyaDR2LTJ6Ii8+PC9zdmc+';
-            }
-
-            try {
-                const { base64 } = await wechatExtractVideoFrame(file);
-                if (preview) preview.src = base64;
-            } catch (error) {
-                alert((error as Error).message);
-                if (preview) preview.src = '';
-            } finally {
-                // document.body.removeChild(input);
-            }
-        });
-    }
-
     const verifyFiles = async (file: any) => {
         if (props?.isRing) {
             // 环拍视频
@@ -135,13 +112,14 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
 
     const fileChange = async (event: any) => {
         if (!event.target.files[0]) return;
-        const flag: boolean = await verifyFiles(event.target.files[0]);
-        console.log('flag', flag);
-        if (!flag) return;
+        // const flag: boolean = await verifyFiles(event.target.files[0]);
+        // console.log('flag', flag);
+        // if (!flag) return;
         setFile(event.target.files[0]);
         if (props?.isRing || props?.isPersonal) {
-            const result = await getVideoFirstFrame(event.target.files[0], 'png');
-            setFirstFrame(result.base64); // 显示 Base64 图片
+            // const result = await getVideoFirstFrame(event.target.files[0], 'png');
+            const { base64 } = await wechatExtractVideoFrame(event.target.files[0]);
+            setFirstFrame(base64); // 显示 Base64 图片
             // const { base64 } = await wechatExtractVideoFrame(event.target.files[0]);
             // setFirstFrame(base64); // 显示 Base64 图片
         }
