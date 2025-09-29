@@ -94,17 +94,17 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
             if (!(res.duration > 45 && res.duration < 60)) {
                 setErrorInfo('请上传时长45s-60s的视频');
                 setShowError(true);
-                return;
+                return false;
             }
             if (!(res.videoWidth === 2160 && res.videoHeight === 3840)) {
                 setErrorInfo('请上传分辨率为4k的视频');
                 setShowError(true);
-                return;
+                return false;
             }
             if (false) {
                 setErrorInfo('请上传帧率为60fps的视频');
                 setShowError(true); 
-                return;
+                return false;
             }
         }
         if (props?.is3DBeauty) {
@@ -117,7 +117,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                 // 短边≥1440，长边≤3840
                 setErrorInfo('请上传分辨率2k-4k的美颜照片');
                 setShowError(true); 
-                return;
+                return false;
             }
         }
 
@@ -127,14 +127,17 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
             if (!(res.duration === 10 || res.duration < 10)) {
                 setErrorInfo('请上传时长小于等于10s的视频');
                 setShowError(true);
-                return;
+                return false;
             }
         }
+        return true;
     }
 
     const fileChange = async (event: any) => {
         if (!event.target.files[0]) return;
-        verifyFiles(event.target.files[0]);
+        const flag: boolean = await verifyFiles(event.target.files[0]);
+        console.log('flag', flag);
+        if (!flag) return;
         setFile(event.target.files[0]);
         if (props?.isRing || props?.isPersonal) {
             const result = await getVideoFirstFrame(event.target.files[0], 'png');

@@ -1392,7 +1392,6 @@ const Home = () => {
   useEffect(() => {
     startUpDressUp();
   }, [loginParams]); // 只依赖loginParams，避免重复执行
-
   // add by chao 2025.09.29 登台刷新问题：将登台代码段独立成函数，方便控制执行时机
   const startUpDressUp = () => {
         console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);

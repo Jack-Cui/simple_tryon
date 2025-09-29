@@ -23,6 +23,7 @@ const UploadAction = () => {
   const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
   const [actionList, setActionList] = useState<any[]>([]);
   const [selectedActionVideos, setSelectedActionVideos] = useState<any[]>([]);
+  const [actionName, setActionName] = useState('');
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(-1);
@@ -42,7 +43,13 @@ const UploadAction = () => {
         setShowError(true);
         return;
       }
+      if (!(personRefEl?.current as any).getPerActionName()) {
+        setErrorInfo('请输入动作视频名称');
+        setShowError(true);
+        return;
+      }
       setSelectedActionVideos([(personRefEl?.current as any).getFile()]);
+      setActionName((personRefEl?.current as any).getPerActionName());
     }
   }
   
@@ -106,17 +113,9 @@ const UploadAction = () => {
           for (const uploadResult of successfulUploads) {
             if (uploadResult.url) {
               console.log('开始调用 uploadActionVideo API，视频URL:', uploadResult.url);
-
-              // 使用文件名作为动作名称
-              const actionName = selectedActionVideos.find(file =>
-                file.name.includes(uploadResult.key || '')
-              )?.name || '动作视频';
-
               const uploadActionResponse = await uploadAPI.uploadActionVideo(
                 loginCache.token,
-                //update by chao 2025.09.28 修改校验报错问题
-                //(personRefEl?.current as any).getPerActionName(), // 动作名称
-                '动作名称', // 动作名称
+                actionName, // 动作名称
                 uploadResult.url
               );
 

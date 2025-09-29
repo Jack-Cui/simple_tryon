@@ -8,7 +8,7 @@ import { modelAPI, uploadAPI } from "../../services/api";
 import ErrorToast from "../../components/errorToast";
 import MediaView from "../../components/MediaView";
 import { checkVideo } from "../../utils/videoCheck";
-const BrowseHistory = () => {
+const BrowseHistory = (props?: {onBack?: any}) => {
     const navigate = useNavigate();
     const [aigcList, setAigcList] = useState<any[]>([]);
     const [showError, setShowError] = useState(false);
@@ -70,6 +70,7 @@ const BrowseHistory = () => {
 
     const handleClick = () => {
         navigate(-1);
+        props?.onBack && props.onBack();
       }
     return (
         <div className="browse-history">

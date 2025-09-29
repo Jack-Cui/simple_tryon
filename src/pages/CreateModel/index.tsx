@@ -293,9 +293,9 @@ const CreateModel = () => {
               
               // 调用创建模型API
               console.log('开始创建模型...');
-              // const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl, (ringRefEl?.current as any).getPerHeight());
               //update by chao 2025.09.28 上传视频后报错：获取Cannot read properties of null (reading 'getPerHeight')
-              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl,185);
+              const height = (ringRefEl?.current as any).getPerHeight();
+              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl,height);
 
               if (createModelResponse.ok) {
                 const createResult = JSON.parse(createModelResponse.data);
@@ -305,11 +305,11 @@ const CreateModel = () => {
                   console.log('创建模型成功:', createResult.data);
                   alert(`模型创建成功！\n图片: ${modelPictureUrl ? '已上传' : '无'}\n视频: ${modelVideoUrl ? '已上传' : '无'}`);
                   
-                  // 调用原来的上传回调
-                  await onUpload({
-                    images: selectedImages,
-                    videos: selectedVideos
-                  });
+                  // // 调用原来的上传回调
+                  // await onUpload({
+                  //   images: selectedImages,
+                  //   videos: selectedVideos
+                  // });
                   
                   // 上传成功后清空选择
                   setSelectedImages([]);

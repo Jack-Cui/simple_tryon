@@ -10,7 +10,13 @@ const MediaView = (props: Props) => {
     return (
         <div className="media-view">
             <IconFont name="close-circle" className="media-view-close" size="large" onClick={props?.onCloseClick as any}/>
-            <video src={props.src || ''} width="100%" height="100%" autoPlay loop>
+            <video src={props.src || ''} width="100vw" height="100vh"  
+    autoPlay 
+    loop 
+    muted  
+    playsInline  
+    webkit-playsinline 
+    preload="auto">
                 您的浏览器不支持 video 标签。
             </video>
             <video className='media-view-samll-videl' src={props.smallSrc || ''} width="140px" height="280px" autoPlay loop>

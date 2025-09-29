@@ -5,6 +5,7 @@ import { CheckCircleIcon, IconFont } from 'tdesign-icons-react';
 import ErrorToast from '../../components/errorToast';
 import { modelAPI } from '../../services/api';
 import { getLoginCache } from '../../utils/loginCache';
+import ModelDefault from '../../assets/model-default.jpg';
 interface Props {
     status: number;
     errorMsg?: string;
@@ -123,7 +124,7 @@ const MyModel = (props: Props) => {
                         </div>}
                     </div>}
                     <div className='my-model-content-detail-img'>
-                        <img src="" alt="" />
+                        <img src={(props?.list && props.list[props.list.length - 1].modelPictureUrl) || ModelDefault} alt="" />
                     </div>
                     <div className={props.status === 0 ? 'my-model-content-detail-info' : 'my-model-content-detail-info my-model-content-detail-blur'}>
                         <div className='my-model-content-detail-info-item'>
