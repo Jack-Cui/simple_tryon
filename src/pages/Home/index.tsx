@@ -2372,7 +2372,7 @@ const Home = () => {
         />
         {/* 音乐结束 */}
         {/* 顶部标题区域 - 与视频播放界面对齐 */}
-        <div style={{
+        {/* <div style={{
           position: 'fixed',
           top: '0',
           left: '0',
@@ -2393,7 +2393,7 @@ const Home = () => {
           }}>
             {roomName}
           </h1>
-        </div>
+        </div> */}
 
         {/* 中间图标区域 - 左右布局 */}
         <div style={{
@@ -2876,7 +2876,7 @@ const Home = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#000',
+      backgroundColor: '#fff',
       display: 'flex',
       flexDirection: 'column',
       position: 'relative'
@@ -3454,7 +3454,7 @@ const Home = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#000',
+            backgroundColor: '#fff',
             zIndex: 10
           }}>
             {/* <div style={{
