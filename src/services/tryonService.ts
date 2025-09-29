@@ -4,7 +4,7 @@ import { webSocketService, WebSocketConfig } from './websocketService';
 import { RTCVideoService, RTCVideoConfig, rtcVideoService } from './rtcVideoService';
 import { RTC_CONFIG } from '../config/config';
 import { AccessToken, Privilege } from '../token/AccessToken';
-import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, getLoginCache, saveLoginCache } from '../utils/loginCache';
+import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 const Long = require('long');
 
@@ -457,8 +457,12 @@ export class TryonService {
     }
     
     const loginCache = getLoginCache();
+    console.log("loginCache:", loginCache);
+    console.log("shareScene:", shareScene);
+    // update by chao 2025.09.29 处理分享后查看模型不对问题
+    // 有部分情况，第二次执行时，shareScene是空的
     if (shareScene == "onshare" && loginCache?.coCreationId !== "") {
-      console.log("构建分享登台信息");
+      console.log("构建分享登台信息" );
       // 重新获取房间信息用于构建登台信息
       const response = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
       if (!response.ok) {
@@ -470,6 +474,11 @@ export class TryonService {
         throw new Error('解析房间信息失败');
       }
       updateRoomIdInCache(roomInfo.data.roomId)
+
+      //add by chao 2025.09.29 share 修改B查看A模型不对问题  没执行到这
+      console.log('🔍 更新缓存中的coUserId为房间的userId:', roomInfo.data.userId);
+      updateCoUserIdFromCache( roomInfo.data.userId);
+
       // 构建登台信息
       this.enterStageInfo = await roomAPI.buildShareEnterStageInfo(roomInfo, this.accessToken);
     } else {
@@ -489,7 +498,7 @@ export class TryonService {
       this.enterStageInfo = await roomAPI.buildEnterStageInfo(roomInfo, this.accessToken);
     }
     
-    console.log('登台信息构建成功:', this.enterStageInfo);
+    console.log(':', this.enterStageInfo);
   }
 
   // 获取场景列表

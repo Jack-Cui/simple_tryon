@@ -67,11 +67,13 @@ function App() {
         let response = null;
 
         //update by chao 2025.09.29 登录接口传递分享参数
-        if(login_scene === 'onshare' && register_time !== '') {
+        if(login_scene === 'onshare' ) {
           response = await authAPI.shareLogin(user_id, tenant_id, register_time, inviteUserId);
           if (response.ok) {
             const loginData = authAPI.parseLoginResponse(response);
             access_token = loginData?.access_token || '';
+            console.log('✅ 分享登录成功:', loginData);
+
           } else {
             setError('分享登录失败');
             setIsLoading(false);
@@ -96,6 +98,7 @@ function App() {
             if(access_token === '') {
               access_token = loginData.access_token;
             }
+
             // 保存登录信息到缓存
             saveLoginCache({
               token: access_token,
@@ -104,6 +107,7 @@ function App() {
               tenantId: tenant_id,
               coCreationId: co_creation_id,
               shareScene: login_scene,
+              coUserId: ''
             });
             
             // 登录成功后立即初始化房间信息

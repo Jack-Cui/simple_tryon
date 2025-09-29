@@ -260,7 +260,8 @@ export class MiniprogramService {
         startTime: 0,
         endTime: 0,
         Size: 4,
-        CustomModelUrl: "12345"
+        // update by chao 2025.09.29 登台参数修改
+        CustomModelUrl: ""
       });
     }
   }

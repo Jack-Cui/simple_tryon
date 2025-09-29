@@ -15,8 +15,9 @@ import {
   CreateSysRoomShareRequest,
   CreateSysRoomShareResponse
 } from '../types/api';
-import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache, updateClothesDetailsInCache } from '../utils/loginCache';
+import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache, updateClothesDetailsInCache, updateCoUserIdFromCache, getCoUserIdFromCache } from '../utils/loginCache';
 import { getEndpoint } from '@volcengine/tos-sdk/dist/utils';
+import { get } from 'http';
 
 const Long = require('long');
 const crypto = require('crypto');
@@ -766,10 +767,16 @@ export const roomAPI = {
     console.log('🔍 场景名称:', scene_name);
     console.log('🔍 服装信息:', garments);
     
+    // add by chao 2025.09.29 登台参数修改
+    const coUserId = getCoUserIdFromCache();
+    console.log('🔍 coUserId from cache:', coUserId);
+
     const enter_stage_info: EnterStageInfo = {
       AvatarId: 0,
-      UserId: login_cache?.userId || "",
-      // UserId: String(room_info_data.userId || 0),
+      // UserId: login_cache?.userId || "",
+      //update by chao 2025.09.29 userId改为房间获取 支持共创
+      UserId: String(coUserId ||room_info_data.userId || login_cache?.userId ||0),
+      // UserId: String( room_info_data.userId || login_cache?.userId ||0),
       // MapName: room_info_data.scenarioId,
       MapName: scene_code,
       Garments: garments,
@@ -780,10 +787,11 @@ export const roomAPI = {
       startTime: 0,
       endTime: 0,
       Size: 4,
-      CustomModelUrl: "12345"
+      // update by chao 2025.09.29 登台参数修改
+      CustomModelUrl: ""
     };
 
-    console.log('✅ 进入舞台信息构建完成:', enter_stage_info);
+    console.log('✅ 进入舞台信息构建完成1:', enter_stage_info);
     const result = JSON.stringify(enter_stage_info);
     console.log('✅ 返回的JSON字符串:', result);
     return result;
@@ -823,7 +831,8 @@ export const roomAPI = {
         startTime: 0,
         endTime: 0,
         Size: 4,
-        CustomModelUrl: "12345"
+        // update by chao 2025.09.29 登台参数修改
+        CustomModelUrl: ""
       };
       console.log('进入舞台信息（无服装）:', enter_stage_info);
       return JSON.stringify(enter_stage_info);
@@ -1110,10 +1119,11 @@ export const roomAPI = {
       startTime: 0,
       endTime: 0,
       Size: 4,
-      CustomModelUrl: "12345"
+      // update by chao 2025.09.29 登台参数修改 12345
+      CustomModelUrl: ""
     };
 
-    console.log('✅ 进入舞台信息构建完成:', enter_stage_info);
+    console.log('✅ 进入舞台信息构建完成2:', enter_stage_info);
     const result = JSON.stringify(enter_stage_info);
     console.log('✅ 返回的JSON字符串:', result);
     return result;
@@ -1189,6 +1199,11 @@ export const roomAPI = {
       }
       
       console.log('✅ 房间信息获取成功');
+
+      //add by chao 2025.09.29 share 修改B查看A模型不对问题  没执行到这
+      console.log('🔍 更新缓存中的userId为房间的userId:', roomInfo.data.userId);
+      updateCoUserIdFromCache( roomInfo.data.userId);
+
       console.log('🔍 clothId:', roomInfo.data.clothId);
       
       // 2. 从 clothId 中提取衣服ID列表

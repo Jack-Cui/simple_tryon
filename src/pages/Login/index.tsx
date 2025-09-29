@@ -199,6 +199,7 @@ const Login = () => {
             roomId: '',
             coCreationId: finalCoCreationId,
             shareScene: "",
+            coUserId: ''
           });
           
           // 登录成功后立即初始化房间信息

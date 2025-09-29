@@ -15,6 +15,7 @@ export interface LoginCacheData {
   defaultSceneName?: string; // 默认场景名称，可选
   timestamp: number; // 缓存时间戳
   shareScene: string;
+  coUserId: string; // 共创用户ID
 }
 
 const CACHE_KEY = 'loginCache';
@@ -256,3 +257,40 @@ export const getClothesDetailFromCache = (clotheId: string): any | null => {
     return null;
   }
 }; 
+
+/**
+ * 获取缓存中的衣服详情
+ * @param coUserId 衣服ID
+ * @returns 衣服详情，如果没有则返回null
+ */
+export const getCoUserIdFromCache = (): any | null => {
+  try {
+    const cachedData = getLoginCache();
+    if (cachedData?.coUserId ) {
+      return cachedData.coUserId;
+    }
+    return null;
+  } catch (error) {
+    console.error('❌ 从缓存获取衣服详情失败:', error);
+    return null;
+  }
+}; 
+  /**
+ * 更新缓存中的房间名称
+ * @param coUserId 房间名称
+ */
+export const updateCoUserIdFromCache = (coUserId: string): void => {
+  try {
+    const cachedData = getLoginCache();
+    if (cachedData) {
+      const updatedData = { ...cachedData, coUserId };
+      const cacheDurationStr = localStorage.getItem(CACHE_KEY + '_duration');
+      const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;
+      
+      localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
+      console.log('✅ coUserId已更新到缓存:', coUserId);
+    }
+  } catch (error) {
+    console.error('❌ 更新缓存中的coUserId失败:', error);
+  }
+};
