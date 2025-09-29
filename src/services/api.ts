@@ -788,7 +788,7 @@ export const roomAPI = {
       endTime: 0,
       Size: 4,
       // update by chao 2025.09.29 登台参数修改
-      CustomModelUrl: ""
+      CustomModelUrl: "12345"
     };
 
     console.log('✅ 进入舞台信息构建完成1:', enter_stage_info);
@@ -832,7 +832,7 @@ export const roomAPI = {
         endTime: 0,
         Size: 4,
         // update by chao 2025.09.29 登台参数修改
-        CustomModelUrl: ""
+        CustomModelUrl: "12345"
       };
       console.log('进入舞台信息（无服装）:', enter_stage_info);
       return JSON.stringify(enter_stage_info);
@@ -1120,7 +1120,7 @@ export const roomAPI = {
       endTime: 0,
       Size: 4,
       // update by chao 2025.09.29 登台参数修改 12345
-      CustomModelUrl: ""
+      CustomModelUrl: "12345"
     };
 
     console.log('✅ 进入舞台信息构建完成2:', enter_stage_info);
