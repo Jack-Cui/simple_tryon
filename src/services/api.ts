@@ -1321,7 +1321,7 @@ export const modelAPI = {
     const data = {
       modelPictureUrl: modelPictureUrl,
       modelVideoUrl: modelVideoUrl,
-      height: height
+      height: height * 10
     };
     console.log('创建模型请求数据:', data);
     return await apiService.post(endpoint, JSON.stringify(data), headers);
