@@ -7,10 +7,12 @@ interface Props {
     smallSrc?: string;
 }
 const MediaView = (props: Props) => {
+    // props.src || '' control
+    // let sr = 'https://ssl.resource.synconize.com/cf99abd63eba493883a44a7d5f03cfe1.mp4';
     return (
         <div className="media-view">
             <IconFont name="close-circle" className="media-view-close" size="large" onClick={props?.onCloseClick as any} />
-            <video src={props.src || ''} width="100%" height="100%"
+            <video src={ props.src || ''} width="100%" height="100%"
                 autoPlay
                 loop
                 muted
