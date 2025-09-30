@@ -218,7 +218,7 @@ function App() {
             {/* <Route path="/my-model" element={<MyModel />} /> */}
             <Route path="/upload-action" element={<UploadAction />} />
             <Route path="/subs-package" element={<SubscribePackage />} />
-            <Route path='/browse-history' element={<BrowseHistory />}/>
+            {/* <Route path='/browse-history' element={<BrowseHistory />}/> */}
             <Route 
               path="/home" 
               element={

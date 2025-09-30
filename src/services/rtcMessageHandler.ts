@@ -1,6 +1,9 @@
 // RTC消息处理服务，参考C#代码实现
 import * as proto from '../proto/xproto';
 const Long = require('long');
+//add by chao 2025.09.30 日志开关
+const isProtoLog = false;
+const isRtcLog = false;
 
 export interface RTCMessage {
   type: string;
@@ -159,21 +162,23 @@ export class RTCMessageHandler {
       
       // 转换为十六进制字符串
       const hexString = Array.from(payload).map((b: unknown) => (b as number).toString(16).padStart(2, '0')).join('');
-      
-      console.log('📤 发送proto消息:', {
-        id: id,
-        idHashCode: id,
-        payloadSize: payload.length,
-        hexString: hexString
-      });
+      if(isProtoLog){
+        console.log('📤 发送proto消息:', {
+          id: id,
+          idHashCode: id,
+          payloadSize: payload.length,
+          hexString: hexString
+        });
+      }
       
       // 使用正确的proto消息格式 (参考C#代码)
       const messageStr = `cmd=proto&id=${id}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
       
+      if(isProtoLog){
       console.log('✅ proto消息发送成功:', id);
       console.log('📤 发送的消息内容:', messageStr);
-      
+      }
     } catch (error) {
       console.error('❌ 发送proto消息失败:', error);
     }
@@ -199,20 +204,22 @@ export class RTCMessageHandler {
       
       const payload = proto.oChangeMapReq.encode(message).finish();
       const hexString = Array.from(payload).map((b: number) => b.toString(16).padStart(2, '0')).join('');
-      
-      console.log('📤 发送proto消息:', {
-        id: proto.eClientPID.ChangeMapReq,
-        payloadSize: payload.length,
-        hexString: hexString
-      });
+      if(isProtoLog){
+        console.log('📤 发送proto消息:', {
+          id: proto.eClientPID.ChangeMapReq,
+          payloadSize: payload.length,
+          hexString: hexString
+        });
+      }
       
       // 使用正确的proto消息格式 (参考C#代码)
       const messageStr = `cmd=proto&id=${proto.eClientPID.ChangeMapReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
-      
+
+      if(isProtoLog){      
       console.log('✅ proto消息发送成功:', proto.eClientPID.ChangeMapReq);
       console.log('📤 发送的消息内容:', messageStr);
-      
+      }
     } catch (error) {
       console.error('❌ 发送切换地图RTC消息失败:', error);
       // 如果proto编码失败，回退到简单字符串格式
@@ -230,11 +237,12 @@ export class RTCMessageHandler {
     }
 
     try {
-      console.log('🔥 准备发送热力图消息:', {
-        enable: enable,
-        messageType: 'oHeatMapReq'
-      });
-      
+      if(isRtcLog){
+        console.log('🔥 准备发送热力图消息:', {
+          enable: enable,
+          messageType: 'oHeatMapReq'
+        });
+      }
       // 直接编码proto消息
       const message = proto.oHeatMapReq.create({
         enable: enable
@@ -242,20 +250,21 @@ export class RTCMessageHandler {
       
       const payload = proto.oHeatMapReq.encode(message).finish();
       const hexString = Array.from(payload).map((b: number) => b.toString(16).padStart(2, '0')).join('');
-      
-      console.log('📤 发送proto消息:', {
-        id: proto.eClientPID.HeatMapReq,
-        payloadSize: payload.length,
-        hexString: hexString
-      });
+      if(isProtoLog){
+        console.log('📤 发送proto消息:', {
+          id: proto.eClientPID.HeatMapReq,
+          payloadSize: payload.length,
+          hexString: hexString
+        });
+      }
       
       // 使用正确的proto消息格式 (参考C#代码)
       const messageStr = `cmd=proto&id=${proto.eClientPID.HeatMapReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
-      
+      if(isProtoLog){      
       console.log('✅ proto消息发送成功:', proto.eClientPID.HeatMapReq);
       console.log('📤 发送的消息内容:', messageStr);
-      
+      }
     } catch (error) {
       console.error('❌ 发送热力图RTC消息失败:', error);
       // 如果proto编码失败，回退到简单字符串格式
@@ -306,9 +315,10 @@ export class RTCMessageHandler {
       const messageStr = `cmd=proto&id=${proto.eClientPID.ChangeGarmentReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
       
+      if(isProtoLog){      
       console.log('✅ 更换服装proto消息发送成功:', proto.eClientPID.ChangeGarmentReq);
       console.log('📤 发送的消息内容:', messageStr);
-      
+      }
     } catch (error) {
       console.error('❌ 发送更换服装RTC消息失败:', error);
     }
@@ -341,9 +351,10 @@ export class RTCMessageHandler {
 
       const messageStr = `cmd=proto&id=${proto.eClientPID.GetImagesInfoReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
-
+      if(isProtoLog){
       console.log('✅ 获取图片信息proto消息发送成功:', proto.eClientPID.GetImagesInfoReq);
       console.log('📤 发送的消息内容:', messageStr);
+      }
     } catch (error) {
       console.error('❌ 发送获取图片信息RTC消息失败:', error);
     }
@@ -377,9 +388,10 @@ export class RTCMessageHandler {
 
       const messageStr = `cmd=proto&id=${proto.eClientPID.ChangeGarmentSizeReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
-
+      if(isProtoLog){
       console.log('✅ 更换服装尺寸proto消息发送成功:', proto.eClientPID.ChangeGarmentSizeReq);
       console.log('📤 发送的消息内容:', messageStr);
+      }
     } catch (error) {
       console.error('❌ 发送更换服装尺寸RTC消息失败:', error);
     }
@@ -424,10 +436,10 @@ export class RTCMessageHandler {
       // 使用正确的proto消息格式 (参考C#代码)
       const messageStr = `cmd=proto&id=${proto.eClientPID.TouchScreenReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
-      
+      if(isProtoLog){      
       console.log('✅ 触摸屏幕proto消息发送成功:', proto.eClientPID.TouchScreenReq);
       console.log('📤 发送的消息内容:', messageStr);
-      
+      }
     } catch (error) {
       console.error('❌ 发送触摸屏幕RTC消息失败:', error);
     }

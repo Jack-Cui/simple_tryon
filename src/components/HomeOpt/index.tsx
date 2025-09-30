@@ -35,6 +35,7 @@ interface Props {
     actionClick?: (msg: any) => void;
     sizeClick?: (size: string) => void;
     loginScene?: string;
+    toHistory?: () => void;
 }
 const HomeOpt = (props: Props) => {
     const { hotClick, actionClick, sizeClick, loginScene } = props;
@@ -126,7 +127,8 @@ const HomeOpt = (props: Props) => {
     }
 
     const goToHistory = () => {
-        navigate('/browse-history');
+        // navigate('/browse-history');
+        props?.toHistory && props.toHistory();
     }
 
     const getActionList = async () => {

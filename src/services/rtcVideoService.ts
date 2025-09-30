@@ -3,6 +3,8 @@ import { rtcMessageHandler } from './rtcMessageHandler';
 import * as proto from '../proto/xproto';
 import { getLoginCache } from '../utils/loginCache';
 
+const isProtoLog = false; //add by chao 2025.09.30 日志开关
+const isRtcLog = false; //add by chao 2025.09.30 日志开关
 export interface RTCVideoConfig {
   appId: string;
   appKey: string;
@@ -173,15 +175,16 @@ export class RTCVideoService {
     // 用户消息接收
     this.engine.on(VERTC.events.onUserMessageReceived, (event: any) => {
       const { roomId, userId, message } = event;
-      console.log('📨 收到用户消息:', { roomId, userId, message });
-      console.log('📨 消息详情:', {
-        roomId: roomId,
-        userId: userId,
-        messageLength: message ? message.length : 0,
-        messageType: typeof message,
-        messageContent: message
-      });
-      
+      if(isRtcLog){
+          console.log('📨 收到用户消息:', { roomId, userId, message });
+          console.log('📨 消息详情:', {
+            roomId: roomId,
+            userId: userId,
+            messageLength: message ? message.length : 0,
+            messageType: typeof message,
+            messageContent: message
+          });
+      }
       // 处理消息
       this.handleUserMessage(message);
     });
@@ -418,8 +421,9 @@ export class RTCVideoService {
     
     // 检查是否是proto消息
     if (message.includes('cmd=proto')) {
-      console.log('📦 收到proto消息:', message);
-      
+      if(isProtoLog){
+        console.log('📦 收到proto消息:', message);
+      }
       try {
         // 解析proto消息格式: cmd=proto&id={messageId}&hex={hexData}
         const parts = message.split('&');
@@ -431,12 +435,13 @@ export class RTCVideoService {
             const messageId = parseInt(idMatch[1]);
             const hexData = hexMatch[1];
             
-            console.log('📦 解析proto消息:', {
-              messageId: messageId,
-              hexData: hexData,
-              hexLength: hexData.length
-            });
-            
+            if(isProtoLog){
+              console.log('📦 解析proto消息:', {
+                messageId: messageId,
+                hexData: hexData,
+                hexLength: hexData.length
+              });
+            }
             // 转换十六进制为字节数组
             const bytes = new Uint8Array(hexData.length / 2);
             for (let i = 0; i < hexData.length; i += 2) {
@@ -465,7 +470,9 @@ export class RTCVideoService {
               });
               window.dispatchEvent(customEvent);
             } else {
-              console.log('📦 未知的proto消息ID:', messageId);
+              if(isProtoLog){
+                console.log('📦 未知的proto消息ID:', messageId);
+              }
             }
           }
         }
@@ -509,7 +516,9 @@ export class RTCVideoService {
 
   // 发送热力图消息
   sendHeatMap(enable: boolean): void {
-    console.log('🔥 发送热力图消息:', enable);
+    if(isRtcLog){
+      console.log('🔥 发送热力图消息:', enable);
+    }
     rtcMessageHandler.sendHeatMap(enable);
   }
 

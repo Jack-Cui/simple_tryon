@@ -4,6 +4,8 @@ import VERTC, { MediaType, StreamIndex } from '@volcengine/rtc';
 
 // 从 proto 中获取 Long 类型
 const Long = require('long');
+//add by chao 2025.09.30 日志开关
+const isRtcLog = false;
 
 // 导入RTC相关依赖
 
@@ -1296,11 +1298,13 @@ export class WebSocketService {
       // 编码消息
       const payload = proto.oHeatMapReq.encode(message).finish();
       
-      console.log('📦 热力图消息编码完成:', {
-        enable: enable,
-        payloadSize: payload.length,
-        payloadBytes: Array.from(payload)
-      });
+      if(isRtcLog){
+        console.log('📦 热力图消息编码完成:', {
+          enable: enable,
+          payloadSize: payload.length,
+          payloadBytes: Array.from(payload)
+        });
+      }
       
       // 发送消息 (HeatMapReq = 1009)
       this.sendMessage(1009, payload);

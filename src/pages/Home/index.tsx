@@ -36,14 +36,19 @@ import CreateModelModal from '../../components/CreateModelModal';
 import ReactHowler from 'react-howler';
 import HomeOpt from '../../components/HomeOpt';
 import { useLoginScene } from '../../contexts/LoginSceneContext';
+import BrowseHistory from '../BrowseHistory';
 
 const Long = require('long');
+// add by chao 2025.09.30 增加日志开关
+const isHotMapLog = false;
+const isVideoPlayLog = false;
+const isDeductLog = false;
 
 //add by chao 2025.09.29 增加路由监听事件
 let locRouteNum = 0;
 const MyContext = React.createContext({});
 
-const Home = () => {
+const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
   const location = useLocation();
 
 //add by chao 2025.09.29 增加路由监听事件
@@ -489,25 +494,27 @@ const Home = () => {
 
   // 处理热力图图标点击
   const handleHeatMapClick = async () => {
-    console.log('🔥 111热力图图标被点击，当前状态:', isHeatMapEnabled);
-
+    if(isHotMapLog){
+      console.log('🔥 111热力图图标被点击，当前状态:', isHeatMapEnabled);
+    }
     // 切换热力图开关状态
     const newHeatMapState = !isHeatMapEnabled;
     setIsHeatMapEnabled(newHeatMapState);
 
     // 检查RTC连接状态
-    if (!rtcVideoService.getConnectionStatus()) {
-      console.error('❌ RTC未连接，无法发送热力图请求');
-      console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
-      console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
-      console.log('🔧 调试信息：');
-      console.log('  - showSelectionScreen:', showSelectionScreen);
-      console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
-      console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
-      console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
-      return;
+    if(isHotMapLog){
+      if (!rtcVideoService.getConnectionStatus()) {
+        console.error('❌ RTC未连接，无法发送热力图请求');
+        console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
+        console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
+        console.log('🔧 调试信息：');
+        console.log('  - showSelectionScreen:', showSelectionScreen);
+        console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
+        console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
+        console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
+        return;
+      }
     }
-
     // 检查是否在视频播放状态（已登台）
     if (showSelectionScreen) {
       console.error('❌ 未在视频播放状态，无法发送热力图请求');
@@ -516,9 +523,13 @@ const Home = () => {
 
     // 发送热力图RTC消息
     try {
-      console.log('🚀 开始发送热力图RTC消息...', newHeatMapState);
+      if(isHotMapLog){
+        console.log('🚀 开始发送热力图RTC消息...', newHeatMapState);
+      }      
       rtcVideoService.sendHeatMap(newHeatMapState);
-      console.log('✅ 热力图RTC消息已发送:', newHeatMapState);
+      if(isHotMapLog){
+        console.log('✅ 热力图RTC消息已发送:', newHeatMapState);
+      }
     } catch (error) {
       console.error('❌ 发送热力图RTC消息失败:', error);
       // 显示错误提示
@@ -531,9 +542,14 @@ const Home = () => {
     console.log('选中动作11111', msg);
   }
 
-  const handleHotClick = (flag: boolean) => {
-    console.log('🔥 111热力图图标被点击，当前状态:', isHeatMapEnabled);
+  const goToHistory = () => {
+      props?.goToPage && props.goToPage('browseHistorry')
+  }
 
+  const handleHotClick = (flag: boolean) => {
+    if(isHotMapLog){
+      console.log('🔥 111热力图图标被点击，当前状态:', isHeatMapEnabled);
+    }
     // 切换热力图开关状态
     const newHeatMapState = flag;
     setIsHeatMapEnabled(newHeatMapState);
@@ -559,9 +575,13 @@ const Home = () => {
 
     // 发送热力图RTC消息
     try {
-      console.log('🚀 开始发送热力图RTC消息...', newHeatMapState);
+      if(isHotMapLog){
+        console.log('🚀 开始发送热力图RTC消息...', newHeatMapState);
+      }
       rtcVideoService.sendHeatMap(newHeatMapState);
-      console.log('✅ 热力图RTC消息已发送:', newHeatMapState);
+      if(isHotMapLog){
+        console.log('✅ 热力图RTC消息已发送:', newHeatMapState);
+      }
     } catch (error) {
       console.error('❌ 发送热力图RTC消息失败:', error);
       // 显示错误提示
@@ -1737,7 +1757,9 @@ const Home = () => {
               let parsedData = response.data;
               if (typeof parsedData === 'string') {
                 parsedData = JSON.parse(parsedData);
-                console.log('✅ 余额扣费请求成功111:', parsedData);
+                if(isDeductLog){
+                  console.log('✅ 余额扣费请求成功111:', parsedData);
+                }
               } else {
                 parsedData = response.data;
                 console.log('✅ 余额扣费请求成功222:', parsedData);
@@ -1754,7 +1776,9 @@ const Home = () => {
                   setShowBalanceModal(true);
                 }
               } else {
-                console.log('✅ 余额扣费请求成功555:', parsedData);
+                if(isDeductLog){
+                  console.log('✅ 余额扣费请求成功555:', parsedData);
+                }
               }
             } catch (e) {
               console.error('解析余额数据失败:', e);
@@ -1867,7 +1891,9 @@ const Home = () => {
 
     // 当视频播放状态改变时，启动或停止定时器
     if (isVideoPlaying) {
-      console.log('🎬 视频开始播放，启动定时扣费');
+      if(isVideoPlayLog){
+        console.log('🎬 视频开始播放，启动定时扣费');
+      }
       startDeductionTimer();
       startPlayTimeTimer();
     } else {
@@ -2369,7 +2395,7 @@ const Home = () => {
         flexDirection: 'column',
         position: 'relative'
       }}>
-        <HomeOpt hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
+        <HomeOpt toHistory={goToHistory} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
         {/* 音乐开始 */}
         <ReactHowler
           src={musicUrl}
@@ -2886,7 +2912,7 @@ const Home = () => {
       flexDirection: 'column',
       position: 'relative'
     }}>
-      <HomeOpt hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
+      <HomeOpt toHistory={goToHistory} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
       {/* 音乐开始 */}
       <ReactHowler
         src={musicUrl}
@@ -3752,5 +3778,20 @@ const Home = () => {
       </div>
     );
   };
+
+const Home = () => {
+  const [step, setStep] = useState<string>('home'); // home 
+  const onClickBack = () => {
+    setStep('home');
+  }
+  return (
+    <>
+    <div style={step === 'home' ? {}: {display: 'none'}}>
+      <HomeVideo goToPage={(msg) => setStep(msg)} />
+    </div>
+    <BrowseHistory isShow={step === 'browseHistorry'} onBack={onClickBack}/>
+    </>
+  )
+}
 
 export default Home; 

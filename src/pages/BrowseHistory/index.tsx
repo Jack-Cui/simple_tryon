@@ -8,7 +8,7 @@ import { modelAPI, uploadAPI } from "../../services/api";
 import ErrorToast from "../../components/errorToast";
 import MediaView from "../../components/MediaView";
 import { checkVideo } from "../../utils/videoCheck";
-const BrowseHistory = (props?: { onBack?: any }) => {
+const BrowseHistory = (props?: { onBack?: any , isShow?: boolean}) => {
     const navigate = useNavigate();
     const [aigcList, setAigcList] = useState<any[]>([]);
     const [showError, setShowError] = useState(false);
@@ -76,11 +76,11 @@ const BrowseHistory = (props?: { onBack?: any }) => {
     }
 
     const handleClick = () => {
-        navigate(-1);
+        // navigate(-1);
         props?.onBack && props.onBack();
     }
     return (
-        <div className="browse-history">
+        <div className="browse-history" style={props?.isShow ? {} : {display: 'none'}}>
             <Navbar className='browse-history-navbar' fixed={false} leftArrow onLeftClick={handleClick}>收藏历史</Navbar>
             <div className="browse-history-content">
                 {aigcList.map((item: any) => {
