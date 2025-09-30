@@ -21,7 +21,7 @@ import { get } from 'http';
 
 const Long = require('long');
 const crypto = require('crypto');
-
+const isRecLog = false; // 是否记录日志，true为记录，false为不记录
 
 // 通用HTTP请求方法
 class ApiService {
@@ -39,8 +39,8 @@ class ApiService {
       ...headers
     };
 
-    console.log('发起GET请求:', url);
-    console.log('请求头:', requestHeaders);
+    if(isRecLog) console.log('发起GET请求:', url);
+    if(isRecLog) console.log('请求头:', requestHeaders);
 
     try {
       const response = await fetch(url, {
@@ -127,9 +127,9 @@ class ApiService {
       ...headers
     };
 
-    console.log('发起POST请求:', url);
-    console.log('请求头:', requestHeaders);
-    console.log('请求数据:', data);
+    if(isRecLog) console.log('发起POST请求:', url);
+    if(isRecLog) console.log('请求头:', requestHeaders);
+    if(isRecLog) console.log('请求数据:', data);
 
     try {
       const fetchOptions: RequestInit = {
@@ -146,9 +146,9 @@ class ApiService {
 
       const response = await fetch(url, fetchOptions);
 
-      console.log('POST请求状态码:', response.status);
-      console.log('POST请求状态文本:', response.statusText);
-      console.log('POST请求响应头:', Object.fromEntries(response.headers.entries()));
+      if(isRecLog) console.log('POST请求状态码:', response.status);
+      if(isRecLog) console.log('POST请求状态文本:', response.statusText);
+      if(isRecLog) console.log('POST请求响应头:', Object.fromEntries(response.headers.entries()));
       
       const responseText = await response.text();
       // console.log('POST请求响应内容:', responseText);
@@ -234,7 +234,7 @@ export const authAPI = {
 
    // 检查登录状态
    async checkLogin(access_token: string): Promise<ApiResponse> {
-    console.log('开始检查登录状态');
+    if(isRecLog) console.log('开始检查登录状态');
     const endpoint = API_ENDPOINTS.CHECK_LOGIN(access_token);
     const headers = {
       // 'Authorization': `Bearer ${access_token}`
@@ -297,7 +297,7 @@ export const authAPI = {
     accessToken: string,
     userId: string
   ): Promise<ApiResponse> {
-    console.log('开始余额扣费请求');
+    if(isRecLog) console.log('开始余额扣费请求');
     
     const url = `${API_CONFIG.BASE_URL}/admin/balance/deduction`;
     
@@ -308,7 +308,7 @@ export const authAPI = {
     const data = JSONbig().stringify(balanceRaw).replace(/\s+/g, '');
     const sMessage = `${data}|${timestamp}|${userId}`;
     
-    console.log('s_message:', sMessage);
+    if(isRecLog) console.log('s_message:', sMessage);
     
     // 使用固定的密钥生成签名
     const KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwxAKb+pGIdtg189rgCtLGClLVTcWkAga0UTiZ8cfDzNDBF3eZBX96iXb5godZLHaAg38OZbtqclZfWBu9nBEpaV+nZudJ5z42RFpJlK6p9ACetR+/rX5Xfol9k0DayI9lP42uyK8h+wv/LPcA5PT/eE4aSMwn2g/xrVuLPGpCXM5Ca3de8s6Rj5JdW2GccLsi3GueLet2N4+a88cvpNMr4poVu135cb+SyxEbt3/4z0HhTFM0QF+GLaw+3faT8A4peiiot4io1UCUyW8fRXIAiHv5J0s8Y3bJW311BZFs/jnAodiIvQKzh3pEMKMyo0kw0T7HF5G4oSe+6Dvn9AV6QIDAQAB";
@@ -326,9 +326,9 @@ export const authAPI = {
       'X-signature': signature,
     };
     
-    console.log('请求URL:', url);
-    console.log('请求头:', headers);
-    console.log('请求数据:', data);
+    if(isRecLog) console.log('请求URL:', url);
+    if(isRecLog) console.log('请求头:', headers);
+    if(isRecLog) console.log('请求数据:', data);
     
     return await apiService.post(url, data, headers);
   }
@@ -348,7 +348,7 @@ export const roomAPI = {
 
   // 获取房间信息
   async getSysRoomShare(co_creation_id: string, access_token: string): Promise<ApiResponse> {
-    console.log('开始获取房间信息，房间ID:', co_creation_id);
+    if(isRecLog) console.log('开始获取房间信息，房间ID:', co_creation_id);
     const endpoint = API_ENDPOINTS.GET_SYSROOMSHARE(co_creation_id);
     const headers = {
       'Authorization': `Bearer ${access_token}`
@@ -358,7 +358,7 @@ export const roomAPI = {
 
   // 获取衣服尺寸
   async getClotheSize(clothe_id: string, access_token: string): Promise<ApiResponse> {
-    console.log('开始获取衣服尺寸，衣服ID:', clothe_id);
+    if(isRecLog) console.log('开始获取衣服尺寸，衣服ID:', clothe_id);
     const endpoint = API_ENDPOINTS.GET_CLOTHE_SIZE(clothe_id);
     const headers = {
       'Authorization': `Bearer ${access_token}`
@@ -368,7 +368,7 @@ export const roomAPI = {
 
   // 获取衣服详情
   async getClotheDetail(clothe_id: string, access_token: string): Promise<ApiResponse> {
-    console.log('开始获取衣服详情，衣服ID:', clothe_id);
+    if(isRecLog) console.log('开始获取衣服详情，衣服ID:', clothe_id);
     const endpoint = API_ENDPOINTS.GET_CLOTHE_DETAIL(clothe_id);
     const headers = {
       'Authorization': `Bearer ${access_token}`
@@ -378,7 +378,7 @@ export const roomAPI = {
 
   // 创建房间
   async createRoom(room_id: string, access_token: string): Promise<ApiResponse> {
-    console.log('开始创建房间，房间ID:', room_id);
+    if(isRecLog) console.log('开始创建房间，房间ID:', room_id);
     const endpoint = API_ENDPOINTS.CREATE_ROOM();
     const headers = {
       'Authorization': `Bearer ${access_token}`,
@@ -393,7 +393,7 @@ export const roomAPI = {
 
   // 加入房间
   async joinRoom(room_primary_id: number, access_token: string, relationship_type: number = 1): Promise<ApiResponse> {
-    console.log('开始加入房间，房间主键ID:', room_primary_id, '关系类型:', relationship_type);
+    if(isRecLog) console.log('开始加入房间，房间主键ID:', room_primary_id, '关系类型:', relationship_type);
     const endpoint = API_ENDPOINTS.JOIN_ROOM();
     const headers = {
       'Authorization': `Bearer ${access_token}`,
@@ -408,7 +408,7 @@ export const roomAPI = {
 
   // 获取场景列表
   async getSceneList(access_token: string): Promise<ApiResponse> {
-    console.log('开始获取场景列表');
+    if(isRecLog) console.log('开始获取场景列表');
     const endpoint = API_ENDPOINTS.GET_SCENE_LIST();
     const headers = {
       'Authorization': `Bearer ${access_token}`,
@@ -420,9 +420,9 @@ export const roomAPI = {
   // 构建进入舞台信息
   // 构建进入舞台信息
   async buildEnterStageInfo(room_info: RoomInfoResponse, access_token: string): Promise<string> {
-    console.log('🚀 开始构建进入舞台信息');
-    console.log('🔍 房间信息:', room_info);
-    console.log('🔍 access_token:', access_token ? '存在' : '不存在');
+    if(isRecLog) console.log('🚀 开始构建进入舞台信息');
+    if(isRecLog) console.log('🔍 房间信息:', room_info);
+    if(isRecLog) console.log('🔍 access_token:', access_token ? '存在' : '不存在');
     if (!room_info) {
       console.warn('⚠️ 房间信息为空');
       return '';
@@ -445,10 +445,10 @@ export const roomAPI = {
       return '';
     }
     const room_info_data = room_info.data;
-    console.log('🔍 房间数据:', room_info_data);
-    console.log('🔍 suitIds:', suitIds);
-    console.log('🔍 userId:', room_info_data.userId);
-    console.log('🔍 scenarioId:', room_info_data.scenarioId);
+    if(isRecLog) console.log('🔍 房间数据:', room_info_data);
+    if(isRecLog) console.log('🔍 suitIds:', suitIds);
+    if(isRecLog) console.log('🔍 userId:', room_info_data.userId);
+    if(isRecLog) console.log('🔍 scenarioId:', room_info_data.scenarioId);
 
     const clothe_ids = suitIds.split(',');
     const garments: any = {};
@@ -459,9 +459,9 @@ export const roomAPI = {
     
     for (let i = 0; i < clothe_ids.length; i++) {
       const clothe_id = clothe_ids[i];
-      console.log(`👕 处理衣服ID [${i + 1}/${clothe_ids.length}]: ${clothe_id}`);
-      console.log(`🔍 当前clothe_ids数组:`, clothe_ids);
-      console.log(`🔍 当前处理的clothe_id:`, clothe_id);
+      if(isRecLog) console.log(`👕 处理衣服ID [${i + 1}/${clothe_ids.length}]: ${clothe_id}`);
+      if(isRecLog) console.log(`🔍 当前clothe_ids数组:`, clothe_ids);
+      if(isRecLog) console.log(`🔍 当前处理的clothe_id:`, clothe_id);
       
       if (!clothe_id || clothe_id === '' || clothe_id === '0') {
         console.log(`⚠️ 跳过无效的衣服ID: ${clothe_id}`);
@@ -475,31 +475,31 @@ export const roomAPI = {
         continue;
       }
       
-      console.log(`✅ 衣服ID ${clothe_id} 验证通过，开始获取详情...`);
+      if(isRecLog) console.log(`✅ 衣服ID ${clothe_id} 验证通过，开始获取详情...`);
       
       try {
         // 获取衣服详情
-        console.log(`获取衣服详情: ${clothe_id}`);
+        if(isRecLog) console.log(`获取衣服详情: ${clothe_id}`);
         let clothe_detail_data = getClothesDetailFromCache(clothe_id);
         
         // 如果缓存中没有，尝试实时获取
         if (!clothe_detail_data) {
-          console.log(`⚠️ 缓存中没有衣服详情: ${clothe_id}，尝试实时获取...`);
-          console.log(`🔍 当前缓存状态:`, getLoginCache()?.clothesDetails ? '有衣服详情缓存' : '无衣服详情缓存');
+          if(isRecLog) console.log(`⚠️ 缓存中没有衣服详情: ${clothe_id}，尝试实时获取...`);
+          if(isRecLog) console.log(`🔍 当前缓存状态:`, getLoginCache()?.clothesDetails ? '有衣服详情缓存' : '无衣服详情缓存');
           try {
             const response = await this.getClotheDetail(clothe_id, access_token);
             if (response.ok && response.data) {
               const parsed_response = JSON.parse(response.data) as ClotheDetailResponse;
               clothe_detail_data = parsed_response.data;
-              console.log(`✅ 实时获取衣服详情成功: ${clothe_id}`);
+              if(isRecLog) console.log(`✅ 实时获取衣服详情成功: ${clothe_id}`);
               
               // 更新缓存
               const clothesDetails: { [key: string]: any } = {};
               clothesDetails[clothe_id] = clothe_detail_data;
               updateClothesDetailsInCache(clothesDetails);
-              console.log(`✅ 已更新衣服详情到缓存: ${clothe_id}`);
+              if(isRecLog) console.log(`✅ 已更新衣服详情到缓存: ${clothe_id}`);
             } else {
-              console.warn(`⚠️ 实时获取衣服详情失败: ${clothe_id}`);
+              if(isRecLog) console.warn(`⚠️ 实时获取衣服详情失败: ${clothe_id}`);
               continue;
             }
           } catch (apiError) {
@@ -511,7 +511,7 @@ export const roomAPI = {
         if (clothe_detail_data) {
           const clothe_detail = clothe_detail_data;
           
-          console.log(`衣服详情获取成功:`, {
+          if(isRecLog) console.log(`衣服详情获取成功:`, {
             id: clothe_detail.id,
             name: clothe_detail.name,
             classifyId: clothe_detail.classifyId,
@@ -527,7 +527,7 @@ export const roomAPI = {
           // const clothesId = "1916394930865287170";
           // const suitIds = "1916394256718999553";
           
-          console.log('👕 处理衣服管理逻辑:', {
+          if(isRecLog) console.log('👕 处理衣服管理逻辑:', {
             classifyId: classifyId,
             clothesId: clothesId,
             suitIds: suitIds
@@ -547,7 +547,7 @@ export const roomAPI = {
                 clothesId: Long.fromString(clothesId)
               };
               clothesItemInfoList.push(item);
-              console.log(`👕 添加了套装衣服: ${clothesId}, classifyId: ${classifyId}`);
+              if(isRecLog) console.log(`👕 添加了套装衣服: ${clothesId}, classifyId: ${classifyId}`);
             } else {
               for (let j = 0; j < arr.length; ++j) {
                 const longValue = Long.fromString(arr[j]);
@@ -556,11 +556,11 @@ export const roomAPI = {
                   clothesId: longValue
                 };
                 clothesItemInfoList.push(item);
-                console.log(`👕 添加了套装衣服: ${clothesId}, classifyId: ${classifyId}`);
+                if(isRecLog) console.log(`👕 添加了套装衣服: ${clothesId}, classifyId: ${classifyId}`);
               }
             }
             
-            console.log('👕 套装处理完成:', clothesItemInfoList);
+            if(isRecLog) console.log('👕 套装处理完成:', clothesItemInfoList);
             
           } else {
             // 非套装
@@ -573,7 +573,7 @@ export const roomAPI = {
                 clothesId: Long.fromString(clothesId)
               };
               clothesItemInfoList.push(item);
-              console.log(`👕 添加了非套装衣服: ${clothesId}, classifyId: ${classifyId}`);
+              if(isRecLog) console.log(`👕 添加了非套装衣服: ${clothesId}, classifyId: ${classifyId}`);
               // console.log('👕 从套装切换到非套装:', clothesItemInfoList);
               
             } else {
@@ -647,11 +647,11 @@ export const roomAPI = {
                   clothesId: Long.fromString(clothesId)
                 };
                 clothesItemInfoList.push(cii);
-                console.log(`👕 添加了新衣服: ${clothesId}, classifyId: ${classifyId}`);
+                // console.log(`👕 添加了新衣服: ${clothesId}, classifyId: ${classifyId}`);
               }
               
-              console.log('👕 非套装处理完成:', clothesItemInfoList);
-              console.log(`👕 添加了衣服: ${clothesId}, classifyId: ${classifyId}`);
+              // console.log('👕 非套装处理完成:', clothesItemInfoList);
+              // console.log(`👕 添加了衣服: ${clothesId}, classifyId: ${classifyId}`);
             }
           }
           
@@ -667,44 +667,44 @@ export const roomAPI = {
       }
     }
     
-    console.log('🔍 所有衣服处理完成，最终结果:');
-    console.log('🔍 处理的clothe_ids:', clothe_ids);
-    console.log('🔍 最终clothesItemInfoList:', clothesItemInfoList);
-    console.log('🔍 最终isClothesSuit:', isClothesSuit);
+    if(isRecLog) console.log('🔍 所有衣服处理完成，最终结果:');
+    if(isRecLog) console.log('🔍 处理的clothe_ids:', clothe_ids);
+    if(isRecLog) console.log('🔍 最终clothesItemInfoList:', clothesItemInfoList);
+    if(isRecLog) console.log('🔍 最终isClothesSuit:', isClothesSuit);
     
     // 详细打印每个衣服的信息
     clothesItemInfoList.forEach((item, index) => {
-      console.log(`🔍 衣服[${index}]:`, {
+      if(isRecLog) console.log(`🔍 衣服[${index}]:`, {
         classifyId: item.classifyId,
         clothesId: item.clothesId.toString()
       });
     });
     
     // 参考 sendChangeGarmentRequest 的构建逻辑
-    console.log('👕 准备构建服装参数:', {
+    if(isRecLog) console.log('👕 准备构建服装参数:', {
       clothesItemInfoList: clothesItemInfoList,
       isClothesSuit: isClothesSuit
     });
     
     // 构建服装参数
-    console.log('🔍 开始构建服装参数:');
-    console.log('🔍 clothesItemInfoList[0]:', clothesItemInfoList[0]);
-    console.log('🔍 clothesItemInfoList[1]:', clothesItemInfoList[1]);
+    if(isRecLog) console.log('🔍 开始构建服装参数:');
+    if(isRecLog) console.log('🔍 clothesItemInfoList[0]:', clothesItemInfoList[0]);
+    if(isRecLog) console.log('🔍 clothesItemInfoList[1]:', clothesItemInfoList[1]);
     
     const garment1Id = clothesItemInfoList.length >= 1 ? clothesItemInfoList[0].clothesId : Long.ZERO;
     const garment2Id = clothesItemInfoList.length >= 2 ? clothesItemInfoList[1].clothesId : Long.ZERO;
     // const garment2Id = Long.fromString("1916792048612323330");
     const garment3Id = clothesItemInfoList.length >= 3 ? clothesItemInfoList[2].clothesId : Long.ZERO;
     
-    console.log('🔍 构建的garment IDs:');
-    console.log('🔍 garment1Id:', garment1Id.toString());
-    console.log('🔍 garment2Id:', garment2Id.toString());
-    console.log('🔍 garment3Id:', garment3Id.toString());
+    if(isRecLog) console.log('🔍 构建的garment IDs:');
+    if(isRecLog) console.log('🔍 garment1Id:', garment1Id.toString());
+    if(isRecLog) console.log('🔍 garment2Id:', garment2Id.toString());
+    if(isRecLog) console.log('🔍 garment3Id:', garment3Id.toString());
     const garment1Size = "4"; // 默认尺寸，实际应该从服务器获取
     const garment2Size = garment2Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
     const garment3Size = garment3Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
 
-    console.log('👕 构建的服装参数:', {
+    if(isRecLog) console.log('👕 构建的服装参数:', {
       garment1Id: garment1Id.toString(), 
       garment2Id: garment2Id.toString(), 
       garment3Id: garment3Id.toString(),
@@ -762,14 +762,14 @@ export const roomAPI = {
       updateDefaultSceneNameInCache(scene_name);
     }
     
-    console.log('🔍 准备构建最终进入舞台信息...');
-    console.log('🔍 场景代码:', scene_code);
-    console.log('🔍 场景名称:', scene_name);
-    console.log('🔍 服装信息:', garments);
+    if(isRecLog) console.log('🔍 准备构建最终进入舞台信息...');
+    if(isRecLog) console.log('🔍 场景代码:', scene_code);
+    if(isRecLog) console.log('🔍 场景名称:', scene_name);
+    if(isRecLog) console.log('🔍 服装信息:', garments);
     
     // add by chao 2025.09.29 登台参数修改
     const coUserId = getCoUserIdFromCache();
-    console.log('🔍 coUserId from cache:', coUserId);
+    if(isRecLog) console.log('🔍 coUserId from cache:', coUserId);
 
     const enter_stage_info: EnterStageInfo = {
       AvatarId: 0,
@@ -791,27 +791,27 @@ export const roomAPI = {
       CustomModelUrl: "12345"
     };
 
-    console.log('✅ 进入舞台信息构建完成1:', enter_stage_info);
+    if(isRecLog) console.log('✅ 进入舞台信息构建完成1:', enter_stage_info);
     const result = JSON.stringify(enter_stage_info);
-    console.log('✅ 返回的JSON字符串:', result);
+    if(isRecLog) console.log('✅ 返回的JSON字符串:', result);
     return result;
   },
 
   // 构建进入舞台信息
   async buildShareEnterStageInfo(room_info: RoomInfoResponse, access_token: string): Promise<string> {
-    console.log('🚀 开始构建进入舞台信息');
-    console.log('🔍 房间信息:', room_info);
-    console.log('🔍 access_token:', access_token ? '存在' : '不存在');
+    if(isRecLog) console.log('🚀 开始构建进入舞台信息');
+    if(isRecLog) console.log('🔍 房间信息:', room_info);
+    if(isRecLog) console.log('🔍 access_token:', access_token ? '存在' : '不存在');
     
     const room_info_data = room_info.data;
     console.log('🔍 房间数据:', room_info_data);
-    console.log('🔍 clothId:', room_info_data.clothId);
-    console.log('🔍 userId:', room_info_data.userId);
-    console.log('🔍 scenarioId:', room_info_data.scenarioId);
+    if(isRecLog) console.log('🔍 clothId:', room_info_data.clothId);
+    if(isRecLog) console.log('🔍 userId:', room_info_data.userId);
+    if(isRecLog) console.log('🔍 scenarioId:', room_info_data.scenarioId);
 
     // 安全检查：确保clothId存在
     if (!room_info_data.clothId) {
-      console.warn('⚠️ 房间信息中没有clothId，使用空的服装列表');
+      if(isRecLog) console.warn('⚠️ 房间信息中没有clothId，使用空的服装列表');
       const enter_stage_info: EnterStageInfo = {
         AvatarId: 0,
         UserId: String(room_info_data.userId || 0),
@@ -834,7 +834,7 @@ export const roomAPI = {
         // update by chao 2025.09.29 登台参数修改
         CustomModelUrl: "12345"
       };
-      console.log('进入舞台信息（无服装）:', enter_stage_info);
+      if(isRecLog) console.log('进入舞台信息（无服装）:', enter_stage_info);
       return JSON.stringify(enter_stage_info);
     }
 
@@ -847,7 +847,7 @@ export const roomAPI = {
     
     for (let i = 0; i < clothe_ids.length; i++) {
       const clothe_id = clothe_ids[i];
-      console.log(`👕 处理衣服ID [${i + 1}/${clothe_ids.length}]: ${clothe_id}`);
+      if(isRecLog) console.log(`👕 处理衣服ID [${i + 1}/${clothe_ids.length}]: ${clothe_id}`);
       
       if (!clothe_id || clothe_id === '' || clothe_id === '0') {
         console.log(`⚠️ 跳过无效的衣服ID: ${clothe_id}`);
@@ -861,29 +861,29 @@ export const roomAPI = {
         continue;
       }
       
-      console.log(`✅ 衣服ID ${clothe_id} 验证通过，开始获取详情...`);
+      if(isRecLog) console.log(`✅ 衣服ID ${clothe_id} 验证通过，开始获取详情...`);
       
       try {
         // 获取衣服详情
-        console.log(`获取衣服详情: ${clothe_id}`);
+        if(isRecLog) console.log(`获取衣服详情: ${clothe_id}`);
         let clothe_detail_data = getClothesDetailFromCache(clothe_id);
         
         // 如果缓存中没有，尝试实时获取
         if (!clothe_detail_data) {
-          console.log(`⚠️ 缓存中没有衣服详情: ${clothe_id}，尝试实时获取...`);
-          console.log(`🔍 当前缓存状态:`, getLoginCache()?.clothesDetails ? '有衣服详情缓存' : '无衣服详情缓存');
+          if(isRecLog) console.log(`⚠️ 缓存中没有衣服详情: ${clothe_id}，尝试实时获取...`);
+          if(isRecLog) console.log(`🔍 当前缓存状态:`, getLoginCache()?.clothesDetails ? '有衣服详情缓存' : '无衣服详情缓存');
           try {
             const response = await this.getClotheDetail(clothe_id, access_token);
             if (response.ok && response.data) {
               const parsed_response = JSON.parse(response.data) as ClotheDetailResponse;
               clothe_detail_data = parsed_response.data;
-              console.log(`✅ 实时获取衣服详情成功: ${clothe_id}`);
+              if(isRecLog) console.log(`✅ 实时获取衣服详情成功: ${clothe_id}`);
               
               // 更新缓存
               const clothesDetails: { [key: string]: any } = {};
               clothesDetails[clothe_id] = clothe_detail_data;
               updateClothesDetailsInCache(clothesDetails);
-              console.log(`✅ 已更新衣服详情到缓存: ${clothe_id}`);
+              if(isRecLog) console.log(`✅ 已更新衣服详情到缓存: ${clothe_id}`);
             } else {
               console.warn(`⚠️ 实时获取衣服详情失败: ${clothe_id}`);
               continue;
@@ -897,7 +897,7 @@ export const roomAPI = {
         if (clothe_detail_data) {
           const clothe_detail = clothe_detail_data;
           
-          console.log(`衣服详情获取成功:`, {
+          if(isRecLog) console.log(`衣服详情获取成功:`, {
             id: clothe_detail.id,
             name: clothe_detail.name,
             classifyId: clothe_detail.classifyId,
@@ -913,7 +913,7 @@ export const roomAPI = {
           // const clothesId = "1916394930865287170";
           // const suitIds = "1916394256718999553";
           
-          console.log('👕 处理衣服管理逻辑:', {
+          if(isRecLog) console.log('👕 处理衣服管理逻辑:', {
             classifyId: classifyId,
             clothesId: clothesId,
             suitIds: suitIds
@@ -944,7 +944,7 @@ export const roomAPI = {
               }
             }
             
-            console.log('👕 套装处理完成:', clothesItemInfoList);
+            if(isRecLog) console.log('👕 套装处理完成:', clothesItemInfoList);
             
           } else {
             // 非套装
@@ -958,7 +958,7 @@ export const roomAPI = {
               };
               clothesItemInfoList.push(item);
               
-              console.log('👕 从套装切换到非套装:', clothesItemInfoList);
+              if(isRecLog) console.log('👕 从套装切换到非套装:', clothesItemInfoList);
               
             } else {
               // 之前不是套装
@@ -1011,7 +1011,7 @@ export const roomAPI = {
               };
               clothesItemInfoList.push(cii);
               
-              console.log('👕 非套装处理完成:', clothesItemInfoList);
+              if(isRecLog) console.log('👕 非套装处理完成:', clothesItemInfoList);
             }
           }
           
@@ -1028,7 +1028,7 @@ export const roomAPI = {
     }
     
     // 参考 sendChangeGarmentRequest 的构建逻辑
-    console.log('👕 准备构建服装参数:', {
+    if(isRecLog) console.log('👕 准备构建服装参数:', {
       clothesItemInfoList: clothesItemInfoList,
       isClothesSuit: isClothesSuit
     });
@@ -1041,7 +1041,7 @@ export const roomAPI = {
     const garment2Size = garment2Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
     const garment3Size = garment3Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
 
-    console.log('👕 构建的服装参数:', {
+    if(isRecLog) console.log('👕 构建的服装参数:', {
       garment1Id: garment1Id.toString(), 
       garment2Id: garment2Id.toString(), 
       garment3Id: garment3Id.toString(),
@@ -1062,13 +1062,13 @@ export const roomAPI = {
     
     // 优先使用房间信息中的场景ID来查找场景代码和名称
     if (room_info_data.scenarioId) {
-      console.log("🔍 房间信息中有场景ID:", room_info_data.scenarioId);
+      if(isRecLog) console.log("🔍 房间信息中有场景ID:", room_info_data.scenarioId);
       if (login_cache && login_cache.scenesList) {
         const scene_list = login_cache.scenesList;
         if (scene_list[room_info_data.scenarioId]) {
           scene_code = scene_list[room_info_data.scenarioId].code;
           scene_name = scene_list[room_info_data.scenarioId].name;
-          console.log("✅ 根据场景ID找到场景代码:", scene_code, "名称:", scene_name);
+          if(isRecLog) console.log("✅ 根据场景ID找到场景代码:", scene_code, "名称:", scene_name);
         } else {
           console.log("⚠️ 场景ID在缓存中未找到:", room_info_data.scenarioId);
         }
@@ -1084,7 +1084,7 @@ export const roomAPI = {
           const scene_id = scene_list_keys[0];
           scene_name = scene_list[scene_id].name;
           scene_code = scene_list[scene_id].code;
-          console.log("🔄 使用缓存中第一个场景:", scene_name, "代码:", scene_code);
+          if(isRecLog) console.log("🔄 使用缓存中第一个场景:", scene_name, "代码:", scene_code);
         }
       }
     }
@@ -1101,10 +1101,10 @@ export const roomAPI = {
       updateDefaultSceneNameInCache(scene_name);
     }
     
-    console.log('🔍 准备构建最终进入舞台信息...');
-    console.log('🔍 场景代码:', scene_code);
-    console.log('🔍 场景名称:', scene_name);
-    console.log('🔍 服装信息:', garments);
+    if(isRecLog) console.log('🔍 准备构建最终进入舞台信息...');
+    if(isRecLog) console.log('🔍 场景代码:', scene_code);
+    if(isRecLog) console.log('🔍 场景名称:', scene_name);
+    if(isRecLog) console.log('🔍 服装信息:', garments);
     
     const enter_stage_info: EnterStageInfo = {
       AvatarId: 0,
@@ -1123,9 +1123,9 @@ export const roomAPI = {
       CustomModelUrl: "12345"
     };
 
-    console.log('✅ 进入舞台信息构建完成2:', enter_stage_info);
+    if(isRecLog) console.log('✅ 进入舞台信息构建完成2:', enter_stage_info);
     const result = JSON.stringify(enter_stage_info);
-    console.log('✅ 返回的JSON字符串:', result);
+    if(isRecLog) console.log('✅ 返回的JSON字符串:', result);
     return result;
   },
 

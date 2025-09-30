@@ -54,20 +54,20 @@ export class RTCVideoService {
 
 
   sendGetImagesInfo(videoId: string): void {
-    console.log('👕 发送获取图片信息消息:', videoId);
+    if(isRtcLog) console.log('👕 发送获取图片信息消息:', videoId);
     rtcMessageHandler.sendGetImagesInfo(videoId);
   }
 
   // 初始化RTC引擎
   async initialize(config: RTCVideoConfig): Promise<void> {
-    console.log('🎥 初始化RTC视频服务...');
-    console.log('  - appId:', config.appId);
-    console.log('  - roomId:', config.roomId);
-    console.log('  - userId:', config.userId);
+    if(isRtcLog) console.log('🎥 初始化RTC视频服务...');
+    if(isRtcLog) console.log('  - appId:', config.appId);
+    if(isRtcLog) console.log('  - roomId:', config.roomId);
+    if(isRtcLog) console.log('  - userId:', config.userId);
     
     // 如果引擎已经存在，先销毁
     if (this.engine) {
-      console.log('⚠️ 检测到已存在的RTC引擎，先销毁');
+      if(isRtcLog) console.log('⚠️ 检测到已存在的RTC引擎，先销毁');
       this.destroy();
     }
     
@@ -83,8 +83,8 @@ export class RTCVideoService {
       // 绑定事件监听器
       this.bindEngineEvents();
       
-      console.log('✅ RTC引擎初始化成功');
-      console.log('🔍 RTC引擎状态:', {
+      if(isRtcLog) console.log('✅ RTC引擎初始化成功');
+      if(isRtcLog) console.log('🔍 RTC引擎状态:', {
         engine: !!this.engine,
         config: !!this.config,
         appId: this.config?.appId,
@@ -101,12 +101,12 @@ export class RTCVideoService {
   private bindEngineEvents(): void {
     if (!this.engine) return;
     
-    console.log('🔧 开始绑定RTC引擎事件...');
+    if(isRtcLog) console.log('🔧 开始绑定RTC引擎事件...');
 
     // 用户加入房间
     this.engine.on(VERTC.events.onUserJoined, (event: any) => {
       const userId = event.userInfo?.userId;
-      console.log('👤 用户加入房间:', userId);
+      if(isRtcLog) console.log('👤 用户加入房间:', userId);
       this.eventHandlers.onUserJoin?.(userId);
     });
     const cachedLoginData = getLoginCache();
@@ -120,7 +120,7 @@ export class RTCVideoService {
       console.log('❌ 房间ID为空，跳过试穿流程');
       return;
     } else {
-      console.log('✅ 房间ID:', roomId);
+      if(isRtcLog) console.log('✅ 房间ID:', roomId);
     }
     // 测试余额扣费功能
     const balanceRaw = {
@@ -138,7 +138,7 @@ export class RTCVideoService {
     // 用户离开房间
     this.engine.on(VERTC.events.onUserLeave, (event: any) => {
       const userId = event.userInfo?.userId;
-      console.log('👤 用户离开房间:', userId);
+      if(isRtcLog) console.log('👤 用户离开房间:', userId);
       this.removeRemoteStream(userId);
       this.eventHandlers.onUserLeave?.(userId);
     });
@@ -150,15 +150,15 @@ export class RTCVideoService {
       const hasVideo = !!(mediaType & MediaType.VIDEO);
       const hasAudio = !!(mediaType & MediaType.AUDIO);
       
-      console.log('📹 用户发布流:', userId, '视频:', hasVideo, '音频:', hasAudio);
+      if(isRtcLog) console.log('📹 用户发布流:', userId, '视频:', hasVideo, '音频:', hasAudio);
       
       // 过滤掉userid=0的流
       if (userId === '0') {
-        console.log('⚠️ 跳过userid=0的流:', userId);
+        if(isRtcLog) console.log('⚠️ 跳过userid=0的流:', userId);
         return;
       }
       
-      console.log('✅ 处理用户流:', userId);
+      if(isRtcLog) console.log('✅ 处理用户流:', userId);
       this.addRemoteStream(userId, hasVideo, hasAudio);
       this.eventHandlers.onUserPublishStream?.(userId, hasVideo, hasAudio);
     });
@@ -166,7 +166,7 @@ export class RTCVideoService {
     // 用户取消发布流
     this.engine.on(VERTC.events.onUserUnpublishStream, (event: any) => {
       const userId = event.userId;
-      console.log('📹 用户取消发布流:', userId);
+      if(isRtcLog) console.log('📹 用户取消发布流:', userId);
       
       this.removeRemoteStream(userId);
       this.eventHandlers.onUserUnpublishStream?.(userId);
@@ -176,8 +176,8 @@ export class RTCVideoService {
     this.engine.on(VERTC.events.onUserMessageReceived, (event: any) => {
       const { roomId, userId, message } = event;
       if(isRtcLog){
-          console.log('📨 收到用户消息:', { roomId, userId, message });
-          console.log('📨 消息详情:', {
+          if(isRtcLog) console.log('📨 收到用户消息:', { roomId, userId, message });
+          if(isRtcLog) console.log('📨 消息详情:', {
             roomId: roomId,
             userId: userId,
             messageLength: message ? message.length : 0,
@@ -192,8 +192,8 @@ export class RTCVideoService {
     // 房间消息接收
     this.engine.on(VERTC.events.onRoomMessageReceived, (event: any) => {
       const { roomId, userId, message } = event;
-      console.log('📨 收到房间消息:', { roomId, userId, message });
-      console.log('📨 房间消息详情:', {
+      if(isRtcLog) console.log('📨 收到房间消息:', { roomId, userId, message });
+      if(isRtcLog) console.log('📨 房间消息详情:', {
         roomId: roomId,
         userId: userId,
         messageLength: message ? message.length : 0,
@@ -212,12 +212,12 @@ export class RTCVideoService {
 
     // 播放器事件
     this.engine.on(VERTC.events.onPlayerEvent, (event: any) => {
-      console.log('🎬 播放器事件:', event);
+      if(isRtcLog) console.log('🎬 播放器事件:', event);
       
       // 检查是否是视频开始播放的事件
       // 根据日志，事件有 eventName 属性，我们需要监听 'canplay' 或 'canplaythrough' 事件
       if (event.eventName === 'canplay' || event.eventName === 'canplaythrough') {
-        console.log('🎬 视频可以播放:', event.userId, '事件:', event.eventName);
+        if(isRtcLog) console.log('🎬 视频可以播放:', event.userId, '事件:', event.eventName);
         
         // 发送自定义事件到首页
         const customEvent = new CustomEvent('rtcPlayerEvent', {
@@ -235,10 +235,10 @@ export class RTCVideoService {
             timestamp: Date.now()
           }
         });
-        console.log('💰 发送余额扣费事件:', event.userId);
+        if(isRtcLog) console.log('💰 发送余额扣费事件:', event.userId);
         window.dispatchEvent(balanceEvent);
       } else {
-        console.log('🎬 其他播放器事件:', event.eventName, 'userId:', event.userId);
+        if(isRtcLog) console.log('🎬 其他播放器事件:', event.eventName, 'userId:', event.userId);
       }
     });
 
@@ -248,7 +248,7 @@ export class RTCVideoService {
       this.eventHandlers.onError?.(event);
     });
     
-    console.log('✅ RTC引擎事件绑定完成');
+    if(isRtcLog) console.log('✅ RTC引擎事件绑定完成');
   }
 
   // 加入房间
@@ -257,10 +257,10 @@ export class RTCVideoService {
       throw new Error('RTC引擎未初始化');
     }
 
-    console.log('🚪 加入RTC房间...');
-    console.log('  - roomId:', this.config.roomId);
-    console.log('  - userId:', this.config.userId);
-    console.log('  - token:', token || '无token');
+    if(isRtcLog) console.log('🚪 加入RTC房间...');
+    if(isRtcLog) console.log('  - roomId:', this.config.roomId);
+    if(isRtcLog) console.log('  - userId:', this.config.userId);
+    if(isRtcLog) console.log('  - token:', token || '无token');
 
     try {
       await this.engine.joinRoom(
@@ -410,7 +410,7 @@ export class RTCVideoService {
 
   // 处理用户消息
   private handleUserMessage(message: string): void {
-    console.log('📨 处理用户消息:', message);
+    if(isRtcLog) console.log('📨 处理用户消息:', message);
     
     // 检查是否是心跳响应
     if (message.includes('stay_room_ack')) {

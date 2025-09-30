@@ -43,6 +43,7 @@ const Long = require('long');
 const isHotMapLog = false;
 const isVideoPlayLog = false;
 const isDeductLog = false;
+const isRtcLog = false;
 
 //add by chao 2025.09.29 增加路由监听事件
 let locRouteNum = 0;
@@ -234,7 +235,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
           } else {
             // //Update by chao 2025.09.27
             // window.close();
-            console.log('账号未在其他地方登录')
+            // console.log('账号未在其他地方登录')
           }
         } catch (error) {
           console.error('检查登录状态失败:', error);
@@ -606,20 +607,20 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
       // 切换场景音乐
       switchSceneMusic(selectedScene.name);
-
-      // 检查RTC连接状态
-      if (!rtcVideoService.getConnectionStatus()) {
-        console.error('❌ RTC未连接，无法切换地图');
-        console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
-        console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
-        console.log('🔧 调试信息：');
-        console.log('  - showSelectionScreen:', showSelectionScreen);
-        console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
-        console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
-        console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
-        return;
+      if(isVideoPlayLog){
+        // 检查RTC连接状态
+        if (!rtcVideoService.getConnectionStatus()) {
+          console.error('❌ RTC未连接，无法切换地图');
+          console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
+          console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
+          console.log('🔧 调试信息：');
+          console.log('  - showSelectionScreen:', showSelectionScreen);
+          console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
+          console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
+          console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
+          return;
+        }
       }
-
       // 检查是否在视频播放状态（已登台）
       if (showSelectionScreen) {
         console.error('❌ 未在视频播放状态，无法切换地图');
@@ -1452,14 +1453,14 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
   }, [loginParams]); // 只依赖loginParams，避免重复执行
   // add by chao 2025.09.29 登台刷新问题：将登台代码段独立成函数，方便控制执行时机
   const startUpDressUp = () => {
-        console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);
+    if(isRtcLog) console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);
 
     if (!loginParams || tryonInitializedRef.current) {
       console.log('🔍 条件不满足，退出useEffect');
       return;
     }
 
-    console.log('🔍 设置tryonInitializedRef.current = true');
+    if(isRtcLog) console.log('🔍 设置tryonInitializedRef.current = true');
     tryonInitializedRef.current = true;
 
     // 如果当前房间名称还是默认值，尝试从 tryonService 获取
@@ -1489,14 +1490,14 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     }
 
     // 预加载衣服详情到缓存
-    if (loginParams?.token) {
-      console.log('🔄 开始预加载衣服详情到缓存');
-    }
+    // if (loginParams?.token) {
+    //   console.log('🔄 开始预加载衣服详情到缓存');
+    // }
 
     // 获取场景列表（只有当前状态为空时才尝试从服务获取）
     if (realSceneIcons.length === 0) { // 如果场景列表为空
       const scenesListFromService = tryonService.getScenesList();
-      console.log('🔍 尝试从 tryonService 获取场景列表:', scenesListFromService);
+      if(isRtcLog) console.log('🔍 尝试从 tryonService 获取场景列表:', scenesListFromService);
 
       if (scenesListFromService && Object.keys(scenesListFromService).length > 0) {
         // 将服务器返回的场景数据转换为UI需要的格式
@@ -1519,7 +1520,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       }
     } else {
       console.log('✅ 场景列表已更新，跳过从 tryonService 获取');
-      console.log('当前场景列表:', realSceneIcons);
+      if(isRtcLog) console.log('当前场景列表:', realSceneIcons);
     }
 
     // 自动执行登台流程（只有在用户没有离开过舞台时才执行）
@@ -1531,13 +1532,13 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
         const urlCoCreationId = getCoCreationIdWithUrlPriority();
         
         if (!hasLeftStage) {
-          console.log('🚀 自动开始登台流程...');
+          if(isRtcLog) console.log('🚀 自动开始登台流程...');
           await handleStartTryon();
         } else {
-          console.log('⚠️ 用户已离开过舞台，跳过自动登台');
+          if(isRtcLog) console.log('⚠️ 用户已离开过舞台，跳过自动登台');
           // 即使离开过舞台，也要检查RTC连接状态
           if (!rtcVideoService.getConnectionStatus()) {
-            console.log('🔄 检测到RTC未连接，尝试重新连接...');
+            if(isRtcLog) console.log('🔄 检测到RTC未连接，尝试重新连接...');
             await handleStartTryon();
           } else {
             console.log('✅ RTC已连接，无需重新连接');
@@ -1552,7 +1553,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
   // 检查视频是否真正开始播放的函数
   const checkVideoPlayingStatus = (userId: string, domId: string, retryCount: number = 0) => {
-    console.log(`🔍 checkVideoPlayingStatus: ${userId} -> ${domId}, 重试次数: ${retryCount}`);
+    if(isRtcLog) console.log(`🔍 checkVideoPlayingStatus: ${userId} -> ${domId}, 重试次数: ${retryCount}`);
 
     const videoElement = document.getElementById(domId);
     if (videoElement) {
@@ -1568,7 +1569,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       }
 
       if (videoTag) {
-        console.log(`✅ 找到视频元素: ${domId}, 标签名: ${videoTag.tagName}`);
+        if(isRtcLog) console.log(`✅ 找到视频元素: ${domId}, 标签名: ${videoTag.tagName}`);
 
         // 设置视频样式以适应容器
         videoTag.style.width = '100%';
@@ -1624,7 +1625,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
             });
 
             videoTag.addEventListener('canplay', () => {
-              console.log(`✅ 视频 ${userId} 可以播放`);
+              if(isRtcLog) console.log(`✅ 视频 ${userId} 可以播放`);
               setVideoPlayingStatus(prev => ({
                 ...prev,
                 [userId]: true
@@ -1689,10 +1690,10 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       },
 
       onUserPublishStream: (userId: string, hasVideo: boolean, hasAudio: boolean) => {
-        console.log('📹 用户发布流:', userId, { hasVideo, hasAudio });
+        if(isRtcLog) console.log('📹 用户发布流:', userId, { hasVideo, hasAudio });
         // 过滤掉userid=0的流
         if (userId === '0') {
-          console.log('⚠️ 跳过userid=0的流:', userId);
+          if(isRtcLog) console.log('⚠️ 跳过userid=0的流:', userId);
         } else {
           console.log('✅ 处理用户流:', userId);
         }
@@ -1722,11 +1723,11 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
   // 设置余额扣费事件监听器（独立useEffect）
   useEffect(() => {
-    console.log('🔧 设置余额扣费事件监听器');
+    if(isRtcLog) console.log('🔧 设置余额扣费事件监听器');
 
     const handleBalanceDeduction = (event: Event) => {
       const customEvent = event as CustomEvent;
-      console.log('💰 收到余额扣费事件:', customEvent.detail);
+      if(isRtcLog) console.log('💰 收到余额扣费事件:', customEvent.detail);
 
       // 异步执行余额扣费，不阻塞事件处理
       (async () => {
@@ -1758,26 +1759,26 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
               if (typeof parsedData === 'string') {
                 parsedData = JSON.parse(parsedData);
                 if(isDeductLog){
-                  console.log('✅ 余额扣费请求成功111:', parsedData);
+                  // if(isRtcLog) console.log('✅ 余额扣费请求成功111:', parsedData);
                 }
               } else {
                 parsedData = response.data;
-                console.log('✅ 余额扣费请求成功222:', parsedData);
+                // console.log('✅ 余额扣费请求成功222:', parsedData);
               }
               // 彻底修复 TS 报错：Property 'data' does not exist on type 'never'
               // 通过类型断言 any，保证 TS 不会推断为 never
               const accountBalance = (parsedData as any)?.data?.accountBalance;
               if (typeof accountBalance === 'number') {
-                console.log('✅ 余额扣费请求成功333:', accountBalance);
+                // console.log('✅ 余额扣费请求成功333:', accountBalance);
                 // 余额乘以10取模5等于0时，弹窗提示
                 // if ((accountBalance * 10) % 5 === 0) {
                 if (accountBalance < 0.1) {
-                  console.log('✅ 余额扣费请求成功444:', accountBalance);
+                  // console.log('✅ 余额扣费请求成功444:', accountBalance);
                   setShowBalanceModal(true);
                 }
               } else {
                 if(isDeductLog){
-                  console.log('✅ 余额扣费请求成功555:', parsedData);
+                  // console.log('✅ 余额扣费请求成功555:', parsedData);
                 }
               }
             } catch (e) {
@@ -1848,7 +1849,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
             );
 
             if (response.ok) {
-              console.log('✅ 定时扣费请求成功:', response.data);
+              if(isRtcLog) console.log('✅ 定时扣费请求成功:', response.data);
               // 解析返回的余额数据
               try {
                 let parsedData = response.data;
@@ -1892,7 +1893,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     // 当视频播放状态改变时，启动或停止定时器
     if (isVideoPlaying) {
       if(isVideoPlayLog){
-        console.log('🎬 视频开始播放，启动定时扣费');
+        if(isRtcLog) console.log('🎬 视频开始播放，启动定时扣费');
       }
       startDeductionTimer();
       startPlayTimeTimer();
@@ -1922,7 +1923,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
   // 登台按钮点击处理
   const handleStartTryon = async () => {
-    console.log('🔍 开始试穿流程，登录参数:', loginParams);
+    if(isRtcLog) console.log('🔍 开始试穿流程，登录参数:', loginParams);
     if (!loginParams) {
       console.warn('缺少登录参数，无法开始试穿');
       return;
@@ -1945,7 +1946,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       setShowSelectionScreen(false); // 隐藏选择界面，显示视频播放界面
 
       // 获取房间信息以获取userId
-      console.log('🔍 开始获取房间信息...');
+      if(isRtcLog) console.log('🔍 开始获取房间信息...');
       const { roomAPI } = await import('../../services/api');
       const roomResponse = await roomAPI.getSysRoomShare(loginParams.roomId, loginParams.token);
       
@@ -1969,9 +1970,9 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
           shareScene: loginParams.shareScene,
         };
 
-        console.log('开始自动试穿流程，配置:', config);
+        if(isRtcLog) console.log('开始自动试穿流程，配置:', config);
         await tryonService.startTryonFlow(config);
-        console.log('✅ 试穿流程启动成功');
+        if(isRtcLog) console.log('✅ 试穿流程启动成功');
         return;
       }
 
@@ -1995,13 +1996,13 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
           shareScene: loginParams.shareScene,
         };
 
-        console.log('开始自动试穿流程，配置:', config);
+        if(isRtcLog) console.log('开始自动试穿流程，配置:', config);
         await tryonService.startTryonFlow(config);
-        console.log('✅ 试穿流程启动成功');
+        if(isRtcLog) console.log('✅ 试穿流程启动成功');
         return;
       }
 
-      console.log('✅ 房间信息获取成功:', roomInfo);
+      if(isRtcLog) console.log('✅ 房间信息获取成功:', roomInfo);
       console.log('🔍 房间信息中的userId:', roomInfo.data.userId);
 
       const rtcConfig: RTCVideoConfig = {
@@ -2026,7 +2027,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       console.log('开始自动试穿流程，配置:', config);
       await tryonService.startTryonFlow(config);
 
-      console.log('✅ 试穿流程启动成功');
+      if(isRtcLog) console.log('✅ 试穿流程启动成功');
 
     } catch (error) {
       console.error('试穿流程启动失败:', error);
@@ -2065,17 +2066,17 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
   useEffect(() => {
     const handleClothesListUpdate = (event: CustomEvent) => {
       const { clothesList } = event.detail;
-      console.log('收到服饰列表更新事件');
-      console.log('服饰分类数量:', clothesList?.length || 0);
+      if(isRtcLog) console.log('收到服饰列表更新事件');
+      if(isRtcLog) console.log('服饰分类数量:', clothesList?.length || 0);
 
       // 避免重复设置相同的数据
       setClothesList(prevClothesList => {
         // 如果新数据与当前数据相同，则不更新
         if (JSON.stringify(prevClothesList) === JSON.stringify(clothesList)) {
-          console.log('服饰列表数据未变化，跳过更新');
+          if(isRtcLog) console.log('服饰列表数据未变化，跳过更新');
           return prevClothesList;
         }
-        console.log('服饰列表数据已更新');
+        if(isRtcLog) console.log('服饰列表数据已更新');
         return clothesList || [];
       });
     };
@@ -2146,19 +2147,19 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
 
         // 开始检查视频播放状态 - 立即开始，不延迟
-        console.log(`🔍 开始检查视频播放状态: ${userId} -> ${domId}`);
+        if(isRtcLog) console.log(`🔍 开始检查视频播放状态: ${userId} -> ${domId}`);
         checkVideoPlayingStatus(userId, domId);
 
         // 使用更频繁的检查策略，因为RTC SDK渲染时间不确定
         const checkVideoElement = (attempt: number = 1) => {
-          console.log(`🔍 第${attempt}次检查视频元素: ${domId}`);
+          if(isRtcLog) console.log(`🔍 第${attempt}次检查视频元素: ${domId}`);
 
           const videoElement = document.getElementById(domId);
           if (videoElement) {
-            console.log(`✅ 找到视频DOM元素: ${domId}`);
-            console.log(`🔍 DOM元素内容:`, videoElement.innerHTML);
-            console.log(`🔍 DOM元素标签名:`, videoElement.tagName);
-            console.log(`🔍 DOM元素类名:`, videoElement.className);
+            if(isRtcLog) console.log(`✅ 找到视频DOM元素: ${domId}`);
+            if(isRtcLog) console.log(`🔍 DOM元素内容:`, videoElement.innerHTML);
+            if(isRtcLog) console.log(`🔍 DOM元素标签名:`, videoElement.tagName);
+            if(isRtcLog) console.log(`🔍 DOM元素类名:`, videoElement.className);
 
             // 尝试多种方式查找video标签
             let videoTag = videoElement.querySelector('video');
@@ -2166,19 +2167,19 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
               // 如果直接查找不到，尝试查找canvas（RTC可能使用canvas）
               const canvas = videoElement.querySelector('canvas');
               if (canvas) {
-                console.log(`✅ 找到canvas标签: ${domId}`);
+                if(isRtcLog) console.log(`✅ 找到canvas标签: ${domId}`);
                 videoTag = canvas as any; // 临时处理
               }
             }
 
             if (videoTag) {
-              console.log(`✅ 找到video标签: ${domId}`);
+              if(isRtcLog) console.log(`✅ 找到video标签: ${domId}`);
               videoTag.style.width = '100%';
               videoTag.style.height = '100%';
               videoTag.style.objectFit = 'cover';
 
               // 添加更多调试信息
-              console.log(`📹 视频元素信息:`, {
+              if(isRtcLog) console.log(`📹 视频元素信息:`, {
                 paused: videoTag.paused,
                 ended: videoTag.ended,
                 readyState: videoTag.readyState,
@@ -2198,10 +2199,10 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
               console.log(`❌ 未找到video标签: ${domId}`);
               // 打印所有子元素
               const children = videoElement.children;
-              console.log(`🔍 子元素数量:`, children.length);
+              if(isRtcLog) console.log(`🔍 子元素数量:`, children.length);
               for (let i = 0; i < children.length; i++) {
                 const child = children[i];
-                console.log(`🔍 子元素 ${i}:`, {
+                if(isRtcLog) console.log(`🔍 子元素 ${i}:`, {
                   tagName: child.tagName,
                   className: child.className,
                   id: child.id
@@ -2274,11 +2275,11 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       console.log('🎬 收到播放器事件:', eventType, userId);
 
       if (eventType === 'onFirstFrame') {
-        console.log('🎬 视频第一帧渲染完成，立即检查视频元素:', userId);
+        if(isRtcLog) console.log('🎬 视频第一帧渲染完成，立即检查视频元素:', userId);
         const domId = `remoteStream_${userId}`;
         checkVideoPlayingStatus(userId, domId);
       } else if (eventType === 'canplay') {
-        console.log('🎬 视频可以播放，立即检查视频元素:', userId);
+        if(isRtcLog) console.log('🎬 视频可以播放，立即检查视频元素:', userId);
         const domId = `remoteStream_${userId}`;
         checkVideoPlayingStatus(userId, domId);
       }
@@ -2287,7 +2288,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     // 监听RTC连接状态变化
     const handleRTCConnectionStatus = () => {
       if (rtcVideoService.getConnectionStatus()) {
-        console.log('✅ RTC连接成功，重置试穿流程标志');
+        if(isRtcLog) console.log('✅ RTC连接成功，重置试穿流程标志');
         hasStartedTryon.current = false; // 重置标志，允许重新连接
       }
     };

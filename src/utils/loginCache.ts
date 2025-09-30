@@ -35,7 +35,7 @@ export const saveLoginCache = (loginData: Omit<LoginCacheData, 'timestamp'>, dur
     
     localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
     localStorage.setItem(CACHE_KEY + '_duration', (duration || DEFAULT_CACHE_DURATION).toString());
-    console.log('✅ 登录信息已保存到缓存');
+    // console.log('✅ 登录信息已保存到缓存');
   } catch (error) {
     console.error('❌ 保存登录缓存失败:', error);
   }
@@ -133,7 +133,7 @@ export const updateRoomNameInCache = (roomName: string): void => {
       const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;
       
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
-      console.log('✅ 房间名称已更新到缓存:', roomName);
+      // console.log('✅ 房间名称已更新到缓存:', roomName);
     }
   } catch (error) {
     console.error('❌ 更新缓存中的房间名称失败:', error);
@@ -153,7 +153,7 @@ export const updateClothesListInCache = (clothesList: ClothesItem[]): void => {
       const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;
       
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
-      console.log('✅ 服饰列表已更新到缓存:', clothesList);
+      // console.log('✅ 服饰列表已更新到缓存:', clothesList);
     }
   } catch (error) {
     console.error('❌ 更新缓存中的服饰列表失败:', error);
@@ -173,7 +173,7 @@ export const updateRoomIdInCache = (roomId: string): void => {
       const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;
       
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
-      console.log('✅ 房间ID已更新到缓存:', roomId);
+      // console.log('✅ 房间ID已更新到缓存:', roomId);
     }
   } catch (error) {
     console.error('❌ 更新缓存中的房间ID失败:', error);
@@ -193,7 +193,7 @@ export const updateScenesListInCache = (scenesList: { [key: string]: { name: str
       const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;
       
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
-      console.log('✅ 场景列表已更新到缓存:', scenesList);
+      // console.log('✅ 场景列表已更新到缓存:', scenesList);
     }
   } catch (error) {
     console.error('❌ 更新缓存中的场景列表失败:', error);
@@ -213,7 +213,7 @@ export const updateDefaultSceneNameInCache = (sceneName: string): void => {
       const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;
       
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
-      console.log('✅ 默认场景名称已更新到缓存:', sceneName);
+      // console.log('✅ 默认场景名称已更新到缓存:', sceneName);
     }
   } catch (error) {
     console.error('❌ 更新默认场景名称缓存失败:', error);
@@ -233,7 +233,7 @@ export const updateClothesDetailsInCache = (clothesDetails: { [key: string]: any
       const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;
       
       localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
-      console.log('✅ 衣服详情已更新到缓存:', clothesDetails);
+      // console.log('✅ 衣服详情已更新到缓存:', clothesDetails);
     }
   } catch (error) {
     console.error('❌ 更新衣服详情缓存失败:', error);

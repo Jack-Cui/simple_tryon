@@ -26,6 +26,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loginScene, setLoginScene] = useState<string>('');
+  const isRecLog = false; // 是否记录日志，true为记录，false为不记录
 
   useEffect(() => {
     // 自动登录逻辑
@@ -47,7 +48,8 @@ function App() {
         const inviteUserId = urlParams.get('inviteUserId') || '';
         const login_scene = urlParams.get('login_scene') || '';
         setLoginScene(login_scene);
-        console.log('🔍 解析URL参数:', { user_id, tenant_id, room_id, login_scene, inviteUserId, register_time });
+        
+        if(isRecLog) console.log('🔍 解析URL参数:', { user_id, tenant_id, room_id, login_scene, inviteUserId, register_time });
         if(login_scene==='onshare' && !inviteUserId){
           alert('页面打开异常，请通过正确的分享链接打开！');  
           return;
@@ -62,7 +64,7 @@ function App() {
         }
 
         // 执行登录
-        console.log('🚀 开始自动登录...');
+        if(isRecLog) console.log('🚀 开始自动登录...');
         let access_token = ''
         let response = null;
 
@@ -72,7 +74,7 @@ function App() {
           if (response.ok) {
             const loginData = authAPI.parseLoginResponse(response);
             access_token = loginData?.access_token || '';
-            console.log('✅ 分享登录成功:', loginData);
+            if(isRecLog) console.log('✅ 分享登录成功:', loginData);
 
           } else {
             setError('分享登录失败');
@@ -85,7 +87,7 @@ function App() {
 
         // response = await authAPI.login(user_id, tenant_id);
         if (response.ok) {
-          console.log('✅ 自动登录成功:', response.data);
+          if(isRecLog) console.log('✅ 自动登录成功:', response.data);
           
           // 解析登录响应
           const loginData = authAPI.parseLoginResponse(response);
@@ -112,7 +114,7 @@ function App() {
             
             // 登录成功后立即初始化房间信息
             try {
-              console.log('🏠 开始初始化房间信息...');
+              if(isRecLog) console.log('🏠 开始初始化房间信息...');
               await tryonService.initializeAfterLogin({
                 tenantId: tenant_id,
                 roomId: room_id,
@@ -121,11 +123,11 @@ function App() {
                 coCreationId: co_creation_id,
                 shareScene: login_scene,
               }, login_scene);
-              console.log('✅ 房间信息初始化成功');
+              if(isRecLog) console.log('✅ 房间信息初始化成功');
               
               // 预加载衣服详情到缓存
               try {
-                console.log('🔄 开始预加载衣服详情到缓存...');
+                if(isRecLog) console.log('🔄 开始预加载衣服详情到缓存...');
                 import('./services/api').then(({ roomAPI }) => {
                 }).catch(error => {
                   console.error('❌ 预加载衣服详情失败:', error);

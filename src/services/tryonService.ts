@@ -7,6 +7,7 @@ import { AccessToken, Privilege } from '../token/AccessToken';
 import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 const Long = require('long');
+const isTronLog = false; // 是否打印试穿日志
 
 export interface TryonConfig {
   // phone: string;
@@ -110,12 +111,12 @@ export class TryonService {
     
     if (shareScene !== "onshare") {
       try {
-        console.log('校验模型列表...');
+        if(isTronLog) console.log('校验模型列表...');
         const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
-        console.log('模型列表校验完成', response);
+        if(isTronLog) console.log('模型列表校验完成', response);
         
         if (response.ok) {
-          console.log('模型列表校验完成', response.data);
+          if(isTronLog) console.log('模型列表校验完成', response.data);
           
           // 解析返回的数据
           try {
@@ -148,7 +149,7 @@ export class TryonService {
             //   return;
             // }
             
-            console.log('找到有效的模型（modelStatus=4），继续流程');
+            if(isTronLog) console.log('找到有效的模型（modelStatus=4），继续流程');
             // 标记模型列表已校验
             this.modelListChecked = true;
           } catch (parseError) {
@@ -591,7 +592,7 @@ export class TryonService {
       throw new Error('token missing');
     }
     const response = await roomAPI.createRoom(loginCache.roomId, loginCache.token);
-    console.log('创建房间响应:', response);
+    // console.log('创建房间响应:', response);
     // console.log('创建房间响应数据:', response.data);
     
     if (!response.ok) {
@@ -639,23 +640,23 @@ export class TryonService {
     // 获取服饰列表
     if (createRoomData.data.clothesList && Array.isArray(createRoomData.data.clothesList)) {
       this.clothesList = createRoomData.data.clothesList;
-      console.log('服饰分类数量:', this.clothesList.length);
+      // console.log('服饰分类数量:', this.clothesList.length);
       
       // 打印第一个分类的信息用于验证数据结构
       if (this.clothesList.length > 0) {
         const firstCategory = this.clothesList[0];
-        console.log('第一个分类信息:', {
-          classifyName: firstCategory.classifyName,
-          classifyUrl: firstCategory.classifyUrl,
-          clothesItemsCount: firstCategory.clothesItems?.length || 0
-        });
+        // console.log('第一个分类信息:', {
+        //   classifyName: firstCategory.classifyName,
+        //   classifyUrl: firstCategory.classifyUrl,
+        //   clothesItemsCount: firstCategory.clothesItems?.length || 0
+        // });
         
         if (firstCategory.clothesItems && firstCategory.clothesItems.length > 0) {
           const firstClothes = firstCategory.clothesItems[0];
-          console.log('第一个分类的第一个服装:', {
-            clothesName: firstClothes.clothesName,
-            clothesImageUrl: firstClothes.clothesImageUrl
-          });
+          // console.log('第一个分类的第一个服装:', {
+          //   clothesName: firstClothes.clothesName,
+          //   clothesImageUrl: firstClothes.clothesImageUrl
+          // });
         }
       }
       
@@ -681,21 +682,22 @@ export class TryonService {
         }
       });
       this.scenesList = scenesMap;
-      console.log('场景列表数量:', Object.keys(this.scenesList).length);
+      if(isTronLog) console.log('场景列表数量:', Object.keys(this.scenesList).length);
       
       // 打印场景列表信息用于验证数据结构
       const sceneEntries = Object.entries(this.scenesList);
-      if (sceneEntries.length > 0) {
-        sceneEntries.forEach(([id, scene], index) => {
-          console.log(`场景 ${index + 1}:`, {
-            id,
-            name: scene.name,
-            code: scene.code,
-            bgm: scene.bgm
+      if(isTronLog){
+        if (sceneEntries.length > 0) {
+          sceneEntries.forEach(([id, scene], index) => {
+            console.log(`场景 ${index + 1}:`, {
+              id,
+              name: scene.name,
+              code: scene.code,
+              bgm: scene.bgm
+            });
           });
-        });
+        }
       }
-      
       // 触发场景列表更新事件
       this.triggerScenesListUpdate();
     } else {
@@ -817,7 +819,7 @@ export class TryonService {
     }
 
     try {
-      console.log('🎥 开始接入RTC视频服务...');
+      if(isTronLog) console.log('🎥 开始接入RTC视频服务...');
       console.log('📋 RTC配置参数:');
       console.log('  - appId:', this.config.rtcConfig.appId);
       console.log('  - appKey:', this.config.rtcConfig.appKey);
@@ -830,24 +832,24 @@ export class TryonService {
       // 设置事件处理器
       this.rtcVideoService!.setEventHandlers({
         onUserJoin: (userId: string) => {
-          console.log('👤 RTC用户加入:', userId);
+          if(isTronLog) console.log('👤 RTC用户加入:', userId);
         },
         onUserLeave: (userId: string) => {
-          console.log('👤 RTC用户离开:', userId);
+          if(isTronLog) console.log('👤 RTC用户离开:', userId);
         },
         onUserPublishStream: (userId: string, hasVideo: boolean, hasAudio: boolean) => {
-          console.log('📹 RTC用户发布流:', userId, '视频:', hasVideo, '音频:', hasAudio);
+          if(isTronLog) console.log('📹 RTC用户发布流:', userId, '视频:', hasVideo, '音频:', hasAudio);
           this.handleRemoteStream(userId, hasVideo, hasAudio);
         },
         onUserUnpublishStream: (userId: string) => {
-          console.log('📹 RTC用户取消发布流:', userId);
+          if(isTronLog) console.log('📹 RTC用户取消发布流:', userId);
         },
         onError: (error: any) => {
           console.error('❌ RTC错误:', error);
         }
       });
       
-      console.log('🔧 开始初始化RTC服务...');
+      if(isTronLog) console.log('🔧 开始初始化RTC服务...');
       
       // 确保RTC配置中的房间ID是最新的
       if (this.roomPrimaryId && this.config.rtcConfig) {
@@ -860,7 +862,7 @@ export class TryonService {
       
       // 生成RTC Token
       const rtcToken = this.generateRTCToken();
-      console.log('🔑 生成RTC Token成功');
+      if(isTronLog) console.log('🔑 生成RTC Token成功');
       
       // 加入RTC房间
       console.log('🚪 开始加入RTC房间...');
@@ -1038,11 +1040,11 @@ export class TryonService {
         tenantId: null
       };
 
-      console.log('📋 构建的分享数据:', shareData);
+      if(isTronLog) console.log('📋 构建的分享数据:', shareData);
 
       // 3. 调用创建分享接口
       const response = await roomAPI.createSysRoomShare(shareData, this.accessToken);
-      console.log('📤 创建分享响应:', response);
+      // console.log('📤 创建分享响应:', response);
 
       if (!response.ok) {
         // 检查响应数据中是否包含code 424
@@ -1061,7 +1063,7 @@ export class TryonService {
       }
 
       const createShareData = roomAPI.parseCreateSysRoomShareResponse(response);
-      console.log('✅ 创建分享成功:', createShareData);
+      // console.log('✅ 创建分享成功:', createShareData);
 
       return createShareData;
 

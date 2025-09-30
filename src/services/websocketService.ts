@@ -362,20 +362,20 @@ export class WebSocketService {
     // 场景变更推送
     this.messageHandlers.set(1109, this.handleSceneChangePush.bind(this));
     
-    console.log('✅ 消息处理器设置完成，已注册以下消息类型:');
-    console.log('  - 登录响应: 1101');
-    console.log('  - 顶号通知: 1105');
-    console.log('  - 进入房间响应: 1201');
-    console.log('  - 进入房间广播: 1202');
-    console.log('  - 登台响应: 1501');
-    console.log('  - 登台广播: 1502');
-    console.log('  - 舞台状态变更: 1522');
-    console.log('  - 队列信息推送: 1505');
-    console.log('  - 离开房间响应: 1203');
-    console.log('  - 离开房间广播: 1204');
-    console.log('  - 心跳响应: 1111');
-    console.log('  - 切换地图响应: 11008');
-    console.log('  - 场景变更推送: 1109');
+    // console.log('✅ 消息处理器设置完成，已注册以下消息类型:');
+    // console.log('  - 登录响应: 1101');
+    // console.log('  - 顶号通知: 1105');
+    // console.log('  - 进入房间响应: 1201');
+    // console.log('  - 进入房间广播: 1202');
+    // console.log('  - 登台响应: 1501');
+    // console.log('  - 登台广播: 1502');
+    // console.log('  - 舞台状态变更: 1522');
+    // console.log('  - 队列信息推送: 1505');
+    // console.log('  - 离开房间响应: 1203');
+    // console.log('  - 离开房间广播: 1204');
+    // console.log('  - 心跳响应: 1111');
+    // console.log('  - 切换地图响应: 11008');
+    // console.log('  - 场景变更推送: 1109');
   }
 
   // 启动心跳
@@ -445,7 +445,7 @@ export class WebSocketService {
     }
 
     try {
-      console.log('💓 发送心跳消息...');
+      if(isRtcLog) console.log('💓 发送心跳消息...');
       
       // 创建心跳请求对象
       const heartbeatReq = proto.oHeartBeatReq.create({
@@ -456,7 +456,7 @@ export class WebSocketService {
       this.sendMessage(1111, payload); // HeartBeatReq = 1111
       
       this.lastHeartbeatTime = Date.now();
-      console.log('💓 心跳消息发送成功');
+      if(isRtcLog) console.log('💓 心跳消息发送成功');
       
     } catch (error) {
       console.error('❌ 发送心跳消息失败:', error);
@@ -473,7 +473,7 @@ export class WebSocketService {
   private handleHeartBeatResponse(payload: ArrayBuffer): void {
     try {
       const heartbeatAsw = proto.oHeartBeatAsw.decode(new Uint8Array(payload));
-      console.log('💓 收到心跳响应:', heartbeatAsw);
+      if(isRtcLog) console.log('💓 收到心跳响应:', heartbeatAsw);
       
       // 更新最后心跳时间
       this.lastHeartbeatTime = Date.now();
@@ -487,7 +487,7 @@ export class WebSocketService {
         ? parseInt(heartbeatAsw.timestamp.toString()) 
         : Number(heartbeatAsw.timestamp);
       const latency = now - timestamp;
-      console.log('💓 心跳延迟:', latency, 'ms');
+      if(isRtcLog) console.log('💓 心跳延迟:', latency, 'ms');
       
     } catch (error) {
       console.error('❌ 解析心跳响应失败:', error);
@@ -499,7 +499,7 @@ export class WebSocketService {
     
     return new Promise((resolve, reject) => {
       try {
-        console.log(`正在连接WebSocket: ${config.url}`);
+        if(isRtcLog) console.log(`正在连接WebSocket: ${config.url}`);
         this.websocket = new WebSocket(config.url);
         
         // 设置二进制数据类型为 ArrayBuffer
@@ -587,10 +587,10 @@ export class WebSocketService {
   private handleReconnect(): void {
     if (this.reconnectAttempts < this.maxReconnectAttempts && this.config) {
       this.reconnectAttempts++;
-      console.log(`🔄 尝试重连 (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+     if(isRtcLog)  console.log(`🔄 尝试重连 (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
       
       const delay = this.reconnectDelay * this.reconnectAttempts;
-      console.log(`⏰ 等待 ${delay}ms 后重连...`);
+      if(isRtcLog) console.log(`⏰ 等待 ${delay}ms 后重连...`);
       
       setTimeout(() => {
         console.log('🚀 开始重连...');
@@ -634,7 +634,7 @@ export class WebSocketService {
         return;
       } else if (typeof data === 'string') {
         // 如果是字符串，可能是 JSON 或其他格式
-        console.log('收到字符串消息:', data);
+        if(isRtcLog) console.log('收到字符串消息:', data);
         // 这里可以根据需要处理字符串消息
         return;
       } else {
@@ -656,8 +656,8 @@ export class WebSocketService {
       
       // 调试：打印原始字节数据
       const headerBytes = new Uint8Array(arrayBuffer.slice(0, 6));
-      console.log(`🔍 消息头原始字节: [${Array.from(headerBytes).join(', ')}]`);
-      console.log(`🔍 解析结果: totalLength=${totalLength}, messageId=${messageId}`);
+      if(isRtcLog) console.log(`🔍 消息头原始字节: [${Array.from(headerBytes).join(', ')}]`);
+      if(isRtcLog) console.log(`🔍 解析结果: totalLength=${totalLength}, messageId=${messageId}`);
       
       // 验证消息长度
       if (totalLength !== arrayBuffer.byteLength) {
@@ -668,15 +668,15 @@ export class WebSocketService {
       // 提取消息体
       const payload = arrayBuffer.slice(6);
       
-      console.log(`收到消息 ID: ${messageId}, 长度: ${totalLength}`);
+      if(isRtcLog) console.log(`收到消息 ID: ${messageId}, 长度: ${totalLength}`);
       
       // 调试：打印所有已注册的消息处理器
-      console.log('🔍 已注册的消息处理器:', Array.from(this.messageHandlers.keys()));
+      if(isRtcLog) console.log('🔍 已注册的消息处理器:', Array.from(this.messageHandlers.keys()));
       
       // 根据消息ID处理消息
       const handler = this.messageHandlers.get(messageId);
       if (handler) {
-        console.log(`✅ 找到消息处理器: ${messageId}`);
+        if(isRtcLog) console.log(`✅ 找到消息处理器: ${messageId}`);
         handler(payload);
       } else {
         console.warn(`❌ 未知消息类型: ${messageId}`);
@@ -688,7 +688,7 @@ export class WebSocketService {
   }
 
   private sendMessage(messageId: number, payload: Uint8Array): void {
-    console.log(`📤 准备发送消息 ID: ${messageId}, 连接状态: ${this.isConnected}`);
+    if(isRtcLog) console.log(`📤 准备发送消息 ID: ${messageId}, 连接状态: ${this.isConnected}`);
     
     if (!this.websocket || !this.isConnected) {
       console.error('❌ WebSocket 未连接，无法发送消息');
@@ -707,10 +707,10 @@ export class WebSocketService {
     const bodyView = new Uint8Array(buffer, 6);
     bodyView.set(payload);
     
-    console.log(`📤 发送消息详情: ID=${messageId}, 总长度=${totalLength}, 数据长度=${payload.length}`);
+    if(isRtcLog) console.log(`📤 发送消息详情: ID=${messageId}, 总长度=${totalLength}, 数据长度=${payload.length}`);
     
     this.websocket.send(buffer);
-    console.log(`✅ 消息发送成功 ID: ${messageId}`);
+    if(isRtcLog) console.log(`✅ 消息发送成功 ID: ${messageId}`);
   }
 
   // 发送登录请求
@@ -719,15 +719,15 @@ export class WebSocketService {
       throw new Error('未配置WebSocket参数');
     }
     
-    console.log('🔐 准备发送登录请求...');
-    console.log('  - uid:', this.config.uid);
-    console.log('  - accessToken:', this.config.accessToken ? '已设置' : '未设置');
-    console.log('  - insToken:', this.config.insToken ? '已设置' : '未设置');
+    if(isRtcLog) console.log('🔐 准备发送登录请求...');
+    if(isRtcLog) console.log('  - uid:', this.config.uid);
+    if(isRtcLog) console.log('  - accessToken:', this.config.accessToken ? '已设置' : '未设置');
+    if(isRtcLog) console.log('  - insToken:', this.config.insToken ? '已设置' : '未设置');
     
     try {
       // 使用 Long.fromString 将字符串 uid 转换为 Long 类型
       const accountLong = this.stringToLong(this.config.uid);
-      console.log('🔐 转换后的 account Long:', this.longToString(accountLong));
+      if(isRtcLog) console.log('🔐 转换后的 account Long:', this.longToString(accountLong));
       
       // 验证 accountLong 是否为有效的 Long 对象
       if (!accountLong || typeof accountLong.toString !== 'function') {
@@ -754,13 +754,13 @@ export class WebSocketService {
         throw new Error('登录请求对象创建失败');
       }
       
-      console.log('🔐 登录请求对象创建成功:', loginReq);
+      if(isRtcLog) console.log('🔐 登录请求对象创建成功:', loginReq);
       
       const payload = proto.oLoginReq.encode(loginReq).finish();
-      console.log('🔐 登录请求编码完成，长度:', payload.length);
+      if(isRtcLog) console.log('🔐 登录请求编码完成，长度:', payload.length);
       
       this.sendMessage(101, payload); // LoginReq = 101
-      console.log('🔐 登录请求已发送');
+      if(isRtcLog) console.log('🔐 登录请求已发送');
       
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -775,19 +775,19 @@ export class WebSocketService {
       throw new Error('未配置WebSocket参数');
     }
     
-    console.log('🚪 准备发送进入房间请求...');
-    console.log('  - roomId:', this.config.roomId);
+    if(isRtcLog) console.log('🚪 准备发送进入房间请求...');
+    if(isRtcLog) console.log('  - roomId:', this.config.roomId);
     
     // 使用 Long.fromString 将字符串 roomId 转换为 Long 类型
     const roomIdLong = this.stringToLong(this.config.roomId);
-    console.log('🚪 转换后的 roomId Long:', this.longToString(roomIdLong));
+    if(isRtcLog) console.log('🚪 转换后的 roomId Long:', this.longToString(roomIdLong));
     
     const enterRoomReq = proto.oEnterRoomReq.create({
       roomId: roomIdLong
     });
     
     const payload = proto.oEnterRoomReq.encode(enterRoomReq).finish();
-    console.log('🚪 进入房间请求已发送');
+    if(isRtcLog) console.log('🚪 进入房间请求已发送');
     this.sendMessage(201, payload); // EnterRoomReq = 201
   }
 
@@ -797,15 +797,15 @@ export class WebSocketService {
       throw new Error('未配置WebSocket参数');
     }
     
-    console.log('🔍 登台请求参数检查:');
-    console.log('  - enterStageInfo:', this.config.enterStageInfo);
+    if(isRtcLog) console.log('🔍 登台请求参数检查:');
+    if(isRtcLog) console.log('  - enterStageInfo:', this.config.enterStageInfo);
     
     const enterStageReq = proto.oEnterStageReq.create({
       context: this.config.enterStageInfo
     });
     
     const payload = proto.oEnterStageReq.encode(enterStageReq).finish();
-    console.log('🔍 发送登台请求');
+    if(isRtcLog) console.log('🔍 发送登台请求');
     this.sendMessage(501, payload); // EnterStageReq = 501
     
     // 启动登台状态监听
@@ -839,7 +839,7 @@ export class WebSocketService {
       roomIdForLeave: null
     };
     
-    console.log('🔍 开始登台状态监听...');
+    if(isRtcLog) console.log('🔍 开始登台状态监听...');
     
     // 设置超时检查
     this.checkStageStatusTimeout();
@@ -881,24 +881,24 @@ export class WebSocketService {
       console.log(`使用配置的房间ID: ${this.stageStatusMonitoring.roomIdForLeave}`);
     }
     
-    console.log('✅ 登台成功，准备启动RTC视频服务...');
+    if(isRtcLog) console.log('✅ 登台成功，准备启动RTC视频服务...');
     
     // 启动RTC视频服务（仅观看模式）
     try {
       await this.triggerRTCStart();
-      console.log('✅ RTC视频服务启动完成');
+      if(isRtcLog) console.log('✅ RTC视频服务启动完成');
     } catch (error) {
       console.error('❌ RTC视频服务启动失败:', error);
       // 即使RTC启动失败，也继续后续流程
     }
     
     console.log('✅ 登台流程完成，RTC视频服务已启动，用户可以正常观看视频');
-    console.log('💡 提示：用户可以通过"离开舞台"按钮手动离开房间');
+    if(isRtcLog) console.log('💡 提示：用户可以通过"离开舞台"按钮手动离开房间');
   }
 
   // 触发RTC启动事件
   private async triggerRTCStart(): Promise<void> {
-    console.log('🚀 触发RTC启动事件...');
+    if(isRtcLog) console.log('🚀 触发RTC启动事件...');
     
     // 创建自定义事件，通知tryonService启动RTC
     const event = new CustomEvent('stageSuccessRTCStart', {
@@ -910,7 +910,7 @@ export class WebSocketService {
     });
     
     window.dispatchEvent(event);
-    console.log('📡 RTC启动事件已发送');
+    if(isRtcLog) console.log('📡 RTC启动事件已发送');
   }
 
   // 发送离开房间请求
@@ -939,13 +939,13 @@ export class WebSocketService {
   private handleLoginResponse(payload: ArrayBuffer): void {
     try {
       const loginAsw = proto.oLoginAsw.decode(new Uint8Array(payload));
-      console.log('登录响应:', loginAsw);
+      if(isRtcLog) console.log('登录响应:', loginAsw);
       
       const errorName = proto.eError[loginAsw.code];
-      console.log(`登录结果: ${errorName}`);
+      if(isRtcLog) console.log(`登录结果: ${errorName}`);
       
       if (loginAsw.code === proto.eError.SUCCESS) {
-        console.log('登录成功，准备进入房间...');
+        if(isRtcLog) console.log('登录成功，准备进入房间...');
         // 自动进入房间
         setTimeout(() => {
           this.sendEnterRoomRequest();
@@ -975,18 +975,18 @@ export class WebSocketService {
   private handleEnterRoomResponse(payload: ArrayBuffer): void {
     try {
       const enterRoomAsw = proto.oEnterRoomAsw.decode(new Uint8Array(payload));
-      console.log('进入房间响应:', enterRoomAsw);
+      if(isRtcLog) console.log('进入房间响应:', enterRoomAsw);
       
       const errorName = proto.eError[enterRoomAsw.code];
-      console.log(`进入房间结果: ${errorName}`);
+      if(isRtcLog) console.log(`进入房间结果: ${errorName}`);
       
       if (enterRoomAsw.code === proto.eError.SUCCESS) {
         // 将 Long 类型转换为字符串显示
         const roomIdStr = enterRoomAsw.roomId.toString();
-        console.log(`成功进入房间: ${roomIdStr}`);
-        console.log(`在线用户数量: ${enterRoomAsw.onlineUsers.length}`);
-        console.log(`舞台数量: ${enterRoomAsw.stageCount}`);
-        console.log(`场景: ${enterRoomAsw.scene}`);
+        if(isRtcLog) console.log(`成功进入房间: ${roomIdStr}`);
+        if(isRtcLog) console.log(`在线用户数量: ${enterRoomAsw.onlineUsers.length}`);
+        if(isRtcLog) console.log(`舞台数量: ${enterRoomAsw.stageCount}`);
+        if(isRtcLog) console.log(`场景: ${enterRoomAsw.scene}`);
         
         // 自动发送登台请求
         setTimeout(() => {
@@ -1014,13 +1014,13 @@ export class WebSocketService {
 
   // 处理登台响应
   private handleEnterStageResponse(payload: ArrayBuffer): void {
-    console.log('登台响应:', payload);
+    if(isRtcLog) console.log('登台响应:', payload);
     try {
       const enterStageAsw = proto.oEnterStageAsw.decode(new Uint8Array(payload));
-      console.log('登台响应详情:', enterStageAsw);
+      if(isRtcLog) console.log('登台响应详情:', enterStageAsw);
       
       const errorName = proto.eError[enterStageAsw.code];
-      console.log(`登台结果: ${errorName}`);
+      if(isRtcLog) console.log(`登台结果: ${errorName}`);
       
       if (enterStageAsw.code === proto.eError.SUCCESS) {
         // 将 Long 类型转换为字符串显示
@@ -1064,16 +1064,16 @@ export class WebSocketService {
       // 将 Long 类型转换为字符串显示
       const stageIdStr = this.longToString(stageStatusChange.stageId);
       const userIdStr = this.longToString(stageStatusChange.userId);
-      console.log(`收到舞台状态变更: 索引${stageStatusChange.index}, 舞台ID${stageIdStr}, 用户ID${userIdStr}, 状态${stageStatusChange.stageType}`);
+      if(isRtcLog) console.log(`收到舞台状态变更: 索引${stageStatusChange.index}, 舞台ID${stageIdStr}, 用户ID${userIdStr}, 状态${stageStatusChange.stageType}`);
       
       // 更新登台状态监听器
       if (this.stageStatusMonitoring.isActive) {
         this.stageStatusMonitoring.receivedStageChange = true;
         
         if (stageStatusChange.stageType === proto.eStageType.StageTypeTryEnter) {
-          console.log('舞台状态变更为 TryEnter - 正在尝试上台');
+          if(isRtcLog) console.log('舞台状态变更为 TryEnter - 正在尝试上台');
         } else if (stageStatusChange.stageType === proto.eStageType.StageTypeWorking) {
-          console.log('舞台状态变更为 Working - 已经在台上工作！');
+          if(isRtcLog) console.log('舞台状态变更为 Working - 已经在台上工作！');
           // 如果状态变为Working，认为登台成功
           this.stageStatusMonitoring.enterStageSuccess = true;
           this.completeStageFlow();
@@ -1088,7 +1088,7 @@ export class WebSocketService {
   private handleStageQueueInfo(payload: ArrayBuffer): void {
     try {
       const stageQueueInfo = proto.oStageQueueInfoPush.decode(new Uint8Array(payload));
-      console.log(`收到舞台队列信息: 队列类型${stageQueueInfo.type}, 排队人数${stageQueueInfo.queueCount}, 舞台数量${stageQueueInfo.stageCount}`);
+      if(isRtcLog) console.log(`收到舞台队列信息: 队列类型${stageQueueInfo.type}, 排队人数${stageQueueInfo.queueCount}, 舞台数量${stageQueueInfo.stageCount}`);
       
       // 可以在这里添加队列状态的处理逻辑
       if (stageQueueInfo.queueUserIds && stageQueueInfo.queueUserIds.length > 0) {
@@ -1137,10 +1137,10 @@ export class WebSocketService {
 
   // 完整的登台流程
   async performFullStageFlow(): Promise<void> {
-    console.log('🚀 开始执行完整登台流程...');
-    console.log('  - WebSocket 连接状态:', this.isConnected);
-    console.log('  - WebSocket 实例:', this.websocket ? '已创建' : '未创建');
-    console.log('  - 配置信息:', this.config ? '已设置' : '未设置');
+    if(isRtcLog) console.log('🚀 开始执行完整登台流程...');
+    if(isRtcLog) console.log('  - WebSocket 连接状态:', this.isConnected);
+    if(isRtcLog) console.log('  - WebSocket 实例:', this.websocket ? '已创建' : '未创建');
+    if(isRtcLog) console.log('  - 配置信息:', this.config ? '已设置' : '未设置');
     
     if (!this.isConnected) {
       console.error('❌ WebSocket 未连接，无法执行登台流程');
@@ -1153,14 +1153,14 @@ export class WebSocketService {
     }
     
     try {
-      console.log('✅ 开始登台流程...');
+      if(isRtcLog) console.log('✅ 开始登台流程...');
       
       // 1. 发送登录请求
-      console.log('📤 步骤1: 发送登录请求');
+      if(isRtcLog) console.log('📤 步骤1: 发送登录请求');
       await this.sendLoginRequest();
       
       // 其他步骤将通过消息处理器自动执行
-      console.log('⏳ 登台流程已启动，等待服务器响应...');
+      if(isRtcLog) console.log('⏳ 登台流程已启动，等待服务器响应...');
       
     } catch (error) {
       console.error('❌ 登台流程失败:', error);
@@ -1269,7 +1269,7 @@ export class WebSocketService {
 
   // 发送热力图请求
   async sendHeatMapRequest(enable: boolean): Promise<void> {
-    console.log('🔥 准备发送热力图请求...', enable);
+    if(isRtcLog) console.log('🔥 准备发送热力图请求...', enable);
     
     // 检查连接状态
     if (!this.isConnected) {
@@ -1282,13 +1282,13 @@ export class WebSocketService {
       console.error('❌ WebSocket配置无效或未进房，无法发送热力图请求');
       throw new Error('WebSocket配置无效或未进房');
     }
-    
-    console.log('🔍 热力图请求状态检查:');
-    console.log('  - WebSocket连接状态:', this.isConnected);
-    console.log('  - 房间ID:', this.config.roomId);
-    console.log('  - 用户ID:', this.config.uid);
-    console.log('  - 热力图开关:', enable);
-    
+    if(isRtcLog) {
+      console.log('🔍 热力图请求状态检查:');
+      console.log('  - WebSocket连接状态:', this.isConnected);
+      console.log('  - 房间ID:', this.config.roomId);
+      console.log('  - 用户ID:', this.config.uid);
+      console.log('  - 热力图开关:', enable);
+    }
     try {
       // 创建 oHeatMapReq 消息
       const message = proto.oHeatMapReq.create({
@@ -1309,7 +1309,7 @@ export class WebSocketService {
       // 发送消息 (HeatMapReq = 1009)
       this.sendMessage(1009, payload);
       
-      console.log('✅ 热力图请求发送成功:', enable);
+      if(isRtcLog) console.log('✅ 热力图请求发送成功:', enable);
       
     } catch (error) {
       console.error('❌ 发送热力图请求失败:', error);
@@ -1320,17 +1320,19 @@ export class WebSocketService {
   // 处理切换地图响应
   private handleChangeMapPush(data: Uint8Array): void {
     try {
-      console.log('🗺️ 收到切换地图响应, 数据长度:', data.length);
-      console.log('🗺️ 原始响应数据:', Array.from(data));
+      // console.log('🗺️ 收到切换地图响应, 数据长度:', data.length);
+      // console.log('🗺️ 原始响应数据:', Array.from(data));
       
       // 解码消息
       const message = proto.oChangeMapPush.decode(data);
       
-      console.log('📦 切换地图响应解码成功:', {
-        code: message.code,
-        mapName: message.mapName,
-        codeText: this.getErrorCodeText(message.code)
-      });
+      if(isRtcLog){
+        console.log('📦 切换地图响应解码成功:', {
+          code: message.code,
+          mapName: message.mapName,
+          codeText: this.getErrorCodeText(message.code)
+        });
+      }
       
       // 打印详细日志
       if (message.code === proto.eError.SUCCESS) {
