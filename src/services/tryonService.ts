@@ -252,7 +252,7 @@ export class TryonService {
       await this.joinRoom(this.roomPrimaryId);
       
       // 4. 调度分配实例
-      console.log('步骤4: 调度分配实例');
+      console.log('步骤4: 调度分配实例1');
       const scheduleResult = await this.scheduleInstance();
       
       // 5. 连接WebSocket并执行登台流程
@@ -379,7 +379,7 @@ export class TryonService {
       await this.joinRoom(roomPrimaryId);
       
       // 4. 调度分配实例
-      console.log('步骤4: 调度分配实例');
+      console.log('步骤4: 调度分配实例2');
       const scheduleResult = await this.scheduleInstance();
       
       // 5. 连接WebSocket并执行登台流程
@@ -825,7 +825,7 @@ export class TryonService {
       console.log('  - appKey:', this.config.rtcConfig.appKey);
       console.log('  - roomId:', this.config.rtcConfig.roomId);
       console.log('  - userId:', this.config.rtcConfig.userId);
-      
+      console.log('性能调优 b1：' + new Date().toLocaleString())
       // 使用全局RTC视频服务实例
       this.rtcVideoService = rtcVideoService;
       

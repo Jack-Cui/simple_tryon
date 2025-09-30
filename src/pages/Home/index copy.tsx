@@ -1015,10 +1015,6 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     console.log('👆 触摸开始:', pos);
   };
 
-  //add by chao 2025.09.30 触控优化 y1
-  // 新增状态：记录上一次拖动方向
-  const [lastDragDirection, setLastDragDirection] = useState<{ x: number, y: number } | null>(null);
-
   // 处理触摸移动事件
   const handleTouchMove = (event: React.TouchEvent | React.MouseEvent) => {
     // 双指缩放逻辑
@@ -1051,32 +1047,9 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     const deltaX = currentPos.x - lastTouchPos.x;
     const deltaY = currentPos.y - lastTouchPos.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-    //add by chao 2025.09.30 触控优化 y1
-    // 判断当前拖动方向
-    const currentDirection = {
-      x: deltaX === 0 ? 0 : deltaX / Math.abs(deltaX),
-      y: deltaY === 0 ? 0 : deltaY / Math.abs(deltaY)
-    };
-    //add by chao 2025.09.30 触控优化 y1 -->
-
     // 拖动阈值恢复到10像素
     if (distance > 10) {
       setIsDragging(true);
-
-    //add by chao 2025.09.30 触控优化 y1
-    // 判断方向是否切换
-    if (
-      lastDragDirection &&
-      (lastDragDirection.x !== currentDirection.x || lastDragDirection.y !== currentDirection.y)
-    ) {
-      // 方向切换，降低灵敏度或重置累计
-      // 可选：setLastTouchPos(currentPos); // 归零累计
-      // 可选：return; // 本次不发送旋转
-    }
-    setLastDragDirection(currentDirection);
-     //add by chao 2025.09.30 触控优化 y1 -->
-
       if (!rtcVideoService.getConnectionStatus()) return;
       try {
         //update by chao 2025.09.25 0.3
@@ -1094,9 +1067,6 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
   // 处理触摸结束事件
   const handleTouchEnd = (event: React.TouchEvent | React.MouseEvent) => {
-    //add by chao 2025.09.30 触控优化 y1
-    setLastDragDirection(null);
-
     if (isDragging) {
       // 拖动结束
     }
