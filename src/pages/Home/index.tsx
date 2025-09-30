@@ -172,6 +172,8 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
   // 新增状态：右侧顶部图片
   const [lastSelectedClothes, setLastSelectedClothes] = useState<ClothesItem | null>(null);
 
+  const homeOptEl = useRef(null);
+
   // 获取当前视频流的video/canvas元素
   const getCurrentVideoElement = (): HTMLVideoElement | HTMLCanvasElement | null => {
     if (videoStreams.length > 0) {
@@ -2398,8 +2400,16 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
         display: 'flex',
         flexDirection: 'column',
         position: 'relative'
-      }}>
-        <HomeOpt toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
+      }}
+      onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (homeOptEl?.current) {
+            (homeOptEl?.current as any).closeOpen();
+          }
+      }}
+      >
+        <HomeOpt ref={homeOptEl} toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
         {/* 音乐开始 */}
         <ReactHowler
           src={musicUrl}
@@ -2915,8 +2925,16 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       display: 'flex',
       flexDirection: 'column',
       position: 'relative'
-    }}>
-      <HomeOpt toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
+    }}
+    onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (homeOptEl?.current) {
+        (homeOptEl?.current as any).closeOpen();
+      }
+  }}
+    >
+      <HomeOpt  ref={homeOptEl} toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
       {/* 音乐开始 */}
       <ReactHowler
         src={musicUrl}

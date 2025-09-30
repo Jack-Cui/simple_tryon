@@ -23,7 +23,7 @@ import Action3Check from '../../assets/action3-check.png';
 import Action4Check from '../../assets/action4-check.png';
 import Action5Check from '../../assets/action5-check.png';
 import './index.css';
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLoginCache } from '../../utils/loginCache';
 import { modelAPI, uploadAPI } from '../../services/api';
@@ -37,7 +37,7 @@ interface Props {
     loginScene?: string;
     toPage?:(type: string) => void;
 }
-const HomeOpt = (props: Props) => {
+const HomeOpt = forwardRef((props: Props, ref: any) => {
     const { hotClick, actionClick, sizeClick, loginScene } = props;
     const navigate = useNavigate();
     const [showHot, setShowHot] = useState(false);
@@ -48,6 +48,7 @@ const HomeOpt = (props: Props) => {
     const actionCheckIconList = [Action1Check, Action2Check, Action3Check, Action4Check, Action5Check];
     // const sizeList = ['3XL', 'XXL', 'XL', 'L', 'M', 'S'];
     const sizeList = ['XXL', 'XL', 'L', 'M', 'S', 'XS'];
+    const [showSize, setShowSize] = useState('');
     const [aigcList, setAigcList] = useState<any[]>([]); // 点击过的动作
     const [showError, setShowError] = useState(false);
     useEffect(() => {
@@ -90,7 +91,10 @@ const HomeOpt = (props: Props) => {
 
     const checkSize = (item: string) => {
         console.log('选中尺寸', item);
-        
+        if (item === showSize) {
+            return setShowIcon(false);
+        }
+        setShowSize(item);
         // 将尺寸字符串转换为数字
         const sizeMap: { [key: string]: number } = {
             'XS': 1,
@@ -133,6 +137,15 @@ const HomeOpt = (props: Props) => {
         props?.toPage && props.toPage('browse-historry');
     }
 
+    useImperativeHandle(ref, () => ({
+        closeOpen: () => {
+            // 关闭打开的页面
+            console.log('关闭所有打开的状态');
+            setShowIcon(false);
+            setShowAction(false);
+        }
+    }));
+
     const getActionList = async () => {
         const loginCache: any = getLoginCache();
         if (!loginCache?.token) {
@@ -156,7 +169,7 @@ const HomeOpt = (props: Props) => {
 
     return (
         <div className="home-opt">
-            <img className="home-opt-hot-btn" onClick={() => setShowHot(!showHot)} src={showHot ? HotOn : HotOff} alt="" />
+            <img className="home-opt-hot-btn" onClick={() => {setShowHot(!showHot);setShowIcon(false);setShowAction(false);}} src={showHot ? HotOn : HotOff} alt="" />
             {showHot && <img className="home-opt-hot-exm" src={HotExm} alt="" />}
             <div className="home-opt-list">
                 <div className="home-opt-list-item">
@@ -167,7 +180,10 @@ const HomeOpt = (props: Props) => {
                         </div>
                         {actionList.filter((item: any) => item.state === '1').map((item: any, index: number) => {
                             return (
-                                <div className='home-opt-list-item-atcion' onClick={() => checkAction(item)}>
+                                <div className='home-opt-list-item-atcion' onClick={(e) => {
+                                    e.stopPropagation();
+                                    checkAction(item);
+                                }}>
                                     <img className="home-opt-list-item-action-img" src={aigcList.includes(item.id) ? actionCheckIconList[index] : actionIconList[index]} alt="" />
                                     {aigcList.includes(item.id) && <img  className="home-opt-list-item-action-aigc" src={AigcTag}/>}
                                     <span>{item.remark}</span>
@@ -176,14 +192,25 @@ const HomeOpt = (props: Props) => {
                         })}
                     </>}
                     {loginScene !== 'onshare' && (
-                    <img className="home-opt-list-img" onClick={() => {setShowAction(!showAction);setShowIcon(false)}} src={showAction ? ActionOn : ActionOff} alt="" />
+                    <img className="home-opt-list-img" onClick={(e) => {
+                        e.stopPropagation();
+                        setShowAction(!showAction);
+                        setShowIcon(false)
+                    }} src={showAction ? ActionOn : ActionOff} alt="" />
                     )}
                 </div>
                 <div className='home-opt-list-item'>
                    {showIcon && 
-                    sizeList.map(item => <div className='home-opt-list-item-size' onClick={() => checkSize(item)}>{item}</div> )
+                    sizeList.map(item => <div className={item === showSize ? 'home-opt-list-item-size home-opt-list-item-size-check' : 'home-opt-list-item-size'} onClick={(e) => {
+                        e.stopPropagation();
+                        checkSize(item);
+                    }}>{item}</div> )
                    }
-                    <img className="home-opt-list-img"  onClick={() => {setShowIcon(!showIcon);setShowAction(false)}} src={Size} alt="" />
+                    <img className="home-opt-list-img"  onClick={(e) => {
+                        e.stopPropagation();
+                        setShowIcon(!showIcon);
+                        setShowAction(false)
+                        }} src={Size} alt="" />
                 </div>
                 {loginScene !== 'onshare' && (
                     <img className="home-opt-list-img" src={Model} alt="" onClick={goToModel} />
@@ -200,6 +227,6 @@ const HomeOpt = (props: Props) => {
             <ErrorToast isConfirm info={`动态视频正在快马加鞭地生成中，预计2分钟后闪亮登场！您可以先去逛逛，别忘了在"收藏记录"里检阅成果哦~`} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)}/>
         </div>
     )
-}
+})
 
 export default HomeOpt;

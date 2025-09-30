@@ -70,7 +70,9 @@
     white-space: nowrap;
     line-height: 20px;
     margin-right: 5px;
-
+}
+.home-opt-list-item-size-check {
+    background: rgba(88, 117, 115, 0.7);
 }
 .home-opt-list-item-action-img {
     width: 34px;
