@@ -23,7 +23,7 @@ const infoList2 = [
     '3. 光线与面部： 光线均匀，避免阴阳脸；确保面部无眼镜、饰品遮挡，且无刘海碎发。',
     '4. 清晰与整洁： 面部五官清晰无遮挡，表情自然。'
 ]
-const CreateModel = () => {
+const CreateModel = (props?: { onBack?: any}) => {
   const navigate = useNavigate();
   const uploadFileEl = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
@@ -54,7 +54,8 @@ const CreateModel = () => {
     if (step === 1) {
         setStep(0)
     } else {
-      navigate(-1);
+      // navigate(-1);
+      props?.onBack && props.onBack();
     }
   }
 
@@ -109,7 +110,8 @@ const CreateModel = () => {
   }
 
   const goToBack = () => {
-    navigate(-1);
+    // navigate(-1);
+    props?.onBack && props.onBack();
   }
 
   const uploadFile = () => {

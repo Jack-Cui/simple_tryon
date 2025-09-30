@@ -15,7 +15,7 @@ const infoList1 = [
   '3.设备与距离：后摄4K60帧；距人0.7–1米稳定绕行；相机始终与拍摄部位同高。',
   '4.拍摄流程：双脚分开站立，双臂侧举与腿成45°；45–60秒转4圈，顺序拍头→胸→臀腿→腿脚；最后拉远全身结束。'
 ];
-const UploadAction = () => {
+const UploadAction = (props?: { onBack?: any}) => {
   const personRefEl = useRef(null);
   const [step, setStep] = useState(0);
   const [showError, setShowError] = useState(false);
@@ -26,10 +26,11 @@ const UploadAction = () => {
   const [actionName, setActionName] = useState('');
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(-1);
+    // navigate(-1);
+    props?.onBack && props.onBack();
   }
   const goToBack = () => {
-    (actionList.length === 4 && status > 0) || actionList.length === 5 ? navigate(-1) : setStep(0);
+    (actionList.length === 4 && status > 0) || actionList.length === 5 ? (props?.onBack && props.onBack()) : setStep(0);
   }
   useEffect(() => {
     getActionList();

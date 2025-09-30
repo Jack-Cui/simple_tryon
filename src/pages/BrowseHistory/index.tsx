@@ -103,7 +103,7 @@ const BrowseHistory = (props?: { onBack?: any , isShow?: boolean}) => {
                             <div className='browse-history-content-detail-img' onClick={() => checkVideo(item)}>
                                 <img src={item.imgs ? item.imgs.split(',')[0] : ''} alt="" />
                             </div>
-                            <div className={item.videoStatus === '2' ? 'browse-history-content-detail-info' : 'browse-history-content-detail-info browse-history-content-detail-blur'}>
+                            <div className={(item.videoStatus === '2' || item.videoStatus === '3') ? 'browse-history-content-detail-info' : 'browse-history-content-detail-info browse-history-content-detail-blur'}>
                                 <div className='browse-history-content-detail-info-item'>
                                     <span>{item.title || ''}</span>
                                     {/* <IconFont name='edit-2' onClick={editAction} className='edit' size="large"/> */}

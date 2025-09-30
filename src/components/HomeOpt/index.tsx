@@ -35,7 +35,7 @@ interface Props {
     actionClick?: (msg: any) => void;
     sizeClick?: (size: string) => void;
     loginScene?: string;
-    toHistory?: () => void;
+    toPage?:(type: string) => void;
 }
 const HomeOpt = (props: Props) => {
     const { hotClick, actionClick, sizeClick, loginScene } = props;
@@ -117,18 +117,20 @@ const HomeOpt = (props: Props) => {
     }
 
     const goToModel = () => {
-        navigate('/create-model');
+        // navigate('/create-model');
+        props?.toPage && props.toPage('create-model');
     }
     const goToUpload = () => {
-        navigate('/upload-action');
+        // navigate('/upload-action');
+        props?.toPage && props.toPage('upload-action');
     }
     const goToSubs = () => {
-        navigate('/subs-package');
+        props?.toPage && props.toPage('subs-package');
     }
 
     const goToHistory = () => {
         // navigate('/browse-history');
-        props?.toHistory && props.toHistory();
+        props?.toPage && props.toPage('browse-historry');
     }
 
     const getActionList = async () => {

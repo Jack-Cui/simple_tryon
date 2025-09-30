@@ -37,6 +37,9 @@ import ReactHowler from 'react-howler';
 import HomeOpt from '../../components/HomeOpt';
 import { useLoginScene } from '../../contexts/LoginSceneContext';
 import BrowseHistory from '../BrowseHistory';
+import UploadAction from '../UploadAction';
+import CreateModel from '../CreateModel';
+import SubscribePackage from '../SubscribePackage';
 
 const Long = require('long');
 // add by chao 2025.09.30 增加日志开关
@@ -543,8 +546,8 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     console.log('选中动作11111', msg);
   }
 
-  const goToHistory = () => {
-      props?.goToPage && props.goToPage('browseHistorry')
+  const toPage = (type: string) => {
+      props?.goToPage && props.goToPage(type)
   }
 
   const handleHotClick = (flag: boolean) => {
@@ -2396,7 +2399,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
         flexDirection: 'column',
         position: 'relative'
       }}>
-        <HomeOpt toHistory={goToHistory} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
+        <HomeOpt toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
         {/* 音乐开始 */}
         <ReactHowler
           src={musicUrl}
@@ -2913,7 +2916,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       flexDirection: 'column',
       position: 'relative'
     }}>
-      <HomeOpt toHistory={goToHistory} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
+      <HomeOpt toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
       {/* 音乐开始 */}
       <ReactHowler
         src={musicUrl}
@@ -3790,7 +3793,10 @@ const Home = () => {
     <div style={step === 'home' ? {}: {display: 'none'}}>
       <HomeVideo goToPage={(msg) => setStep(msg)} />
     </div>
-    <BrowseHistory isShow={step === 'browseHistorry'} onBack={onClickBack}/>
+    {step === 'create-model' && <CreateModel onBack={onClickBack}/>}
+    {step === 'upload-action' && <UploadAction onBack={onClickBack}/>}
+    {step === 'subs-package' && <SubscribePackage onBack={onClickBack}/>}
+    <BrowseHistory isShow={step === 'browse-historry'} onBack={onClickBack}/>
     </>
   )
 }

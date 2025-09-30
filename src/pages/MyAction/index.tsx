@@ -18,6 +18,7 @@ const MyAction = (props: Props) => {
     const [loadRogress, setLoadRogress] = useState(0); // 上传进度
     const [countdown, setCountdown] = useState(24 * 60 * 60 * 1000);
     const [showError, setShowError] = useState(false);
+    const [showBtnError, setShowBtnError] = useState(false);
     const [isEditAction, setIsEditAction] = useState(false); // 是否修改
     const [editNum, setEditNum] = useState(0); // 修改第几项
     const [editValue, setEditValue] = useState(''); // 修改第几项
@@ -89,6 +90,9 @@ const MyAction = (props: Props) => {
     }
 
     const createAction = () => {
+        if ((props?.list && props.list.length === 4 && props.status > 0) || (props?.list && props.list.length === 5)) {
+            return setShowBtnError(true);
+        }
         props?.setStep && props.setStep();
     }
 
@@ -178,7 +182,8 @@ const MyAction = (props: Props) => {
                                         </div>
                                         <div className='btn'>
                                             {/* <Button size="small" variant="outline" shape="round" block>重新上传</Button> */}
-                                            <Button size="small" variant="outline" shape="round" onClick={() => clearAction(item)} block>删除</Button>
+                                            {/* <Button size="small" variant="outline" shape="round" onClick={() => clearAction(item)} block>删除</Button> */}
+                                            <IconFont name='delete-1' onClick={() => clearAction(item)} className='clear' style={{ color: 'red' }} size="large" />
                                         </div>
                                     </div>}
                                 </div>}
@@ -194,7 +199,7 @@ const MyAction = (props: Props) => {
                                             {/* <IconFont name='edit-2' onClick={editAction} className='edit' size="large" /> */}
                                         </div>}
 
-                                    <IconFont name='delete-1' onClick={() => clearAction(item)} className='clear' style={{ color: 'red' }} size="large" />
+                                    {item.state === '1' && <IconFont name='delete-1' onClick={() => clearAction(item)} className='clear' style={{ color: 'red' }} size="large" />}
                                 </div>
                             </div>
                     )
@@ -203,9 +208,10 @@ const MyAction = (props: Props) => {
 
             </div>
             <div className='my-action-btn'>
-                <Button size="large" theme="light" disabled={(props?.list && props.list.length === 4 && props.status > 0) || (props?.list && props.list.length === 5)} block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={createAction}>创建个性化动作</Button>
+                <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={createAction}>创建个性化动作</Button>
             </div>
             <ErrorToast isConfirm info={'确认删除该动作？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)} />
+            <ErrorToast info={'动作数量已超限！'} visible={showBtnError} onClick={() => setShowBtnError(false)} />
         </div>
     )
 }
