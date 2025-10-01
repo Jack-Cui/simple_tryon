@@ -195,6 +195,7 @@ export class TryonService {
         throw new Error('用户未登录或登录信息缺失');
       }
       console.log('步骤1.6: 构建登台信息222', loginCache.roomId);
+      console.log('性能调优 a1.1：' + new Date().toLocaleString()+' '+ performance.now())
       await this.buildStageInfo(loginCache.roomId, shareScene);
       
       // 2. 创建房间
@@ -385,8 +386,9 @@ export class TryonService {
       // 5. 连接WebSocket并执行登台流程
       console.log('步骤5: 连接WebSocket并执行登台流程');
       await this.connectAndPerformStage(scheduleResult);
-      
+      console.log('性能调优 a1.2.3.2：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('试穿流程完成！');
+      console.log('性能调优 a1.2.3.3：' + new Date().toLocaleString() +' '+ performance.now() )
       
     } catch (error) {
       console.error('试穿流程失败:', error);
@@ -484,6 +486,7 @@ export class TryonService {
       this.enterStageInfo = await roomAPI.buildShareEnterStageInfo(roomInfo, this.accessToken);
     } else {
       console.log("构建普通登台信息");
+      console.log('性能调优 a1.2：' + new Date().toLocaleString()+' '+ performance.now())
       // 重新获取房间信息用于构建登台信息
       const response = await roomAPI.getRoomInfoByRoomId(room_id, this.accessToken);
       if (!response.ok) {
@@ -794,7 +797,7 @@ export class TryonService {
         token: this.generateRTCToken() // 动态生成token
       }
     };
-    
+    console.log('性能调优 a1.2.3：' + new Date().toLocaleString() +' '+ performance.now() +' '+ performance.now())
     console.log('WebSocket配置111:', wsConfig);
     
     // 连接WebSocket
@@ -825,7 +828,7 @@ export class TryonService {
       console.log('  - appKey:', this.config.rtcConfig.appKey);
       console.log('  - roomId:', this.config.rtcConfig.roomId);
       console.log('  - userId:', this.config.rtcConfig.userId);
-      console.log('性能调优 b1：' + new Date().toLocaleString())
+      console.log('性能调优 b1：' + new Date().toLocaleString()+' '+ performance.now())
       // 使用全局RTC视频服务实例
       this.rtcVideoService = rtcVideoService;
       
@@ -1014,6 +1017,7 @@ export class TryonService {
       if (!loginCache?.userId) {
         throw new Error('用户未登录或登录信息缺失');
       }
+      console.log('性能调优 a1.2.1：' + new Date().toLocaleString() +' '+ performance.now() )
       // 2. 构建分享数据
       const shareData: CreateSysRoomShareRequest = {
         id: Long.fromString(this.config.coCreationId).toString(),
@@ -1064,7 +1068,7 @@ export class TryonService {
 
       const createShareData = roomAPI.parseCreateSysRoomShareResponse(response);
       // console.log('✅ 创建分享成功:', createShareData);
-
+      console.log('性能调优 a1.2.2：' + new Date().toLocaleString() +' '+ performance.now() )
       return createShareData;
 
     } catch (error) {

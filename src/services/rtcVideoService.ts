@@ -283,7 +283,7 @@ export class RTCVideoService {
       rtcMessageHandler.startHeartbeat();
       
       console.log('✅ 成功加入RTC房间');
-      console.log('性能调优 b2.1：' + new Date().toLocaleString())
+      console.log('性能调优 b2.1：' + new Date().toLocaleString()+' '+ performance.now())
     } catch (error) {
       console.error('❌ 加入RTC房间失败:', error);
       throw error;

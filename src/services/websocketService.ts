@@ -315,6 +315,7 @@ export class WebSocketService {
       }
       
       console.log(`✅ 成功转换字符串 "${value}" 为 Long: ${longValue.toString()}`);
+      console.log('性能调优 a1.2.3.1：' + new Date().toLocaleString()+' '+ performance.now())
       return longValue;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -504,15 +505,15 @@ export class WebSocketService {
         
         // 设置二进制数据类型为 ArrayBuffer
         this.websocket.binaryType = 'arraybuffer';
-        
+        console.log('性能调优 a1.2.1：' + new Date().toLocaleString()+' '+ performance.now())
         this.websocket.onopen = () => {
           console.log('WebSocket 连接成功');
           this.isConnected = true;
           this.reconnectAttempts = 0;
-          
+        console.log('性能调优 a1.2.2：' + new Date().toLocaleString()+' '+ performance.now())  
           // 启动心跳机制
           this.startHeartbeat();
-          
+         console.log('性能调优 a1.2.3：' + new Date().toLocaleString()+' '+ performance.now())    
           resolve();
         };
         
@@ -852,7 +853,7 @@ export class WebSocketService {
     
     this.stageStatusMonitoring.timeoutCount++;
     console.log(`⏰ 登台状态检查超时 (${this.stageStatusMonitoring.timeoutCount}/${this.stageStatusMonitoring.maxTimeouts})`);
-    
+    console.log('性能调优 a1.2.4：' + new Date().toLocaleString()+' '+ performance.now())
     // 如果收到了舞台状态变更，可能登台已经成功
     if (this.stageStatusMonitoring.receivedStageChange && this.stageStatusMonitoring.timeoutCount >= this.stageStatusMonitoring.maxTimeouts) {
       console.log('✅ 基于舞台状态变更判断登台可能成功');
@@ -898,8 +899,9 @@ export class WebSocketService {
 
   // 触发RTC启动事件
   private async triggerRTCStart(): Promise<void> {
-    if(isRtcLog) console.log('🚀 触发RTC启动事件...');
-    
+    console.log('🚀 触发RTC启动事件...');
+    console.log('性能调优 a1.3：' + new Date().toLocaleString()+' '+ performance.now())
+
     // 创建自定义事件，通知tryonService启动RTC
     const event = new CustomEvent('stageSuccessRTCStart', {
       detail: {
