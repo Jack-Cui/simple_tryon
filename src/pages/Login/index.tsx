@@ -235,7 +235,7 @@ console.log('性能调优 a1.0.1：' + new Date().toLocaleString() +' '+ perform
               // 不影响登录流程
             }
           } catch (error) {
-            console.error('❌ 房间信息初始化失败:', error);
+            console.error('❌ 房间信息初始化失败2:', error);
             // 即使初始化失败，也允许用户继续，后续会使用完整流程
           }
           
