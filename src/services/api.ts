@@ -1198,7 +1198,7 @@ export const roomAPI = {
         return;
       }
       
-      console.log('✅ 房间信息获取成功');
+      console.log('✅ 房间信息获取成功1');
 
       //add by chao 2025.09.29 share 修改B查看A模型不对问题  没执行到这
       console.log('🔍 更新缓存中的userId为房间的userId:', roomInfo.data.userId);

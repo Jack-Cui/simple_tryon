@@ -99,8 +99,8 @@ export class TryonService {
     
     // 序列化生成token字符串
     const tokenString = token.serialize();
-    console.log('✅ RTC Token 生成成功');
-    
+    console.log('✅ RTC Token 生成成功: ' +tokenString);
+    console.log('性能调优 a1：' + new Date().toLocaleString() +' '+ performance.now() )
     return tokenString;
   }
 
@@ -108,7 +108,7 @@ export class TryonService {
   async initializeAfterLogin(config: TryonConfig, shareScene: string): Promise<void> {
     this.config = config;
     this.accessToken = config.accessToken;
-    
+    console.log('性能调优 a3.1：' + new Date().toLocaleString() +' '+ performance.now() )
     if (shareScene !== "onshare") {
       try {
         if(isTronLog) console.log('校验模型列表...');
@@ -175,6 +175,7 @@ export class TryonService {
         return;
       }
     }
+    console.log('性能调优 a3.2：' + new Date().toLocaleString() +' '+ performance.now() )
     try {
       // 1. 获取房间信息（但不构建登台信息）
       // console.log('步骤1: 获取房间信息');
@@ -194,12 +195,12 @@ export class TryonService {
       if (!loginCache?.roomId) {
         throw new Error('用户未登录或登录信息缺失');
       }
-      console.log('步骤1.6: 构建登台信息222', loginCache.roomId);
+      console.log('步骤1.6: 构建登台信息111', loginCache.roomId);
       console.log('性能调优 a1.1：' + new Date().toLocaleString()+' '+ performance.now())
       await this.buildStageInfo(loginCache.roomId, shareScene);
       
       // 2. 创建房间
-      console.log('步骤2: 创建房间');
+      console.log('步骤2: 创建房间1');
       this.roomPrimaryId = await this.createRoom();
       console.log('创建房间 roomPrimaryId:', this.roomPrimaryId);
       
@@ -220,7 +221,7 @@ export class TryonService {
 
       
     } catch (error) {
-      console.error('❌ 房间信息初始化失败:', error);
+      console.error('❌ 房间信息初始化失败3:', error);
       throw error;
     }
   }
@@ -249,7 +250,7 @@ export class TryonService {
       console.log('  - 使用已获取的房间名称:', this.roomName);
       
       // 3. 加入房间
-      console.log('步骤3: 加入房间');
+      console.log('步骤3: 加入房间1');
       await this.joinRoom(this.roomPrimaryId);
       
       // 4. 调度分配实例
@@ -366,29 +367,37 @@ export class TryonService {
       if (!loginCache?.roomId) {
         throw new Error('用户未登录或登录信息缺失');
       }
-      console.log('步骤1.6: 构建登台信息', loginCache.roomId);
-      await this.buildStageInfo(loginCache.roomId, "");
+      console.log('步骤1.6: 构建登台信息222', loginCache.roomId);
+      // await this.buildStageInfo(loginCache.roomId, "");
       
       // 2. 创建房间
-      console.log('步骤2: 创建房间');
+      console.log('步骤2: 创建房间2');
+      console.log('性能调优 b1.0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
       const roomPrimaryId = await this.createRoom();
+      console.log('性能调优 b1.0.0.2：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('创建房间111 roomPrimaryId:', roomPrimaryId);
       this.roomPrimaryId = roomPrimaryId;
       
       // 3. 加入房间
-      console.log('步骤3: 加入房间');
+      console.log('步骤3: 加入房间2');
+console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ performance.now() )
       await this.joinRoom(roomPrimaryId);
+      console.log('性能调优 b1.0.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
       
       // 4. 调度分配实例
       console.log('步骤4: 调度分配实例2');
+      console.log('性能调优 b1.0.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
       const scheduleResult = await this.scheduleInstance();
+      console.log('性能调优 b1.0.0.6：' + new Date().toLocaleString() +' '+ performance.now() )
       
       // 5. 连接WebSocket并执行登台流程
       console.log('步骤5: 连接WebSocket并执行登台流程');
+      console.log('性能调优 b1.0.0.7：' + new Date().toLocaleString() +' '+ performance.now() )
       await this.connectAndPerformStage(scheduleResult);
-      console.log('性能调优 a1.2.3.2：' + new Date().toLocaleString() +' '+ performance.now() )
+      console.log('性能调优 b1.0.0.8：' + new Date().toLocaleString() +' '+ performance.now() )
+      // console.log('性能调优 a1.2.3.2：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('试穿流程完成！');
-      console.log('性能调优 a1.2.3.3：' + new Date().toLocaleString() +' '+ performance.now() )
+      // console.log('性能调优 a1.2.3.3：' + new Date().toLocaleString() +' '+ performance.now() )
       
     } catch (error) {
       console.error('试穿流程失败:', error);
@@ -797,7 +806,7 @@ export class TryonService {
         token: this.generateRTCToken() // 动态生成token
       }
     };
-    console.log('性能调优 a1.2.3：' + new Date().toLocaleString() +' '+ performance.now() +' '+ performance.now())
+    console.log('性能调优 a1.2.3-1：' + new Date().toLocaleString() +' '+ performance.now() +' '+ performance.now())
     console.log('WebSocket配置111:', wsConfig);
     
     // 连接WebSocket
@@ -1000,19 +1009,19 @@ export class TryonService {
     try {
       console.log('开始创建分享...');
       console.log('  - roomPrimaryId:', this.roomPrimaryId);
+      
+      // // 1. 获取房间信息以获取必要的数据
+      // const roomResponse = await roomAPI.getSysRoomShare("1", this.accessToken);
+      // if (!roomResponse.ok || !roomResponse.data) {
+      //   throw new Error('获取房间信息失败');
+      // }
 
-      // 1. 获取房间信息以获取必要的数据
-      const roomResponse = await roomAPI.getSysRoomShare("1", this.accessToken);
-      if (!roomResponse.ok || !roomResponse.data) {
-        throw new Error('获取房间信息失败');
-      }
+      // const roomInfo = roomAPI.parseRoomInfoResponse(roomResponse);
+      // if (!roomInfo || !roomInfo.data) {
+      //   throw new Error('解析房间信息失败');
+      // }
 
-      const roomInfo = roomAPI.parseRoomInfoResponse(roomResponse);
-      if (!roomInfo || !roomInfo.data) {
-        throw new Error('解析房间信息失败');
-      }
-
-      console.log('✅ 房间信息获取成功:', roomInfo.data);
+      // console.log('✅ 房间信息获取成功3:', roomInfo.data);
       const loginCache = getLoginCache();
       if (!loginCache?.userId) {
         throw new Error('用户未登录或登录信息缺失');
@@ -1023,11 +1032,11 @@ export class TryonService {
         id: Long.fromString(this.config.coCreationId).toString(),
         roomId: this.roomPrimaryId.toString(),
         userId: loginCache.userId,
-        extra1: roomInfo.data.extra1 || '新视频',
-        extra2: roomInfo.data.extra2 || '',
-        clothId: roomInfo.data.clothId || '',
-        actionId: roomInfo.data.actionId || '',
-        scenarioId: roomInfo.data.scenarioId || '',
+        extra1: '', //roomInfo.data.extra1 || '新视频',
+        extra2: '', //roomInfo.data.extra2 || '',
+        clothId: '', //roomInfo.data.clothId || '',
+        actionId: '', //roomInfo.data.actionId || '',
+        scenarioId: '', //roomInfo.data.scenarioId || '',
         user2Id: null,
         cloth2Id: null,
         action2Id: null,
@@ -1068,7 +1077,7 @@ export class TryonService {
 
       const createShareData = roomAPI.parseCreateSysRoomShareResponse(response);
       // console.log('✅ 创建分享成功:', createShareData);
-      console.log('性能调优 a1.2.2：' + new Date().toLocaleString() +' '+ performance.now() )
+      // console.log('性能调优 a1.2.2：' + new Date().toLocaleString() +' '+ performance.now() )
       return createShareData;
 
     } catch (error) {

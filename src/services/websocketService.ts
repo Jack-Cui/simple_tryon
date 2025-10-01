@@ -786,10 +786,12 @@ export class WebSocketService {
     const enterRoomReq = proto.oEnterRoomReq.create({
       roomId: roomIdLong
     });
-    
+    console.log('性能调优 proto.oEnterRoomReq1：' + new Date().toLocaleString() +' '+ performance.now() )
     const payload = proto.oEnterRoomReq.encode(enterRoomReq).finish();
+   
     if(isRtcLog) console.log('🚪 进入房间请求已发送');
     this.sendMessage(201, payload); // EnterRoomReq = 201
+     console.log('性能调优 proto.oEnterRoomReq2：' + new Date().toLocaleString() +' '+ performance.now() )
   }
 
   // 发送登台请求
@@ -951,7 +953,9 @@ export class WebSocketService {
         // 自动进入房间
         setTimeout(() => {
           this.sendEnterRoomRequest();
-        }, 500);
+        //update by chao 2025.10.01 优化性能
+        // }, 500);
+        }, 100);
       } else {
         alert("登录失败:" + errorName);
         console.error('登录失败:', errorName);
@@ -993,7 +997,9 @@ export class WebSocketService {
         // 自动发送登台请求
         setTimeout(() => {
           this.sendEnterStageRequest();
-        }, 1000);
+        // update by chao 2025.10.01 优化性能
+        // }, 1000);
+        }, 10);
       } else {
         console.error('进入房间失败:', errorName);
       }
@@ -1156,11 +1162,11 @@ export class WebSocketService {
     
     try {
       if(isRtcLog) console.log('✅ 开始登台流程...');
-      
+      console.log('性能调优 sendLoginRequest1：' + new Date().toLocaleString() +' '+ performance.now() )
       // 1. 发送登录请求
       if(isRtcLog) console.log('📤 步骤1: 发送登录请求');
       await this.sendLoginRequest();
-      
+      console.log('性能调优 sendLoginRequest2：' + new Date().toLocaleString() +' '+ performance.now() )
       // 其他步骤将通过消息处理器自动执行
       if(isRtcLog) console.log('⏳ 登台流程已启动，等待服务器响应...');
       

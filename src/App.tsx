@@ -12,23 +12,24 @@ import { authAPI } from './services/api';
 import { saveTokens } from './utils/auth';
 import { saveLoginCache } from './utils/loginCache';
 import { tryonService } from './services/tryonService';
-import { isValidCoCreationId, showCoCreationIdError } from './utils/coCreationIdHelper';
+// import { isValidCoCreationId, showCoCreationIdError } from './utils/coCreationIdHelper';
 import CreateModel from './pages/CreateModel';
-import MyModel from './pages/MyModel';
+// import MyModel from './pages/MyModel';
 import UploadAction from './pages/UploadAction';
-import MyAction from './pages/MyAction';
+// import MyAction from './pages/MyAction';
 import SubscribePackage from './pages/SubscribePackage';
 import { LoginSceneProvider } from './contexts/LoginSceneContext';
-import BrowseHistory from './pages/BrowseHistory';
-import wx from 'weixin-js-sdk';
+// import BrowseHistory from './pages/BrowseHistory';
+// import wx from 'weixin-js-sdk';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loginScene, setLoginScene] = useState<string>('');
   const isRecLog = false; // 是否记录日志，true为记录，false为不记录
-
+  console.log('性能调优 a1-1.0.3：' + new Date().toLocaleString() +' '+ performance.now() )
   useEffect(() => {
+    console.log('性能调优 a1-1.1：' + new Date().toLocaleString() +' '+ performance.now() )
     // 自动登录逻辑
     const autoLogin = async () => {
       try {
@@ -67,7 +68,7 @@ function App() {
         if(isRecLog) console.log('🚀 开始自动登录...');
         let access_token = ''
         let response = null;
-
+        console.log('性能调优 a1-2.1：' + new Date().toLocaleString() +' '+ performance.now() )
         //update by chao 2025.09.29 登录接口传递分享参数
         if(login_scene === 'onshare' ) {
           response = await authAPI.shareLogin(user_id, tenant_id, register_time, inviteUserId);
@@ -84,7 +85,7 @@ function App() {
         } else {
           response = await authAPI.login(user_id, tenant_id);
         }
-
+        console.log('性能调优 a1-2.2：' + new Date().toLocaleString() +' '+ performance.now() )
         // response = await authAPI.login(user_id, tenant_id);
         if (response.ok) {
           if(isRecLog) console.log('✅ 自动登录成功:', response.data);
@@ -136,7 +137,7 @@ function App() {
                 console.error('❌ 预加载衣服详情失败:', error);
               }
             } catch (error) {
-              console.error('❌ 房间信息初始化失败:', error);
+              console.error('❌ 房间信息初始化失败1:', error);
             }
             
             console.log('🎉 自动登录完成，准备进入应用');

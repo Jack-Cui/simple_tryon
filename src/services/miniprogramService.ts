@@ -158,7 +158,7 @@ export class MiniprogramService {
       }
 
       const roomInfo = await roomResponse.json();
-      console.log('✅ 房间信息获取成功');
+      console.log('✅ 房间信息获取成功2');
 
       // 获取场景列表
       const sceneResponse = await fetch(`${this.baseURL}${API_ENDPOINTS.GET_SCENE_LIST()}`, {

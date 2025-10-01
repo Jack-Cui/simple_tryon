@@ -24,13 +24,13 @@ import topIcon from '../../assets/上衣.png';
 import socksIcon from '../../assets/袜子.png';
 import pantsIcon from '../../assets/下装.png';
 import shoesIcon from '../../assets/鞋子.png';
-import shareIcon from '../../assets/相机.png';
-import shareCoverImage from '../../assets/分享封面.png';
-import realSceneIcon from '../../assets/实景.png';
-import heatMapIcon from '../../assets/松紧热图片.png';
+// import shareIcon from '../../assets/相机.png';
+// import shareCoverImage from '../../assets/分享封面.png';
+// import realSceneIcon from '../../assets/实景.png';
+// import heatMapIcon from '../../assets/松紧热图片.png';
 import { apiService, authAPI } from '../../services/api';
 import DownloadAppModal from '../../components/DownloadAppModal';
-import FixedDownloadPrompt from '../../components/FixedDownloadPrompt';
+// import FixedDownloadPrompt from '../../components/FixedDownloadPrompt';
 import ShareModal from '../../components/ShareModal';
 import CreateModelModal from '../../components/CreateModelModal';
 import ReactHowler from 'react-howler';
@@ -50,43 +50,44 @@ const isRtcLog = false;
 
 //add by chao 2025.09.29 增加路由监听事件
 let locRouteNum = 0;
+console.log('性能调优 a1.0.0：' + new Date().toLocaleString() +' '+ performance.now() )
 const MyContext = React.createContext({});
 
 const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
   const location = useLocation();
 
 //add by chao 2025.09.29 增加路由监听事件
-  useEffect(() => {    
-    console.log('locRouteNum:' + locRouteNum);
-    console.log('location： ' + location.pathname);
-    if (location.pathname === '/') {
-      // console.log('返回主页面');      
-      if(locRouteNum>0){
-        const loginCache = getLoginCache();
-        console.log('getLoginCache:', getLoginCache());
-        console.log('locationState:', locationState);
-        //重新执行登台操作
-        // tryonInitializedRef.current = false;
+  // useEffect(() => {    
+  //   console.log('locRouteNum:' + locRouteNum);
+  //   console.log('location： ' + location.pathname);
+  //   if (location.pathname === '/') {
+  //     // console.log('返回主页面');      
+  //     if(locRouteNum>0){
+  //       const loginCache = getLoginCache();
+  //       console.log('getLoginCache:', getLoginCache());
+  //       console.log('locationState:', locationState);
+  //       //重新执行登台操作
+  //       // tryonInitializedRef.current = false;
 
-      if (!loginCache) {
-        alert("缓存失效")
-        return;
-      }
-      // setLoginParams({
-      //   token: loginCache.token,
-      //   userId: loginCache.userId,
-      //   tenantId: loginCache.tenantId,
-      //   roomId: loginCache.roomId,
-      //   coCreationId: loginCache.coCreationId,
-      //   shareScene: loginCache.shareScene,
-      // });
+  //     if (!loginCache) {
+  //       alert("缓存失效")
+  //       return;
+  //     }
+  //     // setLoginParams({
+  //     //   token: loginCache.token,
+  //     //   userId: loginCache.userId,
+  //     //   tenantId: loginCache.tenantId,
+  //     //   roomId: loginCache.roomId,
+  //     //   coCreationId: loginCache.coCreationId,
+  //     //   shareScene: loginCache.shareScene,
+  //     // });
 
-        console.log('🏠 Home组件登录参数更新:', loginParams);
-        startUpDressUp();
-      }
-      locRouteNum = locRouteNum + 1;      
-    }
-  }, [location]);  
+  //       console.log('🏠 Home组件登录参数更新:', loginParams);
+  //       startUpDressUp();
+  //     }
+  //     locRouteNum = locRouteNum + 1;      
+  //   }
+  // }, [location]);  
 
   const navigate = useNavigate();
   const locationState = location.state || {};
@@ -498,50 +499,51 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     }
   };
 
-  // 处理热力图图标点击
-  const handleHeatMapClick = async () => {
-    if(isHotMapLog){
-      console.log('🔥 111热力图图标被点击，当前状态:', isHeatMapEnabled);
-    }
-    // 切换热力图开关状态
-    const newHeatMapState = !isHeatMapEnabled;
-    setIsHeatMapEnabled(newHeatMapState);
+  // update by chao 2025.10.01 注释热力图
+  // // 处理热力图图标点击
+  // const handleHeatMapClick = async () => {
+  //   if(isHotMapLog){
+  //     console.log('🔥 111热力图图标被点击，当前状态:', isHeatMapEnabled);
+  //   }
+  //   // 切换热力图开关状态
+  //   const newHeatMapState = !isHeatMapEnabled;
+  //   setIsHeatMapEnabled(newHeatMapState);
 
-    // 检查RTC连接状态
-    if(isHotMapLog){
-      if (!rtcVideoService.getConnectionStatus()) {
-        console.error('❌ RTC未连接，无法发送热力图请求');
-        console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
-        console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
-        console.log('🔧 调试信息：');
-        console.log('  - showSelectionScreen:', showSelectionScreen);
-        console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
-        console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
-        console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
-        return;
-      }
-    }
-    // 检查是否在视频播放状态（已登台）
-    if (showSelectionScreen) {
-      console.error('❌ 未在视频播放状态，无法发送热力图请求');
-      return;
-    }
+  //   // 检查RTC连接状态
+  //   if(isHotMapLog){
+  //     if (!rtcVideoService.getConnectionStatus()) {
+  //       console.error('❌ RTC未连接，无法发送热力图请求1');
+  //       console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
+  //       console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
+  //       console.log('🔧 调试信息：');
+  //       console.log('  - showSelectionScreen:', showSelectionScreen);
+  //       console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
+  //       console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
+  //       console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
+  //       return;
+  //     }
+  //   }
+  //   // 检查是否在视频播放状态（已登台）
+  //   if (showSelectionScreen) {
+  //     console.error('❌ 未在视频播放状态，无法发送热力图请求');
+  //     return;
+  //   }
 
-    // 发送热力图RTC消息
-    try {
-      if(isHotMapLog){
-        console.log('🚀 开始发送热力图RTC消息...', newHeatMapState);
-      }      
-      rtcVideoService.sendHeatMap(newHeatMapState);
-      if(isHotMapLog){
-        console.log('✅ 热力图RTC消息已发送:', newHeatMapState);
-      }
-    } catch (error) {
-      console.error('❌ 发送热力图RTC消息失败:', error);
-      // 显示错误提示
-      alert(`热力图操作失败: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  };
+  //   // 发送热力图RTC消息
+  //   try {
+  //     if(isHotMapLog){
+  //       console.log('🚀 开始发送热力图RTC消息...', newHeatMapState);
+  //     }      
+  //     rtcVideoService.sendHeatMap(newHeatMapState);
+  //     if(isHotMapLog){
+  //       console.log('✅ 热力图RTC消息已发送:', newHeatMapState);
+  //     }
+  //   } catch (error) {
+  //     console.error('❌ 发送热力图RTC消息失败:', error);
+  //     // 显示错误提示
+  //     alert(`热力图操作失败: ${error instanceof Error ? error.message : String(error)}`);
+  //   }
+  // };
 
 
   const handleActionModelClick = (msg: any) => {
@@ -562,14 +564,14 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
     // 检查RTC连接状态
     if (!rtcVideoService.getConnectionStatus()) {
-      console.error('❌ RTC未连接，无法发送热力图请求');
-      console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
-      console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
-      console.log('🔧 调试信息：');
-      console.log('  - showSelectionScreen:', showSelectionScreen);
-      console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
-      console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
-      console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
+      console.error('❌ RTC未连接，无法发送热力图请求2');
+      // console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
+      // console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
+      // console.log('🔧 调试信息：');
+      // console.log('  - showSelectionScreen:', showSelectionScreen);
+      // console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
+      // console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
+      // console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
       return;
     }
 
@@ -595,63 +597,63 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     }
   }
 
-  // 处理实景图标点击
-  const handleRealSceneClick = async (index?: number) => {
-    if (index === undefined) {
-      // 点击主实景图标，切换展开/收起状态
-      setIsRealSceneExpanded(!isRealSceneExpanded);
-      // 收起动作展开状态
-      setIsActionExpanded(false);
-    } else {
-      // 点击具体的实景，更新选中状态和主图标，然后自动收起
-      setSelectedRealSceneIndex(index);
-      setIsRealSceneExpanded(false); // 自动收起
+  // // 处理实景图标点击
+  // const handleRealSceneClick = async (index?: number) => {
+  //   if (index === undefined) {
+  //     // 点击主实景图标，切换展开/收起状态
+  //     setIsRealSceneExpanded(!isRealSceneExpanded);
+  //     // 收起动作展开状态
+  //     setIsActionExpanded(false);
+  //   } else {
+  //     // 点击具体的实景，更新选中状态和主图标，然后自动收起
+  //     setSelectedRealSceneIndex(index);
+  //     setIsRealSceneExpanded(false); // 自动收起
 
-      const selectedScene = realSceneIcons[index];
-      console.log('选中实景:', selectedScene.name, '地图名称:', selectedScene.mapName);
+  //     const selectedScene = realSceneIcons[index];
+  //     console.log('选中实景:', selectedScene.name, '地图名称:', selectedScene.mapName);
 
-      // 切换场景音乐
-      switchSceneMusic(selectedScene.name);
-      if(isVideoPlayLog){
-        // 检查RTC连接状态
-        if (!rtcVideoService.getConnectionStatus()) {
-          console.error('❌ RTC未连接，无法切换地图');
-          console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
-          console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
-          console.log('🔧 调试信息：');
-          console.log('  - showSelectionScreen:', showSelectionScreen);
-          console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
-          console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
-          console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
-          return;
-        }
-      }
-      // 检查是否在视频播放状态（已登台）
-      if (showSelectionScreen) {
-        console.error('❌ 未在视频播放状态，无法切换地图');
-        return;
-      }
+  //     // 切换场景音乐
+  //     switchSceneMusic(selectedScene.name);
+  //     if(isVideoPlayLog){
+  //       // 检查RTC连接状态
+  //       if (!rtcVideoService.getConnectionStatus()) {
+  //         console.error('❌ RTC未连接，无法切换地图');
+  //         console.log('🔍 RTC连接状态检查失败，可能需要等待RTC初始化完成');
+  //         console.log('💡 提示：请确保已完成登台流程，RTC服务已启动');
+  //         console.log('🔧 调试信息：');
+  //         console.log('  - showSelectionScreen:', showSelectionScreen);
+  //         console.log('  - hasStartedTryon.current:', hasStartedTryon.current);
+  //         console.log('  - RTC SDK版本:', rtcVideoService.getSDKVersion());
+  //         console.log('  - RTC连接状态:', rtcVideoService.getConnectionStatus());
+  //         return;
+  //       }
+  //     }
+  //     // 检查是否在视频播放状态（已登台）
+  //     if (showSelectionScreen) {
+  //       console.error('❌ 未在视频播放状态，无法切换地图');
+  //       return;
+  //     }
 
-      // 发送切换地图的RTC消息
-      try {
-        console.log('🚀 开始发送切换地图RTC消息...');
-        rtcVideoService.sendChangeMap(selectedScene.mapName);
-        console.log('✅ 切换地图RTC消息已发送:', selectedScene.mapName);
-      } catch (error) {
-        console.error('❌ 发送切换地图RTC消息失败:', error);
-        // 显示错误提示
-        alert(`切换地图失败: ${error instanceof Error ? error.message : String(error)}`);
-      }
-    }
-  };
+  //     // 发送切换地图的RTC消息
+  //     try {
+  //       console.log('🚀 开始发送切换地图RTC消息...');
+  //       rtcVideoService.sendChangeMap(selectedScene.mapName);
+  //       console.log('✅ 切换地图RTC消息已发送:', selectedScene.mapName);
+  //     } catch (error) {
+  //       console.error('❌ 发送切换地图RTC消息失败:', error);
+  //       // 显示错误提示
+  //       alert(`切换地图失败: ${error instanceof Error ? error.message : String(error)}`);
+  //     }
+  //   }
+  // };
 
-  // 获取分类的实际图标URL（优先使用服务器返回的classifyUrl）
-  const getCategoryIcon = (classifyName: string): string => {
-    // const categoryItem = clothesList.find(item => item.classifyName === classifyName);
-    // // 优先使用服务器返回的classifyUrl，如果没有则使用本地图标
-    // return categoryItem?.classifyUrl || getClothesIcon(classifyName);
-    return getClothesIcon(classifyName);
-  };
+  // // 获取分类的实际图标URL（优先使用服务器返回的classifyUrl）
+  // const getCategoryIcon = (classifyName: string): string => {
+  //   // const categoryItem = clothesList.find(item => item.classifyName === classifyName);
+  //   // // 优先使用服务器返回的classifyUrl，如果没有则使用本地图标
+  //   // return categoryItem?.classifyUrl || getClothesIcon(classifyName);
+  //   return getClothesIcon(classifyName);
+  // };
 
   // 根据场景名称获取对应的BGM
   const getBGMBySceneName = (sceneName: string): string => {
@@ -676,110 +678,110 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     }
   };
 
-  // 获取第一个分类的第一个服装（用于顶部显示）
-  const getFirstClothesOfFirstCategory = (): any | null => {
-    if (clothesList.length === 0) return null;
+  // // 获取第一个分类的第一个服装（用于顶部显示）
+  // const getFirstClothesOfFirstCategory = (): any | null => {
+  //   if (clothesList.length === 0) return null;
 
-    const firstCategory = getUniqueCategories()[0];
-    if (!firstCategory) return null;
+  //   const firstCategory = getUniqueCategories()[0];
+  //   if (!firstCategory) return null;
 
-    const firstCategoryClothes = getClothesForCategory(firstCategory);
-    return firstCategoryClothes.length > 0 ? firstCategoryClothes[0] : null;
-  };
+  //   const firstCategoryClothes = getClothesForCategory(firstCategory);
+  //   return firstCategoryClothes.length > 0 ? firstCategoryClothes[0] : null;
+  // };
 
-  // 获取当前应该在顶部显示的服装
-  const getCurrentDisplayClothes = (): any | null => {
-    console.log('🔍 getCurrentDisplayClothes 被调用');
-    console.log('🔍 lastSelectedClothes:', lastSelectedClothes);
-    console.log('🔍 isBrowsingClothes:', isBrowsingClothes);
-    console.log('🔍 selectedCategory:', selectedCategory);
-    console.log('🔍 selectedClothesIndex:', selectedClothesIndex);
+  // // 获取当前应该在顶部显示的服装
+  // const getCurrentDisplayClothes = (): any | null => {
+  //   console.log('🔍 getCurrentDisplayClothes 被调用');
+  //   console.log('🔍 lastSelectedClothes:', lastSelectedClothes);
+  //   console.log('🔍 isBrowsingClothes:', isBrowsingClothes);
+  //   console.log('🔍 selectedCategory:', selectedCategory);
+  //   console.log('🔍 selectedClothesIndex:', selectedClothesIndex);
 
-    // 优先显示从房间信息获取的衣服
-    if (lastSelectedClothes) {
-      console.log('✅ 返回从房间信息获取的衣服:', lastSelectedClothes);
-      // 确保返回的衣服对象有正确的图片字段
-      const normalizedClothes = {
-        ...lastSelectedClothes,
-        clothesImageUrl: lastSelectedClothes.clothesImageUrl || lastSelectedClothes.image || '',
-        clothesName: lastSelectedClothes.clothesName || lastSelectedClothes.name || '',
-        classifyName: lastSelectedClothes.classifyName || lastSelectedClothes.type || ''
-      };
-      console.log('✅ 标准化后的衣服对象:', normalizedClothes);
-      return normalizedClothes;
-    }
+  //   // 优先显示从房间信息获取的衣服
+  //   if (lastSelectedClothes) {
+  //     console.log('✅ 返回从房间信息获取的衣服:', lastSelectedClothes);
+  //     // 确保返回的衣服对象有正确的图片字段
+  //     const normalizedClothes = {
+  //       ...lastSelectedClothes,
+  //       clothesImageUrl: lastSelectedClothes.clothesImageUrl || lastSelectedClothes.image || '',
+  //       clothesName: lastSelectedClothes.clothesName || lastSelectedClothes.name || '',
+  //       classifyName: lastSelectedClothes.classifyName || lastSelectedClothes.type || ''
+  //     };
+  //     console.log('✅ 标准化后的衣服对象:', normalizedClothes);
+  //     return normalizedClothes;
+  //   }
 
-    // 如果正在浏览某个分类，显示选中的服装
-    if (isBrowsingClothes && selectedCategory) {
-      const categoryClothes = getClothesForCategory(selectedCategory);
-      const result = categoryClothes.length > selectedClothesIndex ? categoryClothes[selectedClothesIndex] : null;
-      console.log('✅ 返回分类中选中的衣服:', result);
-      return result;
-    }
+  //   // 如果正在浏览某个分类，显示选中的服装
+  //   if (isBrowsingClothes && selectedCategory) {
+  //     const categoryClothes = getClothesForCategory(selectedCategory);
+  //     const result = categoryClothes.length > selectedClothesIndex ? categoryClothes[selectedClothesIndex] : null;
+  //     console.log('✅ 返回分类中选中的衣服:', result);
+  //     return result;
+  //   }
 
-    // 否则显示第一个分类的第一个服装
-    const result = getFirstClothesOfFirstCategory();
-    console.log('✅ 返回第一个分类的第一个衣服:', result);
-    return result;
-  };
+  //   // 否则显示第一个分类的第一个服装
+  //   const result = getFirstClothesOfFirstCategory();
+  //   console.log('✅ 返回第一个分类的第一个衣服:', result);
+  //   return result;
+  // };
 
-  // 获取某个分类下的所有服装（从clothesItems中获取）
-  const getClothesForCategory = (category: string): any[] => {
-    const categoryItem = clothesList.find(item => item.classifyName === category);
-    return categoryItem?.clothesItems || [];
-  };
+  // // 获取某个分类下的所有服装（从clothesItems中获取）
+  // const getClothesForCategory = (category: string): any[] => {
+  //   const categoryItem = clothesList.find(item => item.classifyName === category);
+  //   return categoryItem?.clothesItems || [];
+  // };
 
-  // 获取所有分类
-  const getUniqueCategories = (): string[] => {
-    return clothesList.map(item => item.classifyName);
-  };
+  // // 获取所有分类
+  // const getUniqueCategories = (): string[] => {
+  //   return clothesList.map(item => item.classifyName);
+  // };
 
-  // 处理分类点击
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-    setIsBrowsingClothes(true);
+  // // 处理分类点击
+  // const handleCategoryClick = (category: string) => {
+  //   setSelectedCategory(category);
+  //   setIsBrowsingClothes(true);
 
-    // 设置当前选中的分类ID
-    const classifyId = getClassifyId(category);
-    setSelectedClassifyId(classifyId);
+  //   // 设置当前选中的分类ID
+  //   const classifyId = getClassifyId(category);
+  //   setSelectedClassifyId(classifyId);
 
-    // 调试：打印分类下的服装数量
-    const categoryClothes = getClothesForCategory(category);
-    console.log(`分类 "${category}" 下的服装数量:`, categoryClothes.length);
-    console.log(`分类 "${category}" 下的服装列表:`, categoryClothes.slice(0, 3)); // 只打印前3个用于调试
-  };
+  //   // 调试：打印分类下的服装数量
+  //   const categoryClothes = getClothesForCategory(category);
+  //   console.log(`分类 "${category}" 下的服装数量:`, categoryClothes.length);
+  //   console.log(`分类 "${category}" 下的服装列表:`, categoryClothes.slice(0, 3)); // 只打印前3个用于调试
+  // };
 
-  // 处理返回到分类列表
-  const handleBackToCategories = () => {
-    setIsBrowsingClothes(false);
-    setSelectedCategory(null);
-    setSelectedClothesIndex(0); // 重置到第一个服装
-  };
+  // // 处理返回到分类列表
+  // const handleBackToCategories = () => {
+  //   setIsBrowsingClothes(false);
+  //   setSelectedCategory(null);
+  //   setSelectedClothesIndex(0); // 重置到第一个服装
+  // };
 
-  // 处理服装点击
-  const handleClothesClick = async (clothesItem: any, index: number) => {
-    // 更新顶部显示的服装 - 使用在当前分类下的相对索引
-    setSelectedClothesIndex(index);
+  // // 处理服装点击
+  // const handleClothesClick = async (clothesItem: any, index: number) => {
+  //   // 更新顶部显示的服装 - 使用在当前分类下的相对索引
+  //   setSelectedClothesIndex(index);
 
-    // 更新右侧顶部图片显示的衣服
-    setLastSelectedClothes(clothesItem);
+  //   // 更新右侧顶部图片显示的衣服
+  //   setLastSelectedClothes(clothesItem);
 
-    // 打印详细的衣服信息日志
-    console.log('👕 选中服装详细信息:', {
-      服装名称: clothesItem.clothesName || '未知',
-      服装分类: clothesItem.classifyName || '未知',
-      服装ID: clothesItem.clothesId || '未知',
-      图片URL: clothesItem.clothesImageUrl || '未知',
-      分类内索引: index,
-      完整对象: clothesItem
-    });
+  //   // 打印详细的衣服信息日志
+  //   console.log('👕 选中服装详细信息:', {
+  //     服装名称: clothesItem.clothesName || '未知',
+  //     服装分类: clothesItem.classifyName || '未知',
+  //     服装ID: clothesItem.clothesId || '未知',
+  //     图片URL: clothesItem.clothesImageUrl || '未知',
+  //     分类内索引: index,
+  //     完整对象: clothesItem
+  //   });
 
-    console.log('选中服装:', clothesItem, '分类内索引:', index);
-    console.log('选中服装图片URL:', clothesItem.clothesImageUrl);
+  //   console.log('选中服装:', clothesItem, '分类内索引:', index);
+  //   console.log('选中服装图片URL:', clothesItem.clothesImageUrl);
 
-    // 处理衣服管理逻辑
-    await handleClothesManagement(clothesItem);
-  };
+  //   // 处理衣服管理逻辑
+  //   await handleClothesManagement(clothesItem);
+  // };
 
   // 开始图标自动隐藏定时器（视频播放界面用）
   const startIconHideTimer = () => {
@@ -842,44 +844,44 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     }
   };
 
-  // 处理视频播放界面的更多点击
-  const handleVideoMoveClick = (index?: number) => {
-    if (index === undefined) {
-      // 点击主动作图标，切换展开/收起状态
-      setIsMoveExpanded(!isMoveExpanded);
-      // 收起实景展开状态
-      setIsRealSceneExpanded(false);
-    } else {
-      // 点击具体的动作，更新选中状态和主图标，然后自动收起
-      setSelectedMoveIndex(index);
-      setIsMoveExpanded(false); // 自动收起
+  // // 处理视频播放界面的更多点击
+  // const handleVideoMoveClick = (index?: number) => {
+  //   if (index === undefined) {
+  //     // 点击主动作图标，切换展开/收起状态
+  //     setIsMoveExpanded(!isMoveExpanded);
+  //     // 收起实景展开状态
+  //     setIsRealSceneExpanded(false);
+  //   } else {
+  //     // 点击具体的动作，更新选中状态和主图标，然后自动收起
+  //     setSelectedMoveIndex(index);
+  //     setIsMoveExpanded(false); // 自动收起
 
-      console.log('选中更多， 跳转:', moveIcons[index].name);
-      navigate('/upload');
-    }
+  //     console.log('选中更多， 跳转:', moveIcons[index].name);
+  //     navigate('/upload');
+  //   }
 
-    // 移除隐藏定时器，让icon常驻显示
-    // startIconHideTimer();
-  };
+  //   // 移除隐藏定时器，让icon常驻显示
+  //   // startIconHideTimer();
+  // };
 
-  // 处理视频播放界面的动作点击
-  const handleVideoActionClick = (index?: number) => {
-    if (index === undefined) {
-      // 点击主动作图标，切换展开/收起状态
-      setIsActionExpanded(!isActionExpanded);
-      // 收起实景展开状态
-      setIsRealSceneExpanded(false);
-    } else {
-      // 点击具体的动作，更新选中状态和主图标，然后自动收起
-      setSelectedActionIndex(index);
-      setIsActionExpanded(false); // 自动收起
-      console.log('选中动作:', actionIcons[index].name);
+  // // 处理视频播放界面的动作点击
+  // const handleVideoActionClick = (index?: number) => {
+  //   if (index === undefined) {
+  //     // 点击主动作图标，切换展开/收起状态
+  //     setIsActionExpanded(!isActionExpanded);
+  //     // 收起实景展开状态
+  //     setIsRealSceneExpanded(false);
+  //   } else {
+  //     // 点击具体的动作，更新选中状态和主图标，然后自动收起
+  //     setSelectedActionIndex(index);
+  //     setIsActionExpanded(false); // 自动收起
+  //     console.log('选中动作:', actionIcons[index].name);
       
-    }
+  //   }
 
-    // 移除隐藏定时器，让icon常驻显示
-    // startIconHideTimer();
-  };
+  //   // 移除隐藏定时器，让icon常驻显示
+  //   // startIconHideTimer();
+  // };
 
   // 处理视频播放界面的实景点击
   const handleVideoRealSceneClick = async (index?: number) => {
@@ -928,61 +930,61 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     // startIconHideTimer();
   };
 
-  // 处理视频播放界面的服装分类点击
-  const handleVideoCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-    setIsBrowsingClothes(true);
+  // // 处理视频播放界面的服装分类点击
+  // const handleVideoCategoryClick = (category: string) => {
+  //   setSelectedCategory(category);
+  //   setIsBrowsingClothes(true);
 
-    // 设置当前选中的分类ID
-    const classifyId = getClassifyId(category);
-    setSelectedClassifyId(classifyId);
+  //   // 设置当前选中的分类ID
+  //   const classifyId = getClassifyId(category);
+  //   setSelectedClassifyId(classifyId);
 
-    // 移除隐藏定时器，让icon常驻显示
-    // startIconHideTimer();
+  //   // 移除隐藏定时器，让icon常驻显示
+  //   // startIconHideTimer();
 
-    // 调试：打印分类下的服装数量
-    const categoryClothes = getClothesForCategory(category);
-    console.log(`分类 "${category}" 下的服装数量:`, categoryClothes.length);
-    console.log(`分类 "${category}" 下的服装列表:`, categoryClothes.slice(0, 3)); // 只打印前3个用于调试
-  };
+  //   // 调试：打印分类下的服装数量
+  //   const categoryClothes = getClothesForCategory(category);
+  //   console.log(`分类 "${category}" 下的服装数量:`, categoryClothes.length);
+  //   console.log(`分类 "${category}" 下的服装列表:`, categoryClothes.slice(0, 3)); // 只打印前3个用于调试
+  // };
 
-  // 处理视频播放界面的返回到分类列表
-  const handleVideoBackToCategories = () => {
-    setIsBrowsingClothes(false);
-    setSelectedCategory(null);
-    setSelectedClothesIndex(0); // 重置到第一个服装
+  // // 处理视频播放界面的返回到分类列表
+  // const handleVideoBackToCategories = () => {
+  //   setIsBrowsingClothes(false);
+  //   setSelectedCategory(null);
+  //   setSelectedClothesIndex(0); // 重置到第一个服装
 
-    // 移除隐藏定时器，让icon常驻显示
-    // startIconHideTimer();
-  };
+  //   // 移除隐藏定时器，让icon常驻显示
+  //   // startIconHideTimer();
+  // };
 
-  // 处理视频播放界面的服装点击
-  const handleVideoClothesClick = async (clothesItem: any, index: number) => {
-    // 更新顶部显示的服装 - 使用在当前分类下的相对索引
-    setSelectedClothesIndex(index);
+  // // 处理视频播放界面的服装点击
+  // const handleVideoClothesClick = async (clothesItem: any, index: number) => {
+  //   // 更新顶部显示的服装 - 使用在当前分类下的相对索引
+  //   setSelectedClothesIndex(index);
 
-    // 更新右侧顶部图片显示的衣服
-    setLastSelectedClothes(clothesItem);
+  //   // 更新右侧顶部图片显示的衣服
+  //   setLastSelectedClothes(clothesItem);
 
-    // 打印详细的衣服信息日志
-    console.log('🎬 视频界面选中服装详细信息:', {
-      服装名称: clothesItem.clothesName || '未知',
-      服装分类: clothesItem.classifyName || '未知',
-      服装ID: clothesItem.clothesId || '未知',
-      图片URL: clothesItem.clothesImageUrl || '未知',
-      分类内索引: index,
-      完整对象: clothesItem
-    });
+  //   // 打印详细的衣服信息日志
+  //   console.log('🎬 视频界面选中服装详细信息:', {
+  //     服装名称: clothesItem.clothesName || '未知',
+  //     服装分类: clothesItem.classifyName || '未知',
+  //     服装ID: clothesItem.clothesId || '未知',
+  //     图片URL: clothesItem.clothesImageUrl || '未知',
+  //     分类内索引: index,
+  //     完整对象: clothesItem
+  //   });
 
-    console.log('选中服装:', clothesItem, '分类内索引:', index);
-    console.log('选中服装图片URL:', clothesItem.clothesImageUrl);
+  //   console.log('选中服装:', clothesItem, '分类内索引:', index);
+  //   console.log('选中服装图片URL:', clothesItem.clothesImageUrl);
 
-    // 处理衣服管理逻辑
-    await handleClothesManagement(clothesItem);
+  //   // 处理衣服管理逻辑
+  //   await handleClothesManagement(clothesItem);
 
-    // 移除隐藏定时器，让icon常驻显示
-    // startIconHideTimer();
-  };
+  //   // 移除隐藏定时器，让icon常驻显示
+  //   // startIconHideTimer();
+  // };
 
   // 处理触摸开始事件
   const handleTouchStart = (event: React.TouchEvent | React.MouseEvent) => {
@@ -1390,6 +1392,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
   useEffect(() => {
     console.log('🏠 Home组件初始化，检查登录参数...');
+    console.log('性能调优 组件初始化1：' + new Date().toLocaleString() +' '+ performance.now() )
     if (loginParamsInitializedRef.current) return;
     loginParamsInitializedRef.current = true;
 
@@ -1476,6 +1479,8 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       clearLoginCache();
       navigate('/login?redirect=' + encodeURIComponent(location.pathname));
     }
+
+    console.log('性能调优 组件初始化2：' + new Date().toLocaleString() +' '+ performance.now() )
   }, []); // 空依赖数组，只在组件挂载时执行一次
 
   // 初始化房间名称和服饰列表
@@ -1483,7 +1488,8 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
   // update by chao 2025.09.29 登台刷新问题：定位登台代码段
   useEffect(() => {
-    console.log('🏠 Home组件登录参数更新:', loginParams);
+    console.log('性能调优 a1.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
+    console.log('🏠 Home组件登录参数更新2:', loginParams);
     startUpDressUp();
   }, [loginParams]); // 只依赖loginParams，避免重复执行
   // add by chao 2025.09.29 登台刷新问题：将登台代码段独立成函数，方便控制执行时机
@@ -1491,6 +1497,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     if(isRtcLog) console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);
 
     if (!loginParams || tryonInitializedRef.current) {
+      console.log('性能调优 a1.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('🔍 条件不满足，退出useEffect');
       return;
     }
@@ -1579,7 +1586,9 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
             console.log('✅ RTC已连接，无需重新连接');
           }
         }
-      }, 1000);
+      //update by chao 2025.10.01 优化性能
+      // }, 1000);
+      }, 10);
     };
 
     autoStartTryon();
@@ -1615,7 +1624,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
           // 对于canvas，我们假设它总是"播放"的
           if (videoTag && (videoTag.tagName === 'CANVAS' || (!videoTag.paused && !videoTag.ended && videoTag.readyState > 2))) {
             console.log(`✅ 视频 ${userId} 已开始播放`);
-            console.log('性能调优 b2.2：' + new Date().toLocaleString())
+            console.log('性能调优 b2.2：' + new Date().toLocaleString()+' '+ performance.now())
             setVideoPlayingStatus(prev => ({
               ...prev,
               [userId]: true
@@ -1964,7 +1973,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
       console.warn('缺少登录参数，无法开始试穿');
       return;
     }
-
+console.log('性能调优 c1.0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
     // 检查RTC连接状态，如果已连接则跳过
     if (rtcVideoService.getConnectionStatus()) {
       console.log('RTC已连接，跳过重复初始化');
@@ -1980,12 +1989,12 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
     try {
       hasStartedTryon.current = true;
       setShowSelectionScreen(false); // 隐藏选择界面，显示视频播放界面
-
+      console.log('性能调优 c1.0.0.2：' + new Date().toLocaleString() +' '+ performance.now() )
       // 获取房间信息以获取userId
       if(isRtcLog) console.log('🔍 开始获取房间信息...');
       const { roomAPI } = await import('../../services/api');
       const roomResponse = await roomAPI.getSysRoomShare(loginParams.roomId, loginParams.token);
-      
+      console.log('性能调优 c1.0.0.3：' + new Date().toLocaleString() +' '+ performance.now() )
       if (!roomResponse.ok || !roomResponse.data) {
         console.warn('⚠️ 获取房间信息失败，使用默认userId');
         // 如果获取房间信息失败，使用loginParams中的userId作为备用
@@ -2005,13 +2014,14 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
           coCreationId: loginParams.coCreationId,
           shareScene: loginParams.shareScene,
         };
-
+        console.log('性能调优 c1.0.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
         if(isRtcLog) console.log('开始自动试穿流程，配置:', config);
         await tryonService.startTryonFlow(config);
+        console.log('性能调优 c1.0.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
         if(isRtcLog) console.log('✅ 试穿流程启动成功');
         return;
       }
-
+console.log('性能调优 c1.0.0.6：' + new Date().toLocaleString() +' '+ performance.now() )
       const roomInfo = roomAPI.parseRoomInfoResponse(roomResponse);
       if (!roomInfo || !roomInfo.data) {
         console.warn('⚠️ 解析房间信息失败，使用默认userId');
@@ -2037,7 +2047,7 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
         if(isRtcLog) console.log('✅ 试穿流程启动成功');
         return;
       }
-
+console.log('性能调优 c1.0.0.7：' + new Date().toLocaleString() +' '+ performance.now() )
       if(isRtcLog) console.log('✅ 房间信息获取成功:', roomInfo);
       console.log('🔍 房间信息中的userId:', roomInfo.data.userId);
 
@@ -2059,10 +2069,10 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
         coCreationId: loginParams.coCreationId,
         shareScene: loginParams.shareScene,
       };
-
+console.log('性能调优 c1.0.0.8：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('开始自动试穿流程，配置:', config);
       await tryonService.startTryonFlow(config);
-
+console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ performance.now() )
       if(isRtcLog) console.log('✅ 试穿流程启动成功');
 
     } catch (error) {
@@ -3834,6 +3844,41 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
 
 const Home = () => {
   const [step, setStep] = useState<string>('home'); // home 
+  //<--add by chao 2025.10.01
+//   const animationFrameRef = useRef<number | null>(null);
+//   const lastTimeRef = useRef<number>(0);
+//   const targetFPS = 30; // 目标帧率30FPS
+//   const interval = 1000 / targetFPS;
+//   const boxRef = useRef(null);
+//   const angleRef = useRef(0);
+
+// // 帧率控制逻辑
+//   useEffect(() => {
+//     // alert('ssss');
+//     if (boxRef.current) {
+//       boxRef.current.style.transform = `rotate(${angleRef.current}deg)`;
+//     }
+//     const animate = (currentTime: number) => {
+//       if (currentTime - lastTimeRef.current >= interval) {
+//         // 在这里添加需要每帧执行的逻辑
+//         // 例如更新动画状态或渲染数据
+//         angleRef.current += 2;
+//         boxRef.current.style.transform = `rotate(${angleRef.current}deg)`;
+//         alert('动画帧执行');
+//         lastTimeRef.current = currentTime;
+//       }
+//       animationFrameRef.current = requestAnimationFrame(animate);
+//     };
+
+//     animationFrameRef.current = requestAnimationFrame(animate);
+    
+//     return () => {
+//       let requestId = requestAnimationFrame(animate);
+//       cancelAnimationFrame(requestId);
+//     };
+//   }, []);
+
+  //-->add by chao 2025.10.01
   const onClickBack = () => {
     setStep('home');
   }

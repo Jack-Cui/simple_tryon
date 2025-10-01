@@ -24,7 +24,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-
+console.log('性能调优 a1.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
   // 在开发环境中预填充测试数据
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -153,6 +153,7 @@ const Login = () => {
 
     try {
       console.log('come in')
+
       const response = await authAPI.login(phoneNumber, verifyCode);
       
       if (response.ok) {

@@ -116,7 +116,8 @@ const RTCVideoViewer: React.FC<RTCVideoViewerProps> = ({
         // 延迟一点时间确保DOM元素已经渲染
         setTimeout(() => {
           setupRemoteVideo(stream.userId, stream.domId);
-        }, 100);
+        //优化setTimeOut 原值100
+        }, 10);
       }
     });
   }, [remoteStreams]);
