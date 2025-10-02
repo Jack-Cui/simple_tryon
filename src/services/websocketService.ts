@@ -1022,7 +1022,8 @@ export class WebSocketService {
 
   // 处理登台响应
   private handleEnterStageResponse(payload: ArrayBuffer): void {
-    if(isRtcLog) console.log('登台响应:', payload);
+    // if(isRtcLog) 
+      console.log('登台响应:', payload);
     try {
       const enterStageAsw = proto.oEnterStageAsw.decode(new Uint8Array(payload));
       if(isRtcLog) console.log('登台响应详情:', enterStageAsw);
