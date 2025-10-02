@@ -44,9 +44,9 @@ import SubscribePackage from '../SubscribePackage';
 const Long = require('long');
 // add by chao 2025.09.30 增加日志开关
 const isHotMapLog = false;
-const isVideoPlayLog = false;
+const isVideoPlayLog = true;
 const isDeductLog = false;
-const isRtcLog = false;
+const isRtcLog = true;
 
 //add by chao 2025.09.29 增加路由监听事件
 let locRouteNum = 0;

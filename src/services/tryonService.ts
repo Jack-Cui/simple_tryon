@@ -478,21 +478,36 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       // 重新获取房间信息用于构建登台信息
       const response = await roomAPI.getSysRoomShare(this.config.coCreationId, this.accessToken);
       if (!response.ok) {
-        throw new Error(`获取房间信息失败: HTTP ${response.status}`);
+        throw new Error(`获取共享房间信息失败: HTTP ${response.status}`);
       }
-
       const roomInfo = roomAPI.parseRoomInfoResponse(response);
       if (!roomInfo) {
-        throw new Error('解析房间信息失败');
+        throw new Error('解析共享房间信息失败');
       }
-      updateRoomIdInCache(roomInfo.data.roomId)
-
+      // updateRoomIdInCache(roomInfo.data.roomId)
       //add by chao 2025.09.29 share 修改B查看A模型不对问题  没执行到这
       console.log('🔍 更新缓存中的coUserId为房间的userId:', roomInfo.data.userId);
       updateCoUserIdFromCache( roomInfo.data.userId);
 
+      //update by chao 2025.10.02 注释这部分：
+      //这里直接根据共享id获取到的原房间号，使用和普通登台方式一样的登台数据
+      // // 构建登台信息
+      // this.enterStageInfo = await roomAPI.buildShareEnterStageInfo(roomInfo, this.accessToken);
+
+      //add by chao 2025.10.02
+      // 重新获取房间信息用于构建登台信息
+      const response1 = await roomAPI.getRoomInfoByRoomId(room_id, this.accessToken);
+      if (!response1.ok) {
+        throw new Error(`获取房间信息失败: HTTP ${response1.status}`);
+      }
+      const roomInfo1 = roomAPI.parseRoomInfoResponse(response1);
+      sessionStorage.setItem('roomInfo1', JSON.stringify(roomInfo1));
+      if (!roomInfo1) {
+        throw new Error('解析房间信息失败');
+      }
       // 构建登台信息
-      this.enterStageInfo = await roomAPI.buildShareEnterStageInfo(roomInfo, this.accessToken);
+      this.enterStageInfo = await roomAPI.buildEnterStageInfo(roomInfo1, this.accessToken);
+
     } else {
       console.log("构建普通登台信息");
       console.log('性能调优 a1.2：' + new Date().toLocaleString()+' '+ performance.now())
@@ -1034,7 +1049,8 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
         userId: loginCache.userId,
         extra1: '', //roomInfo.data.extra1 || '新视频',
         extra2: '', //roomInfo.data.extra2 || '',
-        clothId: '', //roomInfo.data.clothId || '',
+        clothId: '', 
+        // roomInfo.data.clothId || '',
         actionId: '', //roomInfo.data.actionId || '',
         scenarioId: '', //roomInfo.data.scenarioId || '',
         user2Id: null,

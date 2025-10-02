@@ -16,12 +16,12 @@ import {
   CreateSysRoomShareResponse
 } from '../types/api';
 import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache, updateClothesDetailsInCache, updateCoUserIdFromCache, getCoUserIdFromCache } from '../utils/loginCache';
-import { getEndpoint } from '@volcengine/tos-sdk/dist/utils';
-import { get } from 'http';
+// import { getEndpoint } from '@volcengine/tos-sdk/dist/utils';
+// import { get } from 'http';
 
 const Long = require('long');
 const crypto = require('crypto');
-const isRecLog = false; // 是否记录日志，true为记录，false为不记录
+const isRecLog = true; // 是否记录日志，true为记录，false为不记录
 
 // 通用HTTP请求方法
 class ApiService {

@@ -5,7 +5,7 @@ import VERTC, { MediaType, StreamIndex } from '@volcengine/rtc';
 // 从 proto 中获取 Long 类型
 const Long = require('long');
 //add by chao 2025.09.30 日志开关
-const isRtcLog = false;
+const isRtcLog = true;
 
 // 导入RTC相关依赖
 
