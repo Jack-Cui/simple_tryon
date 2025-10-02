@@ -94,7 +94,7 @@ await rtcVideoService.initialize(config);
 // await rtcVideoService.joinRoom();
 
 // 设置远程视频播放器
-await rtcVideoService.setRemoteVideoPlayer(userId, domId);
+await rtcVideoService.(userId, domId);
 
 // 获取远程流列表
 const streams = rtcVideoService.getRemoteStreams();

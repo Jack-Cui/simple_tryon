@@ -33,6 +33,8 @@ export class TryonService {
   private rtcStarted: boolean = false; // 防止重复启动RTC
   private onCreateModelCallback: (() => void) | null = null; // 添加创建模型回调函数
   private modelListChecked: boolean = false; // 添加模型列表校验标志
+   //add by chao 2025.10.02 优化重复获取token操作，startRTCVideo方法中继续使用
+  private rtcToken: string | null = null; // 添加RTC Token属性
 
   constructor() {
     // 监听登台成功事件
@@ -806,6 +808,9 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       throw new Error('缺少必要参数');
     }
     
+    //add by chao 2025.10.02 优化重复获取token操作，startRTCVideo方法中继续使用
+    this.rtcToken = this.generateRTCToken();
+
     const wsConfig: WebSocketConfig = {
       url: `wss://${scheduleResult.data.inst_acc_info.ws_url}`,
       uid: this.config.userId,
@@ -818,7 +823,9 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
         appKey: RTC_CONFIG.APP_KEY,
         roomId: this.roomPrimaryId?.toString() || '',
         userId: this.config.userId,
-        token: this.generateRTCToken() // 动态生成token
+        //update by chao 2025.10.02 优化重复获取token操作，startRTCVideo方法中继续使用
+        token: this.rtcToken
+        // token: this.generateRTCToken() // 动态生成token
       }
     };
     console.log('性能调优 a1.2.3-1：' + new Date().toLocaleString() +' '+ performance.now() +' '+ performance.now())
@@ -852,6 +859,7 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       console.log('  - appKey:', this.config.rtcConfig.appKey);
       console.log('  - roomId:', this.config.rtcConfig.roomId);
       console.log('  - userId:', this.config.rtcConfig.userId);
+      console.log('  - rtcToken:', this.rtcToken ? '已提供' : '未提供');
       console.log('性能调优 b1：' + new Date().toLocaleString()+' '+ performance.now())
       // 使用全局RTC视频服务实例
       this.rtcVideoService = rtcVideoService;
@@ -887,13 +895,16 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       // 初始化RTC服务
       await this.rtcVideoService!.initialize(this.config.rtcConfig);
       
-      // 生成RTC Token
-      const rtcToken = this.generateRTCToken();
-      if(isTronLog) console.log('🔑 生成RTC Token成功');
+      //update by chao 2025.10.02 优化重复获取token操作，startRTCVideo方法中继续使用
+      // // 生成RTC Token
+      // const rtcToken = this.generateRTCToken();
+      // if(isTronLog) console.log('🔑 生成RTC Token成功');
       
       // 加入RTC房间
       console.log('🚪 开始加入RTC房间...');
-      await this.rtcVideoService!.joinRoom(rtcToken);
+      // await this.rtcVideoService!.joinRoom(rtcToken);
+      await this.rtcVideoService!.joinRoom(this.rtcToken||'');
+      console.log('复用rtcToken成功：' + this.rtcToken);
       
       console.log('✅ RTC视频服务接入成功！');
       

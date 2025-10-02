@@ -44,17 +44,17 @@ import SubscribePackage from '../SubscribePackage';
 const Long = require('long');
 // add by chao 2025.09.30 增加日志开关
 const isHotMapLog = false;
-const isVideoPlayLog = true;
+const isVideoPlayLog = false;
 const isDeductLog = false;
-const isRtcLog = true;
+const isRtcLog = false;
 
 //add by chao 2025.09.29 增加路由监听事件
-let locRouteNum = 0;
+// let locRouteNum = 0;
 console.log('性能调优 a1.0.0：' + new Date().toLocaleString() +' '+ performance.now() )
-const MyContext = React.createContext({});
+// const MyContext = React.createContext({});
 
 const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
-  const location = useLocation();
+const location = useLocation();
 
 //add by chao 2025.09.29 增加路由监听事件
   // useEffect(() => {    
@@ -1683,26 +1683,32 @@ const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
         // 立即检查一次
         const isPlaying = checkPlaying();
 
+        //update by chao 2025.10.02 全部减少频率为1000 到100
         // 如果视频还没开始播放且重试次数少于10次，继续检查
-        if (!isPlaying && retryCount < 10) {
-          setTimeout(() => checkVideoPlayingStatus(userId, domId, retryCount + 1), 1000);
-        } else if (retryCount >= 10) {
+        // if (!isPlaying && retryCount < 10) {
+        //   setTimeout(() => checkVideoPlayingStatus(userId, domId, retryCount + 1), 1000);
+        // } else if (retryCount >= 10) {
+        //   console.log(`⚠️ 视频 ${userId} 检查超时，停止重试`);
+        // }
+        if (!isPlaying && retryCount < 100) {
+          setTimeout(() => checkVideoPlayingStatus(userId, domId, retryCount + 1), 100);
+        } else if (retryCount >= 100) {
           console.log(`⚠️ 视频 ${userId} 检查超时，停止重试`);
-        }
+        }        
       } else {
         // 如果还没有video标签，延迟检查，但限制重试次数
-        if (retryCount < 10) {
-          console.log(`⏳ 视频元素 ${domId} 还未创建，${retryCount + 1}秒后重试`);
-          setTimeout(() => checkVideoPlayingStatus(userId, domId, retryCount + 1), 1000);
+        if (retryCount < 100) {
+          console.log(`⏳ 视频元素 ${domId} 还未创建，0.${retryCount + 1}秒后重试`);
+          setTimeout(() => checkVideoPlayingStatus(userId, domId, retryCount + 1), 100);
         } else {
           console.log(`⚠️ 视频元素 ${domId} 创建超时，停止重试`);
         }
       }
     } else {
       // 如果DOM元素还没有创建，延迟检查，但限制重试次数
-      if (retryCount < 10) {
-        console.log(`⏳ DOM元素 ${domId} 还未创建，${retryCount + 1}秒后重试`);
-        setTimeout(() => checkVideoPlayingStatus(userId, domId, retryCount + 1), 1000);
+      if (retryCount < 100) {
+        console.log(`⏳ DOM元素 ${domId} 还未创建，0.${retryCount + 1}秒后重试`);
+        setTimeout(() => checkVideoPlayingStatus(userId, domId, retryCount + 1), 100);
       } else {
         console.log(`⚠️ DOM元素 ${domId} 创建超时，停止重试`);
       }
@@ -2260,8 +2266,8 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
           }
 
           // 使用更频繁的检查，减少间隔时间
-          if (attempt < 20) { // 增加检查次数
-            setTimeout(() => checkVideoElement(attempt + 1), 500); // 减少间隔到500ms
+          if (attempt < 100) { // 增加检查次数
+            setTimeout(() => checkVideoElement(attempt + 1), 100); // 减少间隔到500ms
           } else {
             console.log(`⚠️ 视频元素检查超时: ${domId}`);
           }
@@ -2437,7 +2443,8 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
     return (
       <div style={{
         minHeight: '100vh',
-        backgroundColor: '#a8d5ba', // 浅绿色背景
+        //update by chao 2025.10.02 // 修改播放器背景色
+        backgroundColor: '#ffffffff', // 浅绿色背景
         display: 'flex',
         flexDirection: 'column',
         position: 'relative'
@@ -3605,16 +3612,21 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
               left: 0,
               width: '100vw',
               height: '100vh',
-              backgroundColor: '#000',
+              //update by chao 2025.10.02 // 修改播放器背景色
+              backgroundColor: '#ffffffff',
               zIndex: 10,
               overflow: 'hidden'
+              ,
+              //add by chao 2025.10.02 // 初始隐藏，播放后显示
+              // display:'none'
+              display: videoPlayingStatus[stream.userId] ? 'block' : 'none' 
             }}>
               <div
                 id={stream.domId}
                 style={{
                   width: '100vw',
                   height: '100vh',
-                  backgroundColor: '#333',
+                  backgroundColor: '#ffffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

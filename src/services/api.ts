@@ -1,7 +1,7 @@
 import { API_CONFIG, API_ENDPOINTS } from '../config/api';
 import { v4 as uuidv4 } from 'uuid';
 import JSONbig from 'json-bigint';
-import wx from 'weixin-js-sdk'; 
+// import wx from 'weixin-js-sdk'; 
 
 import { 
   ApiResponse, 
@@ -21,7 +21,7 @@ import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache
 
 const Long = require('long');
 const crypto = require('crypto');
-const isRecLog = true; // 是否记录日志，true为记录，false为不记录
+const isRecLog = false; // 是否记录日志，true为记录，false为不记录
 
 // 通用HTTP请求方法
 class ApiService {

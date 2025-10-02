@@ -217,7 +217,7 @@ export class RTCVideoService {
       // 检查是否是视频开始播放的事件
       // 根据日志，事件有 eventName 属性，我们需要监听 'canplay' 或 'canplaythrough' 事件
       if (event.eventName === 'canplay' || event.eventName === 'canplaythrough') {
-        if(isRtcLog) console.log('🎬 视频可以播放:', event.userId, '事件:', event.eventName);
+        console.log('🎬 视频可以播放:', event.userId, '事件:', event.eventName);
         
         // 发送自定义事件到首页
         const customEvent = new CustomEvent('rtcPlayerEvent', {

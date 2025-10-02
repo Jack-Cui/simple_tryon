@@ -146,7 +146,8 @@ const RTCVideoViewer: React.FC<RTCVideoViewerProps> = ({
         style={{
           width: '100%',
           height: '200px',
-          backgroundColor: '#000',
+          //update by chao 2025.10.02 // 修改播放器背景色
+          backgroundColor: '#ffffffff',
           borderRadius: '8px',
           overflow: 'hidden',
           position: 'relative',
