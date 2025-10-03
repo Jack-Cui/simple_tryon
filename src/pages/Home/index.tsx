@@ -1033,7 +1033,7 @@ const location = useLocation();
         if (!rtcVideoService.getConnectionStatus()) return;
         try {
           // 缩小缩放比例，使用0.1的缩放因子
-          const scaleFactor = 0.1;
+          const scaleFactor = 0.05; // 原来是0.1，现在减半
           rtcVideoService.sendTouchScreen(
             proto.eTouchType.scale,
             { x: scaleDelta * scaleFactor, y: 0, z: 0 },
@@ -1053,45 +1053,64 @@ const location = useLocation();
     const deltaX = currentPos.x - lastTouchPos.x;
     const deltaY = currentPos.y - lastTouchPos.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+//<--- 优化方案1：优化缩放距离，解决转向问题
+  // 只用本次移动的距离，不累计
+  if (distance > 2) { // 阈值可调小一点，提升灵敏度
+    setIsDragging(true);
 
-    //add by chao 2025.09.30 触控优化 y1
-    // 判断当前拖动方向
-    const currentDirection = {
-      x: deltaX === 0 ? 0 : deltaX / Math.abs(deltaX),
-      y: deltaY === 0 ? 0 : deltaY / Math.abs(deltaY)
-    };
-    //add by chao 2025.09.30 触控优化 y1 -->
+    // 旋转比例：一屏宽度转一圈
+    const screenWidth = window.innerWidth;
+    const baseRotationScale = 360 / screenWidth; // 拖动一屏宽度=360度=一圈
+    const rotationScale = baseRotationScale * 1.33; // 提高灵敏度
 
-    // 拖动阈值恢复到10像素
-    if (distance > 10) {
-      setIsDragging(true);
+    if (!rtcVideoService.getConnectionStatus()) return;
+    try {
+      rtcVideoService.sendTouchScreen(
+        proto.eTouchType.rotate,
+        { x: deltaX * rotationScale, y: -deltaY * rotationScale, z: 0 },
+        Date.now()
+      );
+      if (!isVideoPaused) setIsVideoPaused(true);
+    } catch { }
 
-    //add by chao 2025.09.30 触控优化 y1
-    // 判断方向是否切换
-    if (
-      lastDragDirection &&
-      (lastDragDirection.x !== currentDirection.x || lastDragDirection.y !== currentDirection.y)
-    ) {
-      // 方向切换，降低灵敏度或重置累计
-      // 可选：setLastTouchPos(currentPos); // 归零累计
-      // 可选：return; // 本次不发送旋转
-    }
-    setLastDragDirection(currentDirection);
-     //add by chao 2025.09.30 触控优化 y1 -->
+    // 更新lastTouchPos为当前点，保证下次delta是“本次移动”
+    setLastTouchPos(currentPos);
+  }
 
-      if (!rtcVideoService.getConnectionStatus()) return;
-      try {
-        //update by chao 2025.09.25 0.3
-        const rotationScale = 0.08;
-        // 修复旋转方向：向上移动时Y值为负，向下移动时Y值为正
-        rtcVideoService.sendTouchScreen(
-          proto.eTouchType.rotate,
-          { x: deltaX * rotationScale, y: -deltaY * rotationScale, z: 0 },
-          Date.now()
-        );
-        if (!isVideoPaused) setIsVideoPaused(true);
-      } catch { }
-    }
+//--- >优化方案1：
+  //<----优化 原方案
+    // //add by chao 2025.09.30 触控优化 y1
+    // // 判断当前拖动方向
+    // const currentDirection = {
+    //   x: deltaX === 0 ? 0 : deltaX / Math.abs(deltaX),
+    //   y: deltaY === 0 ? 0 : deltaY / Math.abs(deltaY)
+    // };
+    // //add by chao 2025.09.30 触控优化 y1 -->
+
+    // // 拖动阈值恢复到10像素
+    // if (distance > 10) {
+    //   setIsDragging(true);
+
+    // // //add by chao 2025.09.30 触控优化 y1
+    // setLastDragDirection(currentDirection);
+    //  //add by chao 2025.09.30 触控优化 y1 -->
+
+    //   if (!rtcVideoService.getConnectionStatus()) return;
+    //   try {
+    //     //update by chao 2025.09.25 0.3
+    //     const rotationScale = 0.08;
+    //     // 修复旋转方向：向上移动时Y值为负，向下移动时Y值为正
+    //     rtcVideoService.sendTouchScreen(
+    //       proto.eTouchType.rotate,
+    //       { x: deltaX * rotationScale, y: -deltaY * rotationScale, z: 0 },
+    //       Date.now()
+    //     );
+    //     if (!isVideoPaused) setIsVideoPaused(true);
+    //   } catch { }
+    // }
+//---->优化 原方案    
+
+
   };
 
   // 处理触摸结束事件

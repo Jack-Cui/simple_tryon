@@ -5,6 +5,8 @@ import { getLoginCache } from '../utils/loginCache';
 
 const isProtoLog = false; //add by chao 2025.09.30 日志开关
 const isRtcLog = false; //add by chao 2025.09.30 日志开关
+const isRotateLog = false; //add by chao 2025.10.02 日志开关
+
 export interface RTCVideoConfig {
   appId: string;
   appKey: string;
@@ -537,7 +539,7 @@ export class RTCVideoService {
 
   // 发送触摸屏幕消息
   sendTouchScreen(touchType: proto.eTouchType, pos: { x: number, y: number, z: number }, timestamp: number): void {
-    console.log('👆 发送触摸屏幕消息:', { touchType, pos, timestamp });
+    if(isRotateLog) console.log('👆 发送触摸屏幕消息:', { touchType, pos, timestamp });
     rtcMessageHandler.sendTouchScreen(touchType, pos, timestamp);
   }
 

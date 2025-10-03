@@ -4,6 +4,7 @@ const Long = require('long');
 //add by chao 2025.09.30 日志开关
 const isProtoLog = false;
 const isRtcLog = false;
+const isRotateLog = false;
 
 export interface RTCMessage {
   type: string;
@@ -407,7 +408,7 @@ export class RTCMessageHandler {
     }
 
     try {
-      console.log('👆 准备发送触摸屏幕消息:', {
+      if(isRotateLog) console.log('👆 准备发送触摸屏幕消息:', {
         touchType: touchType,
         pos: pos,
         timestamp: timestamp,
@@ -428,7 +429,7 @@ export class RTCMessageHandler {
       const payload = proto.oTouchScreenReq.encode(message).finish();
       const hexString = Array.from(payload).map((b: number) => b.toString(16).padStart(2, '0')).join('');
       
-      console.log('📤 发送触摸屏幕proto消息:', {
+      if(isRotateLog) console.log('📤 发送触摸屏幕proto消息:', {
         id: proto.eClientPID.TouchScreenReq,
         payloadSize: payload.length,
         hexString: hexString
@@ -437,7 +438,7 @@ export class RTCMessageHandler {
       // 使用正确的proto消息格式 (参考C#代码)
       const messageStr = `cmd=proto&id=${proto.eClientPID.TouchScreenReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
-      if(isProtoLog){      
+      if(isRotateLog) {      
       console.log('✅ 触摸屏幕proto消息发送成功:', proto.eClientPID.TouchScreenReq);
       console.log('📤 发送的消息内容:', messageStr);
       }
