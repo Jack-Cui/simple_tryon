@@ -151,7 +151,14 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
             {props.isRing && <Input className='input' value={perHeight} onChange={(value: any) => setPerHeight(value)} label={<img src={HeightIcon} />} suffix={<div>厘米</div>} type="number"  borderless placeholder="请输入您的身高" />}
             {props.isPersonal && <Input className='input' value={perActionName} onChange={(value: any) => setPerActionName(value)} maxlength={4} label={<img src={ActionIcon} />} borderless placeholder="请输入动作名称" />}
             <div className="info">
-                <div className='info_title'>环拍视频要求：</div>
+                {/* <div className='info_title'>环拍视频要求：</div> */}
+                <div className="info_title">
+                    {props.isRing
+                        ? '环拍视频要求：'
+                        : props.isPersonal
+                        ? '拍照要求'
+                        : ''}
+                </div>
                 {(props?.info || []).map((item) => {
                     return <div className='info_item'>{item}</div>
                 })}

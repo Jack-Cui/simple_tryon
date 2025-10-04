@@ -12,7 +12,10 @@
     overflow: auto;  
 }
 .upload-action-navbar {
-    margin-bottom: 20px;
+    /* update by chao 2025.10.04 去掉中间灰色间隙 */
+    /* margin-bottom: 20px; */
+  margin-bottom: 0;
+  padding-bottom: 0;    
 }
 .upload-action-btn {
     position: fixed;
