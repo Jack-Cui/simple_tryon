@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+// import App from './App';
 //add by chao 2025.10.01 性能优化
 // 修改后的动态加载
-// const App = React.lazy(() => import('./App'));
+const App = React.lazy(() => import('./App'));
 // import BrowseHistory from './pages/BrowseHistory';
 // import reportWebVitals from './reportWebVitals';
 
