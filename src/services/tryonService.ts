@@ -4,7 +4,7 @@ import { webSocketService, WebSocketConfig } from './websocketService';
 import { RTCVideoService, RTCVideoConfig, rtcVideoService } from './rtcVideoService';
 import { RTC_CONFIG } from '../config/config';
 import { AccessToken, Privilege } from '../token/AccessToken';
-import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache } from '../utils/loginCache';
+import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache, updateCoRoomIdFromCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 const Long = require('long');
 const isTronLog = false; // 是否打印试穿日志
@@ -490,7 +490,8 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       //add by chao 2025.09.29 share 修改B查看A模型不对问题  没执行到这
       console.log('🔍 更新缓存中的coUserId为房间的userId:', roomInfo.data.userId);
       updateCoUserIdFromCache( roomInfo.data.userId);
-
+      //add by chao 2025.10.07 增加共创房间id
+      updateCoRoomIdFromCache( roomInfo.data.roomId);
       //update by chao 2025.10.02 注释这部分：
       //这里直接根据共享id获取到的原房间号，使用和普通登台方式一样的登台数据
       // // 构建登台信息

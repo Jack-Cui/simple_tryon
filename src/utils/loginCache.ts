@@ -16,6 +16,7 @@ export interface LoginCacheData {
   timestamp: number; // 缓存时间戳
   shareScene: string;
   coUserId: string; // 共创用户ID
+  coRoomId: string; // 共创房间ID
 }
 
 const CACHE_KEY = 'loginCache';
@@ -292,5 +293,42 @@ export const updateCoUserIdFromCache = (coUserId: string): void => {
     }
   } catch (error) {
     console.error('❌ 更新缓存中的coUserId失败:', error);
+  }
+};
+
+/**
+ * 获取缓存中的衣服详情
+ * @param coRoomId 分享者房间ID
+ * @returns 衣服详情，如果没有则返回null
+ */
+export const getCoRoomIdFromCache = (): any | null => {
+  try {
+    const cachedData = getLoginCache();
+    if (cachedData?.coRoomId ) {
+      return cachedData.coRoomId;
+    }
+    return null;
+  } catch (error) {
+    console.error('❌ 从缓存获取分享者房间ID失败:', error);
+    return null;
+  }
+}; 
+  /**
+ * 更新缓存中的房间名称
+ * @param coRoomId 房间名称
+ */
+export const updateCoRoomIdFromCache = (coRoomId: string): void => {
+  try {
+    const cachedData = getLoginCache();
+    if (cachedData) {
+      const updatedData = { ...cachedData, coRoomId };
+      const cacheDurationStr = localStorage.getItem(CACHE_KEY + '_duration');
+      const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;
+      
+      localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
+      console.log('✅ coRoomId 已更新到缓存:', coRoomId);
+    }
+  } catch (error) {
+    console.error('❌ 更新缓存中的 coRoomId 失败:', error);
   }
 };

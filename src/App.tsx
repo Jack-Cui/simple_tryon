@@ -110,7 +110,8 @@ function App() {
               tenantId: tenant_id,
               coCreationId: co_creation_id,
               shareScene: login_scene,
-              coUserId: ''
+              coUserId: '',
+              coRoomId: ''
             });
             
             // 登录成功后立即初始化房间信息

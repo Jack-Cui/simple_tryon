@@ -8,6 +8,7 @@ import { modelAPI, uploadAPI } from "../../services/api";
 import ErrorToast from "../../components/errorToast";
 import MediaView from "../../components/MediaView";
 import { checkVideo } from "../../utils/videoCheck";
+import e from "express";
 const BrowseHistory = (props?: { onBack?: any , isShow?: boolean}) => {
     const navigate = useNavigate();
     const [aigcList, setAigcList] = useState<any[]>([]);
@@ -17,27 +18,54 @@ const BrowseHistory = (props?: { onBack?: any , isShow?: boolean}) => {
     const [videoInfo, setVideoInfo] = useState<any>({});
     useEffect(() => {
         getActionList();
-    }, [])
+    }, [props?.isShow]);
 
     const getActionList = async () => {
+        // console.log('获取动作视频列表111');
         const loginCache: any = getLoginCache();
         if (!loginCache?.token) {
             throw new Error('用户未登录或登录信息缺失');
         }
-        const resultResponse = await uploadAPI.getAiVideoResult(loginCache.token, 1, 10);
-        if (resultResponse.ok) {
-            const resultData = JSON.parse(resultResponse.data);
-            console.log('动作视频结果:', resultData);
+        //add by chao 2025.10.07 支持分享模式查询他人的收藏
+        const coUserId = loginCache.coUserId;
+        const coRoomId = loginCache.coRoomId;        
+        if(loginCache.shareScene === 'onshare' && coUserId && coRoomId){
+                console.log('获取动作视频列表-分享模式：coUserId,coRoomId:',coUserId,coRoomId);
+                // 共创模式：B查看A的分享
+                const resultResponse = await uploadAPI.getAiVideoResultShare(loginCache.token, 1, 10,coUserId,coRoomId);
+                if (resultResponse.ok) {
+                    const resultData = JSON.parse(resultResponse.data);
+                    console.log('动作视频结果:', resultData);
 
-            if (resultData.code === 0) {
-                setAigcList(resultData.data?.records || []);
-                console.log('动作视频结果获取成功:', resultData.data?.records);
+                    if (resultData.code === 0) {
+                        setAigcList(resultData.data?.records || []);
+                        console.log('动作视频结果获取成功:', resultData.data?.records);
+                    } else {
+                        console.warn('获取动作视频结果失败:', resultData.message);
+                    }
+                } else {
+                    console.warn('获取动作视频结果HTTP错误:', resultResponse.status);
+                } 
+            
+        }else{
+            // 普通模式
+            const resultResponse = await uploadAPI.getAiVideoResult(loginCache.token, 1, 10);
+            if (resultResponse.ok) {
+                const resultData = JSON.parse(resultResponse.data);
+                console.log('动作视频结果:', resultData);
+
+                if (resultData.code === 0) {
+                    setAigcList(resultData.data?.records || []);
+                    console.log('动作视频结果获取成功:', resultData.data?.records);
+                } else {
+                    console.warn('获取动作视频结果失败:', resultData.message);
+                }
             } else {
-                console.warn('获取动作视频结果失败:', resultData.message);
-            }
-        } else {
-            console.warn('获取动作视频结果HTTP错误:', resultResponse.status);
+                console.warn('获取动作视频结果HTTP错误:', resultResponse.status);
+            }            
         }
+
+
     }
 
     const checkVideo = (msg: any) => {

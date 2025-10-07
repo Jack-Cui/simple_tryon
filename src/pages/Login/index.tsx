@@ -200,7 +200,8 @@ console.log('性能调优 a1.0.1：' + new Date().toLocaleString() +' '+ perform
             roomId: '',
             coCreationId: finalCoCreationId,
             shareScene: "",
-            coUserId: ''
+            coUserId: '',
+            coRoomId: ''
           });
           
           // 登录成功后立即初始化房间信息
