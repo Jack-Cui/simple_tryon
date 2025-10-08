@@ -129,6 +129,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         console.log('fileChange..1');
         if (!event.target.files[0]) return;
         console.log('fileChange..2');
+        
         const flag: boolean = await verifyFiles(event.target.files[0]);
         console.log('flag', flag);
         if (!flag) return;
