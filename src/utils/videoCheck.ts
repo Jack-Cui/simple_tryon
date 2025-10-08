@@ -6,6 +6,9 @@
  * @FilePath: /my-app/src/utils/utils.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+
+import e from "express";
+
 // 获取最大公约数
   function getGcd(a: any, b: any): any {
     let n1: any, n2: any;
@@ -30,15 +33,31 @@
     if (checktimevideo) {
       document.body.removeChild(checktimevideo)
     }
-    let doms
-    doms = document.createElement('video');
-    const url = URL.createObjectURL(files[0])
-    // console.log(url)
-    doms.src = url
-    doms.id = 'checktimevideo'
-    doms.style.display = 'none'
-    document.body.appendChild(doms);
-    console.log(doms);
+    let doms = document.createElement('video');
+        doms.id = 'checktimevideo'
+        doms.style.display = 'none'
+    // iOS 兼容性处理
+    let isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if (isIOS) {
+      const reader = new FileReader();
+      return new Promise(resolve => {
+        reader.onload = async function (e: any) {
+          doms.src = e.target.result;
+          document.body.appendChild(doms);
+          console.log('iOS环境doms：' + doms);
+          const result = await gettime(doms);
+          resolve(result);
+        };
+        reader.readAsDataURL(files[0]);
+      });
+    } else{
+          const url = URL.createObjectURL(files[0])
+          // console.log(url)
+          doms.src = url
+          document.body.appendChild(doms);
+          console.log('非iOS环境doms：' + doms);
+      }
+
     return await gettime(doms);
   }
   const gettime = (doms: any) => {
@@ -73,6 +92,6 @@
   // 获取视频时长
 export const checkVideo = async (file: any) => {
     const obj: any = await checkSize([file]);
-    console.log(obj);
+    console.log('视频信息：'+obj);
     return obj;
   }

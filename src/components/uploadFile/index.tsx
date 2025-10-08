@@ -65,7 +65,9 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     }
 
     const verifyFiles = async (file: any) => {
+        console.log('fileChange..3');
         console.log(file.name.split('.').pop());
+        console.log('fileChange..4');
         if (props?.isRing) {
             if (!['mov', 'mp4'].includes((file.name.split('.').pop() as never))) {
                 setErrorInfo('请上传mov/mp4格式视频');
@@ -79,6 +81,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                 setShowError(true);
                 return false;
             }
+            console.log(res);
             if (!(res.videoWidth === 2160 && res.videoHeight === 3840)) {
                 setErrorInfo('请上传分辨率为4k的视频');
                 setShowError(true);
@@ -117,7 +120,9 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     }
 
     const fileChange = async (event: any) => {
+        console.log('fileChange..1');
         if (!event.target.files[0]) return;
+        console.log('fileChange..2');
         const flag: boolean = await verifyFiles(event.target.files[0]);
         console.log('flag', flag);
         if (!flag) return;
