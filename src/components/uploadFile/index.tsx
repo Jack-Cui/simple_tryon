@@ -69,6 +69,11 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         console.log(file.name.split('.').pop());
         console.log('fileChange..4');
         console.log(file);
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        if (isIOS) {
+            // IOS暂时不校验
+            return true;
+        }
         if (props?.isRing) {
             if (!['mov', 'mp4'].includes((file.name.split('.').pop() as never))) {
                 setErrorInfo('请上传mov/mp4格式视频');
