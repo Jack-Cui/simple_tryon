@@ -68,6 +68,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         console.log('fileChange..3');
         console.log(file.name.split('.').pop());
         console.log('fileChange..4');
+        console.log(file);
         if (props?.isRing) {
             if (!['mov', 'mp4'].includes((file.name.split('.').pop() as never))) {
                 setErrorInfo('请上传mov/mp4格式视频');
@@ -76,7 +77,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
             }
             // 环拍视频
             const res: any = await checkVideo(file);
-            if (!(res.duration > 45 && res.duration < 60)) {
+            if (!(res.duration >= 45 && res.duration <= 60)) {
                 setErrorInfo('请上传时长45s-60s的视频');
                 setShowError(true);
                 return false;
