@@ -52,7 +52,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     const getAccept = () => {
         let accept = '';
         if (props?.isRing) {
-            accept = 'video/mov,video/mp4';
+            accept = 'video/*';
         } else if (props?.isPersonal) {
             accept = 'video/*';
         } else if (props?.is3DBeauty) {
@@ -65,7 +65,13 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     }
 
     const verifyFiles = async (file: any) => {
+        console.log(file.name.split('.').pop());
         if (props?.isRing) {
+            if (!['mov', 'mp4'].includes((file.name.split('.').pop() as never))) {
+                setErrorInfo('请上传mov/mp4格式视频');
+                setShowError(true);
+                return false;
+            }
             // 环拍视频
             const res: any = await checkVideo(file);
             if (!(res.duration > 45 && res.duration < 60)) {

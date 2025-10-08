@@ -10,12 +10,14 @@ interface CreateModelModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreateModel: () => void;
+  gotoCreateModel: () => void;
 }
 
 const CreateModelModal: React.FC<CreateModelModalProps> = ({
   isOpen,
   onClose,
-  onCreateModel
+  onCreateModel,
+  gotoCreateModel,
 }) => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const navigate = useNavigate();
@@ -60,7 +62,8 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
             <button 
               className="confirm-button"
               onClick={() => {
-                navigate('/create-model');
+                // navigate('/create-model');
+                gotoCreateModel();
               }}
             >
               去建模

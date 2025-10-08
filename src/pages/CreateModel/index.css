@@ -3,7 +3,7 @@
     height: 100vh;
     /* padding-top: var(--td-navbar-height, 48px);
     height: calc(100vh - 80px - var(--td-navbar-height, 48px)); */
-    background: #eee;
+    background: #fff;
     position: relative;
 }
 .create-Model > .content {

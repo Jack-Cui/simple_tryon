@@ -3861,6 +3861,9 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
         <CreateModelModal
           isOpen={showCreateModelModal}
           onClose={() => setShowCreateModelModal(false)}
+          gotoCreateModel={() => {
+            toPage('create-model');
+          }}
           onCreateModel={() => {
             // 不要在这里关闭弹窗，让CreateModelModal内部处理
             console.log('开始创建模型流程');
