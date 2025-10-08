@@ -21,6 +21,10 @@ import SubscribePackage from './pages/SubscribePackage';
 import { LoginSceneProvider } from './contexts/LoginSceneContext';
 // import BrowseHistory from './pages/BrowseHistory';
 // import wx from 'weixin-js-sdk';
+//add by chao 2025.10.08
+import VideoUploader from './pages/Home/VideoUploader';
+
+
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -214,6 +218,7 @@ function App() {
       <Router basename="/simple">
         <div className="App">
           <Routes>
+            <Route path="/video-uploader" element={<VideoUploader />} />
             <Route path="/test-nav" element={<TestNavigation />} />
             <Route path="/tryon-test" element={<TryonTest />} />
             <Route path="/simple-tryon-test" element={<SimpleTryonTest />} />

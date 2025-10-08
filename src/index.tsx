@@ -5,7 +5,6 @@ import './index.css';
 //add by chao 2025.10.01 性能优化
 // 修改后的动态加载
 const App = React.lazy(() => import('./App'));
-// import BrowseHistory from './pages/BrowseHistory';
 // import reportWebVitals from './reportWebVitals';
 
 

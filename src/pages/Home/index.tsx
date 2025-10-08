@@ -3912,13 +3912,34 @@ const Home = () => {
 //     };
 //   }, []);
 
-  //-->add by chao 2025.10.01
+// add by chao 2025.10.08
+const navigate = useNavigate(); // 新增
+//-->add by chao 2025.10.01
   const onClickBack = () => {
     setStep('home');
   }
   return (
     <>
     <div style={step === 'home' ? {}: {display: 'none'}}>
+{/* 新增跳转按钮 */}
+        {/* <button
+          style={{
+            position: 'fixed',
+            top: 20,
+            right: 20,
+            zIndex: 9999,
+            padding: '10px 20px',
+            background: '#1890ff',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '6px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}
+          onClick={() => navigate('/video-uploader')}
+        >
+          跳转到视频上传
+        </button>       */}
       <HomeVideo goToPage={(msg) => setStep(msg)} />
     </div>
     {step === 'create-model' && <CreateModel onBack={onClickBack}/>}
