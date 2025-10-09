@@ -11,6 +11,7 @@ import {checkImg} from '../../utils/imgCheck';
 import { getVideoFirstFrame } from '../../utils/vedioToImg';
 import ErrorToast from '../errorToast';
 import { setupWechatVideoCapture, wechatExtractVideoFrame } from '../../utils/wxVideoToImg';
+
 interface Props {
     title: String;
     info?: string[];
@@ -165,6 +166,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
             <div className="btn" id='selectVideoBtn'>
                 <img src={firstFrame || UploadIcon} onClick={uploadFile} />
                 <input ref={uploadFileEl} accept={getAccept()} type="file" style={{ display: 'none' }} onChange={fileChange} />
+                {/* <input ref={uploadFileEl}  type="file" style={{ display: 'none' }} onChange={fileChange} /> */}
             </div>
             {props.isRing && <Input className='input' value={perHeight} onChange={(value: any) => setPerHeight(value)} label={<img src={HeightIcon} />} suffix={<div>厘米</div>} type="number"  borderless placeholder="请输入您的身高" />}
             {props.isPersonal && <Input className='input' value={perActionName} onChange={(value: any) => setPerActionName(value)} maxlength={4} label={<img src={ActionIcon} />} borderless placeholder="请输入动作名称" />}

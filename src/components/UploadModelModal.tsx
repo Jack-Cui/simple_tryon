@@ -309,7 +309,7 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
           
           console.log('初始化TOS客户端用于动作视频上传');
           tosUploadService.initialize(credentials);
-          
+          console.log('credentials: ' + credentials);
           console.log('开始上传动作视频文件');
           const videoResults = await tosUploadService.uploadFiles(selectedActionVideos);
           

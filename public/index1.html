@@ -12,4 +12,24 @@
     <script>
         var vConsole = new window.VConsole();
     </script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+
+    <button onclick="selectFile()">选择文件</button>
+
+<script>
+  // 初始化SDK（需先通过后端接口获取签名）
+  wx.config({ /* 配置参数 */ });
+
+  function uploadFile(tempFilePath) {
+    wx.uploadFile({
+      url: 'YOUR_SERVER_URL',
+      filePath: tempFilePath,
+      name: 'file',
+      success(res) {
+        alert('上传成功');
+      }
+    });
+  }
+</script>
+
 </html>
