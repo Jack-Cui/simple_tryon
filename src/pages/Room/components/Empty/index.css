@@ -1,0 +1,26 @@
+.empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient( 25% 48% at 52% 50%, #FFFFFF 0%, #F9F9F9 42%, #EBEBEB 100%);
+}
+.empty > .img {
+    width: 173px;
+    height: 173px;
+}
+.empty > .tip {
+    width: 168px;
+    height: 20px;
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 500;
+    font-size: 14px;
+    color: #C4C2C2;
+    line-height: 20px;
+    text-align: center;
+    font-style: normal;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}

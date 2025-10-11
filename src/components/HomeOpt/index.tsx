@@ -129,7 +129,8 @@ const HomeOpt = forwardRef((props: Props, ref: any) => {
         props?.toPage && props.toPage('upload-action');
     }
     const goToSubs = () => {
-        props?.toPage && props.toPage('subs-package');
+        navigate('/room');
+        // props?.toPage && props.toPage('subs-package');
     }
 
     const goToHistory = () => {

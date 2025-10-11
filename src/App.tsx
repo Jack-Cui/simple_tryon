@@ -23,6 +23,7 @@ import { LoginSceneProvider } from './contexts/LoginSceneContext';
 // import wx from 'weixin-js-sdk';
 //add by chao 2025.10.08
 import VideoUploader from './pages/Home/VideoUploader';
+import Room from './pages/Room';
 
 
 
@@ -228,6 +229,7 @@ function App() {
             <Route path="/upload-action" element={<UploadAction />} />
             <Route path="/subs-package" element={<SubscribePackage />} />
             {/* <Route path='/browse-history' element={<BrowseHistory />}/> */}
+            <Route path="/room" element={<Room />} />
             <Route 
               path="/home" 
               element={

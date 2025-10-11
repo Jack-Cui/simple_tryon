@@ -1,0 +1,14 @@
+.room {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+.room-bottom-tab-bar {
+    position: absolute;
+    bottom: 15px;   
+    width: 100vw;
+}
+.room-bottom-tab-bar  > .t-tab-bar {
+    width: 50%;
+    margin: 0 auto;
+}
