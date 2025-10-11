@@ -27,6 +27,7 @@ const CreateModel = (props?: { onBack?: any}) => {
   const navigate = useNavigate();
   const uploadFileEl = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
+  const [isUploadPic, setIsUploadPic] = useState(0);
   const [showError, setShowError] = useState(false);
   const [errorInfo, setErrorInfo] = useState('');
   const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
@@ -93,11 +94,24 @@ const CreateModel = (props?: { onBack?: any}) => {
         setShowError(true);
         return;
       }
-      setSelectedImages([(beautyRefEl?.current as any).getFile()]);
+      setSelectedImages([(beautyRefEl?.current as any).getFile()]);            
     }
     setStep(2);
-    handleUpload();
+    //add by chao:解决美颜图状态没有更新到ref
+    setIsUploadPic(isUploadPic => isUploadPic + 1);
+    // handleUpload();          
   }
+
+  //add by chao
+    // 当 selectedImages 变化时执行后续操作
+  useEffect(() => {
+    console.log("正在上传美颜图！");
+    if (selectedImages.length > 0) {
+      handleUpload(); 
+    }
+  }, [isUploadPic]); 
+
+
 
   const onSkip = () => {
     // 跳过
@@ -159,6 +173,7 @@ const CreateModel = (props?: { onBack?: any}) => {
 
       // 初始化模型URL
       let modelPictureUrl = '';
+      let mid = '';
       let modelVideoUrl = '';
       let uploadResults: any[] = [];
 
@@ -227,6 +242,7 @@ const CreateModel = (props?: { onBack?: any}) => {
         }
       }
 
+      console.log("selectedImages.length:" + selectedImages.length);
       // 处理图片上传
       if (selectedImages.length > 0) {
         console.log('开始处理图片上传');
@@ -267,9 +283,12 @@ const CreateModel = (props?: { onBack?: any}) => {
             console.log('图片上传结果:', imageResults);
             
             // 如果图片上传成功，使用第一个图片的URL
-            if (imageResults.length > 0 && imageResults[0].success && imageResults[0].url) {
+            if (imageResults.length > 0 && imageResults[0].success && imageResults[0].url && imageResults[0].mid) {
               modelPictureUrl = imageResults[0].url;
+              mid = imageResults[0].mid;
               console.log('设置图片URL:', modelPictureUrl);
+            }else{
+              console.log('美颜图上传结果获取参数异常！')
             }
           } else {
             throw new Error(tokenResult.message || '获取图片上传token失败');
@@ -288,6 +307,7 @@ const CreateModel = (props?: { onBack?: any}) => {
               console.log('所有文件上传成功:', uploadResults);
               console.log('模型图片URL:', modelPictureUrl);
               console.log('模型视频URL:', modelVideoUrl);
+              console.log('美颜图mid：', mid);
               
               // 检查是否至少有一个URL
               if (!modelPictureUrl && !modelVideoUrl) {
@@ -299,7 +319,7 @@ const CreateModel = (props?: { onBack?: any}) => {
               console.log('开始创建模型...');
               //update by chao 2025.09.28 上传视频后报错：获取Cannot read properties of null (reading 'getPerHeight')
               // const height = (ringRefEl?.current as any).getPerHeight();
-              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl,perHeight);
+              const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl,perHeight,mid,'我的模型');
 
               if (createModelResponse.ok) {
                 const createResult = JSON.parse(createModelResponse.data);

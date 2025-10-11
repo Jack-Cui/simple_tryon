@@ -90,15 +90,16 @@ export class TTPUploadService {
           ]
         });
 
+        //update by chao 2025.10.11
         // 监听上传完成事件
         this.uploader!.on('complete', (info) => {
           console.log('TTP 上传完成:', info);
           if (info.uploadResult) {
             resolve({
               success: true,
-              url: info.uploadResult.url || info.uploadResult.videoUrl,
-              key: info.uploadResult.key || info.uploadResult.videoKey,
-              mid: info.uploadResult.mid || info.uploadResult.videoId
+              url: 'http://vid.ai1010.cn/' + info.uploadResult.SourceInfo.FileName || info.uploadResult.url || info.uploadResult.videoUrl,
+              key: info.key || info.uploadResult.key || info.uploadResult.videoKey,
+              mid: info.uploadResult.Mid || info.uploadResult.mid || info.uploadResult.videoId
             });
           } else {
             resolve({

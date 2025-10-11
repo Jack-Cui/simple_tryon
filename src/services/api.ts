@@ -1311,7 +1311,7 @@ export const roomAPI = {
 }; 
 
 export const modelAPI = {
-  async createModel(access_token: string, modelPictureUrl: string, modelVideoUrl: string, height: number): Promise<ApiResponse> {
+  async createModel(access_token: string, modelPictureUrl: string, modelVideoUrl: string, height: number, mid: string, modeName: string): Promise<ApiResponse> {
     console.log('开始创建模型, endpoint:', API_ENDPOINTS.CREATE_MODEL(), 'access_token:', access_token, 'modelPictureUrl:', modelPictureUrl, 'modelVideoUrl:', modelVideoUrl);
     const endpoint = API_ENDPOINTS.CREATE_MODEL();
     const headers = {
@@ -1321,7 +1321,9 @@ export const modelAPI = {
     const data = {
       modelPictureUrl: modelPictureUrl,
       modelVideoUrl: modelVideoUrl,
-      height: height * 10
+      height: height * 10,
+      modelPictureFileId: mid,
+      modeName: modeName
     };
     console.log('创建模型请求数据:', data);
     return await apiService.post(endpoint, JSON.stringify(data), headers);

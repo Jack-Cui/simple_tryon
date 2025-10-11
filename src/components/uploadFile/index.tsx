@@ -102,7 +102,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         }
         if (props?.is3DBeauty) {
         const res: any = await checkImg(file);
-        console.log(res);
+        console.log("width:" + res.fileInfo.width + "height:" + res.fileInfo.height );
             // 美图
             const short = res.fileInfo.width < res.fileInfo.height ? res.fileInfo.width : res.fileInfo.height;
             const long = res.fileInfo.width < res.fileInfo.height ? res.fileInfo.height : res.fileInfo.width;

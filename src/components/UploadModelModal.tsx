@@ -92,6 +92,7 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
       // 初始化模型URL
       let modelPictureUrl = '';
       let modelVideoUrl = '';
+      let mid = '';
       
       // 检查是否至少有一个文件
       if (selectedImages.length === 0 && selectedVideos.length === 0) {
@@ -205,8 +206,9 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
             console.log('图片上传结果:', imageResults);
             
             // 如果图片上传成功，使用第一个图片的URL
-            if (imageResults.length > 0 && imageResults[0].success && imageResults[0].url) {
+            if (imageResults.length > 0 && imageResults[0].success && imageResults[0].url && imageResults[0].mid) {
               modelPictureUrl = imageResults[0].url;
+              mid = imageResults[0].mid;
               console.log('设置图片URL:', modelPictureUrl);
             }
           } else {
@@ -225,6 +227,7 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
         console.log('所有文件上传成功:', uploadResults);
         console.log('模型图片URL:', modelPictureUrl);
         console.log('模型视频URL:', modelVideoUrl);
+        console.log('mid1:',mid);
         
         // 检查是否至少有一个URL
         if (!modelPictureUrl && !modelVideoUrl) {
@@ -234,7 +237,7 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
         
         // 调用创建模型API
         console.log('开始创建模型...');
-        const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl, 180);
+        const createModelResponse = await modelAPI.createModel(loginCache.token, modelPictureUrl, modelVideoUrl, 180,mid,'我的模型');
         
         if (createModelResponse.ok) {
           const createResult = JSON.parse(createModelResponse.data);
