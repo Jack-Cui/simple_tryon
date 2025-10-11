@@ -11,7 +11,7 @@ const Room = () => {
         { value: 'vedio', label: '视频' },
         { value: '3d', label: '3D' },
     ];
-    const [isEmpty, setIsEmpty] = useState(true);
+    const [isEmpty, setIsEmpty] = useState(false);
     const [value, setValue] = useState('poster');
     const change = (changeValue: any) => {
         setValue(changeValue);
