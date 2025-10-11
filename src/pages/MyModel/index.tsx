@@ -95,8 +95,8 @@ const MyModel = (props: Props) => {
             <Navbar className='my-model-navbar' leftArrow onLeftClick={handleClick} fixed={false}>我的模型</Navbar>
             <div className="my-model-content">
                 <div className='my-model-content-detail'>
-                    {props.status !== 0 && <div className='my-model-content-detail-mask'>
-                        {props.status === 1 && <div className='mask-upload-ing'>
+                    {props.status !== 0 && <div className='my-model-content-detail-mask'>                        
+                            {props.status === 1 && <div className='mask-upload-ing'>
                             <div className='center'>
                                 <div className='title'>
                                     <span>正在上传中...</span>
