@@ -11,6 +11,15 @@ import { TosCredentials, tosUploadService } from '../../services/tosUploadServic
 import { TTPCredentials, ttpUploadService } from '../../services/ttpUploadService';
 import MyModel from '../MyModel';
 import { useNavigate } from 'react-router-dom';
+
+//add by chao: 2025.10.12修改视频上传问题
+// 定义返回的数据结构
+interface VideoUploadResult {
+  modelVideoUrlRes: string;
+  videoResultsRes: any[];
+}
+
+
 const infoList1 = [
   '1.光线与背景：光线明亮均匀，背景简洁非纯白；避免镜面反光和他人入镜。',
   '2.形象与着装：露额耳，无刘海，不戴眼镜饰品；穿贴身无装饰背心短裤，赤脚。',
@@ -24,6 +33,8 @@ const infoList2 = [
     '4. 清晰与整洁： 面部五官清晰无遮挡，表情自然。'
 ]
 const CreateModel = (props?: { onBack?: any}) => {
+  //add by chao:2025.10.12 修改iOS上传
+  const [iOSVideoUploadResult, setIOSVideoUploadResult] = useState<VideoUploadResult | null>(null);
   const navigate = useNavigate();
   const uploadFileEl = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
@@ -108,7 +119,7 @@ const CreateModel = (props?: { onBack?: any}) => {
     console.log("正在上传美颜图！");
     if (selectedImages.length > 0) {
       handleUpload(); 
-    }
+    }    
   }, [isUploadPic]); 
 
 
@@ -177,70 +188,80 @@ const CreateModel = (props?: { onBack?: any}) => {
       let modelVideoUrl = '';
       let uploadResults: any[] = [];
 
-      // 处理视频上传
+      //add by chao: 2025.10.12 封装上传视频方法，支持在其他代码段提前上传，兼容iOS特殊场景
       if (selectedVideos.length > 0) {
-        console.log('开始处理视频上传');
-        const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
-        if (tokenResponse.ok) {
-          const tokenResult = JSON.parse(tokenResponse.data);
-          console.log('获取视频上传token成功:', tokenResult);
-          
-          if (tokenResult.code === 0) {
-            console.log('视频token数据结构:', tokenResult);
-            console.log('credentials路径:', tokenResult.data?.result?.credentials);
-            
-            const credentials: TosCredentials = {
-              accessKeyId: tokenResult.data.result.credentials.accessKeyId,
-              secretAccessKey: tokenResult.data.result.credentials.secretAccessKey,
-              sessionToken: tokenResult.data.result.credentials.sessionToken,
-              expiredTime: tokenResult.data.result.credentials.expiredTime
-            };
-            
-            console.log('构建的credentials:', credentials);
-            
-            // 对比视频和图片的凭证差异
-            console.log('=== 视频上传凭证信息 ===');
-            console.log('accessKeyId:', credentials.accessKeyId);
-            console.log('secretAccessKey长度:', credentials.secretAccessKey?.length);
-            console.log('sessionToken长度:', credentials.sessionToken?.length);
-            console.log('expiredTime:', credentials.expiredTime);
-            
-            // 检查sessionToken是否包含正确的权限
-            if (credentials.sessionToken) {
-              try {
-                const tokenParts = credentials.sessionToken.split('.');
-                if (tokenParts.length >= 2) {
-                  const payload = JSON.parse(atob(tokenParts[1]));
-                  console.log('视频sessionToken payload:', payload);
-                }
-              } catch (e) {
-                console.log('无法解析视频sessionToken payload');
-              }
-            }
-            
-            console.log('初始化TOS客户端用于视频上传');
-            tosUploadService.initialize(credentials);
-            setStatus(1);
-            console.log('开始上传视频文件');
-            const videoResults = await tosUploadService.uploadFiles(selectedVideos);
-            uploadResults.push(...videoResults);
-            
-            console.log('视频上传结果:', videoResults);
-            setStatus(2);
-            // 如果视频上传成功，使用第一个视频的URL
-            if (videoResults.length > 0 && videoResults[0].success && videoResults[0].url) {
-              modelVideoUrl = videoResults[0].url;
-              console.log('设置视频URL:', modelVideoUrl);
-            }
-          } else {
-            setStep(1);
-            throw new Error(tokenResult.message || '获取视频上传token失败');
-          }
-        } else {
-          setStep(1);
-          throw new Error(`获取视频上传token失败: HTTP ${tokenResponse.status}`);
-        }
+        const { modelVideoUrlRes, videoResultsRes } = await uploadVideo(loginCache);
+        modelVideoUrl = modelVideoUrlRes;
+        uploadResults.push(...videoResultsRes);
+        console.log('视频URL:', modelVideoUrlRes);
+        console.log('上传结果数量:', videoResultsRes.length);        
       }
+      
+      //TODEL:2025.10.12
+      // 处理视频上传
+      // if (selectedVideos.length > 0) {
+      //   console.log('开始处理视频上传');
+      //   const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
+      //   if (tokenResponse.ok) {
+      //     const tokenResult = JSON.parse(tokenResponse.data);
+      //     console.log('获取视频上传token成功:', tokenResult);
+          
+      //     if (tokenResult.code === 0) {
+      //       console.log('视频token数据结构:', tokenResult);
+      //       console.log('credentials路径:', tokenResult.data?.result?.credentials);
+            
+      //       const credentials: TosCredentials = {
+      //         accessKeyId: tokenResult.data.result.credentials.accessKeyId,
+      //         secretAccessKey: tokenResult.data.result.credentials.secretAccessKey,
+      //         sessionToken: tokenResult.data.result.credentials.sessionToken,
+      //         expiredTime: tokenResult.data.result.credentials.expiredTime
+      //       };
+            
+      //       console.log('构建的credentials:', credentials);
+            
+      //       // 对比视频和图片的凭证差异
+      //       console.log('=== 视频上传凭证信息 ===');
+      //       console.log('accessKeyId:', credentials.accessKeyId);
+      //       console.log('secretAccessKey长度:', credentials.secretAccessKey?.length);
+      //       console.log('sessionToken长度:', credentials.sessionToken?.length);
+      //       console.log('expiredTime:', credentials.expiredTime);
+            
+      //       // 检查sessionToken是否包含正确的权限
+      //       if (credentials.sessionToken) {
+      //         try {
+      //           const tokenParts = credentials.sessionToken.split('.');
+      //           if (tokenParts.length >= 2) {
+      //             const payload = JSON.parse(atob(tokenParts[1]));
+      //             console.log('视频sessionToken payload:', payload);
+      //           }
+      //         } catch (e) {
+      //           console.log('无法解析视频sessionToken payload');
+      //         }
+      //       }
+            
+      //       console.log('初始化TOS客户端用于视频上传');
+      //       tosUploadService.initialize(credentials);
+      //       setStatus(1);
+      //       console.log('开始上传视频文件');
+      //       const videoResults = await tosUploadService.uploadFiles(selectedVideos);
+      //       uploadResults.push(...videoResults);
+            
+      //       console.log('视频上传结果:', videoResults);
+      //       setStatus(2);
+      //       // 如果视频上传成功，使用第一个视频的URL
+      //       if (videoResults.length > 0 && videoResults[0].success && videoResults[0].url) {
+      //         modelVideoUrl = videoResults[0].url;
+      //         console.log('设置视频URL:', modelVideoUrl);
+      //       }
+      //     } else {
+      //       setStep(1);
+      //       throw new Error(tokenResult.message || '获取视频上传token失败');
+      //     }
+      //   } else {
+      //     setStep(1);
+      //     throw new Error(`获取视频上传token失败: HTTP ${tokenResponse.status}`);
+      //   }
+      // }
 
       console.log("selectedImages.length:" + selectedImages.length);
       // 处理图片上传
@@ -355,6 +376,74 @@ const CreateModel = (props?: { onBack?: any}) => {
     } 
   }
 
+  //add by chao: 2025.10.12 兼容iOS特殊场景，封装上传方法
+  const uploadVideo = async(loginCache: { token: string }): Promise<VideoUploadResult>=>{
+      let modelVideoUrl = '';
+          // 处理视频上传
+      
+        console.log('开始处理视频上传');
+        const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
+        if (tokenResponse.ok) {
+          const tokenResult = JSON.parse(tokenResponse.data);
+          console.log('获取视频上传token成功:', tokenResult);
+          
+          if (tokenResult.code === 0) {
+            console.log('视频token数据结构:', tokenResult);
+            console.log('credentials路径:', tokenResult.data?.result?.credentials);
+            
+            const credentials: TosCredentials = {
+              accessKeyId: tokenResult.data.result.credentials.accessKeyId,
+              secretAccessKey: tokenResult.data.result.credentials.secretAccessKey,
+              sessionToken: tokenResult.data.result.credentials.sessionToken,
+              expiredTime: tokenResult.data.result.credentials.expiredTime
+            };
+            
+            console.log('构建的credentials:', credentials);
+            
+            // 对比视频和图片的凭证差异
+            console.log('=== 视频上传凭证信息 ===');
+            console.log('accessKeyId:', credentials.accessKeyId);
+            console.log('secretAccessKey长度:', credentials.secretAccessKey?.length);
+            console.log('sessionToken长度:', credentials.sessionToken?.length);
+            console.log('expiredTime:', credentials.expiredTime);
+            
+            // 检查sessionToken是否包含正确的权限
+            if (credentials.sessionToken) {
+              try {
+                const tokenParts = credentials.sessionToken.split('.');
+                if (tokenParts.length >= 2) {
+                  const payload = JSON.parse(atob(tokenParts[1]));
+                  console.log('视频sessionToken payload:', payload);
+                }
+              } catch (e) {
+                console.log('无法解析视频sessionToken payload');
+              }
+            }
+            
+            console.log('初始化TOS客户端用于视频上传');
+            tosUploadService.initialize(credentials);
+            setStatus(1);
+            console.log('开始上传视频文件');
+            const videoResults = await tosUploadService.uploadFiles(selectedVideos);
+            // uploadResults.push(...videoResults);
+            
+            console.log('视频上传结果:', videoResults);
+            setStatus(2);
+            // 如果视频上传成功，使用第一个视频的URL
+            if (videoResults.length > 0 && videoResults[0].success && videoResults[0].url) {
+              modelVideoUrl = videoResults[0].url;
+              console.log('设置视频URL:', modelVideoUrl);
+            }
+            return { modelVideoUrlRes:modelVideoUrl, videoResultsRes:videoResults};
+          } else {
+            setStep(1);
+            throw new Error(tokenResult.message || '获取视频上传token失败');
+          }
+        } else {
+          setStep(1);
+          throw new Error(`获取视频上传token失败: HTTP ${tokenResponse.status}`);
+        }      
+  }
 
   return (
     <>
@@ -364,7 +453,16 @@ const CreateModel = (props?: { onBack?: any}) => {
       <div className="create-Model">
       <Navbar className='create-Model-navbar' fixed={false} leftArrow onLeftClick={handleClick}>{step === 0 ? '创建模型' : '3D美颜'}</Navbar>
       <div className='content'>
-        <UploadFile isHide={!(step === 0)} ref={ringRefEl} isRing title="上传环拍视频"  info={infoList1}/>
+        <UploadFile isHide={!(step === 0)} ref={ringRefEl} isRing title="上传环拍视频"  info={infoList1} onIOSUploadVideo={async (file: File) => {
+    // 这里 file 是 UploadFile 组件传递上来的
+    const loginCache = getLoginCache();
+    if(loginCache){
+      const result = await uploadVideo(loginCache);
+      setIOSVideoUploadResult(result); // 保存结果
+      return result; // 可选：返回给 UploadFile 用于提示
+    }
+
+  }} />
         <UploadFile isHide={!(step === 1)}  ref={beautyRefEl} is3DBeauty title="上传清晰正面美颜照"  info={infoList2}/>
       </div>
       <div className='create-Model-btn'>

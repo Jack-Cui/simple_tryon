@@ -13,6 +13,11 @@ import ErrorToast from '../errorToast';
 import { setupWechatVideoCapture, wechatExtractVideoFrame } from '../../utils/wxVideoToImg';
 
 interface Props {
+  // ...existing props...
+  onIOSUploadVideo?: (file: File) => Promise<any>;
+}
+
+interface Props {
     title: String;
     info?: string[];
     example?: any[];
@@ -70,8 +75,8 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         console.log(file.name.split('.').pop());
         console.log('fileChange..4');
         console.log(file);
-        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  
+
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);  
         if (props?.isRing) {
             if (isIOS) {
             // if (false) {
@@ -135,45 +140,63 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         if (!event.target.files[0]) return;
         console.log('fileChange..2');
 
+        //add by chao:2025.10.12
+        //如果是iOS环境，直接先上传文件，再校验文件信息
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);  
+        if(true){
+            // 调用父组件传递的上传方法
+            if (props.onIOSUploadVideo) {
+                const uploadResult = await props.onIOSUploadVideo(event.target.files[0]);
+                // 上传结果打印
+                console.log('uploadVideo result:', uploadResult);
+                alert('iOS开始上传！')
+            } 
+        }
+
+
+        //add by chao:2025.10.12 尝试自动播放方案解决iOS获取不到视频信息问题，没有有效解决，先注释 
+            // 自动播放并立即暂停视频（无感知）
+        //     await new Promise<void>((resolve) => {
+        //         console.log('fileChange..s.1.1'+' '+ performance.now());
+        //         const tempVideo = document.createElement('video');
+        //         console.log('fileChange..s.1.2'+' '+ performance.now());
+        //         tempVideo.src = URL.createObjectURL(event.target.files[0]);
+        //         tempVideo.muted = true;
+        //         tempVideo.style.display = 'none';
+        //         document.body.appendChild(tempVideo);
+        //         console.log('fileChange..s.1.3'+' '+ performance.now());
+        //         tempVideo.onloadeddata = () => {
+        //             tempVideo.play().then(() => {
+        //                 tempVideo.pause();
+        //                 document.body.removeChild(tempVideo);
+        //                 resolve();
+        //             }).catch(() => {
+        //                 document.body.removeChild(tempVideo);
+        //                 resolve();
+        //             });
+        //         };
+        //         console.log('fileChange..s.1.4'+' '+ performance.now());
+        //         // 防止 onloadeddata 不触发
+        //         setTimeout(() => {
+        //             console.log('fileChange..s.1.5'+' '+ performance.now());
+        //             if (document.body.contains(tempVideo)) {
+        //                 document.body.removeChild(tempVideo);
+        //                 resolve();
+        //             }
+        //         }, 2000);
+        //     });
+        // const isConfirmed = window.confirm('确定要执行这个操作吗？');
+        // if (isConfirmed) {
+        //     // 用户点击了确认，继续执行后续代码
+        //     console.log('用户确认，继续执行...');
+        // } else {
+        //     // 用户点击了取消
+        //     console.log('用户取消操作');
+        // }
+
+      
+
         
-        // 自动播放并立即暂停视频（无感知）
-        await new Promise<void>((resolve) => {
-            console.log('fileChange..s.1.1'+' '+ performance.now());
-            const tempVideo = document.createElement('video');
-            console.log('fileChange..s.1.2'+' '+ performance.now());
-            tempVideo.src = URL.createObjectURL(event.target.files[0]);
-            tempVideo.muted = true;
-            tempVideo.style.display = 'none';
-            document.body.appendChild(tempVideo);
-            console.log('fileChange..s.1.3'+' '+ performance.now());
-            tempVideo.onloadeddata = () => {
-                tempVideo.play().then(() => {
-                    tempVideo.pause();
-                    document.body.removeChild(tempVideo);
-                    resolve();
-                }).catch(() => {
-                    document.body.removeChild(tempVideo);
-                    resolve();
-                });
-            };
-            console.log('fileChange..s.1.4'+' '+ performance.now());
-            // 防止 onloadeddata 不触发
-            setTimeout(() => {
-                console.log('fileChange..s.1.5'+' '+ performance.now());
-                if (document.body.contains(tempVideo)) {
-                    document.body.removeChild(tempVideo);
-                    resolve();
-                }
-            }, 2000);
-        });
-        const isConfirmed = window.confirm('确定要执行这个操作吗？');
-    if (isConfirmed) {
-        // 用户点击了确认，继续执行后续代码
-        console.log('用户确认，继续执行...');
-    } else {
-        // 用户点击了取消
-        console.log('用户取消操作');
-    }
         const flag: boolean = await verifyFiles(event.target.files[0]);
         console.log('flag', flag);
         if (!flag) return;
