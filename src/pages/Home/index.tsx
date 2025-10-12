@@ -1021,6 +1021,15 @@ const location = useLocation();
   // 新增状态：记录上一次拖动方向
   const [lastDragDirection, setLastDragDirection] = useState<{ x: number, y: number } | null>(null);
 
+  /**
+   * add by chao 2025.10.12 触控优化 增加拖拽惯性事件
+    1.记录每次拖动的速度（deltaX/deltaY 和时间）
+    2.在 handleTouchEnd 时计算惯性速度
+    3.用 requestAnimationFrame 实现惯性动画，逐步减速，持续 1-2 秒
+   */
+  const [inertiaAnimationId, setInertiaAnimationId] = useState<number | null>(null);
+  const lastMoveRef = useRef<{ time: number, x: number, y: number } | null>(null);
+    
   // 处理触摸移动事件
   const handleTouchMove = (event: React.TouchEvent | React.MouseEvent) => {
     // 双指缩放逻辑
@@ -1050,6 +1059,7 @@ const location = useLocation();
     // 单指拖动逻辑
     if (!lastTouchPos) return;
     const currentPos = getEventPosition(event);
+    const now = Date.now(); //add by chao 2025.10.12 触控优化 增加拖拽惯性事件
     const deltaX = currentPos.x - lastTouchPos.x;
     const deltaY = currentPos.y - lastTouchPos.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -1057,6 +1067,13 @@ const location = useLocation();
   // 只用本次移动的距离，不累计
   if (distance > 2) { // 阈值可调小一点，提升灵敏度
     setIsDragging(true);
+
+    // 记录最后一次滑动速度 add by chao 2025.10.12 触控优化 增加拖拽惯性事件
+    lastMoveRef.current = {
+      time: now,
+      x: deltaX,
+      y: deltaY
+    };    
 
     // 旋转比例：一屏宽度转一圈
     const screenWidth = window.innerWidth;
@@ -1076,6 +1093,8 @@ const location = useLocation();
     // 更新lastTouchPos为当前点，保证下次delta是“本次移动”
     setLastTouchPos(currentPos);
   }
+
+
 
 //--- >优化方案1：
   //<----优化 原方案
@@ -1113,6 +1132,49 @@ const location = useLocation();
 
   };
 
+  // 惯性动画函数 add by chao 2025.10.12 触控优化 增加拖拽惯性事件
+  const startInertia = (vx: number, vy: number) => {
+    let start = Date.now();
+    let duration = 2000; // 惯性持续时间，单位ms
+    let prevTime = start;
+
+    // 惯性速度按比例调整
+    const inertiaVx = vx * 0.3;
+    const inertiaVy = vy * 0.3;
+
+    const animate = () => {
+      const now = Date.now();
+      const elapsed = now - start;
+      const t = Math.min(elapsed / duration, 1); // 0~1
+
+      // 指数衰减，逐步减速
+      const factor = Math.exp(-3 * t);
+
+      // 旋转比例（与拖动一致）
+      const screenWidth = window.innerWidth;
+      const rotationScale = (360 / screenWidth) * 1.33;
+
+      if (!rtcVideoService.getConnectionStatus()) return;
+
+      try {
+        rtcVideoService.sendTouchScreen(
+          proto.eTouchType.rotate,
+          { x: inertiaVx * factor * rotationScale, y: -inertiaVy * factor * rotationScale, z: 0 },
+          Date.now()
+        );
+      } catch {}
+
+      if (t < 1 && (Math.abs(inertiaVx * factor) > 0.1 || Math.abs(inertiaVy * factor) > 0.1)) {
+        const id = requestAnimationFrame(animate);
+        setInertiaAnimationId(id);
+      } else {
+        setInertiaAnimationId(null);
+      }
+    };
+
+    animate();
+  };
+
   // 处理触摸结束事件
   const handleTouchEnd = (event: React.TouchEvent | React.MouseEvent) => {
     //add by chao 2025.09.30 触控优化 y1
@@ -1138,11 +1200,33 @@ const location = useLocation();
         }
       }
     }
+
+    // 计算惯性速度 add by chao 2025.10.12 触控优化 增加拖拽惯性事件
+    if (lastMoveRef.current) {
+      const { time, x, y } = lastMoveRef.current;
+      const now = Date.now();
+      const dt = now - time;
+      // 只在快速滑动时触发惯性
+      if (dt < 80 && (Math.abs(x) > 5 || Math.abs(y) > 5)) {
+        startInertia(x, y);
+      }
+      lastMoveRef.current = null;
+    }    
+
     setIsDragging(false);
     setLastTouchPos(null);
     setInitialDistance(null);
     setLastScaleDistance(null);
   };
+
+  // 组件卸载时清理动画 add by chao 2025.10.12 触控优化 增加拖拽惯性事件
+  useEffect(() => {
+    return () => {
+      if (inertiaAnimationId) {
+        cancelAnimationFrame(inertiaAnimationId);
+      }
+    };
+  }, [inertiaAnimationId]);
 
   // 获取事件位置
   const getEventPosition = (event: React.TouchEvent | React.MouseEvent): { x: number, y: number } => {
