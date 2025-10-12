@@ -1135,7 +1135,7 @@ const location = useLocation();
   // 惯性动画函数 add by chao 2025.10.12 触控优化 增加拖拽惯性事件
   const startInertia = (vx: number, vy: number) => {
     let start = Date.now();
-    let duration = 2000; // 惯性持续时间，单位ms
+    let duration = 4000; // 惯性持续时间，单位ms
     let prevTime = start;
 
     // 惯性速度按比例调整
