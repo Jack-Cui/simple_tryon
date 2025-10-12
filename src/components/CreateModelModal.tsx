@@ -22,6 +22,12 @@ const CreateModelModal: React.FC<CreateModelModalProps> = ({
   const [showUploadModal, setShowUploadModal] = useState(false);
   const navigate = useNavigate();
   if (!isOpen) return null;
+  //update by chao:2025.10.12 修改页面跳转逻辑，如果没有建模，直接到新页面
+  // if(isOpen){
+  //   navigate('/room/empty');
+  // }else{
+  //   return null;
+  // }
 
   return (
     <div className="create-model-modal-overlay" onClick={onClose}>

@@ -57,7 +57,7 @@ const isRtcLog = false;
 
 //add by chao 2025.09.29 增加路由监听事件
 // let locRouteNum = 0;
-console.log('性能调优 a1.0.0：' + new Date().toLocaleString() +' '+ performance.now() )
+console.log('性能调优 a1.0.0-1：' + new Date().toLocaleString() +' '+ performance.now() )
 // const MyContext = React.createContext({});
 
 const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {

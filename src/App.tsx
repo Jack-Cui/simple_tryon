@@ -24,8 +24,15 @@ import { LoginSceneProvider } from './contexts/LoginSceneContext';
 //add by chao 2025.10.08
 import VideoUploader from './pages/Home/VideoUploader';
 import Room from './pages/Room';
+import Empty from './pages/Room/components/Empty';
+// import UploadModelModal from './components/UploadModelModal';
 
-
+// interface CreateModelModalProps {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   onCreateModel: () => void;
+//   gotoCreateModel: () => void;
+// }
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -231,6 +238,7 @@ function App() {
             <Route path="/subs-package" element={<SubscribePackage />} />
             {/* <Route path='/browse-history' element={<BrowseHistory />}/> */}
             <Route path="/room" element={<Room />} />
+            <Route path="/room/empty" element={<Empty />} />
             <Route 
               path="/home" 
               element={
@@ -244,6 +252,8 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Home />
+                  {/* <Room/> */}
+                  {/* <Empty/> */}
                 </ProtectedRoute>
               } 
             />
