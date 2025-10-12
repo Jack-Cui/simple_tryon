@@ -1,5 +1,5 @@
 import './index.css';
-import { Input, Toast } from 'tdesign-mobile-react';
+import { Input, Loading, Toast } from 'tdesign-mobile-react';
 import { CheckCircleIcon, CloseCircleIcon } from 'tdesign-icons-react';
 import HeightIcon from '../../assets/height.png';
 import ActionIcon from '../../assets//action.png';
@@ -146,10 +146,20 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         if(true){
             // 调用父组件传递的上传方法
             if (props.onIOSUploadVideo) {
+                Toast({
+                    message: '上传中。。。',
+                    direction: 'column',
+                    placement: 'middle',
+                    // duration: 5000,
+                    preventScrollThrough: true,
+                    showOverlay: true,
+                    icon: <Loading />,
+                  });
                 const uploadResult = await props.onIOSUploadVideo(event.target.files[0]);
                 // 上传结果打印
+                Toast.clear();
                 console.log('uploadVideo result:', uploadResult);
-                alert('iOS开始上传！')
+                // alert('iOS开始上传！')
             } 
         }
 

@@ -6,8 +6,9 @@ interface Props {
 }
 const Poster = (props: Props) => {
     const [imageList, setImageList] = useState([
-        'https://tdesign.gtimg.com/mobile/demos/swiper1.png',
-        'https://tdesign.gtimg.com/mobile/demos/swiper2.png',
+        'https://admins3.tos-cn-shanghai.volces.com/20250904-01.jpg',
+        'https://admins3.tos-cn-shanghai.volces.com/20250904-04.jpg',
+        'https://admins3.tos-cn-shanghai.volces.com/20250904-07.jpg'
     ])
     const swiperItems = () => (
         <>
