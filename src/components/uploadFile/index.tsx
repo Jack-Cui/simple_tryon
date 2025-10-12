@@ -71,47 +71,50 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         console.log('fileChange..4');
         console.log(file);
         const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-        if (isIOS) {
-            // IOS暂时不校验
-            return true;
-        }
+  
         if (props?.isRing) {
-            if (!['mov', 'mp4'].includes((file.name.split('.').pop() as never))) {
-                setErrorInfo('请上传mov/mp4格式视频');
-                setShowError(true);
-                return false;
-            }
-            // 环拍视频
-            const res: any = await checkVideo(file);
-            if (!(res.duration >= 45 && res.duration <= 60)) {
-                setErrorInfo('请上传时长45s-60s的视频');
-                setShowError(true);
-                return false;
-            }
-            console.log(res);
-            if (!(res.videoWidth === 2160 && res.videoHeight === 3840)) {
-                setErrorInfo('请上传分辨率为4k的视频');
-                setShowError(true);
-                return false;
-            }
-            if (false) {
-                setErrorInfo('请上传帧率为60fps的视频');
-                setShowError(true); 
-                return false;
+            if (isIOS) {
+                // IOS暂时不校验
+                return true;
+            } else{
+                if (!['mov', 'mp4'].includes((file.name.split('.').pop() as never))) {
+                    setErrorInfo('请上传mov/mp4格式视频');
+                    setShowError(true);
+                    return false;
+                }
+                // 环拍视频
+                const res: any = await checkVideo(file);
+                if (!(res.duration >= 45 && res.duration <= 60)) {
+                    setErrorInfo('请上传时长45s-60s的视频');
+                    setShowError(true);
+                    return false;
+                }
+                console.log(res);
+                if (!(res.videoWidth === 2160 && res.videoHeight === 3840)) {
+                    setErrorInfo('请上传分辨率为4k的视频');
+                    setShowError(true);
+                    return false;
+                }
+                if (false) {
+                    setErrorInfo('请上传帧率为60fps的视频');
+                    setShowError(true); 
+                    return false;
+                }
             }
         }
+        
         if (props?.is3DBeauty) {
-        const res: any = await checkImg(file);
-        console.log("width:" + res.fileInfo.width + "height:" + res.fileInfo.height );
-            // 美图
-            const short = res.fileInfo.width < res.fileInfo.height ? res.fileInfo.width : res.fileInfo.height;
-            const long = res.fileInfo.width < res.fileInfo.height ? res.fileInfo.height : res.fileInfo.width;
-            if (!((short > 1440 || short === 1440) && (long < 3840 || long === 3840))) {
-                // 短边≥1440，长边≤3840
-                setErrorInfo('请上传分辨率2k-4k的美颜照片');
-                setShowError(true); 
-                return false;
-            }
+            const res: any = await checkImg(file);
+            console.log("width:" + res.fileInfo.width + "height:" + res.fileInfo.height );
+                // 美图
+                const short = res.fileInfo.width < res.fileInfo.height ? res.fileInfo.width : res.fileInfo.height;
+                const long = res.fileInfo.width < res.fileInfo.height ? res.fileInfo.height : res.fileInfo.width;
+                if (!((short > 1440 || short === 1440) && (long < 3840 || long === 3840))) {
+                    // 短边≥1440，长边≤3840
+                    setErrorInfo('请上传分辨率2k-4k的美颜照片');
+                    setShowError(true); 
+                    return false;
+                }
         }
 
         if (props?.isPersonal) {
