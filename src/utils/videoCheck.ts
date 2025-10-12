@@ -39,30 +39,31 @@ import wx from "weixin-js-sdk";
     let doms = document.createElement('video');
         doms.id = 'checktimevideo'
         doms.style.display = 'none'
-    // iOS 兼容性处理
-    let isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    if (isIOS) {
-      const reader = new FileReader();
-      return new Promise(resolve => {
-        reader.onload = async function (e: any) {
-          doms.src = e.target.result;
-          document.body.appendChild(doms);
-          console.log('iOS环境doms：' + doms);
+    // // iOS 兼容性处理
+    // let isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    // if (isIOS) {
+    //   const reader = new FileReader();
+    //   return new Promise(resolve => {
+    //     reader.onload = async function (e: any) {
+    //       doms.src = e.target.result;
+    //       document.body.appendChild(doms);
+    //       console.log('iOS环境doms：' + doms);
           
-          const result = await gettime(doms); 
-          console.log('result:'+result);         
-          resolve(result);         
-        };       
-        reader.readAsDataURL(files[0]);
-        console.log('iOS环境doms..4');
-      });
-    } else{
+    //       const result = await gettime(doms); 
+    //       console.log('result:'+result);         
+    //       resolve(result);         
+    //     };       
+    //     reader.readAsDataURL(files[0]);
+    //     console.log('iOS环境doms..4');
+    //   });
+    // } else{
+          //取消iOS特殊处理，因为不生效 chao:2025.10.12 
           const url = URL.createObjectURL(files[0])
           // console.log(url)
           doms.src = url
           document.body.appendChild(doms);
-          console.log('非iOS环境doms：' + doms);
-      }
+          console.log('环境检测doms：' + doms);
+      // }
 
     return await gettime(doms);
   }

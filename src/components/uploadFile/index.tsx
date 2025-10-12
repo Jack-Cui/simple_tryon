@@ -74,6 +74,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
   
         if (props?.isRing) {
             if (isIOS) {
+            // if (false) {
                 // IOS暂时不校验
                 return true;
             } else{
@@ -133,7 +134,46 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         console.log('fileChange..1');
         if (!event.target.files[0]) return;
         console.log('fileChange..2');
+
         
+        // 自动播放并立即暂停视频（无感知）
+        await new Promise<void>((resolve) => {
+            console.log('fileChange..s.1.1'+' '+ performance.now());
+            const tempVideo = document.createElement('video');
+            console.log('fileChange..s.1.2'+' '+ performance.now());
+            tempVideo.src = URL.createObjectURL(event.target.files[0]);
+            tempVideo.muted = true;
+            tempVideo.style.display = 'none';
+            document.body.appendChild(tempVideo);
+            console.log('fileChange..s.1.3'+' '+ performance.now());
+            tempVideo.onloadeddata = () => {
+                tempVideo.play().then(() => {
+                    tempVideo.pause();
+                    document.body.removeChild(tempVideo);
+                    resolve();
+                }).catch(() => {
+                    document.body.removeChild(tempVideo);
+                    resolve();
+                });
+            };
+            console.log('fileChange..s.1.4'+' '+ performance.now());
+            // 防止 onloadeddata 不触发
+            setTimeout(() => {
+                console.log('fileChange..s.1.5'+' '+ performance.now());
+                if (document.body.contains(tempVideo)) {
+                    document.body.removeChild(tempVideo);
+                    resolve();
+                }
+            }, 2000);
+        });
+        const isConfirmed = window.confirm('确定要执行这个操作吗？');
+    if (isConfirmed) {
+        // 用户点击了确认，继续执行后续代码
+        console.log('用户确认，继续执行...');
+    } else {
+        // 用户点击了取消
+        console.log('用户取消操作');
+    }
         const flag: boolean = await verifyFiles(event.target.files[0]);
         console.log('flag', flag);
         if (!flag) return;
