@@ -11,6 +11,7 @@ import {checkImg} from '../../utils/imgCheck';
 import { getVideoFirstFrame } from '../../utils/vedioToImg';
 import ErrorToast from '../errorToast';
 import { setupWechatVideoCapture, wechatExtractVideoFrame } from '../../utils/wxVideoToImg';
+import { apiService, uploadAPI } from '../../services/api';
 
 interface Props {
   // ...existing props...
@@ -135,31 +136,113 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         return true;
     }
 
+    //add by chao:2025.10.13
+    // 获取 jpg 图片并转为 base64
+    // 获取 jpg 图片并转为 base64（只返回纯base64数据，不带前缀）
+    async function fetchJpgAsBase64(fPicUrl: string): Promise<string> {
+    const response = await fetch(fPicUrl, { method: 'GET' });
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+        // 取出base64部分
+        const result = reader.result as string;
+        // 兼容 data:image/jpeg;base64,xxxx 或 data:image/jpg;base64,xxxx
+        const base64 = result.replace(/^data:(image|application)\/\w+;base64,/, '');
+        resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
+    }
+
     const fileChange = async (event: any) => {
         console.log('fileChange..1');
         if (!event.target.files[0]) return;
         console.log('fileChange..2');
 
         //add by chao:2025.10.12
+        //IOS特殊处理
         //如果是iOS环境，直接先上传文件，再校验文件信息
         const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);  
-        if(true){
+        // if(true){
+        if(isIOS){
             // 调用父组件传递的上传方法
             if (props.onIOSUploadVideo) {
                 Toast({
-                    message: '上传中。。。',
+                    message: '视频上传中,请稍后...',
                     direction: 'column',
                     placement: 'middle',
-                    // duration: 5000,
+                    duration: 0,
                     preventScrollThrough: true,
                     showOverlay: true,
                     icon: <Loading />,
                   });
-                const uploadResult = await props.onIOSUploadVideo(event.target.files[0]);
-                // 上传结果打印
-                Toast.clear();
-                console.log('uploadVideo result:', uploadResult);
-                // alert('iOS开始上传！')
+                const { modelVideoUrlRes, videoResultsRes }= await props.onIOSUploadVideo(event.target.files[0]);
+                Toast.clear();                
+                console.log('uploadVideo result:', modelVideoUrlRes);
+
+                if(modelVideoUrlRes){
+                    let r_frame_rate = '';
+                    let width = ''; 
+                    let height = ''; 
+                    let duration = '';
+                    //1.获取视频基本信息
+                    try {
+                        const response = await uploadAPI.getTOSVideoResult(modelVideoUrlRes);
+                            
+                        if (response.ok) {
+                            // 假设 response.data 已经是 JSON 字符串
+                            const vData = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+
+                            // 找到视频流（codec_type === 'video'）
+                            const videoStream = (vData.streams || []).find((s: any) => s.codec_type === 'video');
+
+                             r_frame_rate = videoStream?.r_frame_rate; // 如 "60/1"
+                             width = videoStream?.width;
+                             height = videoStream?.height;
+
+                            // 视频时长（单位：秒，字符串类型，可转为数字）
+                             duration = vData.format?.duration;
+
+                            console.log('帧率:', r_frame_rate);
+                            console.log('宽度:', width);
+                            console.log('高度:', height);
+                            console.log('时长:', duration);                            
+                        }
+                    } catch (error) {
+                        console.error('获取视频基本信息失败:', error);
+                        return;
+                    } 
+
+                    //2.校验视频基本信息
+                    if (!(Number(duration) >= 45 && (Number(duration) <= 60))) {
+                        setErrorInfo('请上传时长45s-60s的视频');
+                        setShowError(true);
+                        return;
+                    }                    
+                    if (!(Number(height) === 2160 && Number(width) === 3840)) {
+                        setErrorInfo('请上传分辨率为4k的视频');
+                        setShowError(true);
+                        return;
+                    }
+                    if (!(r_frame_rate === "60/1" )) {
+                        setErrorInfo('请上传帧率为60fps的视频');
+                        setShowError(true);
+                        return;
+                    }
+
+                    //3.获取视频帧截图
+                    const fPicUrl = modelVideoUrlRes+'?x-tos-process=video/snapshot,t_1000,w_500,h_800,f_jpg';
+                    const base64 = await fetchJpgAsBase64(fPicUrl);
+                    console.log('fPic base64:',base64);
+                    setFirstFrame(fPicUrl); // 显示 Base64 图片
+                    
+
+                    setFile(event.target.files[0]);
+                    return;
+                }
+
             } 
         }
 

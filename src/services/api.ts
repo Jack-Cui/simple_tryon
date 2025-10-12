@@ -1529,6 +1529,26 @@ export const modelAPI = {
 };
 
 export const uploadAPI = {
+  //获取TOS视频信息
+  async getTOSVideoResult(url: string): Promise<ApiResponse> {
+    console.log('获TOS取视频信息');
+    const endpoint = API_ENDPOINTS.GET_TOS_VIDEO_DATA(url);
+    const headers = {
+      // 'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  },
+  
+  //获取TOS视频第一帧图片
+  async getTOSVideoFpic(url: string): Promise<ApiResponse> {
+    console.log('获TOS取视频信息');
+    const endpoint = API_ENDPOINTS.GET_TOS_VIDEO_FPIC(url);
+    const headers = {
+      // 'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  },
+
   async getUploadVedioToken(access_token: string): Promise<ApiResponse> {
     console.log('开始获取上传视频临时token');
     const endpoint = API_ENDPOINTS.GET_UPLOAD_VEDIO_TOKEN();

@@ -39,6 +39,7 @@ const CreateModel = (props?: { onBack?: any}) => {
   const uploadFileEl = useRef<HTMLInputElement>(null);
   const [step, setStep] = useState(0);
   const [isUploadPic, setIsUploadPic] = useState(0);
+  const [isUploadIOSVideo, setIsUploadIOSVideo] = useState(0);
   const [showError, setShowError] = useState(false);
   const [errorInfo, setErrorInfo] = useState('');
   const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
@@ -73,6 +74,7 @@ const CreateModel = (props?: { onBack?: any}) => {
 
   const onNext = () => {
     if (ringRefEl?.current) {
+
       if (!(ringRefEl?.current as any).getFile()) {
         setErrorInfo('请上传环拍视频');
         setShowError(true);
@@ -113,6 +115,7 @@ const CreateModel = (props?: { onBack?: any}) => {
     // handleUpload();          
   }
 
+  
   //add by chao
     // 当 selectedImages 变化时执行后续操作
   useEffect(() => {
@@ -188,15 +191,29 @@ const CreateModel = (props?: { onBack?: any}) => {
       let modelVideoUrl = '';
       let uploadResults: any[] = [];
 
-      //add by chao: 2025.10.12 封装上传视频方法，支持在其他代码段提前上传，兼容iOS特殊场景
-      if (selectedVideos.length > 0) {
-        const { modelVideoUrlRes, videoResultsRes } = await uploadVideo(loginCache);
-        modelVideoUrl = modelVideoUrlRes;
-        uploadResults.push(...videoResultsRes);
-        console.log('视频URL:', modelVideoUrlRes);
-        console.log('上传结果数量:', videoResultsRes.length);        
+      //IOS特殊处理
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);  
+      if(!isIOS){
+      // if(false){
+        //add by chao: 2025.10.12 封装上传视频方法，支持在其他代码段提前上传，兼容iOS特殊场景
+        if (selectedVideos.length > 0) {
+          const { modelVideoUrlRes, videoResultsRes } = await uploadVideo(loginCache, selectedVideos);
+          modelVideoUrl = modelVideoUrlRes;
+          uploadResults.push(...videoResultsRes);
+          console.log('视频URL:', modelVideoUrlRes);
+          console.log('上传结果数量:', videoResultsRes.length);        
+        }
+      }else{
+        //如果是iOS环境，直接读取上一部选择视频时的上传结果
+        if(iOSVideoUploadResult){
+            const { modelVideoUrlRes, videoResultsRes } =iOSVideoUploadResult;
+            modelVideoUrl = modelVideoUrlRes;
+            uploadResults.push(...videoResultsRes);
+        }
       }
+
       
+
       //TODEL:2025.10.12
       // 处理视频上传
       // if (selectedVideos.length > 0) {
@@ -377,7 +394,7 @@ const CreateModel = (props?: { onBack?: any}) => {
   }
 
   //add by chao: 2025.10.12 兼容iOS特殊场景，封装上传方法
-  const uploadVideo = async(loginCache: { token: string }): Promise<VideoUploadResult>=>{
+  const uploadVideo = async(loginCache: { token: string }, upFile:any[]): Promise<VideoUploadResult>=>{
       let modelVideoUrl = '';
           // 处理视频上传
       
@@ -424,7 +441,8 @@ const CreateModel = (props?: { onBack?: any}) => {
             tosUploadService.initialize(credentials);
             setStatus(1);
             console.log('开始上传视频文件');
-            const videoResults = await tosUploadService.uploadFiles(selectedVideos);
+            // upFile  selectedVideos
+            const videoResults = await tosUploadService.uploadFiles(upFile);
             // uploadResults.push(...videoResults);
             
             console.log('视频上传结果:', videoResults);
@@ -443,7 +461,26 @@ const CreateModel = (props?: { onBack?: any}) => {
           setStep(1);
           throw new Error(`获取视频上传token失败: HTTP ${tokenResponse.status}`);
         }      
-  }
+
+
+        
+  };
+
+  // //TODO:chao
+  //  useEffect(() => {
+  //     const loginCache = getLoginCache();
+  //   if(loginCache){
+      
+  //     if (selectedVideos) {
+  //       console.log("正在iOS环境上传环拍视频！");
+  //       (async () => {
+  //         const result = await uploadVideo(loginCache);
+  //         setIOSVideoUploadResult(result); // 保存结果
+  //       })();   
+  //     }    
+  //   }
+  // }, [isUploadIOSVideo]); 
+
 
   return (
     <>
@@ -457,7 +494,12 @@ const CreateModel = (props?: { onBack?: any}) => {
     // 这里 file 是 UploadFile 组件传递上来的
     const loginCache = getLoginCache();
     if(loginCache){
-      const result = await uploadVideo(loginCache);
+      const sfile = file;
+      console.log('sfile:'+ sfile.name)
+      // setSelectedVideos([(ringRefEl?.current as any).sfile]);
+
+      // setIsUploadIOSVideo(isUploadIOSVideo => isUploadIOSVideo +1);
+      const result = await uploadVideo(loginCache,[sfile]);
       setIOSVideoUploadResult(result); // 保存结果
       return result; // 可选：返回给 UploadFile 用于提示
     }

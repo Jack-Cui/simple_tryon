@@ -127,6 +127,12 @@ export const API_ENDPOINTS = {
   // 获取AI视频
   GET_AI_VIDEO_RESULT: (id: string) => `/admin/sysaivideo/${id}`,
 
+  //获取TOS视频信息
+  GET_TOS_VIDEO_DATA:(url:string)=> `${url}?x-tos-process=video/info`,
+
+  //获取TOS视频第一帧图片
+  GET_TOS_VIDEO_FPIC:(url:string)=> `${url}?x-tos-process=video/snapshot,t_1000,w_500,h_800,f_jpg`,
+
   // 获取AI视频列表（也就是历史）
   GET_AI_VIDEO_RESULT_LIST: (current: number, size: number) => `/admin/sysaivideo/pageByUser?descs=create_time&current=${current}&size=${size}`,
 
