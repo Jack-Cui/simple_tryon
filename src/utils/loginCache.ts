@@ -17,6 +17,7 @@ export interface LoginCacheData {
   shareScene: string;
   coUserId: string; // 共创用户ID
   coRoomId: string; // 共创房间ID
+  clothDefaultSize: string;//衣服默认尺码 add by chao:2025.10.12
 }
 
 const CACHE_KEY = 'loginCache';
@@ -260,9 +261,9 @@ export const getClothesDetailFromCache = (clotheId: string): any | null => {
 }; 
 
 /**
- * 获取缓存中的衣服详情
+ * 获取缓存中的共创用户ID
  * @param coUserId 衣服ID
- * @returns 衣服详情，如果没有则返回null
+ * @returns 用户ID，如果没有则返回null
  */
 export const getCoUserIdFromCache = (): any | null => {
   try {
@@ -277,7 +278,7 @@ export const getCoUserIdFromCache = (): any | null => {
   }
 }; 
   /**
- * 更新缓存中的房间名称
+ * 更新缓存中的共创用户ID
  * @param coUserId 房间名称
  */
 export const updateCoUserIdFromCache = (coUserId: string): void => {
@@ -297,9 +298,9 @@ export const updateCoUserIdFromCache = (coUserId: string): void => {
 };
 
 /**
- * 获取缓存中的衣服详情
+ * 获取缓存中的共创房间ID
  * @param coRoomId 分享者房间ID
- * @returns 衣服详情，如果没有则返回null
+ * @returns 房间ID，如果没有则返回null
  */
 export const getCoRoomIdFromCache = (): any | null => {
   try {
@@ -330,5 +331,41 @@ export const updateCoRoomIdFromCache = (coRoomId: string): void => {
     }
   } catch (error) {
     console.error('❌ 更新缓存中的 coRoomId 失败:', error);
+  }
+};
+
+/**
+ * 获取缓存中的默认衣服尺寸
+ * @param ClothDefaultSize 默认衣服尺寸
+ * @returns 默认衣服尺寸，如果没有则返回null
+ */
+export const getClothDefaultSizeFromCache = (): any | null => {
+  try {
+    const cachedData = getLoginCache();
+    if (cachedData?.clothDefaultSize ) {
+      return cachedData.clothDefaultSize;
+    }
+    return null;
+  } catch (error) {
+    console.error('❌ 从缓存获取 默认衣服尺寸 失败:', error);
+    return null;
+  }
+}; 
+  /**
+ * 更新缓存中的默认衣服尺寸
+ * @param coRoomId 默认衣服尺寸
+ */
+export const updateClothDefaultSizeFromCache = (clothDefaultSize: string): void => {
+  try {
+    const cachedData = getLoginCache();
+    if (cachedData) {
+      const updatedData = { ...cachedData, clothDefaultSize };
+      // const cacheDurationStr = localStorage.getItem(CACHE_KEY + '_duration');
+      // const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;      
+      localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
+      console.log('✅ clothDefaultSize 已更新到缓存:', clothDefaultSize);
+    }
+  } catch (error) {
+    console.error('❌ 更新缓存中的 clothDefaultSize 失败:', error);
   }
 };

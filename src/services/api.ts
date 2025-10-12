@@ -13,9 +13,10 @@ import {
   JoinRoomResponse, 
   EnterStageInfo,
   CreateSysRoomShareRequest,
-  CreateSysRoomShareResponse
+  CreateSysRoomShareResponse,
+  ClotheSizeResponse
 } from '../types/api';
-import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache, updateClothesDetailsInCache, updateCoUserIdFromCache, getCoUserIdFromCache } from '../utils/loginCache';
+import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache, updateClothesDetailsInCache, updateCoUserIdFromCache, getCoUserIdFromCache, updateClothDefaultSizeFromCache } from '../utils/loginCache';
 // import { getEndpoint } from '@volcengine/tos-sdk/dist/utils';
 // import { get } from 'http';
 
@@ -668,7 +669,7 @@ export const roomAPI = {
     }
     
     if(isRecLog) console.log('🔍 所有衣服处理完成，最终结果:');
-    if(isRecLog) console.log('🔍 处理的clothe_ids:', clothe_ids);
+    console.log('🔍 处理的clothe_ids:', clothe_ids);
     if(isRecLog) console.log('🔍 最终clothesItemInfoList:', clothesItemInfoList);
     if(isRecLog) console.log('🔍 最终isClothesSuit:', isClothesSuit);
     
@@ -697,14 +698,37 @@ export const roomAPI = {
     const garment3Id = clothesItemInfoList.length >= 3 ? clothesItemInfoList[2].clothesId : Long.ZERO;
     
     if(isRecLog) console.log('🔍 构建的garment IDs:');
-    if(isRecLog) console.log('🔍 garment1Id:', garment1Id.toString());
+    console.log('🔍 garment1Id:', garment1Id.toString());
     if(isRecLog) console.log('🔍 garment2Id:', garment2Id.toString());
     if(isRecLog) console.log('🔍 garment3Id:', garment3Id.toString());
-    const garment1Size = "4"; // 默认尺寸，实际应该从服务器获取
+
+    let garment1Size = "4"; // 默认尺寸，实际应该从服务器获取
     const garment2Size = garment2Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
     const garment3Size = garment3Id.gt(Long.ZERO) ? "4" : "1"; // 默认尺寸，实际应该从服务器获取
 
-    if(isRecLog) console.log('👕 构建的服装参数:', {
+    //add by chao: 2025.10.12 获取当前尺码逻辑
+    const response = await roomAPI.getClotheSize( clothesItemInfoList[0].clothesId, access_token);
+    if(response.ok && response.data){        
+        console.log('获取当前尺码数据:', response.data);
+        const parsed_response = JSON.parse(response.data) as ClotheSizeResponse;
+        const sizeName = parsed_response.data;
+        // 将尺寸字符串转换为数字
+        const sizeMap: { [key: string]: number } = {
+            'XS': 1,
+            'S': 2,
+            'M': 3,
+            'L': 4,
+            'XL': 5,
+            'XXL': 6,
+            '3XL': 7
+        };
+        if(sizeMap[sizeName]){
+          garment1Size = String(sizeMap[sizeName]);
+        }
+        updateClothDefaultSizeFromCache(String(sizeName));
+    }
+
+    console.log('👕 构建的服装参数:', {
       garment1Id: garment1Id.toString(), 
       garment2Id: garment2Id.toString(), 
       garment3Id: garment3Id.toString(),

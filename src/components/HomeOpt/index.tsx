@@ -25,8 +25,8 @@ import Action5Check from '../../assets/action5-check.png';
 import './index.css';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getLoginCache } from '../../utils/loginCache';
-import { modelAPI, uploadAPI } from '../../services/api';
+import { getClothesDetailFromCache, getLoginCache,getClothDefaultSizeFromCache } from '../../utils/loginCache';
+import { modelAPI, roomAPI, uploadAPI } from '../../services/api';
 import { rtcVideoService } from '../../services/rtcVideoService';
 import ErrorToast from '../errorToast';
 import { Button } from 'tdesign-mobile-react';
@@ -58,6 +58,25 @@ const HomeOpt = forwardRef((props: Props, ref: any) => {
     useEffect(() => {
         hotClick && hotClick(showHot);
     }, [showHot, hotClick])
+
+    //add by chao: 2025.10.12
+    // 获取当前用户的默认尺码,动态加载尺码控件效果
+    //TODO:根据尺码设置选中状态
+    const getUserDefaultSize = () => {
+        const clothDefaultSize: string = getClothDefaultSizeFromCache();
+        if (!clothDefaultSize) {
+            console.log('获取尺码失败！');
+            return;
+        }
+        console.log('获取默认尺码..' + clothDefaultSize);
+        setShowSize(clothDefaultSize);
+        return;
+    }
+    useEffect(()=>{
+        getUserDefaultSize();
+        
+    }, [])
+
 
     const checkAction = async (msg: any) => {
         if (aigcList.includes(msg.id)) return;

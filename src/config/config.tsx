@@ -132,7 +132,7 @@ export const API_ENDPOINTS = {
 
 // 获取AI视频列表（也就是历史）
 //add by chao: 2025.10.07 支持分享模式查询他人的收藏
-  GET_AI_VIDEO_RESULT_LIST_SHARE: (current: number, size: number, sUserId: string, sRoomId: string) => `/admin/sysaivideo/pageByUser?descs=create_time&current=${current}&size=${size}&userId=${sUserId}&roomId=${sRoomId}`,
+  GET_AI_VIDEO_RESULT_LIST_SHARE: (current: number, size: number, sUserId: string, sRoomId: string) => `/admin/sysaivideo/pageByUserId?descs=create_time&current=${current}&size=${size}&userId=${sUserId}&roomId=${sRoomId}`,
 
   // 删除aigc视频
   DELETE_AI_VIDEO: (id: string) => `/admin/sysaivideo/removeUserVideoById/${id}`,

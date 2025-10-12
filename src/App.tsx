@@ -116,7 +116,8 @@ function App() {
               coCreationId: co_creation_id,
               shareScene: login_scene,
               coUserId: '',
-              coRoomId: ''
+              coRoomId: '',
+              clothDefaultSize:''
             });
             
             // 登录成功后立即初始化房间信息
