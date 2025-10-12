@@ -14,12 +14,11 @@ const root = ReactDOM.createRoot(
 
 console.log('性能调优 a0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Suspense fallback={<div>Loading...</div>}>
         <App />
-    </Suspense>
-    
-  </React.StrictMode>
+    </Suspense>    
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

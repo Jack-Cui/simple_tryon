@@ -25,9 +25,20 @@ module.exports = function(app) {
   app.use(
     '/admin',
     createProxyMiddleware({
-      target: 'http://localhost:81',
+      target: 'http://localhost:81',      
       changeOrigin: true,
-      pathRewrite: { '^/admin': '/admin' },
+      // pathRewrite: { '^/admin': '/admin' },
     })
   ); 
+  // app.use(
+  //   '/admin',
+  //   createProxyMiddleware({
+  //     target: 'http://180.184.140.234:9999',
+  //     changeOrigin: true,
+  //     secure: false,
+  //     pathRewrite: {
+  //       '^/admin': '/admin' // 保持路径不变
+  //     },
+  //   })
+  // );
 }; 
