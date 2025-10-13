@@ -11,6 +11,8 @@ import CreateModel from '../CreateModel';
 import UploadAction from '../UploadAction';
 import SubscribePackage from '../SubscribePackage';
 import BrowseHistory from '../BrowseHistory';
+import { modelAPI } from '../../services/api';
+import { getLoginCache } from '../../utils/loginCache';
 const Room = () => {
     const homeOptEl = useRef(null);
     const d3El = useRef(null);
@@ -37,6 +39,21 @@ const Room = () => {
     useEffect(() => {
         console.log('当前值：', value);
     }, [value]);
+    useEffect(() => {
+        getModelList();
+    }, [])
+
+    // 获取模型列表
+      const getModelList = async () => {
+        const loginCache: any = getLoginCache();
+        const response = await modelAPI.getModelList(loginCache.token, loginCache.userId);
+        const dataObj = JSON.parse(response.data);
+        if (!(dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0)) {
+            setIsEmpty(false)
+        } else {
+            setIsEmpty(true)
+        }
+      }
     return (
         <>
             <div className="room" 
@@ -51,7 +68,7 @@ const Room = () => {
             >
                 {
                     isEmpty ?
-                        <Empty />
+                        <Empty toPage={() => setPage('create-model')} />
                         :
                         <>
                             <Poster isShow={value === 'poster'} />

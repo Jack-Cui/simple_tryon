@@ -229,10 +229,10 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                     <img src={Foot} alt="" onClick={goToHistory} />
                     <span>足迹</span>
                 </div>
-                <div>
+                {/* <div>
                     <img src={Sub} alt="" onClick={goToSubs} />
                     <span>订阅包</span>
-                </div>
+                </div> */}
             </div>
         </div>
     )

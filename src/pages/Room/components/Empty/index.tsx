@@ -3,8 +3,12 @@ import { Button } from 'tdesign-mobile-react';
 import EmptyImg from '../../../../assets/empty.png';
 import './index.css';
 interface Props {
+    toPage?: () => void;
 }
 const Empty = (props: Props) => {
+    const gotoCreate = () => {
+        props?.toPage && props.toPage();
+    }
     return <div className="empty">
         <img className='img' src={EmptyImg} alt="" />
         <div className='tip'>您还没有人物模型无法试穿</div>
@@ -13,6 +17,7 @@ const Empty = (props: Props) => {
             theme="light"
             shape="round"
             style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }}
+            onClick={gotoCreate}
         >去创建模型</Button>
     </div>
 }

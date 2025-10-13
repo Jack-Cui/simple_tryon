@@ -4,7 +4,7 @@
 .icon-page-to > .left > .exm {
     position: fixed;
     left: 25px;
-    bottom: 350px;
+    bottom: 470px;
     z-index: 99;
     width: 12px;
     height: 17px;
@@ -15,10 +15,15 @@
     line-height: 17px;
     text-align: justify;
     font-style: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .icon-page-to > .left > .exm > img {
     width: 23px;
     height: 175px;
+    margin: 10px;
 }
 .icon-page-to > .left > .hot {
     position: fixed;
