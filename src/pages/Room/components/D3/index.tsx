@@ -1,5 +1,5 @@
 import './index.css';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './index.css';
 import { tryonService } from '../../../../services/tryonService';
@@ -60,7 +60,7 @@ const isRtcLog = false;
 console.log('性能调优 a1.0.0-1：' + new Date().toLocaleString() +' '+ performance.now() )
 // const MyContext = React.createContext({});
 
-const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
+const D3 = forwardRef((props: {goToPage?: (str: string) => void; isShow?: boolean}, ref) => {
 const location = useLocation();
 
 //add by chao 2025.09.29 增加路由监听事件
@@ -2527,18 +2527,27 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
     };
   }, []);
 
+  useImperativeHandle(ref, () => ({
+          // 暴露给父组件的方法，用于获取数据
+          // 获取文件
+          handleHotClick: (flag: boolean) => {
+            handleHotClick(flag);
+          },
+      })); // 依赖项变化时更新暴露的方法
+
   // 如果缺少必要参数，显示加载页面
   if (!loginParams) {
     return (
       <div style={{
-        display: 'flex',
+        display: props.isShow ? 'flex' : 'none',
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: '100vh',
         backgroundColor: '#f8f9fa',
         flexDirection: 'column',
         padding: '20px'
-      }}>
+      }}
+      >
         <div style={{ fontSize: '16px', marginBottom: '10px', color: '#1890ff' }}>
           🔄 正在验证登录信息...
         </div>
@@ -2555,7 +2564,7 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
         minHeight: '100vh',
         //update by chao 2025.10.02 // 修改播放器背景色
         backgroundColor: '#ffffffff', // 浅绿色背景
-        display: 'flex',
+        display: props.isShow ? 'flex' : 'none',
         flexDirection: 'column',
         position: 'relative'
       }}
@@ -2567,7 +2576,7 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
           }
       }}
       >
-        <HomeOpt ref={homeOptEl} toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
+        {/* <HomeOpt ref={homeOptEl} toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/> */}
         {/* 音乐开始 */}
         <ReactHowler
           src={musicUrl}
@@ -3080,7 +3089,7 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
     <div style={{
       minHeight: '100vh',
       backgroundColor: '#fff',
-      display: 'flex',
+      display: props.isShow ? 'flex' : 'none',
       flexDirection: 'column',
       position: 'relative'
     }}
@@ -3092,7 +3101,7 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
       }
   }}
     >
-      <HomeOpt  ref={homeOptEl} toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/>
+      {/* <HomeOpt  ref={homeOptEl} toPage={(type) => toPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} actionClick={(msg: any) => handleActionModelClick(msg)} loginScene={loginScene}/> */}
       {/* 音乐开始 */}
       <ReactHowler
         src={musicUrl}
@@ -3859,9 +3868,9 @@ console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ perfo
         {/* <FixedDownloadPrompt /> */}
       </div>
     );
-  };
+  });
 
-const D3 = (props: Props) => {
+const D3s = (props: Props) => {
   const [step, setStep] = useState<string>('home'); // home 
   //<--add by chao 2025.10.01
 //   const animationFrameRef = useRef<number | null>(null);
@@ -3907,7 +3916,8 @@ const navigate = useNavigate(); // 新增
   
     
     <div className="D3"  style={{display: props.isShow ? 'block' : 'none'}}>
-    <>
+      {/* <HomeVideo goToPage={(msg) => setStep(msg)} /> */}
+    {/* <>
         <div style={step === 'home' ? {}: {display: 'none'}}>
             <HomeVideo goToPage={(msg) => setStep(msg)} />
         </div>
@@ -3915,7 +3925,7 @@ const navigate = useNavigate(); // 新增
         {step === 'upload-action' && <UploadAction onBack={onClickBack}/>}
         {step === 'subs-package' && <SubscribePackage onBack={onClickBack}/>}
         <BrowseHistory isShow={step === 'browse-historry'} onBack={onClickBack}/>
-    </>
+    </> */}
     </div>
     
   )

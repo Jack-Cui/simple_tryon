@@ -7,6 +7,7 @@
     position: absolute;
     bottom: 15px;   
     width: 100vw;
+    z-index: 999;
 }
 .room-bottom-tab-bar  > .t-tab-bar {
     width: 50%;

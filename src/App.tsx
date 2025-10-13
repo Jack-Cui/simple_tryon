@@ -251,8 +251,8 @@ function App() {
               path="/" 
               element={
                 <ProtectedRoute>
-                  <Home />
-                  {/* <Room/> */}
+                  {/* <Home /> */}
+                  <Room/>
                   {/* <Empty/> */}
                 </ProtectedRoute>
               } 
