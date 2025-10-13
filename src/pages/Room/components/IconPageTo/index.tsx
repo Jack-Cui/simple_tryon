@@ -205,7 +205,8 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                         setShowIcon(!showIcon);
                         setShowAction(false)
                     }}>
-                        <img src={sizeShowList[sizeMsg[showSize]]} alt="" />
+                        {/* <img src={sizeShowList[sizeMsg[showSize]]} alt="" /> */}
+                        <img src={sizeShowList[0]} alt="" />
                         {/* <span>尺码</span> */}
                     </div>
                     {showIcon &&

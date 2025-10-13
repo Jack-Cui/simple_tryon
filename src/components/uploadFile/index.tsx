@@ -226,7 +226,9 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                         setShowError(true);
                         return;
                     }
-                    if (!(r_frame_rate === "30/1" )) {
+                    // if (!(r_frame_rate === "30/1" )) {
+                    const numerator = Number(r_frame_rate.split('/')[0]);
+                    if (numerator <= 29 ) {    
                         setErrorInfo('请上传帧率为60fps的视频');
                         setShowError(true);
                         return;

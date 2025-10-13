@@ -13,7 +13,12 @@ import SubscribePackage from '../SubscribePackage';
 import BrowseHistory from '../BrowseHistory';
 import { modelAPI } from '../../services/api';
 import { getLoginCache } from '../../utils/loginCache';
+
+
+
 const Room = () => {
+
+    const [applyStatus, setApplyStatus] = useState<number | null>(null);    
     const homeOptEl = useRef(null);
     const d3El = useRef(null);
     const { loginScene } = useLoginScene();
@@ -48,11 +53,19 @@ const Room = () => {
         const loginCache: any = getLoginCache();
         const response = await modelAPI.getModelList(loginCache.token, loginCache.userId);
         const dataObj = JSON.parse(response.data);
-        if (!(dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0)) {
+        // if (!(dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0)) {
+        console.log('dataObj', dataObj);
+
+        if( dataObj.data && dataObj.data[0].modelStatus === 4 )  {
             setIsEmpty(false)
         } else {
             setIsEmpty(true)
         }
+        console.log('dataObj.data.applyStatus', dataObj.data[0].applyStatus);
+        if( dataObj.data && dataObj.data[0].applyStatus){
+            setApplyStatus(dataObj.data[0].applyStatus);
+        }
+
       }
     return (
         <>
@@ -68,7 +81,7 @@ const Room = () => {
             >
                 {
                     isEmpty ?
-                        <Empty toPage={() => setPage('create-model')} />
+                        <Empty toPage={() => setPage('create-model')} applyStatus={applyStatus} />
                         :
                         <>
                             <Poster isShow={value === 'poster'} />
