@@ -129,7 +129,8 @@ const MyModel = (props: Props) => {
                     <div className={props.status === 0 ? 'my-model-content-detail-info' : 'my-model-content-detail-info my-model-content-detail-blur'}>
                         <div className='my-model-content-detail-info-item'>
                             <span>名称：</span>
-                            {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].modelName) : ''}
+                            我的模型
+                            {/* {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].modelName) : ''} */}
                         </div>
                         <div className='my-model-content-detail-info-item'>
                             <span>身高：</span>

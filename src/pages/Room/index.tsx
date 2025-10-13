@@ -56,7 +56,7 @@ const Room = () => {
         // if (!(dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0)) {
         console.log('dataObj', dataObj);
 
-        if( dataObj.data && dataObj.data[0].modelStatus === 4 )  {
+        if( dataObj.data && dataObj.data.length > 0 && dataObj.data[0].modelStatus === 4 )  {
             setIsEmpty(false)
         } else {
             setIsEmpty(true)
