@@ -344,7 +344,22 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                     return <div className='info_item'>{item}</div>
                 })}
             </div>
-            <div className="example">
+            {
+                props?.example ? <div className="example">
+                    {
+                        props?.example.map(item => {
+                            return <div className='example_item'>
+                                        <img src={item.img} />
+                                        <div className='title'>
+                                            {item.isError ? <CloseCircleIcon color='red' /> : <CheckCircleIcon color='green' />}
+                                            <span>{item.name}</span>
+                                        </div>
+                                    </div>
+                        })
+                    }
+                    
+                </div> : 
+                <div className="example">
                 <div className='example_item'>
                     <img src={Example2Icon} />
                     <div className='title'>
@@ -374,6 +389,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                     </div>
                 </div>
             </div>
+            }
             <ErrorToast info={errorInfo} visible={showError} onClick={() => setShowError(false)} />
         </div>
     )

@@ -11,6 +11,14 @@ import { TosCredentials, tosUploadService } from '../../services/tosUploadServic
 import { TTPCredentials, ttpUploadService } from '../../services/ttpUploadService';
 import MyModel from '../MyModel';
 import { useNavigate } from 'react-router-dom';
+import Example1 from '../../assets/example1.png';
+import Example2 from '../../assets/example2.png';
+import Example3 from '../../assets/example3.png';
+import Example4 from '../../assets/example4.png';
+import Example5 from '../../assets/example5.png';
+import Example6 from '../../assets/example6.png';
+import Example7 from '../../assets/example7.png';
+import Example8 from '../../assets/example8.png';
 
 //add by chao: 2025.10.12修改视频上传问题
 // 定义返回的数据结构
@@ -31,6 +39,51 @@ const infoList2 = [
     '2. 正面与露脸： 必须为正脸照片，头顶和面部完整露出，无侧转或倾斜，双眼睁开。',
     '3. 光线与面部： 光线均匀，避免阴阳脸；确保面部无眼镜、饰品遮挡，且无刘海碎发。',
     '4. 清晰与整洁： 面部五官清晰无遮挡，表情自然。'
+]
+
+const RingExample = [
+  {
+    img: Example1,
+    name: '环拍轨迹',
+    isError: false,
+  },
+  {
+    img: Example2,
+    name: '着装姿势',
+    isError: false,
+  },
+  {
+    img: Example3,
+    name: '穿着鞋袜',
+    isError: true,
+  },
+  {
+    img: Example4,
+    name: '背景服装颜色相近',
+    isError: true,
+  },
+];
+const BeautyExample = [
+  {
+    img: Example5,
+    name: '合格美颜图',
+    isError: false,
+  },
+  {
+    img: Example6,
+    name: '非正脸',
+    isError: true,
+  },
+  {
+    img: Example7,
+    name: '光照不均',
+    isError: true,
+  },
+  {
+    img: Example8,
+    name: '刘海遮挡',
+    isError: true,
+  },
 ]
 const CreateModel = (props?: { onBack?: any}) => {
   //add by chao:2025.10.12 修改iOS上传
@@ -490,7 +543,7 @@ const CreateModel = (props?: { onBack?: any}) => {
       <div className="create-Model">
       <Navbar className='create-Model-navbar' fixed={false} leftArrow onLeftClick={handleClick}>{step === 0 ? '创建模型' : '3D美颜'}</Navbar>
       <div className='content'>
-        <UploadFile isHide={!(step === 0)} ref={ringRefEl} isRing title="上传环拍视频"  info={infoList1} onIOSUploadVideo={async (file: File) => {
+        <UploadFile example={RingExample} isHide={!(step === 0)} ref={ringRefEl} isRing title="上传环拍视频"  info={infoList1} onIOSUploadVideo={async (file: File) => {
     // 这里 file 是 UploadFile 组件传递上来的
     const loginCache = getLoginCache();
     if(loginCache){
@@ -505,7 +558,7 @@ const CreateModel = (props?: { onBack?: any}) => {
     }
 
   }} />
-        <UploadFile isHide={!(step === 1)}  ref={beautyRefEl} is3DBeauty title="上传清晰正面美颜照"  info={infoList2}/>
+        <UploadFile example={BeautyExample} isHide={!(step === 1)}  ref={beautyRefEl} is3DBeauty title="上传清晰正面美颜照"  info={infoList2}/>
       </div>
       <div className='create-Model-btn'>
         {step === 0 && <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={onNext}>下一步</Button>}

@@ -1,6 +1,9 @@
 import './index.css';
 import HotsOff from '../../../../assets/hots-off.png';
 import HotsOn from '../../../../assets/hots-on.png';
+import SizeXll from '../../../../assets/size-xll.png';
+import SizeXll1 from '../../../../assets/size-xll1.png';
+import SizeXllShow from '../../../../assets/size-xll-show.png';
 import SizeXl from '../../../../assets/size-xl.png';
 import SizeXl1 from '../../../../assets/size-xl1.png';
 import SizeXlShow from '../../../../assets/size-xl-show.png';
@@ -13,6 +16,9 @@ import SizeMShow from '../../../../assets/size-m-show.png';
 import SizeS from '../../../../assets/size-s.png';
 import SizeS1 from '../../../../assets/size-s1.png';
 import SizeSShow from '../../../../assets/size-s-show.png';
+import SizeXs from '../../../../assets/size-xl.png';
+import SizeXs1 from '../../../../assets/size-xl1.png';
+import SizeXsShow from '../../../../assets/size-xl-show.png';
 import Models from '../../../../assets/models.png';
 import Foot from '../../../../assets/foot.png';
 import Sub from '../../../../assets/sub.png';
@@ -40,14 +46,16 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
     // const actionIconList = [Action1, Action2, Action3, Action4, Action5];
     // const actionCheckIconList = [Action1Check, Action2Check, Action3Check, Action4Check, Action5Check];
     const sizeMsg: any = {
-        'S': 0, 
-        'M': 1, 
-        'L': 2, 
-        'XL': 3
+        'XS': 0,
+        'S': 1, 
+        'M': 2, 
+        'L': 3, 
+        'XL': 4,
+        'XLL': 5
     };
-    const sizeList = [SizeS1, SizeM1, SizeL1, SizeXl1];
-    const sizeCheckList = [SizeS, SizeM, SizeL, SizeXl];
-    const sizeShowList = [SizeSShow, SizeMShow, SizeLShow, SizeXlShow];
+    const sizeList = [SizeXs1, SizeS1, SizeM1, SizeL1, SizeXl1, SizeXll1];
+    const sizeCheckList = [SizeXs, SizeS, SizeM, SizeL, SizeXl, SizeXll];
+    const sizeShowList = [SizeXsShow, SizeSShow, SizeMShow, SizeLShow, SizeXlShow, SizeXllShow];
     const [showSize, setShowSize] = useState('');
     const [aigcList, setAigcList] = useState<any[]>([]); // 点击过的动作
     const [showError, setShowError] = useState(false);
