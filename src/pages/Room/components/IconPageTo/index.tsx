@@ -16,8 +16,8 @@ import SizeMShow from '../../../../assets/size-m-show.png';
 import SizeS from '../../../../assets/size-s.png';
 import SizeS1 from '../../../../assets/size-s1.png';
 import SizeSShow from '../../../../assets/size-s-show.png';
-import SizeXs from '../../../../assets/size-xl.png';
-import SizeXs1 from '../../../../assets/size-xl1.png';
+import SizeXs from '../../../../assets/size-xs.png';
+import SizeXs1 from '../../../../assets/size-xs1.png';
 import SizeXsShow from '../../../../assets/size-xl-show.png';
 import Models from '../../../../assets/models.png';
 import Foot from '../../../../assets/foot.png';
@@ -117,7 +117,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
     }
 
     const checkSize = (num: number) => {
-        const item = ['S', 'M', 'L', 'XL'][num];
+        const item = ['XS','S', 'M', 'L', 'XL', 'XLL'][num];
         console.log('选中尺寸', item);
         if (item === showSize) {
             return setShowIcon(false);

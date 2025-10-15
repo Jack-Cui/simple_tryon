@@ -1,0 +1,19 @@
+.room-load {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-load .t-loading__spinner--line:before {
+    background-color: #fff;
+}
+.room-load .t-loading__spinner {
+    width: 32px;
+    height: 32px;
+}
+.room-load .t-loading__text {
+    color: #fff;
+    font-size: 18px;
+}
