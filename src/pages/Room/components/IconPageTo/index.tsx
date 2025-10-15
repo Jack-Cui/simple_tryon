@@ -18,7 +18,7 @@ import SizeS1 from '../../../../assets/size-s1.png';
 import SizeSShow from '../../../../assets/size-s-show.png';
 import SizeXs from '../../../../assets/size-xs.png';
 import SizeXs1 from '../../../../assets/size-xs1.png';
-import SizeXsShow from '../../../../assets/size-xl-show.png';
+import SizeXsShow from '../../../../assets/size-xs-show.png';
 import Models from '../../../../assets/models.png';
 import Foot from '../../../../assets/foot.png';
 import Sub from '../../../../assets/sub.png';
