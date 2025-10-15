@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-console.log('性能调优 a0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
+//console.log('性能调优 a0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
 root.render(
   // <React.StrictMode>
     <Suspense fallback={<div>Loading...</div>}>

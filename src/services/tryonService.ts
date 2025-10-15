@@ -7,8 +7,12 @@ import { AccessToken, Privilege } from '../token/AccessToken';
 import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache, updateCoRoomIdFromCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 import { log } from 'console';
+import { useState } from 'react';
+
 const Long = require('long');
 const isTronLog = false; // 是否打印试穿日志
+// const [imageIds, setImageIds] = useState<string[]>([]);
+// const [videoId, setVideoId] = useState<string>("");
 
 export interface TryonConfig {
   // phone: string;
@@ -22,6 +26,8 @@ export interface TryonConfig {
 }
 
 export class TryonService {
+  private tsImageIds: string[] = [];
+  private tsVideoId: string = "";  
   private config: TryonConfig | null = null;
   private accessToken: string | null = null;
   private roomId: string | null = null;
@@ -45,6 +51,13 @@ export class TryonService {
   // 设置创建模型回调函数
   setOnCreateModelCallback(callback: () => void) {
     this.onCreateModelCallback = callback;
+  }
+  //add by chao 2025.10.15 获取图片和视频ID
+  public getMediaIds(){
+    return {
+      imageIds: this.tsImageIds,
+      videoId: this.tsVideoId,
+    };
   }
 
   // 设置事件监听器
@@ -103,7 +116,7 @@ export class TryonService {
     // 序列化生成token字符串
     const tokenString = token.serialize();
     console.log('✅ RTC Token 生成成功: ' +tokenString);
-    console.log('性能调优 a1：' + new Date().toLocaleString() +' '+ performance.now() )
+    //console.log('性能调优 a1：' + new Date().toLocaleString() +' '+ performance.now() )
     return tokenString;
   }
 
@@ -111,7 +124,7 @@ export class TryonService {
   async initializeAfterLogin(config: TryonConfig, shareScene: string): Promise<void> {
     this.config = config;
     this.accessToken = config.accessToken;
-    console.log('性能调优 a3.1：' + new Date().toLocaleString() +' '+ performance.now() )
+    //console.log('性能调优 a3.1：' + new Date().toLocaleString() +' '+ performance.now() )
     if (shareScene !== "onshare") {
       try {
         if(isTronLog) console.log('校验模型列表...');
@@ -194,7 +207,7 @@ export class TryonService {
         return;
       }
     }
-    console.log('性能调优 a3.2：' + new Date().toLocaleString() +' '+ performance.now() )
+    //console.log('性能调优 a3.2：' + new Date().toLocaleString() +' '+ performance.now() )
     try {
       // 1. 获取房间信息（但不构建登台信息）
       // console.log('步骤1: 获取房间信息');
@@ -215,7 +228,7 @@ export class TryonService {
         throw new Error('用户未登录或登录信息缺失');
       }
       console.log('步骤1.6: 构建登台信息111', loginCache.roomId);
-      console.log('性能调优 a1.1：' + new Date().toLocaleString()+' '+ performance.now())
+      //console.log('性能调优 a1.1：' + new Date().toLocaleString()+' '+ performance.now())
       await this.buildStageInfo(loginCache.roomId, shareScene);
       
       // 2. 创建房间
@@ -407,32 +420,32 @@ export class TryonService {
       
       // 2. 创建房间
       console.log('步骤2: 创建房间2');
-      console.log('性能调优 b1.0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 b1.0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
       const roomPrimaryId = await this.createRoom();
-      console.log('性能调优 b1.0.0.2：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 b1.0.0.2：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('创建房间111 roomPrimaryId:', roomPrimaryId);
       this.roomPrimaryId = roomPrimaryId;
       
       // 3. 加入房间
       console.log('步骤3: 加入房间2');
-console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ performance.now() )
+//console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ performance.now() )
       await this.joinRoom(roomPrimaryId);
-      console.log('性能调优 b1.0.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 b1.0.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
       
       // 4. 调度分配实例
       console.log('步骤4: 调度分配实例2');
-      console.log('性能调优 b1.0.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 b1.0.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
       const scheduleResult = await this.scheduleInstance();
-      console.log('性能调优 b1.0.0.6：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 b1.0.0.6：' + new Date().toLocaleString() +' '+ performance.now() )
       
       // 5. 连接WebSocket并执行登台流程
       console.log('步骤5: 连接WebSocket并执行登台流程');
-      console.log('性能调优 b1.0.0.7：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 b1.0.0.7：' + new Date().toLocaleString() +' '+ performance.now() )
       await this.connectAndPerformStage(scheduleResult);
-      console.log('性能调优 b1.0.0.8：' + new Date().toLocaleString() +' '+ performance.now() )
-      // console.log('性能调优 a1.2.3.2：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 b1.0.0.8：' + new Date().toLocaleString() +' '+ performance.now() )
+      // //console.log('性能调优 a1.2.3.2：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('试穿流程完成！');
-      // console.log('性能调优 a1.2.3.3：' + new Date().toLocaleString() +' '+ performance.now() )
+      // //console.log('性能调优 a1.2.3.3：' + new Date().toLocaleString() +' '+ performance.now() )
       
     } catch (error) {
       console.error('试穿流程失败:', error);
@@ -546,7 +559,7 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
 
     } else {
       console.log("构建普通登台信息");
-      console.log('性能调优 a1.2：' + new Date().toLocaleString()+' '+ performance.now())
+      //console.log('性能调优 a1.2：' + new Date().toLocaleString()+' '+ performance.now())
       // 重新获取房间信息用于构建登台信息
       const response = await roomAPI.getRoomInfoByRoomId(room_id, this.accessToken);
       if (!response.ok) {
@@ -862,7 +875,7 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
         // token: this.generateRTCToken() // 动态生成token
       }
     };
-    console.log('性能调优 a1.2.3-1：' + new Date().toLocaleString() +' '+ performance.now() +' '+ performance.now())
+    //console.log('性能调优 a1.2.3-1：' + new Date().toLocaleString() +' '+ performance.now() +' '+ performance.now())
     console.log('WebSocket配置111:', wsConfig);
     
     // 连接WebSocket
@@ -894,7 +907,7 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       console.log('  - roomId:', this.config.rtcConfig.roomId);
       console.log('  - userId:', this.config.rtcConfig.userId);
       console.log('  - rtcToken:', this.rtcToken ? '已提供' : '未提供');
-      console.log('性能调优 b1：' + new Date().toLocaleString()+' '+ performance.now())
+      //console.log('性能调优 b1：' + new Date().toLocaleString()+' '+ performance.now())
       // 使用全局RTC视频服务实例
       this.rtcVideoService = rtcVideoService;
       
@@ -1051,7 +1064,10 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
         }catch(error){
             console.error('❌ 调用新增用户试衣开场视频接口失败:', error);
         }
-        
+      this.tsImageIds = imageIds;
+      this.tsVideoId = videoId;
+      console.log('设置变量1111');  
+
       //3.通知UE前两次的结果
       rtcVideoService.sendStartInfoToUE(imageIds,videoId);
       console.log('通知UE开场动画参数已发送！','imageIds:',imageIds,'videoId:',videoId);
@@ -1195,7 +1211,7 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       if (!loginCache?.userId) {
         throw new Error('用户未登录或登录信息缺失');
       }
-      console.log('性能调优 a1.2.1：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 a1.2.1：' + new Date().toLocaleString() +' '+ performance.now() )
       // 2. 构建分享数据
       const shareData: CreateSysRoomShareRequest = {
         id: Long.fromString(this.config.coCreationId).toString(),
@@ -1247,7 +1263,7 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
 
       const createShareData = roomAPI.parseCreateSysRoomShareResponse(response);
       // console.log('✅ 创建分享成功:', createShareData);
-      // console.log('性能调优 a1.2.2：' + new Date().toLocaleString() +' '+ performance.now() )
+      // //console.log('性能调优 a1.2.2：' + new Date().toLocaleString() +' '+ performance.now() )
       return createShareData;
 
     } catch (error) {

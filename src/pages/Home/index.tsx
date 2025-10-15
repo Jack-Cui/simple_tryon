@@ -50,7 +50,7 @@ const isRtcLog = false;
 
 //add by chao 2025.09.29 增加路由监听事件
 // let locRouteNum = 0;
-console.log('性能调优 a1.0.0：' + new Date().toLocaleString() +' '+ performance.now() )
+//console.log('性能调优 a1.0.0：' + new Date().toLocaleString() +' '+ performance.now() )
 // const MyContext = React.createContext({});
 
 const HomeVideo = (props: {goToPage?: (str: string) => void;}) => {
@@ -1495,7 +1495,7 @@ const location = useLocation();
 
   useEffect(() => {
     console.log('🏠 Home组件初始化，检查登录参数...');
-    console.log('性能调优 组件初始化1：' + new Date().toLocaleString() +' '+ performance.now() )
+    //console.log('性能调优 组件初始化1：' + new Date().toLocaleString() +' '+ performance.now() )
     if (loginParamsInitializedRef.current) return;
     loginParamsInitializedRef.current = true;
 
@@ -1583,7 +1583,7 @@ const location = useLocation();
       navigate('/login?redirect=' + encodeURIComponent(location.pathname));
     }
 
-    console.log('性能调优 组件初始化2：' + new Date().toLocaleString() +' '+ performance.now() )
+    //console.log('性能调优 组件初始化2：' + new Date().toLocaleString() +' '+ performance.now() )
   }, []); // 空依赖数组，只在组件挂载时执行一次
 
   // 初始化房间名称和服饰列表
@@ -1591,7 +1591,7 @@ const location = useLocation();
 
   // update by chao 2025.09.29 登台刷新问题：定位登台代码段
   useEffect(() => {
-    console.log('性能调优 a1.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
+    //console.log('性能调优 a1.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
     console.log('🏠 Home组件登录参数更新2:', loginParams);
     startUpDressUp();
   }, [loginParams]); // 只依赖loginParams，避免重复执行
@@ -1600,7 +1600,7 @@ const location = useLocation();
     if(isRtcLog) console.log('🔍 tryonInitializedRef.current:', tryonInitializedRef.current);
 
     if (!loginParams || tryonInitializedRef.current) {
-      console.log('性能调优 a1.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 a1.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('🔍 条件不满足，退出useEffect');
       return;
     }
@@ -1727,7 +1727,7 @@ const location = useLocation();
           // 对于canvas，我们假设它总是"播放"的
           if (videoTag && (videoTag.tagName === 'CANVAS' || (!videoTag.paused && !videoTag.ended && videoTag.readyState > 2))) {
             console.log(`✅ 视频 ${userId} 已开始播放`);
-            console.log('性能调优 b2.2：' + new Date().toLocaleString()+' '+ performance.now())
+            //console.log('性能调优 b2.2：' + new Date().toLocaleString()+' '+ performance.now())
             setVideoPlayingStatus(prev => ({
               ...prev,
               [userId]: true
@@ -2082,7 +2082,7 @@ const location = useLocation();
       console.warn('缺少登录参数，无法开始试穿');
       return;
     }
-console.log('性能调优 c1.0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
+//console.log('性能调优 c1.0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
     // 检查RTC连接状态，如果已连接则跳过
     if (rtcVideoService.getConnectionStatus()) {
       console.log('RTC已连接，跳过重复初始化');
@@ -2098,12 +2098,12 @@ console.log('性能调优 c1.0.0.1：' + new Date().toLocaleString() +' '+ perfo
     try {
       hasStartedTryon.current = true;
       setShowSelectionScreen(false); // 隐藏选择界面，显示视频播放界面
-      console.log('性能调优 c1.0.0.2：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 c1.0.0.2：' + new Date().toLocaleString() +' '+ performance.now() )
       // 获取房间信息以获取userId
       if(isRtcLog) console.log('🔍 开始获取房间信息...');
       const { roomAPI } = await import('../../services/api');
       const roomResponse = await roomAPI.getSysRoomShare(loginParams.roomId, loginParams.token);
-      console.log('性能调优 c1.0.0.3：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 c1.0.0.3：' + new Date().toLocaleString() +' '+ performance.now() )
       if (!roomResponse.ok || !roomResponse.data) {
         console.warn('⚠️ 获取房间信息失败，使用默认userId');
         // 如果获取房间信息失败，使用loginParams中的userId作为备用
@@ -2123,14 +2123,14 @@ console.log('性能调优 c1.0.0.1：' + new Date().toLocaleString() +' '+ perfo
           coCreationId: loginParams.coCreationId,
           shareScene: loginParams.shareScene,
         };
-        console.log('性能调优 c1.0.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
+        //console.log('性能调优 c1.0.0.4：' + new Date().toLocaleString() +' '+ performance.now() )
         if(isRtcLog) console.log('开始自动试穿流程，配置:', config);
         await tryonService.startTryonFlow(config);
-        console.log('性能调优 c1.0.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
+        //console.log('性能调优 c1.0.0.5：' + new Date().toLocaleString() +' '+ performance.now() )
         if(isRtcLog) console.log('✅ 试穿流程启动成功');
         return;
       }
-console.log('性能调优 c1.0.0.6：' + new Date().toLocaleString() +' '+ performance.now() )
+//console.log('性能调优 c1.0.0.6：' + new Date().toLocaleString() +' '+ performance.now() )
       const roomInfo = roomAPI.parseRoomInfoResponse(roomResponse);
       if (!roomInfo || !roomInfo.data) {
         console.warn('⚠️ 解析房间信息失败，使用默认userId');
@@ -2156,7 +2156,7 @@ console.log('性能调优 c1.0.0.6：' + new Date().toLocaleString() +' '+ perfo
         if(isRtcLog) console.log('✅ 试穿流程启动成功');
         return;
       }
-console.log('性能调优 c1.0.0.7：' + new Date().toLocaleString() +' '+ performance.now() )
+//console.log('性能调优 c1.0.0.7：' + new Date().toLocaleString() +' '+ performance.now() )
       if(isRtcLog) console.log('✅ 房间信息获取成功:', roomInfo);
       console.log('🔍 房间信息中的userId:', roomInfo.data.userId);
 
@@ -2178,10 +2178,10 @@ console.log('性能调优 c1.0.0.7：' + new Date().toLocaleString() +' '+ perfo
         coCreationId: loginParams.coCreationId,
         shareScene: loginParams.shareScene,
       };
-console.log('性能调优 c1.0.0.8：' + new Date().toLocaleString() +' '+ performance.now() )
+//console.log('性能调优 c1.0.0.8：' + new Date().toLocaleString() +' '+ performance.now() )
       console.log('开始自动试穿流程，配置:', config);
       await tryonService.startTryonFlow(config);
-console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ performance.now() )
+//console.log('性能调优 c1.0.0.9：' + new Date().toLocaleString() +' '+ performance.now() )
       if(isRtcLog) console.log('✅ 试穿流程启动成功');
 
     } catch (error) {

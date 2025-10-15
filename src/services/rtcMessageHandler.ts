@@ -31,7 +31,7 @@ export class RTCMessageHandler {
   // 初始化消息处理器
   initialize(): void {
     console.log('📨 初始化RTC消息处理器');
-    console.log('性能调优 a12：' + new Date().toLocaleString()+' '+ performance.now() )
+    //console.log('性能调优 a12：' + new Date().toLocaleString()+' '+ performance.now() )
   }
 
   // 设置RTC引擎

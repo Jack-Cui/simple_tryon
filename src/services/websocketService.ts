@@ -315,7 +315,7 @@ export class WebSocketService {
       }
       
       console.log(`✅ 成功转换字符串 "${value}" 为 Long: ${longValue.toString()}`);
-      console.log('性能调优 a1.2.3.1：' + new Date().toLocaleString()+' '+ performance.now())
+      //console.log('性能调优 a1.2.3.1：' + new Date().toLocaleString()+' '+ performance.now())
       return longValue;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -505,15 +505,15 @@ export class WebSocketService {
         
         // 设置二进制数据类型为 ArrayBuffer
         this.websocket.binaryType = 'arraybuffer';
-        console.log('性能调优 a1.2.1：' + new Date().toLocaleString()+' '+ performance.now())
+        //console.log('性能调优 a1.2.1：' + new Date().toLocaleString()+' '+ performance.now())
         this.websocket.onopen = () => {
           console.log('WebSocket 连接成功');
           this.isConnected = true;
           this.reconnectAttempts = 0;
-        console.log('性能调优 a1.2.2：' + new Date().toLocaleString()+' '+ performance.now())  
+        //console.log('性能调优 a1.2.2：' + new Date().toLocaleString()+' '+ performance.now())  
           // 启动心跳机制
           this.startHeartbeat();
-         console.log('性能调优 a1.2.3：' + new Date().toLocaleString()+' '+ performance.now())    
+         //console.log('性能调优 a1.2.3：' + new Date().toLocaleString()+' '+ performance.now())    
           resolve();
         };
         
@@ -786,12 +786,12 @@ export class WebSocketService {
     const enterRoomReq = proto.oEnterRoomReq.create({
       roomId: roomIdLong
     });
-    console.log('性能调优 proto.oEnterRoomReq1：' + new Date().toLocaleString() +' '+ performance.now() )
+    //console.log('性能调优 proto.oEnterRoomReq1：' + new Date().toLocaleString() +' '+ performance.now() )
     const payload = proto.oEnterRoomReq.encode(enterRoomReq).finish();
    
     if(isRtcLog) console.log('🚪 进入房间请求已发送');
     this.sendMessage(201, payload); // EnterRoomReq = 201
-     console.log('性能调优 proto.oEnterRoomReq2：' + new Date().toLocaleString() +' '+ performance.now() )
+     //console.log('性能调优 proto.oEnterRoomReq2：' + new Date().toLocaleString() +' '+ performance.now() )
   }
 
   // 发送登台请求
@@ -855,7 +855,7 @@ export class WebSocketService {
     
     this.stageStatusMonitoring.timeoutCount++;
     console.log(`⏰ 登台状态检查超时 (${this.stageStatusMonitoring.timeoutCount}/${this.stageStatusMonitoring.maxTimeouts})`);
-    console.log('性能调优 a1.2.4：' + new Date().toLocaleString()+' '+ performance.now())
+    //console.log('性能调优 a1.2.4：' + new Date().toLocaleString()+' '+ performance.now())
     // 如果收到了舞台状态变更，可能登台已经成功
     if (this.stageStatusMonitoring.receivedStageChange && this.stageStatusMonitoring.timeoutCount >= this.stageStatusMonitoring.maxTimeouts) {
       console.log('✅ 基于舞台状态变更判断登台可能成功');
@@ -902,7 +902,7 @@ export class WebSocketService {
   // 触发RTC启动事件
   private async triggerRTCStart(): Promise<void> {
     console.log('🚀 触发RTC启动事件...');
-    console.log('性能调优 a1.3：' + new Date().toLocaleString()+' '+ performance.now())
+    //console.log('性能调优 a1.3：' + new Date().toLocaleString()+' '+ performance.now())
 
     // 创建自定义事件，通知tryonService启动RTC
     const event = new CustomEvent('stageSuccessRTCStart', {
@@ -1163,11 +1163,11 @@ export class WebSocketService {
     
     try {
       if(isRtcLog) console.log('✅ 开始登台流程...');
-      console.log('性能调优 sendLoginRequest1：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 sendLoginRequest1：' + new Date().toLocaleString() +' '+ performance.now() )
       // 1. 发送登录请求
       if(isRtcLog) console.log('📤 步骤1: 发送登录请求');
       await this.sendLoginRequest();
-      console.log('性能调优 sendLoginRequest2：' + new Date().toLocaleString() +' '+ performance.now() )
+      //console.log('性能调优 sendLoginRequest2：' + new Date().toLocaleString() +' '+ performance.now() )
       // 其他步骤将通过消息处理器自动执行
       if(isRtcLog) console.log('⏳ 登台流程已启动，等待服务器响应...');
       
