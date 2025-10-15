@@ -449,20 +449,24 @@ export class RTCMessageHandler {
   }
 
   //add by chao:2025.10.15 将发起开场图、AIGC视频的结果，通知UE
-  sendStartInfoToUE(imageIds: number[], videoId: number): void {
+  sendStartInfoToUE(imageIds: string[], videoId: string): void {
     if (!this.engine) {
       console.error('❌ [RTCMessageHandler:sendChangeGarment] engine is null');
       return;
     }
+    const imageIdsLong = imageIds.map(id => Long.fromString(id));
 
     try {
       
       // 直接编码proto消息
       const message = proto.oGetImagesInfoReq.create({
-        videoId: videoId,
-        imageId: imageIds
+        videoId: Long.fromString(videoId),
+        imageId: imageIdsLong
       });
-      
+      console.log('proto messageType: oGetImagesInfoReq');
+      console.log('proto videoId:', videoId);
+      console.log('proto imageIds:', imageIds);      
+      console.log('proto message:', message);
       const payload = proto.oGetImagesInfoReq.encode(message).finish();
       const hexString = Array.from(payload).map((b: number) => b.toString(16).padStart(2, '0')).join('');
       
@@ -476,10 +480,10 @@ export class RTCMessageHandler {
       const messageStr = `cmd=proto&id=${proto.eClientPID.GetImagesInfoReq}&hex=${hexString}`;
       this.engine.sendUserMessage("8888", messageStr);
       
-      if(isProtoLog){      
+      // if(isProtoLog){      
       console.log('✅ 同步开场图、AIGC视频给UE proto消息发送成功:', proto.eClientPID.GetImagesInfoReq);
       console.log('📤 发送的消息内容:', messageStr);
-      }
+      // }
     } catch (error) {
       console.error('❌ 发送 同步开场图、AIGC视频给UE proto消息失败:', error);
     }

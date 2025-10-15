@@ -968,8 +968,8 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       let beautyPic = '';
       let clothId = '';      
       let videoPathCloth = '';
-      let imageIds: number[] = [];
-      let videoId = 0;
+      let imageIds: string[] = [];
+      let videoId:string = '';
       //初始化参数值
       try{
             const response1 = await roomAPI.getRoomInfoByRoomId(roomId, loginCache.token);
@@ -1051,7 +1051,7 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
         }catch(error){
             console.error('❌ 调用新增用户试衣开场视频接口失败:', error);
         }
-
+        
       //3.通知UE前两次的结果
       rtcVideoService.sendStartInfoToUE(imageIds,videoId);
       console.log('通知UE开场动画参数已发送！','imageIds:',imageIds,'videoId:',videoId);

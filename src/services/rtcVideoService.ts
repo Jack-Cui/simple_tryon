@@ -538,7 +538,7 @@ export class RTCVideoService {
   }
 
   //add by chao:2025.10.15 将发起开场图、AIGC视频的结果，通知UE
-  sendStartInfoToUE(imageIds: number[], videoId: number): void {
+  sendStartInfoToUE(imageIds: string[], videoId: string): void {
     console.log('🚀 发送开场图、AIGC视频给UE:', { imageIds, videoId });
     rtcMessageHandler.sendStartInfoToUE(imageIds, videoId);
   }  
