@@ -1,5 +1,6 @@
 // RTC消息处理服务，参考C#代码实现
 import * as proto from '../proto/xproto';
+import { oGetImagesInfoReq } from '../proto/xproto';
 const Long = require('long');
 //add by chao 2025.09.30 日志开关
 const isProtoLog = false;
@@ -446,6 +447,44 @@ export class RTCMessageHandler {
       console.error('❌ 发送触摸屏幕RTC消息失败:', error);
     }
   }
+
+  //add by chao:2025.10.15 将发起开场图、AIGC视频的结果，通知UE
+  sendStartInfoToUE(imageIds: number[], videoId: number): void {
+    if (!this.engine) {
+      console.error('❌ [RTCMessageHandler:sendChangeGarment] engine is null');
+      return;
+    }
+
+    try {
+      
+      // 直接编码proto消息
+      const message = proto.oGetImagesInfoReq.create({
+        videoId: videoId,
+        imageId: imageIds
+      });
+      
+      const payload = proto.oGetImagesInfoReq.encode(message).finish();
+      const hexString = Array.from(payload).map((b: number) => b.toString(16).padStart(2, '0')).join('');
+      
+      console.log('📤 发送 同步开场图、AIGC视频给UE proto消息:', {
+        id: proto.eClientPID.GetImagesInfoReq,
+        payloadSize: payload.length,
+        hexString: hexString
+      });
+      
+      // 使用正确的proto消息格式 (参考C#代码)
+      const messageStr = `cmd=proto&id=${proto.eClientPID.GetImagesInfoReq}&hex=${hexString}`;
+      this.engine.sendUserMessage("8888", messageStr);
+      
+      if(isProtoLog){      
+      console.log('✅ 同步开场图、AIGC视频给UE proto消息发送成功:', proto.eClientPID.GetImagesInfoReq);
+      console.log('📤 发送的消息内容:', messageStr);
+      }
+    } catch (error) {
+      console.error('❌ 发送 同步开场图、AIGC视频给UE proto消息失败:', error);
+    }
+  }
+
 
   // 发送心跳消息
   sendHeartbeatMessage(): HeartBeatMessage {

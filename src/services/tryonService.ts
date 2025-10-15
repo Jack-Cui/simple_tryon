@@ -6,6 +6,7 @@ import { RTC_CONFIG } from '../config/config';
 import { AccessToken, Privilege } from '../token/AccessToken';
 import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache, updateCoRoomIdFromCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
+import { log } from 'console';
 const Long = require('long');
 const isTronLog = false; // 是否打印试穿日志
 
@@ -940,13 +941,122 @@ console.log('性能调优 b1.0.0.3：' + new Date().toLocaleString() +' '+ perfo
       console.log('复用rtcToken成功：' + this.rtcToken);
       
       console.log('✅ RTC视频服务接入成功！');
-      
+
+      this.initTryonParams();
+      console.log('触发this.initTryonParams()！');
+
     } catch (error) {
       console.error('❌ RTC视频服务接入失败:', error);
       console.error('错误详情:', error);
       // 不抛出错误，避免影响主流程
     }
   }
+
+  private async initTryonParams() {
+      //add by chao 2025.10.15 增加开场动画同步UE逻辑
+      const loginCache = getLoginCache();
+      if (!loginCache?.roomId) {
+        throw new Error('用户未登录或登录信息缺失');
+      }
+      if (!loginCache?.token) {
+        throw new Error('token missing');
+      }
+
+      let roomId = loginCache.roomId;
+      console.log('loginCache.roomId:', roomId);
+      let modelId = '';
+      let beautyPic = '';
+      let clothId = '';      
+      let videoPathCloth = '';
+      let imageIds: number[] = [];
+      let videoId = 0;
+      //初始化参数值
+      try{
+            const response1 = await roomAPI.getRoomInfoByRoomId(roomId, loginCache.token);
+            if (!response1.ok) {
+              throw new Error(`获取房间信息失败111: HTTP ${response1.status}`);
+            }
+            const roomInfo1 = roomAPI.parseRoomInfoResponse(response1);
+            if (!roomInfo1) {
+              throw new Error('解析房间信息失败111');
+            }
+            clothId = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothesId || '';
+            videoPathCloth = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.videoPath || '';
+            console.log('初始化参数值 clothId:', clothId);
+            console.log('初始化参数值 videoPathCloth:', videoPathCloth);
+          
+      }catch(error){
+          console.error('❌ 初始化参数值失败111:', error);
+      }
+      
+      try {
+        const response = await modelAPI.getModelList(loginCache.token, loginCache.userId);          
+          if (response.ok) {
+              const dataObj = JSON.parse(response.data);
+              // // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+              // if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+              // }
+              
+              // 检查是否有 modelStatus=4 的模型
+              const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+              if (hasValidModel) {
+                  modelId = dataObj.data[0]?.id || '';
+                  beautyPic = dataObj.data[0]?.modelPictureUrl || '';                  
+              }
+              console.log('初始化参数值 modelId:', modelId);
+              console.log('初始化参数值 beautyPic:', beautyPic);
+          }
+        }catch(error){
+            console.error('❌ 初始化参数值失败222:', error);
+        }
+        
+
+      //add by chao 2025.10.15 增加开场动画同步UE逻辑
+      //1.调用4次 新增用户试衣开场图片接口
+      for (let i = 1; i <= 4; i++) {
+        const figurePose = `https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/figure_pose${i}.jpg`;
+
+        try{
+          const resultResponse = await roomAPI.sendStartPicToUE(clothId, modelId, beautyPic, figurePose, loginCache.token);
+
+          if (resultResponse.ok) {
+              const resultData = JSON.parse(resultResponse.data);
+              console.log('新增开场图片结果:', resultData);
+              if (resultData.data) {
+                  console.log('resultData.data.id:', resultData.data?.id);
+                  imageIds.push(resultData.data?.id);
+              }else{
+                  console.log('resultData.data不存在:', resultData);
+              }   
+          }
+        }catch(error){
+            console.error('❌ 调用新增用户试衣开场图片接口失败:', error);
+        }
+      }
+      console.log('图片IDs:', imageIds);
+
+      //2.调用1次 新增视频接口
+      try{
+          const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token);
+          if (resultResponse.ok) {
+              const resultData = JSON.parse(resultResponse.data);
+              console.log('新增开场视频结果:', resultData);
+              if (resultData.data) {
+                  console.log('resultData.data.id:', resultData.data?.id);
+                  videoId = resultData.data?.id;
+              }else{
+                  console.log('resultData.data不存在:', resultData);
+              }   
+          }
+        }catch(error){
+            console.error('❌ 调用新增用户试衣开场视频接口失败:', error);
+        }
+
+      //3.通知UE前两次的结果
+      rtcVideoService.sendStartInfoToUE(imageIds,videoId);
+      console.log('通知UE开场动画参数已发送！','imageIds:',imageIds,'videoId:',videoId);
+  }
+
 
   // 处理远程视频流
   private async handleRemoteStream(userId: string, hasVideo: boolean, hasAudio: boolean): Promise<void> {

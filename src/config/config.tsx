@@ -144,6 +144,18 @@ export const API_ENDPOINTS = {
 
   // 删除aigc视频
   DELETE_AI_VIDEO: (id: string) => `/admin/sysaivideo/removeUserVideoById/${id}`,
+
+  //查询用户开场图片接口
+  GET_USER_START_IMAGE: (id: string) => `/admin/sysopeningimageuser/getByUser/${id}`,
+
+  //查询用户开场视频接口
+  GET_USER_START_VIDEO: (id: string) => `/admin/sysaivideo/${id}`,
+
+  //新增用户试衣开场图片接口  
+  ADD_USER_START_IMAGE: () => `/admin/sysopeningimageuser/saveByUser`,
+
+  //新增用户试衣开场视频接口
+  ADD_USER_START_VIDEO: () => ` /admin/sysaivideo/saveByUser`,
 };
 
 // RTC配置

@@ -1331,7 +1331,52 @@ export const roomAPI = {
       console.error('解析创建分享响应失败:', error);
       return null;
     }
-  }
+  },
+
+  // add by chao 2025.10.15 增加开场图
+  async sendStartPicToUE(clothId: string, modelId: string, beautyPic: string,figurePose: string, access_token: string): Promise<ApiResponse> {
+    // if(isRecLog) 
+      console.log('开始增加开场图，clothId:', clothId, 'modelId:', modelId, 'beautyPic:', beautyPic);
+    const endpoint = API_ENDPOINTS.ADD_USER_START_IMAGE();
+    const headers = {
+      'Authorization': `Bearer ${access_token}`,
+      'Content-Type': 'application/json'
+    };
+    const data = JSON.stringify({
+      clothId: clothId,
+      modelId: modelId,
+      beautyPic: beautyPic,
+      note: '',//非必传
+      figurePose: figurePose,
+      accessoriesImg: 'https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/blank.png'
+    });
+    return await apiService.post(endpoint, data, headers);
+  },
+
+  // add by chao 2025.10.15 增加开场视频
+  async sendStartVideoToUE(modelId:string, clothId: string, roomId: string, beautyPic: string,videoPathCloth: string, access_token: string): Promise<ApiResponse> {
+    // if(isRecLog) 
+      console.log('开始增加开场视频， modelId:', modelId, 'clothId:', clothId, 'roomId:', roomId, 'beautyPic:', beautyPic, 'videoPathCloth:', videoPathCloth);
+    const endpoint = API_ENDPOINTS.ADD_USER_START_VIDEO();
+    const headers = {
+      'Authorization': `Bearer ${access_token}`,
+      'Content-Type': 'application/json'
+    };
+    const data = JSON.stringify({
+      clothId: clothId,
+      imgs: '',
+      roomId: roomId,
+      beautyPic: beautyPic,
+      title: clothId,
+      actionPath: 'https://admins3.tos-cn-shanghai.volces.com/video_20251013/front.mp4',
+      actionPathBack:'https://admins3.tos-cn-shanghai.volces.com/video_20251013/back.mp4',
+      videoPathCloth: videoPathCloth,
+      modelId: modelId
+    });
+    return await apiService.post(endpoint, data, headers);
+  }  
+
+
 }; 
 
 export const modelAPI = {
@@ -1525,7 +1570,29 @@ export const modelAPI = {
       'Authorization': `Bearer ${access_token}`
     };
     return await apiService.get(endpoint, headers);
-  }
+  },
+  
+  // 获取开场图片
+  async getUserStartImage(picId: string, access_token: string): Promise<ApiResponse> {
+    // if(isRecLog) 
+      console.log('自动获取开场图片: ', picId);
+    const endpoint = API_ENDPOINTS.GET_USER_START_IMAGE(picId);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  },
+
+  // 获取开场视频
+  async getUserStartVideo(picId: string, access_token: string): Promise<ApiResponse> {
+    // if(isRecLog) 
+      console.log('自动获取开场视频: ', picId);
+    const endpoint = API_ENDPOINTS.GET_USER_START_VIDEO(picId);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  },  
 };
 
 export const uploadAPI = {

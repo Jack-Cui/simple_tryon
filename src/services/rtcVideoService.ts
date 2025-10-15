@@ -537,6 +537,12 @@ export class RTCVideoService {
     rtcMessageHandler.sendChangeGarmentSize(size);
   }
 
+  //add by chao:2025.10.15 将发起开场图、AIGC视频的结果，通知UE
+  sendStartInfoToUE(imageIds: number[], videoId: number): void {
+    console.log('🚀 发送开场图、AIGC视频给UE:', { imageIds, videoId });
+    rtcMessageHandler.sendStartInfoToUE(imageIds, videoId);
+  }  
+
   // 发送触摸屏幕消息
   sendTouchScreen(touchType: proto.eTouchType, pos: { x: number, y: number, z: number }, timestamp: number): void {
     if(isRotateLog) console.log('👆 发送触摸屏幕消息:', { touchType, pos, timestamp });
