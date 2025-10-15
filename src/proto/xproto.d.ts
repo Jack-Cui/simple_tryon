@@ -24,10 +24,23 @@ export enum eError {
     ERROR_ENTER_STAGE_FAIL = 75,
     ERROR_ENTER_STAGE_TIMEOUT = 76,
     ERROR_NOT_IN_STAGE = 77,
+    ERROR_NOT_IN_UE = 78,
     ERROR_INVITER_NOT_IN_UE = 80,
     ERROR_INVITEE_NOT_IN_STAGE = 81,
     ERROR_INVITE_CONTEXT_NOT_EXIST = 82,
-    ERROR_INVITEE_NOT_YOU = 83
+    ERROR_INVITEE_NOT_YOU = 83,
+    ERROR_UE_IS_REQUESTING = 90,
+    ERROR_UE_REQ_TIMEOUT = 91,
+    ERROR_ALREADY_ON_STAGE = 11001,
+    ERROR_OUT_OF_CURRENCY = 11002,
+    ERROR_PARAMETER_NOT_MATCH = 11003,
+    ERROR_NO_AVATAR_MODEL = 11004,
+    ERROR_NO_EMPTY_STAGE = 11005,
+    ERROR_ALREADY_LEAVE_STAGE = 11006,
+    ERROR_INITIAL_AVATAR_FAILED = 11007,
+    ERROR_ROOM_IS_NOT_EMPTY = 11008,
+    ERROR_CLOSE_ROOM_ID_IS_INVALID = 11009,
+    ERROR_CATPURE_IMAGE_NOT_COMPLETE = 11010
 }
 
 /** eClientPID enum. */
@@ -52,6 +65,11 @@ export enum eClientPID {
     UpdateEnterStageContextReq = 511,
     MultiActionReq = 512,
     MultiActionReply = 516,
+    SetUserControlledStageActor = 517,
+    ClientForwardMsgReq = 601,
+    ReleaseUeReq = 701,
+    AddUeReq = 702,
+    ChangeIconReq = 711,
     PlayAnimationReq = 1001,
     ChangeGarmentReq = 1002,
     TouchScreenReq = 1003,
@@ -61,6 +79,8 @@ export enum eClientPID {
     LatencyReq = 1007,
     ChangeMapReq = 1008,
     HeatMapReq = 1009,
+    ChangeActionReq = 1010,
+    ChangeUser = 1011,
     GetImagesInfoReq = 1012,
     HeartBeatReq = 1111
 }
@@ -104,6 +124,11 @@ export enum eServerPID {
     MultiActionReplyResult = 1517,
     LeaveUePush = 1521,
     StageStatusChangePush = 1522,
+    ClientForwardMsgPush = 1601,
+    ReleaseUeAsw = 1701,
+    AddUeAsw = 1702,
+    ChangeIconAsw = 1711,
+    ChangeIconPush = 1712,
     PlayAnimationPush = 11001,
     ChangeGarmentPush = 11002,
     TouchScreenPush = 11003,
@@ -112,7 +137,830 @@ export enum eServerPID {
     KickUserOutStagePush = 11006,
     LatencyPush = 11007,
     ChangeMapPush = 11008,
-    HeatMapPush = 11009
+    HeatMapPush = 11009,
+    GetImagesInfoPush = 11010
+}
+
+/** Represents a oChangeIconReq. */
+export class oChangeIconReq implements IoChangeIconReq {
+
+    /**
+     * Constructs a new oChangeIconReq.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoChangeIconReq);
+
+    /** oChangeIconReq open. */
+    public open: boolean;
+
+    /**
+     * Creates a new oChangeIconReq instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oChangeIconReq instance
+     */
+    public static create(properties?: IoChangeIconReq): oChangeIconReq;
+
+    /**
+     * Encodes the specified oChangeIconReq message. Does not implicitly {@link oChangeIconReq.verify|verify} messages.
+     * @param message oChangeIconReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoChangeIconReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oChangeIconReq message, length delimited. Does not implicitly {@link oChangeIconReq.verify|verify} messages.
+     * @param message oChangeIconReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoChangeIconReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oChangeIconReq message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oChangeIconReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oChangeIconReq;
+
+    /**
+     * Decodes a oChangeIconReq message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oChangeIconReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oChangeIconReq;
+
+    /**
+     * Verifies a oChangeIconReq message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oChangeIconReq message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oChangeIconReq
+     */
+    public static fromObject(object: { [k: string]: any }): oChangeIconReq;
+
+    /**
+     * Creates a plain object from a oChangeIconReq message. Also converts values to other types if specified.
+     * @param message oChangeIconReq
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oChangeIconReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oChangeIconReq to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oChangeIconReq
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oChangeIconAsw. */
+export class oChangeIconAsw implements IoChangeIconAsw {
+
+    /**
+     * Constructs a new oChangeIconAsw.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoChangeIconAsw);
+
+    /** oChangeIconAsw code. */
+    public code: eError;
+
+    /**
+     * Creates a new oChangeIconAsw instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oChangeIconAsw instance
+     */
+    public static create(properties?: IoChangeIconAsw): oChangeIconAsw;
+
+    /**
+     * Encodes the specified oChangeIconAsw message. Does not implicitly {@link oChangeIconAsw.verify|verify} messages.
+     * @param message oChangeIconAsw message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoChangeIconAsw, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oChangeIconAsw message, length delimited. Does not implicitly {@link oChangeIconAsw.verify|verify} messages.
+     * @param message oChangeIconAsw message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoChangeIconAsw, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oChangeIconAsw message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oChangeIconAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oChangeIconAsw;
+
+    /**
+     * Decodes a oChangeIconAsw message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oChangeIconAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oChangeIconAsw;
+
+    /**
+     * Verifies a oChangeIconAsw message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oChangeIconAsw message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oChangeIconAsw
+     */
+    public static fromObject(object: { [k: string]: any }): oChangeIconAsw;
+
+    /**
+     * Creates a plain object from a oChangeIconAsw message. Also converts values to other types if specified.
+     * @param message oChangeIconAsw
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oChangeIconAsw, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oChangeIconAsw to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oChangeIconAsw
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oChangeIconPush. */
+export class oChangeIconPush implements IoChangeIconPush {
+
+    /**
+     * Constructs a new oChangeIconPush.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoChangeIconPush);
+
+    /** oChangeIconPush userId. */
+    public userId: number;
+
+    /** oChangeIconPush open. */
+    public open: boolean;
+
+    /**
+     * Creates a new oChangeIconPush instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oChangeIconPush instance
+     */
+    public static create(properties?: IoChangeIconPush): oChangeIconPush;
+
+    /**
+     * Encodes the specified oChangeIconPush message. Does not implicitly {@link oChangeIconPush.verify|verify} messages.
+     * @param message oChangeIconPush message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoChangeIconPush, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oChangeIconPush message, length delimited. Does not implicitly {@link oChangeIconPush.verify|verify} messages.
+     * @param message oChangeIconPush message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoChangeIconPush, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oChangeIconPush message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oChangeIconPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oChangeIconPush;
+
+    /**
+     * Decodes a oChangeIconPush message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oChangeIconPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oChangeIconPush;
+
+    /**
+     * Verifies a oChangeIconPush message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oChangeIconPush message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oChangeIconPush
+     */
+    public static fromObject(object: { [k: string]: any }): oChangeIconPush;
+
+    /**
+     * Creates a plain object from a oChangeIconPush message. Also converts values to other types if specified.
+     * @param message oChangeIconPush
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oChangeIconPush, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oChangeIconPush to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oChangeIconPush
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oReleaseUeReq. */
+export class oReleaseUeReq implements IoReleaseUeReq {
+
+    /**
+     * Constructs a new oReleaseUeReq.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoReleaseUeReq);
+
+    /**
+     * Creates a new oReleaseUeReq instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oReleaseUeReq instance
+     */
+    public static create(properties?: IoReleaseUeReq): oReleaseUeReq;
+
+    /**
+     * Encodes the specified oReleaseUeReq message. Does not implicitly {@link oReleaseUeReq.verify|verify} messages.
+     * @param message oReleaseUeReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoReleaseUeReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oReleaseUeReq message, length delimited. Does not implicitly {@link oReleaseUeReq.verify|verify} messages.
+     * @param message oReleaseUeReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoReleaseUeReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oReleaseUeReq message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oReleaseUeReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oReleaseUeReq;
+
+    /**
+     * Decodes a oReleaseUeReq message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oReleaseUeReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oReleaseUeReq;
+
+    /**
+     * Verifies a oReleaseUeReq message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oReleaseUeReq message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oReleaseUeReq
+     */
+    public static fromObject(object: { [k: string]: any }): oReleaseUeReq;
+
+    /**
+     * Creates a plain object from a oReleaseUeReq message. Also converts values to other types if specified.
+     * @param message oReleaseUeReq
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oReleaseUeReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oReleaseUeReq to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oReleaseUeReq
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oReleaseUeAsw. */
+export class oReleaseUeAsw implements IoReleaseUeAsw {
+
+    /**
+     * Constructs a new oReleaseUeAsw.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoReleaseUeAsw);
+
+    /** oReleaseUeAsw code. */
+    public code: eError;
+
+    /**
+     * Creates a new oReleaseUeAsw instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oReleaseUeAsw instance
+     */
+    public static create(properties?: IoReleaseUeAsw): oReleaseUeAsw;
+
+    /**
+     * Encodes the specified oReleaseUeAsw message. Does not implicitly {@link oReleaseUeAsw.verify|verify} messages.
+     * @param message oReleaseUeAsw message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoReleaseUeAsw, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oReleaseUeAsw message, length delimited. Does not implicitly {@link oReleaseUeAsw.verify|verify} messages.
+     * @param message oReleaseUeAsw message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoReleaseUeAsw, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oReleaseUeAsw message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oReleaseUeAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oReleaseUeAsw;
+
+    /**
+     * Decodes a oReleaseUeAsw message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oReleaseUeAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oReleaseUeAsw;
+
+    /**
+     * Verifies a oReleaseUeAsw message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oReleaseUeAsw message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oReleaseUeAsw
+     */
+    public static fromObject(object: { [k: string]: any }): oReleaseUeAsw;
+
+    /**
+     * Creates a plain object from a oReleaseUeAsw message. Also converts values to other types if specified.
+     * @param message oReleaseUeAsw
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oReleaseUeAsw, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oReleaseUeAsw to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oReleaseUeAsw
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oAddUeReq. */
+export class oAddUeReq implements IoAddUeReq {
+
+    /**
+     * Constructs a new oAddUeReq.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoAddUeReq);
+
+    /** oAddUeReq context. */
+    public context: string;
+
+    /**
+     * Creates a new oAddUeReq instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oAddUeReq instance
+     */
+    public static create(properties?: IoAddUeReq): oAddUeReq;
+
+    /**
+     * Encodes the specified oAddUeReq message. Does not implicitly {@link oAddUeReq.verify|verify} messages.
+     * @param message oAddUeReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoAddUeReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oAddUeReq message, length delimited. Does not implicitly {@link oAddUeReq.verify|verify} messages.
+     * @param message oAddUeReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoAddUeReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oAddUeReq message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oAddUeReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oAddUeReq;
+
+    /**
+     * Decodes a oAddUeReq message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oAddUeReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oAddUeReq;
+
+    /**
+     * Verifies a oAddUeReq message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oAddUeReq message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oAddUeReq
+     */
+    public static fromObject(object: { [k: string]: any }): oAddUeReq;
+
+    /**
+     * Creates a plain object from a oAddUeReq message. Also converts values to other types if specified.
+     * @param message oAddUeReq
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oAddUeReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oAddUeReq to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oAddUeReq
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oAddUeAsw. */
+export class oAddUeAsw implements IoAddUeAsw {
+
+    /**
+     * Constructs a new oAddUeAsw.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoAddUeAsw);
+
+    /** oAddUeAsw code. */
+    public code: eError;
+
+    /**
+     * Creates a new oAddUeAsw instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oAddUeAsw instance
+     */
+    public static create(properties?: IoAddUeAsw): oAddUeAsw;
+
+    /**
+     * Encodes the specified oAddUeAsw message. Does not implicitly {@link oAddUeAsw.verify|verify} messages.
+     * @param message oAddUeAsw message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoAddUeAsw, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oAddUeAsw message, length delimited. Does not implicitly {@link oAddUeAsw.verify|verify} messages.
+     * @param message oAddUeAsw message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoAddUeAsw, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oAddUeAsw message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oAddUeAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oAddUeAsw;
+
+    /**
+     * Decodes a oAddUeAsw message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oAddUeAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oAddUeAsw;
+
+    /**
+     * Verifies a oAddUeAsw message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oAddUeAsw message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oAddUeAsw
+     */
+    public static fromObject(object: { [k: string]: any }): oAddUeAsw;
+
+    /**
+     * Creates a plain object from a oAddUeAsw message. Also converts values to other types if specified.
+     * @param message oAddUeAsw
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oAddUeAsw, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oAddUeAsw to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oAddUeAsw
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oClientForwardMsgReq. */
+export class oClientForwardMsgReq implements IoClientForwardMsgReq {
+
+    /**
+     * Constructs a new oClientForwardMsgReq.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoClientForwardMsgReq);
+
+    /** oClientForwardMsgReq toAll. */
+    public toAll: boolean;
+
+    /** oClientForwardMsgReq toSelf. */
+    public toSelf: boolean;
+
+    /** oClientForwardMsgReq toUserIds. */
+    public toUserIds: (number|Long)[];
+
+    /** oClientForwardMsgReq content. */
+    public content: string;
+
+    /**
+     * Creates a new oClientForwardMsgReq instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oClientForwardMsgReq instance
+     */
+    public static create(properties?: IoClientForwardMsgReq): oClientForwardMsgReq;
+
+    /**
+     * Encodes the specified oClientForwardMsgReq message. Does not implicitly {@link oClientForwardMsgReq.verify|verify} messages.
+     * @param message oClientForwardMsgReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoClientForwardMsgReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oClientForwardMsgReq message, length delimited. Does not implicitly {@link oClientForwardMsgReq.verify|verify} messages.
+     * @param message oClientForwardMsgReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoClientForwardMsgReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oClientForwardMsgReq message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oClientForwardMsgReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oClientForwardMsgReq;
+
+    /**
+     * Decodes a oClientForwardMsgReq message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oClientForwardMsgReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oClientForwardMsgReq;
+
+    /**
+     * Verifies a oClientForwardMsgReq message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oClientForwardMsgReq message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oClientForwardMsgReq
+     */
+    public static fromObject(object: { [k: string]: any }): oClientForwardMsgReq;
+
+    /**
+     * Creates a plain object from a oClientForwardMsgReq message. Also converts values to other types if specified.
+     * @param message oClientForwardMsgReq
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oClientForwardMsgReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oClientForwardMsgReq to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oClientForwardMsgReq
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oClientForwardMsgPush. */
+export class oClientForwardMsgPush implements IoClientForwardMsgPush {
+
+    /**
+     * Constructs a new oClientForwardMsgPush.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoClientForwardMsgPush);
+
+    /** oClientForwardMsgPush fromUserId. */
+    public fromUserId: number;
+
+    /** oClientForwardMsgPush content. */
+    public content: string;
+
+    /**
+     * Creates a new oClientForwardMsgPush instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oClientForwardMsgPush instance
+     */
+    public static create(properties?: IoClientForwardMsgPush): oClientForwardMsgPush;
+
+    /**
+     * Encodes the specified oClientForwardMsgPush message. Does not implicitly {@link oClientForwardMsgPush.verify|verify} messages.
+     * @param message oClientForwardMsgPush message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoClientForwardMsgPush, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oClientForwardMsgPush message, length delimited. Does not implicitly {@link oClientForwardMsgPush.verify|verify} messages.
+     * @param message oClientForwardMsgPush message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoClientForwardMsgPush, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oClientForwardMsgPush message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oClientForwardMsgPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oClientForwardMsgPush;
+
+    /**
+     * Decodes a oClientForwardMsgPush message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oClientForwardMsgPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oClientForwardMsgPush;
+
+    /**
+     * Verifies a oClientForwardMsgPush message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oClientForwardMsgPush message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oClientForwardMsgPush
+     */
+    public static fromObject(object: { [k: string]: any }): oClientForwardMsgPush;
+
+    /**
+     * Creates a plain object from a oClientForwardMsgPush message. Also converts values to other types if specified.
+     * @param message oClientForwardMsgPush
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oClientForwardMsgPush, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oClientForwardMsgPush to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oClientForwardMsgPush
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
 /** Represents a oHeartBeatReq. */
@@ -688,6 +1536,15 @@ export class oServerHeartBeat implements IoServerHeartBeat {
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
+/** eClientType enum. */
+export enum eClientType {
+    ECT_Android = 0,
+    ECT_IOS = 1,
+    ECT_H5 = 2,
+    ECT_Windows = 3,
+    ECT_ClientTypeNum = 4
+}
+
 /** Represents a oLoginReq. */
 export class oLoginReq implements IoLoginReq {
 
@@ -705,6 +1562,15 @@ export class oLoginReq implements IoLoginReq {
 
     /** oLoginReq insToken. */
     public insToken: string;
+
+    /** oLoginReq priorityCities. */
+    public priorityCities: number[];
+
+    /** oLoginReq clientType. */
+    public clientType: eClientType;
+
+    /** oLoginReq clientVersion. */
+    public clientVersion: string;
 
     /**
      * Creates a new oLoginReq instance using the specified properties.
@@ -972,6 +1838,9 @@ export class oSceneChangePush implements IoSceneChangePush {
 
     /** oSceneChangePush scene. */
     public scene: string;
+
+    /** oSceneChangePush ueId. */
+    public ueId: number;
 
     /**
      * Creates a new oSceneChangePush instance using the specified properties.
@@ -1813,6 +2682,96 @@ export class oChangeMapReq implements IoChangeMapReq {
 
     /**
      * Gets the default type url for oChangeMapReq
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oChangeActionReq. */
+export class oChangeActionReq implements IoChangeActionReq {
+
+    /**
+     * Constructs a new oChangeActionReq.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoChangeActionReq);
+
+    /** oChangeActionReq actionId. */
+    public actionId: (number|Long);
+
+    /**
+     * Creates a new oChangeActionReq instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oChangeActionReq instance
+     */
+    public static create(properties?: IoChangeActionReq): oChangeActionReq;
+
+    /**
+     * Encodes the specified oChangeActionReq message. Does not implicitly {@link oChangeActionReq.verify|verify} messages.
+     * @param message oChangeActionReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoChangeActionReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oChangeActionReq message, length delimited. Does not implicitly {@link oChangeActionReq.verify|verify} messages.
+     * @param message oChangeActionReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoChangeActionReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oChangeActionReq message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oChangeActionReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oChangeActionReq;
+
+    /**
+     * Decodes a oChangeActionReq message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oChangeActionReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oChangeActionReq;
+
+    /**
+     * Verifies a oChangeActionReq message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oChangeActionReq message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oChangeActionReq
+     */
+    public static fromObject(object: { [k: string]: any }): oChangeActionReq;
+
+    /**
+     * Creates a plain object from a oChangeActionReq message. Also converts values to other types if specified.
+     * @param message oChangeActionReq
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oChangeActionReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oChangeActionReq to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oChangeActionReq
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -2705,6 +3664,9 @@ export class oTouchScreenReq implements IoTouchScreenReq {
     /** oTouchScreenReq timestamp. */
     public timestamp: (number|Long);
 
+    /** oTouchScreenReq userid. */
+    public userid: (number|Long);
+
     /**
      * Creates a new oTouchScreenReq instance using the specified properties.
      * @param [properties] Properties to set
@@ -2876,6 +3838,189 @@ export class oTouchScreenPush implements IoTouchScreenPush {
     public static getTypeUrl(typeUrlPrefix?: string): string;
 }
 
+/** Represents a oGetImagesInfoReq. */
+export class oGetImagesInfoReq implements IoGetImagesInfoReq {
+
+    /**
+     * Constructs a new oGetImagesInfoReq.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoGetImagesInfoReq);
+
+    /** oGetImagesInfoReq videoId. */
+    public videoId: (number|Long);
+
+    /** oGetImagesInfoReq imageId. */
+    public imageId: (number|Long)[];
+
+    /**
+     * Creates a new oGetImagesInfoReq instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oGetImagesInfoReq instance
+     */
+    public static create(properties?: IoGetImagesInfoReq): oGetImagesInfoReq;
+
+    /**
+     * Encodes the specified oGetImagesInfoReq message. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
+     * @param message oGetImagesInfoReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoGetImagesInfoReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oGetImagesInfoReq message, length delimited. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
+     * @param message oGetImagesInfoReq message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoGetImagesInfoReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oGetImagesInfoReq message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oGetImagesInfoReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oGetImagesInfoReq;
+
+    /**
+     * Decodes a oGetImagesInfoReq message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oGetImagesInfoReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oGetImagesInfoReq;
+
+    /**
+     * Verifies a oGetImagesInfoReq message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oGetImagesInfoReq message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oGetImagesInfoReq
+     */
+    public static fromObject(object: { [k: string]: any }): oGetImagesInfoReq;
+
+    /**
+     * Creates a plain object from a oGetImagesInfoReq message. Also converts values to other types if specified.
+     * @param message oGetImagesInfoReq
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oGetImagesInfoReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oGetImagesInfoReq to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oGetImagesInfoReq
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oGetImagesInfoPush. */
+export class oGetImagesInfoPush implements IoGetImagesInfoPush {
+
+    /**
+     * Constructs a new oGetImagesInfoPush.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoGetImagesInfoPush);
+
+    /** oGetImagesInfoPush code. */
+    public code: eError;
+
+    /**
+     * Creates a new oGetImagesInfoPush instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oGetImagesInfoPush instance
+     */
+    public static create(properties?: IoGetImagesInfoPush): oGetImagesInfoPush;
+
+    /**
+     * Encodes the specified oGetImagesInfoPush message. Does not implicitly {@link oGetImagesInfoPush.verify|verify} messages.
+     * @param message oGetImagesInfoPush message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoGetImagesInfoPush, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oGetImagesInfoPush message, length delimited. Does not implicitly {@link oGetImagesInfoPush.verify|verify} messages.
+     * @param message oGetImagesInfoPush message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoGetImagesInfoPush, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oGetImagesInfoPush message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oGetImagesInfoPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oGetImagesInfoPush;
+
+    /**
+     * Decodes a oGetImagesInfoPush message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oGetImagesInfoPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oGetImagesInfoPush;
+
+    /**
+     * Verifies a oGetImagesInfoPush message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oGetImagesInfoPush message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oGetImagesInfoPush
+     */
+    public static fromObject(object: { [k: string]: any }): oGetImagesInfoPush;
+
+    /**
+     * Creates a plain object from a oGetImagesInfoPush message. Also converts values to other types if specified.
+     * @param message oGetImagesInfoPush
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oGetImagesInfoPush, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oGetImagesInfoPush to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oGetImagesInfoPush
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
 /** Represents a oEnterRoomReq. */
 export class oEnterRoomReq implements IoEnterRoomReq {
 
@@ -2887,6 +4032,9 @@ export class oEnterRoomReq implements IoEnterRoomReq {
 
     /** oEnterRoomReq roomId. */
     public roomId: (number|Long);
+
+    /** oEnterRoomReq content. */
+    public content: string;
 
     /**
      * Creates a new oEnterRoomReq instance using the specified properties.
@@ -2995,6 +4143,9 @@ export class oStageInfo implements IoStageInfo {
 
     /** oStageInfo stageType. */
     public stageType: eStageType;
+
+    /** oStageInfo ueId. */
+    public ueId: number;
 
     /**
      * Creates a new oStageInfo instance using the specified properties.
@@ -3112,6 +4263,9 @@ export class oEnterRoomAsw implements IoEnterRoomAsw {
 
     /** oEnterRoomAsw muteUsers. */
     public muteUsers: (number|Long)[];
+
+    /** oEnterRoomAsw content. */
+    public content: string;
 
     /**
      * Creates a new oEnterRoomAsw instance using the specified properties.
@@ -3545,6 +4699,96 @@ export class oLeaveRoomPush implements IoLeaveRoomPush {
 
     /**
      * Gets the default type url for oLeaveRoomPush
+     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns The default type url
+     */
+    public static getTypeUrl(typeUrlPrefix?: string): string;
+}
+
+/** Represents a oSetUserControlledStageActor. */
+export class oSetUserControlledStageActor implements IoSetUserControlledStageActor {
+
+    /**
+     * Constructs a new oSetUserControlledStageActor.
+     * @param [properties] Properties to set
+     */
+    constructor(properties?: IoSetUserControlledStageActor);
+
+    /** oSetUserControlledStageActor userId. */
+    public userId: (number|Long);
+
+    /**
+     * Creates a new oSetUserControlledStageActor instance using the specified properties.
+     * @param [properties] Properties to set
+     * @returns oSetUserControlledStageActor instance
+     */
+    public static create(properties?: IoSetUserControlledStageActor): oSetUserControlledStageActor;
+
+    /**
+     * Encodes the specified oSetUserControlledStageActor message. Does not implicitly {@link oSetUserControlledStageActor.verify|verify} messages.
+     * @param message oSetUserControlledStageActor message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encode(message: IoSetUserControlledStageActor, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Encodes the specified oSetUserControlledStageActor message, length delimited. Does not implicitly {@link oSetUserControlledStageActor.verify|verify} messages.
+     * @param message oSetUserControlledStageActor message or plain object to encode
+     * @param [writer] Writer to encode to
+     * @returns Writer
+     */
+    public static encodeDelimited(message: IoSetUserControlledStageActor, writer?: $protobuf.Writer): $protobuf.Writer;
+
+    /**
+     * Decodes a oSetUserControlledStageActor message from the specified reader or buffer.
+     * @param reader Reader or buffer to decode from
+     * @param [length] Message length if known beforehand
+     * @returns oSetUserControlledStageActor
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oSetUserControlledStageActor;
+
+    /**
+     * Decodes a oSetUserControlledStageActor message from the specified reader or buffer, length delimited.
+     * @param reader Reader or buffer to decode from
+     * @returns oSetUserControlledStageActor
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oSetUserControlledStageActor;
+
+    /**
+     * Verifies a oSetUserControlledStageActor message.
+     * @param message Plain object to verify
+     * @returns `null` if valid, otherwise the reason why it is not
+     */
+    public static verify(message: { [k: string]: any }): (string|null);
+
+    /**
+     * Creates a oSetUserControlledStageActor message from a plain object. Also converts values to their respective internal types.
+     * @param object Plain object
+     * @returns oSetUserControlledStageActor
+     */
+    public static fromObject(object: { [k: string]: any }): oSetUserControlledStageActor;
+
+    /**
+     * Creates a plain object from a oSetUserControlledStageActor message. Also converts values to other types if specified.
+     * @param message oSetUserControlledStageActor
+     * @param [options] Conversion options
+     * @returns Plain object
+     */
+    public static toObject(message: oSetUserControlledStageActor, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+    /**
+     * Converts this oSetUserControlledStageActor to JSON.
+     * @returns JSON object
+     */
+    public toJSON(): { [k: string]: any };
+
+    /**
+     * Gets the default type url for oSetUserControlledStageActor
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */
@@ -5144,96 +6388,6 @@ export class oRoomSetMaxStageCountAsw implements IoRoomSetMaxStageCountAsw {
 
     /**
      * Gets the default type url for oRoomSetMaxStageCountAsw
-     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns The default type url
-     */
-    public static getTypeUrl(typeUrlPrefix?: string): string;
-}
-
-/** Represents a oGetImagesInfoReq. */
-export class oGetImagesInfoReq implements IoGetImagesInfoReq {
-
-    /**
-     * Constructs a new oGetImagesInfoReq.
-     * @param [properties] Properties to set
-     */
-    constructor(properties?: IoGetImagesInfoReq);
-
-    /** oGetImagesInfoReq videoId. */
-    public videoId: (number|Long);
-
-    /**
-     * Creates a new oGetImagesInfoReq instance using the specified properties.
-     * @param [properties] Properties to set
-     * @returns oGetImagesInfoReq instance
-     */
-    public static create(properties?: IoGetImagesInfoReq): oGetImagesInfoReq;
-
-    /**
-     * Encodes the specified oGetImagesInfoReq message. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
-     * @param message oGetImagesInfoReq message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encode(message: IoGetImagesInfoReq, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Encodes the specified oGetImagesInfoReq message, length delimited. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
-     * @param message oGetImagesInfoReq message or plain object to encode
-     * @param [writer] Writer to encode to
-     * @returns Writer
-     */
-    public static encodeDelimited(message: IoGetImagesInfoReq, writer?: $protobuf.Writer): $protobuf.Writer;
-
-    /**
-     * Decodes a oGetImagesInfoReq message from the specified reader or buffer.
-     * @param reader Reader or buffer to decode from
-     * @param [length] Message length if known beforehand
-     * @returns oGetImagesInfoReq
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): oGetImagesInfoReq;
-
-    /**
-     * Decodes a oGetImagesInfoReq message from the specified reader or buffer, length delimited.
-     * @param reader Reader or buffer to decode from
-     * @returns oGetImagesInfoReq
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): oGetImagesInfoReq;
-
-    /**
-     * Verifies a oGetImagesInfoReq message.
-     * @param message Plain object to verify
-     * @returns `null` if valid, otherwise the reason why it is not
-     */
-    public static verify(message: { [k: string]: any }): (string|null);
-
-    /**
-     * Creates a oGetImagesInfoReq message from a plain object. Also converts values to their respective internal types.
-     * @param object Plain object
-     * @returns oGetImagesInfoReq
-     */
-    public static fromObject(object: { [k: string]: any }): oGetImagesInfoReq;
-
-    /**
-     * Creates a plain object from a oGetImagesInfoReq message. Also converts values to other types if specified.
-     * @param message oGetImagesInfoReq
-     * @param [options] Conversion options
-     * @returns Plain object
-     */
-    public static toObject(message: oGetImagesInfoReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
-
-    /**
-     * Converts this oGetImagesInfoReq to JSON.
-     * @returns JSON object
-     */
-    public toJSON(): { [k: string]: any };
-
-    /**
-     * Gets the default type url for oGetImagesInfoReq
      * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
      * @returns The default type url
      */

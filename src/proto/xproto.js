@@ -35,10 +35,23 @@ var $root = $protobuf.roots["default"] || ($protobuf.roots["default"] = {});
  * @property {number} ERROR_ENTER_STAGE_FAIL=75 ERROR_ENTER_STAGE_FAIL value
  * @property {number} ERROR_ENTER_STAGE_TIMEOUT=76 ERROR_ENTER_STAGE_TIMEOUT value
  * @property {number} ERROR_NOT_IN_STAGE=77 ERROR_NOT_IN_STAGE value
+ * @property {number} ERROR_NOT_IN_UE=78 ERROR_NOT_IN_UE value
  * @property {number} ERROR_INVITER_NOT_IN_UE=80 ERROR_INVITER_NOT_IN_UE value
  * @property {number} ERROR_INVITEE_NOT_IN_STAGE=81 ERROR_INVITEE_NOT_IN_STAGE value
  * @property {number} ERROR_INVITE_CONTEXT_NOT_EXIST=82 ERROR_INVITE_CONTEXT_NOT_EXIST value
  * @property {number} ERROR_INVITEE_NOT_YOU=83 ERROR_INVITEE_NOT_YOU value
+ * @property {number} ERROR_UE_IS_REQUESTING=90 ERROR_UE_IS_REQUESTING value
+ * @property {number} ERROR_UE_REQ_TIMEOUT=91 ERROR_UE_REQ_TIMEOUT value
+ * @property {number} ERROR_ALREADY_ON_STAGE=11001 ERROR_ALREADY_ON_STAGE value
+ * @property {number} ERROR_OUT_OF_CURRENCY=11002 ERROR_OUT_OF_CURRENCY value
+ * @property {number} ERROR_PARAMETER_NOT_MATCH=11003 ERROR_PARAMETER_NOT_MATCH value
+ * @property {number} ERROR_NO_AVATAR_MODEL=11004 ERROR_NO_AVATAR_MODEL value
+ * @property {number} ERROR_NO_EMPTY_STAGE=11005 ERROR_NO_EMPTY_STAGE value
+ * @property {number} ERROR_ALREADY_LEAVE_STAGE=11006 ERROR_ALREADY_LEAVE_STAGE value
+ * @property {number} ERROR_INITIAL_AVATAR_FAILED=11007 ERROR_INITIAL_AVATAR_FAILED value
+ * @property {number} ERROR_ROOM_IS_NOT_EMPTY=11008 ERROR_ROOM_IS_NOT_EMPTY value
+ * @property {number} ERROR_CLOSE_ROOM_ID_IS_INVALID=11009 ERROR_CLOSE_ROOM_ID_IS_INVALID value
+ * @property {number} ERROR_CATPURE_IMAGE_NOT_COMPLETE=11010 ERROR_CATPURE_IMAGE_NOT_COMPLETE value
  */
 $root.eError = (function() {
     var valuesById = {}, values = Object.create(valuesById);
@@ -64,10 +77,23 @@ $root.eError = (function() {
     values[valuesById[75] = "ERROR_ENTER_STAGE_FAIL"] = 75;
     values[valuesById[76] = "ERROR_ENTER_STAGE_TIMEOUT"] = 76;
     values[valuesById[77] = "ERROR_NOT_IN_STAGE"] = 77;
+    values[valuesById[78] = "ERROR_NOT_IN_UE"] = 78;
     values[valuesById[80] = "ERROR_INVITER_NOT_IN_UE"] = 80;
     values[valuesById[81] = "ERROR_INVITEE_NOT_IN_STAGE"] = 81;
     values[valuesById[82] = "ERROR_INVITE_CONTEXT_NOT_EXIST"] = 82;
     values[valuesById[83] = "ERROR_INVITEE_NOT_YOU"] = 83;
+    values[valuesById[90] = "ERROR_UE_IS_REQUESTING"] = 90;
+    values[valuesById[91] = "ERROR_UE_REQ_TIMEOUT"] = 91;
+    values[valuesById[11001] = "ERROR_ALREADY_ON_STAGE"] = 11001;
+    values[valuesById[11002] = "ERROR_OUT_OF_CURRENCY"] = 11002;
+    values[valuesById[11003] = "ERROR_PARAMETER_NOT_MATCH"] = 11003;
+    values[valuesById[11004] = "ERROR_NO_AVATAR_MODEL"] = 11004;
+    values[valuesById[11005] = "ERROR_NO_EMPTY_STAGE"] = 11005;
+    values[valuesById[11006] = "ERROR_ALREADY_LEAVE_STAGE"] = 11006;
+    values[valuesById[11007] = "ERROR_INITIAL_AVATAR_FAILED"] = 11007;
+    values[valuesById[11008] = "ERROR_ROOM_IS_NOT_EMPTY"] = 11008;
+    values[valuesById[11009] = "ERROR_CLOSE_ROOM_ID_IS_INVALID"] = 11009;
+    values[valuesById[11010] = "ERROR_CATPURE_IMAGE_NOT_COMPLETE"] = 11010;
     return values;
 })();
 
@@ -95,6 +121,11 @@ $root.eError = (function() {
  * @property {number} UpdateEnterStageContextReq=511 UpdateEnterStageContextReq value
  * @property {number} MultiActionReq=512 MultiActionReq value
  * @property {number} MultiActionReply=516 MultiActionReply value
+ * @property {number} SetUserControlledStageActor=517 SetUserControlledStageActor value
+ * @property {number} ClientForwardMsgReq=601 ClientForwardMsgReq value
+ * @property {number} ReleaseUeReq=701 ReleaseUeReq value
+ * @property {number} AddUeReq=702 AddUeReq value
+ * @property {number} ChangeIconReq=711 ChangeIconReq value
  * @property {number} PlayAnimationReq=1001 PlayAnimationReq value
  * @property {number} ChangeGarmentReq=1002 ChangeGarmentReq value
  * @property {number} TouchScreenReq=1003 TouchScreenReq value
@@ -104,6 +135,8 @@ $root.eError = (function() {
  * @property {number} LatencyReq=1007 LatencyReq value
  * @property {number} ChangeMapReq=1008 ChangeMapReq value
  * @property {number} HeatMapReq=1009 HeatMapReq value
+ * @property {number} ChangeActionReq=1010 ChangeActionReq value
+ * @property {number} ChangeUser=1011 ChangeUser value
  * @property {number} GetImagesInfoReq=1012 GetImagesInfoReq value
  * @property {number} HeartBeatReq=1111 HeartBeatReq value
  */
@@ -129,6 +162,11 @@ $root.eClientPID = (function() {
     values[valuesById[511] = "UpdateEnterStageContextReq"] = 511;
     values[valuesById[512] = "MultiActionReq"] = 512;
     values[valuesById[516] = "MultiActionReply"] = 516;
+    values[valuesById[517] = "SetUserControlledStageActor"] = 517;
+    values[valuesById[601] = "ClientForwardMsgReq"] = 601;
+    values[valuesById[701] = "ReleaseUeReq"] = 701;
+    values[valuesById[702] = "AddUeReq"] = 702;
+    values[valuesById[711] = "ChangeIconReq"] = 711;
     values[valuesById[1001] = "PlayAnimationReq"] = 1001;
     values[valuesById[1002] = "ChangeGarmentReq"] = 1002;
     values[valuesById[1003] = "TouchScreenReq"] = 1003;
@@ -138,6 +176,8 @@ $root.eClientPID = (function() {
     values[valuesById[1007] = "LatencyReq"] = 1007;
     values[valuesById[1008] = "ChangeMapReq"] = 1008;
     values[valuesById[1009] = "HeatMapReq"] = 1009;
+    values[valuesById[1010] = "ChangeActionReq"] = 1010;
+    values[valuesById[1011] = "ChangeUser"] = 1011;
     values[valuesById[1012] = "GetImagesInfoReq"] = 1012;
     values[valuesById[1111] = "HeartBeatReq"] = 1111;
     return values;
@@ -184,6 +224,11 @@ $root.eClientPID = (function() {
  * @property {number} MultiActionReplyResult=1517 MultiActionReplyResult value
  * @property {number} LeaveUePush=1521 LeaveUePush value
  * @property {number} StageStatusChangePush=1522 StageStatusChangePush value
+ * @property {number} ClientForwardMsgPush=1601 ClientForwardMsgPush value
+ * @property {number} ReleaseUeAsw=1701 ReleaseUeAsw value
+ * @property {number} AddUeAsw=1702 AddUeAsw value
+ * @property {number} ChangeIconAsw=1711 ChangeIconAsw value
+ * @property {number} ChangeIconPush=1712 ChangeIconPush value
  * @property {number} PlayAnimationPush=11001 PlayAnimationPush value
  * @property {number} ChangeGarmentPush=11002 ChangeGarmentPush value
  * @property {number} TouchScreenPush=11003 TouchScreenPush value
@@ -193,6 +238,7 @@ $root.eClientPID = (function() {
  * @property {number} LatencyPush=11007 LatencyPush value
  * @property {number} ChangeMapPush=11008 ChangeMapPush value
  * @property {number} HeatMapPush=11009 HeatMapPush value
+ * @property {number} GetImagesInfoPush=11010 GetImagesInfoPush value
  */
 $root.eServerPID = (function() {
     var valuesById = {}, values = Object.create(valuesById);
@@ -233,6 +279,11 @@ $root.eServerPID = (function() {
     values[valuesById[1517] = "MultiActionReplyResult"] = 1517;
     values[valuesById[1521] = "LeaveUePush"] = 1521;
     values[valuesById[1522] = "StageStatusChangePush"] = 1522;
+    values[valuesById[1601] = "ClientForwardMsgPush"] = 1601;
+    values[valuesById[1701] = "ReleaseUeAsw"] = 1701;
+    values[valuesById[1702] = "AddUeAsw"] = 1702;
+    values[valuesById[1711] = "ChangeIconAsw"] = 1711;
+    values[valuesById[1712] = "ChangeIconPush"] = 1712;
     values[valuesById[11001] = "PlayAnimationPush"] = 11001;
     values[valuesById[11002] = "ChangeGarmentPush"] = 11002;
     values[valuesById[11003] = "TouchScreenPush"] = 11003;
@@ -242,7 +293,2590 @@ $root.eServerPID = (function() {
     values[valuesById[11007] = "LatencyPush"] = 11007;
     values[valuesById[11008] = "ChangeMapPush"] = 11008;
     values[valuesById[11009] = "HeatMapPush"] = 11009;
+    values[valuesById[11010] = "GetImagesInfoPush"] = 11010;
     return values;
+})();
+
+$root.oChangeIconReq = (function() {
+
+    /**
+     * Properties of a oChangeIconReq.
+     * @exports IoChangeIconReq
+     * @interface IoChangeIconReq
+     * @property {boolean|null} [open] oChangeIconReq open
+     */
+
+    /**
+     * Constructs a new oChangeIconReq.
+     * @exports oChangeIconReq
+     * @classdesc Represents a oChangeIconReq.
+     * @implements IoChangeIconReq
+     * @constructor
+     * @param {IoChangeIconReq=} [properties] Properties to set
+     */
+    function oChangeIconReq(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oChangeIconReq open.
+     * @member {boolean} open
+     * @memberof oChangeIconReq
+     * @instance
+     */
+    oChangeIconReq.prototype.open = false;
+
+    /**
+     * Creates a new oChangeIconReq instance using the specified properties.
+     * @function create
+     * @memberof oChangeIconReq
+     * @static
+     * @param {IoChangeIconReq=} [properties] Properties to set
+     * @returns {oChangeIconReq} oChangeIconReq instance
+     */
+    oChangeIconReq.create = function create(properties) {
+        return new oChangeIconReq(properties);
+    };
+
+    /**
+     * Encodes the specified oChangeIconReq message. Does not implicitly {@link oChangeIconReq.verify|verify} messages.
+     * @function encode
+     * @memberof oChangeIconReq
+     * @static
+     * @param {IoChangeIconReq} message oChangeIconReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oChangeIconReq.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.open != null && Object.hasOwnProperty.call(message, "open"))
+            writer.uint32(/* id 1, wireType 0 =*/8).bool(message.open);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oChangeIconReq message, length delimited. Does not implicitly {@link oChangeIconReq.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oChangeIconReq
+     * @static
+     * @param {IoChangeIconReq} message oChangeIconReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oChangeIconReq.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oChangeIconReq message from the specified reader or buffer.
+     * @function decode
+     * @memberof oChangeIconReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oChangeIconReq} oChangeIconReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oChangeIconReq.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oChangeIconReq();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.open = reader.bool();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oChangeIconReq message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oChangeIconReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oChangeIconReq} oChangeIconReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oChangeIconReq.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oChangeIconReq message.
+     * @function verify
+     * @memberof oChangeIconReq
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oChangeIconReq.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.open != null && message.hasOwnProperty("open"))
+            if (typeof message.open !== "boolean")
+                return "open: boolean expected";
+        return null;
+    };
+
+    /**
+     * Creates a oChangeIconReq message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oChangeIconReq
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oChangeIconReq} oChangeIconReq
+     */
+    oChangeIconReq.fromObject = function fromObject(object) {
+        if (object instanceof $root.oChangeIconReq)
+            return object;
+        var message = new $root.oChangeIconReq();
+        if (object.open != null)
+            message.open = Boolean(object.open);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oChangeIconReq message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oChangeIconReq
+     * @static
+     * @param {oChangeIconReq} message oChangeIconReq
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oChangeIconReq.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            object.open = false;
+        if (message.open != null && message.hasOwnProperty("open"))
+            object.open = message.open;
+        return object;
+    };
+
+    /**
+     * Converts this oChangeIconReq to JSON.
+     * @function toJSON
+     * @memberof oChangeIconReq
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oChangeIconReq.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oChangeIconReq
+     * @function getTypeUrl
+     * @memberof oChangeIconReq
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oChangeIconReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oChangeIconReq";
+    };
+
+    return oChangeIconReq;
+})();
+
+$root.oChangeIconAsw = (function() {
+
+    /**
+     * Properties of a oChangeIconAsw.
+     * @exports IoChangeIconAsw
+     * @interface IoChangeIconAsw
+     * @property {eError|null} [code] oChangeIconAsw code
+     */
+
+    /**
+     * Constructs a new oChangeIconAsw.
+     * @exports oChangeIconAsw
+     * @classdesc Represents a oChangeIconAsw.
+     * @implements IoChangeIconAsw
+     * @constructor
+     * @param {IoChangeIconAsw=} [properties] Properties to set
+     */
+    function oChangeIconAsw(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oChangeIconAsw code.
+     * @member {eError} code
+     * @memberof oChangeIconAsw
+     * @instance
+     */
+    oChangeIconAsw.prototype.code = 0;
+
+    /**
+     * Creates a new oChangeIconAsw instance using the specified properties.
+     * @function create
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {IoChangeIconAsw=} [properties] Properties to set
+     * @returns {oChangeIconAsw} oChangeIconAsw instance
+     */
+    oChangeIconAsw.create = function create(properties) {
+        return new oChangeIconAsw(properties);
+    };
+
+    /**
+     * Encodes the specified oChangeIconAsw message. Does not implicitly {@link oChangeIconAsw.verify|verify} messages.
+     * @function encode
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {IoChangeIconAsw} message oChangeIconAsw message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oChangeIconAsw.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.code != null && Object.hasOwnProperty.call(message, "code"))
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.code);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oChangeIconAsw message, length delimited. Does not implicitly {@link oChangeIconAsw.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {IoChangeIconAsw} message oChangeIconAsw message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oChangeIconAsw.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oChangeIconAsw message from the specified reader or buffer.
+     * @function decode
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oChangeIconAsw} oChangeIconAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oChangeIconAsw.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oChangeIconAsw();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.code = reader.int32();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oChangeIconAsw message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oChangeIconAsw} oChangeIconAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oChangeIconAsw.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oChangeIconAsw message.
+     * @function verify
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oChangeIconAsw.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.code != null && message.hasOwnProperty("code"))
+            switch (message.code) {
+            default:
+                return "code: enum value expected";
+            case 0:
+            case 1:
+            case 2:
+            case 41:
+            case 42:
+            case 43:
+            case 44:
+            case 51:
+            case 52:
+            case 53:
+            case 61:
+            case 62:
+            case 63:
+            case 64:
+            case 65:
+            case 71:
+            case 72:
+            case 73:
+            case 74:
+            case 75:
+            case 76:
+            case 77:
+            case 78:
+            case 80:
+            case 81:
+            case 82:
+            case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
+                break;
+            }
+        return null;
+    };
+
+    /**
+     * Creates a oChangeIconAsw message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oChangeIconAsw} oChangeIconAsw
+     */
+    oChangeIconAsw.fromObject = function fromObject(object) {
+        if (object instanceof $root.oChangeIconAsw)
+            return object;
+        var message = new $root.oChangeIconAsw();
+        switch (object.code) {
+        default:
+            if (typeof object.code === "number") {
+                message.code = object.code;
+                break;
+            }
+            break;
+        case "UNKNOWN":
+        case 0:
+            message.code = 0;
+            break;
+        case "SUCCESS":
+        case 1:
+            message.code = 1;
+            break;
+        case "FAILD":
+        case 2:
+            message.code = 2;
+            break;
+        case "ERROR_REQ_PARAM":
+        case 41:
+            message.code = 41;
+            break;
+        case "ERROR_OTHER_ROOM_OPEN":
+        case 42:
+            message.code = 42;
+            break;
+        case "ERROR_CREATE_ROOM_FAIL":
+        case 43:
+            message.code = 43;
+            break;
+        case "ERROR_ENTER_ROOM_FAIL":
+        case 44:
+            message.code = 44;
+            break;
+        case "EMPTY_INS_TOKEN":
+        case 51:
+            message.code = 51;
+            break;
+        case "UNSET_INS_TOKEN":
+        case 52:
+            message.code = 52;
+            break;
+        case "ERROR_INS_TOKEN":
+        case 53:
+            message.code = 53;
+            break;
+        case "ERROR_APP_SERVER_CONNECT_FAIL":
+        case 61:
+            message.code = 61;
+            break;
+        case "ERROR_APP_SERVER_RET_NOT_200":
+        case 62:
+            message.code = 62;
+            break;
+        case "ERROR_APP_SERVER_RET_NOT_JSON":
+        case 63:
+            message.code = 63;
+            break;
+        case "ERROR_APP_SERVER_RET_AUTH_FAIL":
+        case 64:
+            message.code = 64;
+            break;
+        case "ERROR_APP_SERVER_RET_CODE_FAIL":
+        case 65:
+            message.code = 65;
+            break;
+        case "ERROR_NO_ROOM":
+        case 71:
+            message.code = 71;
+            break;
+        case "ERROR_NOT_IN_ROOM":
+        case 72:
+            message.code = 72;
+            break;
+        case "ERROR_ALREADY_IN_STAGE":
+        case 73:
+            message.code = 73;
+            break;
+        case "ERROR_ALREADY_IN_QUEUE":
+        case 74:
+            message.code = 74;
+            break;
+        case "ERROR_ENTER_STAGE_FAIL":
+        case 75:
+            message.code = 75;
+            break;
+        case "ERROR_ENTER_STAGE_TIMEOUT":
+        case 76:
+            message.code = 76;
+            break;
+        case "ERROR_NOT_IN_STAGE":
+        case 77:
+            message.code = 77;
+            break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
+        case "ERROR_INVITER_NOT_IN_UE":
+        case 80:
+            message.code = 80;
+            break;
+        case "ERROR_INVITEE_NOT_IN_STAGE":
+        case 81:
+            message.code = 81;
+            break;
+        case "ERROR_INVITE_CONTEXT_NOT_EXIST":
+        case 82:
+            message.code = 82;
+            break;
+        case "ERROR_INVITEE_NOT_YOU":
+        case 83:
+            message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
+            break;
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oChangeIconAsw message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {oChangeIconAsw} message oChangeIconAsw
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oChangeIconAsw.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            object.code = options.enums === String ? "UNKNOWN" : 0;
+        if (message.code != null && message.hasOwnProperty("code"))
+            object.code = options.enums === String ? $root.eError[message.code] === undefined ? message.code : $root.eError[message.code] : message.code;
+        return object;
+    };
+
+    /**
+     * Converts this oChangeIconAsw to JSON.
+     * @function toJSON
+     * @memberof oChangeIconAsw
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oChangeIconAsw.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oChangeIconAsw
+     * @function getTypeUrl
+     * @memberof oChangeIconAsw
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oChangeIconAsw.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oChangeIconAsw";
+    };
+
+    return oChangeIconAsw;
+})();
+
+$root.oChangeIconPush = (function() {
+
+    /**
+     * Properties of a oChangeIconPush.
+     * @exports IoChangeIconPush
+     * @interface IoChangeIconPush
+     * @property {number|null} [userId] oChangeIconPush userId
+     * @property {boolean|null} [open] oChangeIconPush open
+     */
+
+    /**
+     * Constructs a new oChangeIconPush.
+     * @exports oChangeIconPush
+     * @classdesc Represents a oChangeIconPush.
+     * @implements IoChangeIconPush
+     * @constructor
+     * @param {IoChangeIconPush=} [properties] Properties to set
+     */
+    function oChangeIconPush(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oChangeIconPush userId.
+     * @member {number} userId
+     * @memberof oChangeIconPush
+     * @instance
+     */
+    oChangeIconPush.prototype.userId = 0;
+
+    /**
+     * oChangeIconPush open.
+     * @member {boolean} open
+     * @memberof oChangeIconPush
+     * @instance
+     */
+    oChangeIconPush.prototype.open = false;
+
+    /**
+     * Creates a new oChangeIconPush instance using the specified properties.
+     * @function create
+     * @memberof oChangeIconPush
+     * @static
+     * @param {IoChangeIconPush=} [properties] Properties to set
+     * @returns {oChangeIconPush} oChangeIconPush instance
+     */
+    oChangeIconPush.create = function create(properties) {
+        return new oChangeIconPush(properties);
+    };
+
+    /**
+     * Encodes the specified oChangeIconPush message. Does not implicitly {@link oChangeIconPush.verify|verify} messages.
+     * @function encode
+     * @memberof oChangeIconPush
+     * @static
+     * @param {IoChangeIconPush} message oChangeIconPush message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oChangeIconPush.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.userId);
+        if (message.open != null && Object.hasOwnProperty.call(message, "open"))
+            writer.uint32(/* id 2, wireType 0 =*/16).bool(message.open);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oChangeIconPush message, length delimited. Does not implicitly {@link oChangeIconPush.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oChangeIconPush
+     * @static
+     * @param {IoChangeIconPush} message oChangeIconPush message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oChangeIconPush.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oChangeIconPush message from the specified reader or buffer.
+     * @function decode
+     * @memberof oChangeIconPush
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oChangeIconPush} oChangeIconPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oChangeIconPush.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oChangeIconPush();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.userId = reader.int32();
+                    break;
+                }
+            case 2: {
+                    message.open = reader.bool();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oChangeIconPush message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oChangeIconPush
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oChangeIconPush} oChangeIconPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oChangeIconPush.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oChangeIconPush message.
+     * @function verify
+     * @memberof oChangeIconPush
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oChangeIconPush.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.userId != null && message.hasOwnProperty("userId"))
+            if (!$util.isInteger(message.userId))
+                return "userId: integer expected";
+        if (message.open != null && message.hasOwnProperty("open"))
+            if (typeof message.open !== "boolean")
+                return "open: boolean expected";
+        return null;
+    };
+
+    /**
+     * Creates a oChangeIconPush message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oChangeIconPush
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oChangeIconPush} oChangeIconPush
+     */
+    oChangeIconPush.fromObject = function fromObject(object) {
+        if (object instanceof $root.oChangeIconPush)
+            return object;
+        var message = new $root.oChangeIconPush();
+        if (object.userId != null)
+            message.userId = object.userId | 0;
+        if (object.open != null)
+            message.open = Boolean(object.open);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oChangeIconPush message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oChangeIconPush
+     * @static
+     * @param {oChangeIconPush} message oChangeIconPush
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oChangeIconPush.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults) {
+            object.userId = 0;
+            object.open = false;
+        }
+        if (message.userId != null && message.hasOwnProperty("userId"))
+            object.userId = message.userId;
+        if (message.open != null && message.hasOwnProperty("open"))
+            object.open = message.open;
+        return object;
+    };
+
+    /**
+     * Converts this oChangeIconPush to JSON.
+     * @function toJSON
+     * @memberof oChangeIconPush
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oChangeIconPush.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oChangeIconPush
+     * @function getTypeUrl
+     * @memberof oChangeIconPush
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oChangeIconPush.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oChangeIconPush";
+    };
+
+    return oChangeIconPush;
+})();
+
+$root.oReleaseUeReq = (function() {
+
+    /**
+     * Properties of a oReleaseUeReq.
+     * @exports IoReleaseUeReq
+     * @interface IoReleaseUeReq
+     */
+
+    /**
+     * Constructs a new oReleaseUeReq.
+     * @exports oReleaseUeReq
+     * @classdesc Represents a oReleaseUeReq.
+     * @implements IoReleaseUeReq
+     * @constructor
+     * @param {IoReleaseUeReq=} [properties] Properties to set
+     */
+    function oReleaseUeReq(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * Creates a new oReleaseUeReq instance using the specified properties.
+     * @function create
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {IoReleaseUeReq=} [properties] Properties to set
+     * @returns {oReleaseUeReq} oReleaseUeReq instance
+     */
+    oReleaseUeReq.create = function create(properties) {
+        return new oReleaseUeReq(properties);
+    };
+
+    /**
+     * Encodes the specified oReleaseUeReq message. Does not implicitly {@link oReleaseUeReq.verify|verify} messages.
+     * @function encode
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {IoReleaseUeReq} message oReleaseUeReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oReleaseUeReq.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oReleaseUeReq message, length delimited. Does not implicitly {@link oReleaseUeReq.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {IoReleaseUeReq} message oReleaseUeReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oReleaseUeReq.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oReleaseUeReq message from the specified reader or buffer.
+     * @function decode
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oReleaseUeReq} oReleaseUeReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oReleaseUeReq.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oReleaseUeReq();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oReleaseUeReq message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oReleaseUeReq} oReleaseUeReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oReleaseUeReq.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oReleaseUeReq message.
+     * @function verify
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oReleaseUeReq.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        return null;
+    };
+
+    /**
+     * Creates a oReleaseUeReq message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oReleaseUeReq} oReleaseUeReq
+     */
+    oReleaseUeReq.fromObject = function fromObject(object) {
+        if (object instanceof $root.oReleaseUeReq)
+            return object;
+        return new $root.oReleaseUeReq();
+    };
+
+    /**
+     * Creates a plain object from a oReleaseUeReq message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {oReleaseUeReq} message oReleaseUeReq
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oReleaseUeReq.toObject = function toObject() {
+        return {};
+    };
+
+    /**
+     * Converts this oReleaseUeReq to JSON.
+     * @function toJSON
+     * @memberof oReleaseUeReq
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oReleaseUeReq.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oReleaseUeReq
+     * @function getTypeUrl
+     * @memberof oReleaseUeReq
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oReleaseUeReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oReleaseUeReq";
+    };
+
+    return oReleaseUeReq;
+})();
+
+$root.oReleaseUeAsw = (function() {
+
+    /**
+     * Properties of a oReleaseUeAsw.
+     * @exports IoReleaseUeAsw
+     * @interface IoReleaseUeAsw
+     * @property {eError|null} [code] oReleaseUeAsw code
+     */
+
+    /**
+     * Constructs a new oReleaseUeAsw.
+     * @exports oReleaseUeAsw
+     * @classdesc Represents a oReleaseUeAsw.
+     * @implements IoReleaseUeAsw
+     * @constructor
+     * @param {IoReleaseUeAsw=} [properties] Properties to set
+     */
+    function oReleaseUeAsw(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oReleaseUeAsw code.
+     * @member {eError} code
+     * @memberof oReleaseUeAsw
+     * @instance
+     */
+    oReleaseUeAsw.prototype.code = 0;
+
+    /**
+     * Creates a new oReleaseUeAsw instance using the specified properties.
+     * @function create
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {IoReleaseUeAsw=} [properties] Properties to set
+     * @returns {oReleaseUeAsw} oReleaseUeAsw instance
+     */
+    oReleaseUeAsw.create = function create(properties) {
+        return new oReleaseUeAsw(properties);
+    };
+
+    /**
+     * Encodes the specified oReleaseUeAsw message. Does not implicitly {@link oReleaseUeAsw.verify|verify} messages.
+     * @function encode
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {IoReleaseUeAsw} message oReleaseUeAsw message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oReleaseUeAsw.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.code != null && Object.hasOwnProperty.call(message, "code"))
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.code);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oReleaseUeAsw message, length delimited. Does not implicitly {@link oReleaseUeAsw.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {IoReleaseUeAsw} message oReleaseUeAsw message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oReleaseUeAsw.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oReleaseUeAsw message from the specified reader or buffer.
+     * @function decode
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oReleaseUeAsw} oReleaseUeAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oReleaseUeAsw.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oReleaseUeAsw();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.code = reader.int32();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oReleaseUeAsw message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oReleaseUeAsw} oReleaseUeAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oReleaseUeAsw.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oReleaseUeAsw message.
+     * @function verify
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oReleaseUeAsw.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.code != null && message.hasOwnProperty("code"))
+            switch (message.code) {
+            default:
+                return "code: enum value expected";
+            case 0:
+            case 1:
+            case 2:
+            case 41:
+            case 42:
+            case 43:
+            case 44:
+            case 51:
+            case 52:
+            case 53:
+            case 61:
+            case 62:
+            case 63:
+            case 64:
+            case 65:
+            case 71:
+            case 72:
+            case 73:
+            case 74:
+            case 75:
+            case 76:
+            case 77:
+            case 78:
+            case 80:
+            case 81:
+            case 82:
+            case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
+                break;
+            }
+        return null;
+    };
+
+    /**
+     * Creates a oReleaseUeAsw message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oReleaseUeAsw} oReleaseUeAsw
+     */
+    oReleaseUeAsw.fromObject = function fromObject(object) {
+        if (object instanceof $root.oReleaseUeAsw)
+            return object;
+        var message = new $root.oReleaseUeAsw();
+        switch (object.code) {
+        default:
+            if (typeof object.code === "number") {
+                message.code = object.code;
+                break;
+            }
+            break;
+        case "UNKNOWN":
+        case 0:
+            message.code = 0;
+            break;
+        case "SUCCESS":
+        case 1:
+            message.code = 1;
+            break;
+        case "FAILD":
+        case 2:
+            message.code = 2;
+            break;
+        case "ERROR_REQ_PARAM":
+        case 41:
+            message.code = 41;
+            break;
+        case "ERROR_OTHER_ROOM_OPEN":
+        case 42:
+            message.code = 42;
+            break;
+        case "ERROR_CREATE_ROOM_FAIL":
+        case 43:
+            message.code = 43;
+            break;
+        case "ERROR_ENTER_ROOM_FAIL":
+        case 44:
+            message.code = 44;
+            break;
+        case "EMPTY_INS_TOKEN":
+        case 51:
+            message.code = 51;
+            break;
+        case "UNSET_INS_TOKEN":
+        case 52:
+            message.code = 52;
+            break;
+        case "ERROR_INS_TOKEN":
+        case 53:
+            message.code = 53;
+            break;
+        case "ERROR_APP_SERVER_CONNECT_FAIL":
+        case 61:
+            message.code = 61;
+            break;
+        case "ERROR_APP_SERVER_RET_NOT_200":
+        case 62:
+            message.code = 62;
+            break;
+        case "ERROR_APP_SERVER_RET_NOT_JSON":
+        case 63:
+            message.code = 63;
+            break;
+        case "ERROR_APP_SERVER_RET_AUTH_FAIL":
+        case 64:
+            message.code = 64;
+            break;
+        case "ERROR_APP_SERVER_RET_CODE_FAIL":
+        case 65:
+            message.code = 65;
+            break;
+        case "ERROR_NO_ROOM":
+        case 71:
+            message.code = 71;
+            break;
+        case "ERROR_NOT_IN_ROOM":
+        case 72:
+            message.code = 72;
+            break;
+        case "ERROR_ALREADY_IN_STAGE":
+        case 73:
+            message.code = 73;
+            break;
+        case "ERROR_ALREADY_IN_QUEUE":
+        case 74:
+            message.code = 74;
+            break;
+        case "ERROR_ENTER_STAGE_FAIL":
+        case 75:
+            message.code = 75;
+            break;
+        case "ERROR_ENTER_STAGE_TIMEOUT":
+        case 76:
+            message.code = 76;
+            break;
+        case "ERROR_NOT_IN_STAGE":
+        case 77:
+            message.code = 77;
+            break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
+        case "ERROR_INVITER_NOT_IN_UE":
+        case 80:
+            message.code = 80;
+            break;
+        case "ERROR_INVITEE_NOT_IN_STAGE":
+        case 81:
+            message.code = 81;
+            break;
+        case "ERROR_INVITE_CONTEXT_NOT_EXIST":
+        case 82:
+            message.code = 82;
+            break;
+        case "ERROR_INVITEE_NOT_YOU":
+        case 83:
+            message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
+            break;
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oReleaseUeAsw message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {oReleaseUeAsw} message oReleaseUeAsw
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oReleaseUeAsw.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            object.code = options.enums === String ? "UNKNOWN" : 0;
+        if (message.code != null && message.hasOwnProperty("code"))
+            object.code = options.enums === String ? $root.eError[message.code] === undefined ? message.code : $root.eError[message.code] : message.code;
+        return object;
+    };
+
+    /**
+     * Converts this oReleaseUeAsw to JSON.
+     * @function toJSON
+     * @memberof oReleaseUeAsw
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oReleaseUeAsw.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oReleaseUeAsw
+     * @function getTypeUrl
+     * @memberof oReleaseUeAsw
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oReleaseUeAsw.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oReleaseUeAsw";
+    };
+
+    return oReleaseUeAsw;
+})();
+
+$root.oAddUeReq = (function() {
+
+    /**
+     * Properties of a oAddUeReq.
+     * @exports IoAddUeReq
+     * @interface IoAddUeReq
+     * @property {string|null} [context] oAddUeReq context
+     */
+
+    /**
+     * Constructs a new oAddUeReq.
+     * @exports oAddUeReq
+     * @classdesc Represents a oAddUeReq.
+     * @implements IoAddUeReq
+     * @constructor
+     * @param {IoAddUeReq=} [properties] Properties to set
+     */
+    function oAddUeReq(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oAddUeReq context.
+     * @member {string} context
+     * @memberof oAddUeReq
+     * @instance
+     */
+    oAddUeReq.prototype.context = "";
+
+    /**
+     * Creates a new oAddUeReq instance using the specified properties.
+     * @function create
+     * @memberof oAddUeReq
+     * @static
+     * @param {IoAddUeReq=} [properties] Properties to set
+     * @returns {oAddUeReq} oAddUeReq instance
+     */
+    oAddUeReq.create = function create(properties) {
+        return new oAddUeReq(properties);
+    };
+
+    /**
+     * Encodes the specified oAddUeReq message. Does not implicitly {@link oAddUeReq.verify|verify} messages.
+     * @function encode
+     * @memberof oAddUeReq
+     * @static
+     * @param {IoAddUeReq} message oAddUeReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oAddUeReq.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.context != null && Object.hasOwnProperty.call(message, "context"))
+            writer.uint32(/* id 1, wireType 2 =*/10).string(message.context);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oAddUeReq message, length delimited. Does not implicitly {@link oAddUeReq.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oAddUeReq
+     * @static
+     * @param {IoAddUeReq} message oAddUeReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oAddUeReq.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oAddUeReq message from the specified reader or buffer.
+     * @function decode
+     * @memberof oAddUeReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oAddUeReq} oAddUeReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oAddUeReq.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oAddUeReq();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.context = reader.string();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oAddUeReq message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oAddUeReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oAddUeReq} oAddUeReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oAddUeReq.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oAddUeReq message.
+     * @function verify
+     * @memberof oAddUeReq
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oAddUeReq.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.context != null && message.hasOwnProperty("context"))
+            if (!$util.isString(message.context))
+                return "context: string expected";
+        return null;
+    };
+
+    /**
+     * Creates a oAddUeReq message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oAddUeReq
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oAddUeReq} oAddUeReq
+     */
+    oAddUeReq.fromObject = function fromObject(object) {
+        if (object instanceof $root.oAddUeReq)
+            return object;
+        var message = new $root.oAddUeReq();
+        if (object.context != null)
+            message.context = String(object.context);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oAddUeReq message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oAddUeReq
+     * @static
+     * @param {oAddUeReq} message oAddUeReq
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oAddUeReq.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            object.context = "";
+        if (message.context != null && message.hasOwnProperty("context"))
+            object.context = message.context;
+        return object;
+    };
+
+    /**
+     * Converts this oAddUeReq to JSON.
+     * @function toJSON
+     * @memberof oAddUeReq
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oAddUeReq.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oAddUeReq
+     * @function getTypeUrl
+     * @memberof oAddUeReq
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oAddUeReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oAddUeReq";
+    };
+
+    return oAddUeReq;
+})();
+
+$root.oAddUeAsw = (function() {
+
+    /**
+     * Properties of a oAddUeAsw.
+     * @exports IoAddUeAsw
+     * @interface IoAddUeAsw
+     * @property {eError|null} [code] oAddUeAsw code
+     */
+
+    /**
+     * Constructs a new oAddUeAsw.
+     * @exports oAddUeAsw
+     * @classdesc Represents a oAddUeAsw.
+     * @implements IoAddUeAsw
+     * @constructor
+     * @param {IoAddUeAsw=} [properties] Properties to set
+     */
+    function oAddUeAsw(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oAddUeAsw code.
+     * @member {eError} code
+     * @memberof oAddUeAsw
+     * @instance
+     */
+    oAddUeAsw.prototype.code = 0;
+
+    /**
+     * Creates a new oAddUeAsw instance using the specified properties.
+     * @function create
+     * @memberof oAddUeAsw
+     * @static
+     * @param {IoAddUeAsw=} [properties] Properties to set
+     * @returns {oAddUeAsw} oAddUeAsw instance
+     */
+    oAddUeAsw.create = function create(properties) {
+        return new oAddUeAsw(properties);
+    };
+
+    /**
+     * Encodes the specified oAddUeAsw message. Does not implicitly {@link oAddUeAsw.verify|verify} messages.
+     * @function encode
+     * @memberof oAddUeAsw
+     * @static
+     * @param {IoAddUeAsw} message oAddUeAsw message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oAddUeAsw.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.code != null && Object.hasOwnProperty.call(message, "code"))
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.code);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oAddUeAsw message, length delimited. Does not implicitly {@link oAddUeAsw.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oAddUeAsw
+     * @static
+     * @param {IoAddUeAsw} message oAddUeAsw message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oAddUeAsw.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oAddUeAsw message from the specified reader or buffer.
+     * @function decode
+     * @memberof oAddUeAsw
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oAddUeAsw} oAddUeAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oAddUeAsw.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oAddUeAsw();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.code = reader.int32();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oAddUeAsw message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oAddUeAsw
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oAddUeAsw} oAddUeAsw
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oAddUeAsw.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oAddUeAsw message.
+     * @function verify
+     * @memberof oAddUeAsw
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oAddUeAsw.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.code != null && message.hasOwnProperty("code"))
+            switch (message.code) {
+            default:
+                return "code: enum value expected";
+            case 0:
+            case 1:
+            case 2:
+            case 41:
+            case 42:
+            case 43:
+            case 44:
+            case 51:
+            case 52:
+            case 53:
+            case 61:
+            case 62:
+            case 63:
+            case 64:
+            case 65:
+            case 71:
+            case 72:
+            case 73:
+            case 74:
+            case 75:
+            case 76:
+            case 77:
+            case 78:
+            case 80:
+            case 81:
+            case 82:
+            case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
+                break;
+            }
+        return null;
+    };
+
+    /**
+     * Creates a oAddUeAsw message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oAddUeAsw
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oAddUeAsw} oAddUeAsw
+     */
+    oAddUeAsw.fromObject = function fromObject(object) {
+        if (object instanceof $root.oAddUeAsw)
+            return object;
+        var message = new $root.oAddUeAsw();
+        switch (object.code) {
+        default:
+            if (typeof object.code === "number") {
+                message.code = object.code;
+                break;
+            }
+            break;
+        case "UNKNOWN":
+        case 0:
+            message.code = 0;
+            break;
+        case "SUCCESS":
+        case 1:
+            message.code = 1;
+            break;
+        case "FAILD":
+        case 2:
+            message.code = 2;
+            break;
+        case "ERROR_REQ_PARAM":
+        case 41:
+            message.code = 41;
+            break;
+        case "ERROR_OTHER_ROOM_OPEN":
+        case 42:
+            message.code = 42;
+            break;
+        case "ERROR_CREATE_ROOM_FAIL":
+        case 43:
+            message.code = 43;
+            break;
+        case "ERROR_ENTER_ROOM_FAIL":
+        case 44:
+            message.code = 44;
+            break;
+        case "EMPTY_INS_TOKEN":
+        case 51:
+            message.code = 51;
+            break;
+        case "UNSET_INS_TOKEN":
+        case 52:
+            message.code = 52;
+            break;
+        case "ERROR_INS_TOKEN":
+        case 53:
+            message.code = 53;
+            break;
+        case "ERROR_APP_SERVER_CONNECT_FAIL":
+        case 61:
+            message.code = 61;
+            break;
+        case "ERROR_APP_SERVER_RET_NOT_200":
+        case 62:
+            message.code = 62;
+            break;
+        case "ERROR_APP_SERVER_RET_NOT_JSON":
+        case 63:
+            message.code = 63;
+            break;
+        case "ERROR_APP_SERVER_RET_AUTH_FAIL":
+        case 64:
+            message.code = 64;
+            break;
+        case "ERROR_APP_SERVER_RET_CODE_FAIL":
+        case 65:
+            message.code = 65;
+            break;
+        case "ERROR_NO_ROOM":
+        case 71:
+            message.code = 71;
+            break;
+        case "ERROR_NOT_IN_ROOM":
+        case 72:
+            message.code = 72;
+            break;
+        case "ERROR_ALREADY_IN_STAGE":
+        case 73:
+            message.code = 73;
+            break;
+        case "ERROR_ALREADY_IN_QUEUE":
+        case 74:
+            message.code = 74;
+            break;
+        case "ERROR_ENTER_STAGE_FAIL":
+        case 75:
+            message.code = 75;
+            break;
+        case "ERROR_ENTER_STAGE_TIMEOUT":
+        case 76:
+            message.code = 76;
+            break;
+        case "ERROR_NOT_IN_STAGE":
+        case 77:
+            message.code = 77;
+            break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
+        case "ERROR_INVITER_NOT_IN_UE":
+        case 80:
+            message.code = 80;
+            break;
+        case "ERROR_INVITEE_NOT_IN_STAGE":
+        case 81:
+            message.code = 81;
+            break;
+        case "ERROR_INVITE_CONTEXT_NOT_EXIST":
+        case 82:
+            message.code = 82;
+            break;
+        case "ERROR_INVITEE_NOT_YOU":
+        case 83:
+            message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
+            break;
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oAddUeAsw message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oAddUeAsw
+     * @static
+     * @param {oAddUeAsw} message oAddUeAsw
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oAddUeAsw.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            object.code = options.enums === String ? "UNKNOWN" : 0;
+        if (message.code != null && message.hasOwnProperty("code"))
+            object.code = options.enums === String ? $root.eError[message.code] === undefined ? message.code : $root.eError[message.code] : message.code;
+        return object;
+    };
+
+    /**
+     * Converts this oAddUeAsw to JSON.
+     * @function toJSON
+     * @memberof oAddUeAsw
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oAddUeAsw.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oAddUeAsw
+     * @function getTypeUrl
+     * @memberof oAddUeAsw
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oAddUeAsw.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oAddUeAsw";
+    };
+
+    return oAddUeAsw;
+})();
+
+$root.oClientForwardMsgReq = (function() {
+
+    /**
+     * Properties of a oClientForwardMsgReq.
+     * @exports IoClientForwardMsgReq
+     * @interface IoClientForwardMsgReq
+     * @property {boolean|null} [toAll] oClientForwardMsgReq toAll
+     * @property {boolean|null} [toSelf] oClientForwardMsgReq toSelf
+     * @property {Array.<number|Long>|null} [toUserIds] oClientForwardMsgReq toUserIds
+     * @property {string|null} [content] oClientForwardMsgReq content
+     */
+
+    /**
+     * Constructs a new oClientForwardMsgReq.
+     * @exports oClientForwardMsgReq
+     * @classdesc Represents a oClientForwardMsgReq.
+     * @implements IoClientForwardMsgReq
+     * @constructor
+     * @param {IoClientForwardMsgReq=} [properties] Properties to set
+     */
+    function oClientForwardMsgReq(properties) {
+        this.toUserIds = [];
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oClientForwardMsgReq toAll.
+     * @member {boolean} toAll
+     * @memberof oClientForwardMsgReq
+     * @instance
+     */
+    oClientForwardMsgReq.prototype.toAll = false;
+
+    /**
+     * oClientForwardMsgReq toSelf.
+     * @member {boolean} toSelf
+     * @memberof oClientForwardMsgReq
+     * @instance
+     */
+    oClientForwardMsgReq.prototype.toSelf = false;
+
+    /**
+     * oClientForwardMsgReq toUserIds.
+     * @member {Array.<number|Long>} toUserIds
+     * @memberof oClientForwardMsgReq
+     * @instance
+     */
+    oClientForwardMsgReq.prototype.toUserIds = $util.emptyArray;
+
+    /**
+     * oClientForwardMsgReq content.
+     * @member {string} content
+     * @memberof oClientForwardMsgReq
+     * @instance
+     */
+    oClientForwardMsgReq.prototype.content = "";
+
+    /**
+     * Creates a new oClientForwardMsgReq instance using the specified properties.
+     * @function create
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {IoClientForwardMsgReq=} [properties] Properties to set
+     * @returns {oClientForwardMsgReq} oClientForwardMsgReq instance
+     */
+    oClientForwardMsgReq.create = function create(properties) {
+        return new oClientForwardMsgReq(properties);
+    };
+
+    /**
+     * Encodes the specified oClientForwardMsgReq message. Does not implicitly {@link oClientForwardMsgReq.verify|verify} messages.
+     * @function encode
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {IoClientForwardMsgReq} message oClientForwardMsgReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oClientForwardMsgReq.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.toAll != null && Object.hasOwnProperty.call(message, "toAll"))
+            writer.uint32(/* id 1, wireType 0 =*/8).bool(message.toAll);
+        if (message.toSelf != null && Object.hasOwnProperty.call(message, "toSelf"))
+            writer.uint32(/* id 2, wireType 0 =*/16).bool(message.toSelf);
+        if (message.toUserIds != null && message.toUserIds.length) {
+            writer.uint32(/* id 3, wireType 2 =*/26).fork();
+            for (var i = 0; i < message.toUserIds.length; ++i)
+                writer.uint64(message.toUserIds[i]);
+            writer.ldelim();
+        }
+        if (message.content != null && Object.hasOwnProperty.call(message, "content"))
+            writer.uint32(/* id 4, wireType 2 =*/34).string(message.content);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oClientForwardMsgReq message, length delimited. Does not implicitly {@link oClientForwardMsgReq.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {IoClientForwardMsgReq} message oClientForwardMsgReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oClientForwardMsgReq.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oClientForwardMsgReq message from the specified reader or buffer.
+     * @function decode
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oClientForwardMsgReq} oClientForwardMsgReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oClientForwardMsgReq.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oClientForwardMsgReq();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.toAll = reader.bool();
+                    break;
+                }
+            case 2: {
+                    message.toSelf = reader.bool();
+                    break;
+                }
+            case 3: {
+                    if (!(message.toUserIds && message.toUserIds.length))
+                        message.toUserIds = [];
+                    if ((tag & 7) === 2) {
+                        var end2 = reader.uint32() + reader.pos;
+                        while (reader.pos < end2)
+                            message.toUserIds.push(reader.uint64());
+                    } else
+                        message.toUserIds.push(reader.uint64());
+                    break;
+                }
+            case 4: {
+                    message.content = reader.string();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oClientForwardMsgReq message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oClientForwardMsgReq} oClientForwardMsgReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oClientForwardMsgReq.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oClientForwardMsgReq message.
+     * @function verify
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oClientForwardMsgReq.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.toAll != null && message.hasOwnProperty("toAll"))
+            if (typeof message.toAll !== "boolean")
+                return "toAll: boolean expected";
+        if (message.toSelf != null && message.hasOwnProperty("toSelf"))
+            if (typeof message.toSelf !== "boolean")
+                return "toSelf: boolean expected";
+        if (message.toUserIds != null && message.hasOwnProperty("toUserIds")) {
+            if (!Array.isArray(message.toUserIds))
+                return "toUserIds: array expected";
+            for (var i = 0; i < message.toUserIds.length; ++i)
+                if (!$util.isInteger(message.toUserIds[i]) && !(message.toUserIds[i] && $util.isInteger(message.toUserIds[i].low) && $util.isInteger(message.toUserIds[i].high)))
+                    return "toUserIds: integer|Long[] expected";
+        }
+        if (message.content != null && message.hasOwnProperty("content"))
+            if (!$util.isString(message.content))
+                return "content: string expected";
+        return null;
+    };
+
+    /**
+     * Creates a oClientForwardMsgReq message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oClientForwardMsgReq} oClientForwardMsgReq
+     */
+    oClientForwardMsgReq.fromObject = function fromObject(object) {
+        if (object instanceof $root.oClientForwardMsgReq)
+            return object;
+        var message = new $root.oClientForwardMsgReq();
+        if (object.toAll != null)
+            message.toAll = Boolean(object.toAll);
+        if (object.toSelf != null)
+            message.toSelf = Boolean(object.toSelf);
+        if (object.toUserIds) {
+            if (!Array.isArray(object.toUserIds))
+                throw TypeError(".oClientForwardMsgReq.toUserIds: array expected");
+            message.toUserIds = [];
+            for (var i = 0; i < object.toUserIds.length; ++i)
+                if ($util.Long)
+                    (message.toUserIds[i] = $util.Long.fromValue(object.toUserIds[i])).unsigned = true;
+                else if (typeof object.toUserIds[i] === "string")
+                    message.toUserIds[i] = parseInt(object.toUserIds[i], 10);
+                else if (typeof object.toUserIds[i] === "number")
+                    message.toUserIds[i] = object.toUserIds[i];
+                else if (typeof object.toUserIds[i] === "object")
+                    message.toUserIds[i] = new $util.LongBits(object.toUserIds[i].low >>> 0, object.toUserIds[i].high >>> 0).toNumber(true);
+        }
+        if (object.content != null)
+            message.content = String(object.content);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oClientForwardMsgReq message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {oClientForwardMsgReq} message oClientForwardMsgReq
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oClientForwardMsgReq.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.arrays || options.defaults)
+            object.toUserIds = [];
+        if (options.defaults) {
+            object.toAll = false;
+            object.toSelf = false;
+            object.content = "";
+        }
+        if (message.toAll != null && message.hasOwnProperty("toAll"))
+            object.toAll = message.toAll;
+        if (message.toSelf != null && message.hasOwnProperty("toSelf"))
+            object.toSelf = message.toSelf;
+        if (message.toUserIds && message.toUserIds.length) {
+            object.toUserIds = [];
+            for (var j = 0; j < message.toUserIds.length; ++j)
+                if (typeof message.toUserIds[j] === "number")
+                    object.toUserIds[j] = options.longs === String ? String(message.toUserIds[j]) : message.toUserIds[j];
+                else
+                    object.toUserIds[j] = options.longs === String ? $util.Long.prototype.toString.call(message.toUserIds[j]) : options.longs === Number ? new $util.LongBits(message.toUserIds[j].low >>> 0, message.toUserIds[j].high >>> 0).toNumber(true) : message.toUserIds[j];
+        }
+        if (message.content != null && message.hasOwnProperty("content"))
+            object.content = message.content;
+        return object;
+    };
+
+    /**
+     * Converts this oClientForwardMsgReq to JSON.
+     * @function toJSON
+     * @memberof oClientForwardMsgReq
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oClientForwardMsgReq.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oClientForwardMsgReq
+     * @function getTypeUrl
+     * @memberof oClientForwardMsgReq
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oClientForwardMsgReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oClientForwardMsgReq";
+    };
+
+    return oClientForwardMsgReq;
+})();
+
+$root.oClientForwardMsgPush = (function() {
+
+    /**
+     * Properties of a oClientForwardMsgPush.
+     * @exports IoClientForwardMsgPush
+     * @interface IoClientForwardMsgPush
+     * @property {number|null} [fromUserId] oClientForwardMsgPush fromUserId
+     * @property {string|null} [content] oClientForwardMsgPush content
+     */
+
+    /**
+     * Constructs a new oClientForwardMsgPush.
+     * @exports oClientForwardMsgPush
+     * @classdesc Represents a oClientForwardMsgPush.
+     * @implements IoClientForwardMsgPush
+     * @constructor
+     * @param {IoClientForwardMsgPush=} [properties] Properties to set
+     */
+    function oClientForwardMsgPush(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oClientForwardMsgPush fromUserId.
+     * @member {number} fromUserId
+     * @memberof oClientForwardMsgPush
+     * @instance
+     */
+    oClientForwardMsgPush.prototype.fromUserId = 0;
+
+    /**
+     * oClientForwardMsgPush content.
+     * @member {string} content
+     * @memberof oClientForwardMsgPush
+     * @instance
+     */
+    oClientForwardMsgPush.prototype.content = "";
+
+    /**
+     * Creates a new oClientForwardMsgPush instance using the specified properties.
+     * @function create
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {IoClientForwardMsgPush=} [properties] Properties to set
+     * @returns {oClientForwardMsgPush} oClientForwardMsgPush instance
+     */
+    oClientForwardMsgPush.create = function create(properties) {
+        return new oClientForwardMsgPush(properties);
+    };
+
+    /**
+     * Encodes the specified oClientForwardMsgPush message. Does not implicitly {@link oClientForwardMsgPush.verify|verify} messages.
+     * @function encode
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {IoClientForwardMsgPush} message oClientForwardMsgPush message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oClientForwardMsgPush.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.fromUserId != null && Object.hasOwnProperty.call(message, "fromUserId"))
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.fromUserId);
+        if (message.content != null && Object.hasOwnProperty.call(message, "content"))
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.content);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oClientForwardMsgPush message, length delimited. Does not implicitly {@link oClientForwardMsgPush.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {IoClientForwardMsgPush} message oClientForwardMsgPush message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oClientForwardMsgPush.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oClientForwardMsgPush message from the specified reader or buffer.
+     * @function decode
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oClientForwardMsgPush} oClientForwardMsgPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oClientForwardMsgPush.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oClientForwardMsgPush();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.fromUserId = reader.int32();
+                    break;
+                }
+            case 2: {
+                    message.content = reader.string();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oClientForwardMsgPush message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oClientForwardMsgPush} oClientForwardMsgPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oClientForwardMsgPush.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oClientForwardMsgPush message.
+     * @function verify
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oClientForwardMsgPush.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.fromUserId != null && message.hasOwnProperty("fromUserId"))
+            if (!$util.isInteger(message.fromUserId))
+                return "fromUserId: integer expected";
+        if (message.content != null && message.hasOwnProperty("content"))
+            if (!$util.isString(message.content))
+                return "content: string expected";
+        return null;
+    };
+
+    /**
+     * Creates a oClientForwardMsgPush message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oClientForwardMsgPush} oClientForwardMsgPush
+     */
+    oClientForwardMsgPush.fromObject = function fromObject(object) {
+        if (object instanceof $root.oClientForwardMsgPush)
+            return object;
+        var message = new $root.oClientForwardMsgPush();
+        if (object.fromUserId != null)
+            message.fromUserId = object.fromUserId | 0;
+        if (object.content != null)
+            message.content = String(object.content);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oClientForwardMsgPush message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {oClientForwardMsgPush} message oClientForwardMsgPush
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oClientForwardMsgPush.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults) {
+            object.fromUserId = 0;
+            object.content = "";
+        }
+        if (message.fromUserId != null && message.hasOwnProperty("fromUserId"))
+            object.fromUserId = message.fromUserId;
+        if (message.content != null && message.hasOwnProperty("content"))
+            object.content = message.content;
+        return object;
+    };
+
+    /**
+     * Converts this oClientForwardMsgPush to JSON.
+     * @function toJSON
+     * @memberof oClientForwardMsgPush
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oClientForwardMsgPush.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oClientForwardMsgPush
+     * @function getTypeUrl
+     * @memberof oClientForwardMsgPush
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oClientForwardMsgPush.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oClientForwardMsgPush";
+    };
+
+    return oClientForwardMsgPush;
 })();
 
 $root.oHeartBeatReq = (function() {
@@ -1955,6 +4589,26 @@ $root.oServerHeartBeat = (function() {
     return oServerHeartBeat;
 })();
 
+/**
+ * eClientType enum.
+ * @exports eClientType
+ * @enum {number}
+ * @property {number} ECT_Android=0 ECT_Android value
+ * @property {number} ECT_IOS=1 ECT_IOS value
+ * @property {number} ECT_H5=2 ECT_H5 value
+ * @property {number} ECT_Windows=3 ECT_Windows value
+ * @property {number} ECT_ClientTypeNum=4 ECT_ClientTypeNum value
+ */
+$root.eClientType = (function() {
+    var valuesById = {}, values = Object.create(valuesById);
+    values[valuesById[0] = "ECT_Android"] = 0;
+    values[valuesById[1] = "ECT_IOS"] = 1;
+    values[valuesById[2] = "ECT_H5"] = 2;
+    values[valuesById[3] = "ECT_Windows"] = 3;
+    values[valuesById[4] = "ECT_ClientTypeNum"] = 4;
+    return values;
+})();
+
 $root.oLoginReq = (function() {
 
     /**
@@ -1964,6 +4618,9 @@ $root.oLoginReq = (function() {
      * @property {number|Long|null} [account] oLoginReq account
      * @property {string|null} [token] oLoginReq token
      * @property {string|null} [insToken] oLoginReq insToken
+     * @property {Array.<number>|null} [priorityCities] oLoginReq priorityCities
+     * @property {eClientType|null} [clientType] oLoginReq clientType
+     * @property {string|null} [clientVersion] oLoginReq clientVersion
      */
 
     /**
@@ -1975,6 +4632,7 @@ $root.oLoginReq = (function() {
      * @param {IoLoginReq=} [properties] Properties to set
      */
     function oLoginReq(properties) {
+        this.priorityCities = [];
         if (properties)
             for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                 if (properties[keys[i]] != null)
@@ -2006,6 +4664,30 @@ $root.oLoginReq = (function() {
     oLoginReq.prototype.insToken = "";
 
     /**
+     * oLoginReq priorityCities.
+     * @member {Array.<number>} priorityCities
+     * @memberof oLoginReq
+     * @instance
+     */
+    oLoginReq.prototype.priorityCities = $util.emptyArray;
+
+    /**
+     * oLoginReq clientType.
+     * @member {eClientType} clientType
+     * @memberof oLoginReq
+     * @instance
+     */
+    oLoginReq.prototype.clientType = 0;
+
+    /**
+     * oLoginReq clientVersion.
+     * @member {string} clientVersion
+     * @memberof oLoginReq
+     * @instance
+     */
+    oLoginReq.prototype.clientVersion = "";
+
+    /**
      * Creates a new oLoginReq instance using the specified properties.
      * @function create
      * @memberof oLoginReq
@@ -2035,6 +4717,16 @@ $root.oLoginReq = (function() {
             writer.uint32(/* id 3, wireType 2 =*/26).string(message.token);
         if (message.insToken != null && Object.hasOwnProperty.call(message, "insToken"))
             writer.uint32(/* id 4, wireType 2 =*/34).string(message.insToken);
+        if (message.priorityCities != null && message.priorityCities.length) {
+            writer.uint32(/* id 5, wireType 2 =*/42).fork();
+            for (var i = 0; i < message.priorityCities.length; ++i)
+                writer.int32(message.priorityCities[i]);
+            writer.ldelim();
+        }
+        if (message.clientType != null && Object.hasOwnProperty.call(message, "clientType"))
+            writer.uint32(/* id 6, wireType 0 =*/48).int32(message.clientType);
+        if (message.clientVersion != null && Object.hasOwnProperty.call(message, "clientVersion"))
+            writer.uint32(/* id 7, wireType 2 =*/58).string(message.clientVersion);
         return writer;
     };
 
@@ -2083,6 +4775,25 @@ $root.oLoginReq = (function() {
                     message.insToken = reader.string();
                     break;
                 }
+            case 5: {
+                    if (!(message.priorityCities && message.priorityCities.length))
+                        message.priorityCities = [];
+                    if ((tag & 7) === 2) {
+                        var end2 = reader.uint32() + reader.pos;
+                        while (reader.pos < end2)
+                            message.priorityCities.push(reader.int32());
+                    } else
+                        message.priorityCities.push(reader.int32());
+                    break;
+                }
+            case 6: {
+                    message.clientType = reader.int32();
+                    break;
+                }
+            case 7: {
+                    message.clientVersion = reader.string();
+                    break;
+                }
             default:
                 reader.skipType(tag & 7);
                 break;
@@ -2127,6 +4838,27 @@ $root.oLoginReq = (function() {
         if (message.insToken != null && message.hasOwnProperty("insToken"))
             if (!$util.isString(message.insToken))
                 return "insToken: string expected";
+        if (message.priorityCities != null && message.hasOwnProperty("priorityCities")) {
+            if (!Array.isArray(message.priorityCities))
+                return "priorityCities: array expected";
+            for (var i = 0; i < message.priorityCities.length; ++i)
+                if (!$util.isInteger(message.priorityCities[i]))
+                    return "priorityCities: integer[] expected";
+        }
+        if (message.clientType != null && message.hasOwnProperty("clientType"))
+            switch (message.clientType) {
+            default:
+                return "clientType: enum value expected";
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                break;
+            }
+        if (message.clientVersion != null && message.hasOwnProperty("clientVersion"))
+            if (!$util.isString(message.clientVersion))
+                return "clientVersion: string expected";
         return null;
     };
 
@@ -2155,6 +4887,43 @@ $root.oLoginReq = (function() {
             message.token = String(object.token);
         if (object.insToken != null)
             message.insToken = String(object.insToken);
+        if (object.priorityCities) {
+            if (!Array.isArray(object.priorityCities))
+                throw TypeError(".oLoginReq.priorityCities: array expected");
+            message.priorityCities = [];
+            for (var i = 0; i < object.priorityCities.length; ++i)
+                message.priorityCities[i] = object.priorityCities[i] | 0;
+        }
+        switch (object.clientType) {
+        default:
+            if (typeof object.clientType === "number") {
+                message.clientType = object.clientType;
+                break;
+            }
+            break;
+        case "ECT_Android":
+        case 0:
+            message.clientType = 0;
+            break;
+        case "ECT_IOS":
+        case 1:
+            message.clientType = 1;
+            break;
+        case "ECT_H5":
+        case 2:
+            message.clientType = 2;
+            break;
+        case "ECT_Windows":
+        case 3:
+            message.clientType = 3;
+            break;
+        case "ECT_ClientTypeNum":
+        case 4:
+            message.clientType = 4;
+            break;
+        }
+        if (object.clientVersion != null)
+            message.clientVersion = String(object.clientVersion);
         return message;
     };
 
@@ -2171,6 +4940,8 @@ $root.oLoginReq = (function() {
         if (!options)
             options = {};
         var object = {};
+        if (options.arrays || options.defaults)
+            object.priorityCities = [];
         if (options.defaults) {
             if ($util.Long) {
                 var long = new $util.Long(0, 0, true);
@@ -2179,6 +4950,8 @@ $root.oLoginReq = (function() {
                 object.account = options.longs === String ? "0" : 0;
             object.token = "";
             object.insToken = "";
+            object.clientType = options.enums === String ? "ECT_Android" : 0;
+            object.clientVersion = "";
         }
         if (message.account != null && message.hasOwnProperty("account"))
             if (typeof message.account === "number")
@@ -2189,6 +4962,15 @@ $root.oLoginReq = (function() {
             object.token = message.token;
         if (message.insToken != null && message.hasOwnProperty("insToken"))
             object.insToken = message.insToken;
+        if (message.priorityCities && message.priorityCities.length) {
+            object.priorityCities = [];
+            for (var j = 0; j < message.priorityCities.length; ++j)
+                object.priorityCities[j] = message.priorityCities[j];
+        }
+        if (message.clientType != null && message.hasOwnProperty("clientType"))
+            object.clientType = options.enums === String ? $root.eClientType[message.clientType] === undefined ? message.clientType : $root.eClientType[message.clientType] : message.clientType;
+        if (message.clientVersion != null && message.hasOwnProperty("clientVersion"))
+            object.clientVersion = message.clientVersion;
         return object;
     };
 
@@ -2380,10 +5162,23 @@ $root.oLoginAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         return null;
@@ -2496,6 +5291,10 @@ $root.oLoginAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -2511,6 +5310,54 @@ $root.oLoginAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         return message;
@@ -2749,6 +5596,7 @@ $root.oSceneChangePush = (function() {
      * @exports IoSceneChangePush
      * @interface IoSceneChangePush
      * @property {string|null} [scene] oSceneChangePush scene
+     * @property {number|null} [ueId] oSceneChangePush ueId
      */
 
     /**
@@ -2773,6 +5621,14 @@ $root.oSceneChangePush = (function() {
      * @instance
      */
     oSceneChangePush.prototype.scene = "";
+
+    /**
+     * oSceneChangePush ueId.
+     * @member {number} ueId
+     * @memberof oSceneChangePush
+     * @instance
+     */
+    oSceneChangePush.prototype.ueId = 0;
 
     /**
      * Creates a new oSceneChangePush instance using the specified properties.
@@ -2800,6 +5656,8 @@ $root.oSceneChangePush = (function() {
             writer = $Writer.create();
         if (message.scene != null && Object.hasOwnProperty.call(message, "scene"))
             writer.uint32(/* id 1, wireType 2 =*/10).string(message.scene);
+        if (message.ueId != null && Object.hasOwnProperty.call(message, "ueId"))
+            writer.uint32(/* id 2, wireType 0 =*/16).int32(message.ueId);
         return writer;
     };
 
@@ -2840,6 +5698,10 @@ $root.oSceneChangePush = (function() {
                     message.scene = reader.string();
                     break;
                 }
+            case 2: {
+                    message.ueId = reader.int32();
+                    break;
+                }
             default:
                 reader.skipType(tag & 7);
                 break;
@@ -2878,6 +5740,9 @@ $root.oSceneChangePush = (function() {
         if (message.scene != null && message.hasOwnProperty("scene"))
             if (!$util.isString(message.scene))
                 return "scene: string expected";
+        if (message.ueId != null && message.hasOwnProperty("ueId"))
+            if (!$util.isInteger(message.ueId))
+                return "ueId: integer expected";
         return null;
     };
 
@@ -2895,6 +5760,8 @@ $root.oSceneChangePush = (function() {
         var message = new $root.oSceneChangePush();
         if (object.scene != null)
             message.scene = String(object.scene);
+        if (object.ueId != null)
+            message.ueId = object.ueId | 0;
         return message;
     };
 
@@ -2911,10 +5778,14 @@ $root.oSceneChangePush = (function() {
         if (!options)
             options = {};
         var object = {};
-        if (options.defaults)
+        if (options.defaults) {
             object.scene = "";
+            object.ueId = 0;
+        }
         if (message.scene != null && message.hasOwnProperty("scene"))
             object.scene = message.scene;
+        if (message.ueId != null && message.hasOwnProperty("ueId"))
+            object.ueId = message.ueId;
         return object;
     };
 
@@ -3403,10 +6274,23 @@ $root.oPlayAnimationPush = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.animId != null && message.hasOwnProperty("animId"))
@@ -3528,6 +6412,10 @@ $root.oPlayAnimationPush = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -3543,6 +6431,54 @@ $root.oPlayAnimationPush = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.animId != null)
@@ -5112,6 +8048,225 @@ $root.oChangeMapReq = (function() {
     return oChangeMapReq;
 })();
 
+$root.oChangeActionReq = (function() {
+
+    /**
+     * Properties of a oChangeActionReq.
+     * @exports IoChangeActionReq
+     * @interface IoChangeActionReq
+     * @property {number|Long|null} [actionId] oChangeActionReq actionId
+     */
+
+    /**
+     * Constructs a new oChangeActionReq.
+     * @exports oChangeActionReq
+     * @classdesc Represents a oChangeActionReq.
+     * @implements IoChangeActionReq
+     * @constructor
+     * @param {IoChangeActionReq=} [properties] Properties to set
+     */
+    function oChangeActionReq(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oChangeActionReq actionId.
+     * @member {number|Long} actionId
+     * @memberof oChangeActionReq
+     * @instance
+     */
+    oChangeActionReq.prototype.actionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+    /**
+     * Creates a new oChangeActionReq instance using the specified properties.
+     * @function create
+     * @memberof oChangeActionReq
+     * @static
+     * @param {IoChangeActionReq=} [properties] Properties to set
+     * @returns {oChangeActionReq} oChangeActionReq instance
+     */
+    oChangeActionReq.create = function create(properties) {
+        return new oChangeActionReq(properties);
+    };
+
+    /**
+     * Encodes the specified oChangeActionReq message. Does not implicitly {@link oChangeActionReq.verify|verify} messages.
+     * @function encode
+     * @memberof oChangeActionReq
+     * @static
+     * @param {IoChangeActionReq} message oChangeActionReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oChangeActionReq.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.actionId != null && Object.hasOwnProperty.call(message, "actionId"))
+            writer.uint32(/* id 1, wireType 0 =*/8).int64(message.actionId);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oChangeActionReq message, length delimited. Does not implicitly {@link oChangeActionReq.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oChangeActionReq
+     * @static
+     * @param {IoChangeActionReq} message oChangeActionReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oChangeActionReq.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oChangeActionReq message from the specified reader or buffer.
+     * @function decode
+     * @memberof oChangeActionReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oChangeActionReq} oChangeActionReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oChangeActionReq.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oChangeActionReq();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.actionId = reader.int64();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oChangeActionReq message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oChangeActionReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oChangeActionReq} oChangeActionReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oChangeActionReq.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oChangeActionReq message.
+     * @function verify
+     * @memberof oChangeActionReq
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oChangeActionReq.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.actionId != null && message.hasOwnProperty("actionId"))
+            if (!$util.isInteger(message.actionId) && !(message.actionId && $util.isInteger(message.actionId.low) && $util.isInteger(message.actionId.high)))
+                return "actionId: integer|Long expected";
+        return null;
+    };
+
+    /**
+     * Creates a oChangeActionReq message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oChangeActionReq
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oChangeActionReq} oChangeActionReq
+     */
+    oChangeActionReq.fromObject = function fromObject(object) {
+        if (object instanceof $root.oChangeActionReq)
+            return object;
+        var message = new $root.oChangeActionReq();
+        if (object.actionId != null)
+            if ($util.Long)
+                (message.actionId = $util.Long.fromValue(object.actionId)).unsigned = false;
+            else if (typeof object.actionId === "string")
+                message.actionId = parseInt(object.actionId, 10);
+            else if (typeof object.actionId === "number")
+                message.actionId = object.actionId;
+            else if (typeof object.actionId === "object")
+                message.actionId = new $util.LongBits(object.actionId.low >>> 0, object.actionId.high >>> 0).toNumber();
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oChangeActionReq message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oChangeActionReq
+     * @static
+     * @param {oChangeActionReq} message oChangeActionReq
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oChangeActionReq.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            if ($util.Long) {
+                var long = new $util.Long(0, 0, false);
+                object.actionId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+            } else
+                object.actionId = options.longs === String ? "0" : 0;
+        if (message.actionId != null && message.hasOwnProperty("actionId"))
+            if (typeof message.actionId === "number")
+                object.actionId = options.longs === String ? String(message.actionId) : message.actionId;
+            else
+                object.actionId = options.longs === String ? $util.Long.prototype.toString.call(message.actionId) : options.longs === Number ? new $util.LongBits(message.actionId.low >>> 0, message.actionId.high >>> 0).toNumber() : message.actionId;
+        return object;
+    };
+
+    /**
+     * Converts this oChangeActionReq to JSON.
+     * @function toJSON
+     * @memberof oChangeActionReq
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oChangeActionReq.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oChangeActionReq
+     * @function getTypeUrl
+     * @memberof oChangeActionReq
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oChangeActionReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oChangeActionReq";
+    };
+
+    return oChangeActionReq;
+})();
+
 $root.oChangeRtcStatePush = (function() {
 
     /**
@@ -5301,10 +8456,23 @@ $root.oChangeRtcStatePush = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.type != null && message.hasOwnProperty("type"))
@@ -5429,6 +8597,10 @@ $root.oChangeRtcStatePush = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -5444,6 +8616,54 @@ $root.oChangeRtcStatePush = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         switch (object.type) {
@@ -5731,10 +8951,23 @@ $root.oQueryCurrencyPush = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.Currency != null && message.hasOwnProperty("Currency"))
@@ -5863,6 +9096,10 @@ $root.oQueryCurrencyPush = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -5878,6 +9115,54 @@ $root.oQueryCurrencyPush = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.Currency != null)
@@ -6443,10 +9728,23 @@ $root.oChangeMapPush = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.mapName != null && message.hasOwnProperty("mapName"))
@@ -6562,6 +9860,10 @@ $root.oChangeMapPush = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -6577,6 +9879,54 @@ $root.oChangeMapPush = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.mapName != null)
@@ -7107,10 +10457,23 @@ $root.oChangeGarmentPush = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.garment1 != null && message.hasOwnProperty("garment1")) {
@@ -7238,6 +10601,10 @@ $root.oChangeGarmentPush = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -7253,6 +10620,54 @@ $root.oChangeGarmentPush = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.garment1 != null) {
@@ -8047,6 +11462,7 @@ $root.oTouchScreenReq = (function() {
      * @property {eTouchType|null} [touchType] oTouchScreenReq touchType
      * @property {IoVector3|null} [pos] oTouchScreenReq pos
      * @property {number|Long|null} [timestamp] oTouchScreenReq timestamp
+     * @property {number|Long|null} [userid] oTouchScreenReq userid
      */
 
     /**
@@ -8089,6 +11505,14 @@ $root.oTouchScreenReq = (function() {
     oTouchScreenReq.prototype.timestamp = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
 
     /**
+     * oTouchScreenReq userid.
+     * @member {number|Long} userid
+     * @memberof oTouchScreenReq
+     * @instance
+     */
+    oTouchScreenReq.prototype.userid = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+    /**
      * Creates a new oTouchScreenReq instance using the specified properties.
      * @function create
      * @memberof oTouchScreenReq
@@ -8118,6 +11542,8 @@ $root.oTouchScreenReq = (function() {
             $root.oVector3.encode(message.pos, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
         if (message.timestamp != null && Object.hasOwnProperty.call(message, "timestamp"))
             writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.timestamp);
+        if (message.userid != null && Object.hasOwnProperty.call(message, "userid"))
+            writer.uint32(/* id 4, wireType 0 =*/32).uint64(message.userid);
         return writer;
     };
 
@@ -8164,6 +11590,10 @@ $root.oTouchScreenReq = (function() {
                 }
             case 3: {
                     message.timestamp = reader.uint64();
+                    break;
+                }
+            case 4: {
+                    message.userid = reader.uint64();
                     break;
                 }
             default:
@@ -8218,6 +11648,9 @@ $root.oTouchScreenReq = (function() {
         if (message.timestamp != null && message.hasOwnProperty("timestamp"))
             if (!$util.isInteger(message.timestamp) && !(message.timestamp && $util.isInteger(message.timestamp.low) && $util.isInteger(message.timestamp.high)))
                 return "timestamp: integer|Long expected";
+        if (message.userid != null && message.hasOwnProperty("userid"))
+            if (!$util.isInteger(message.userid) && !(message.userid && $util.isInteger(message.userid.low) && $util.isInteger(message.userid.high)))
+                return "userid: integer|Long expected";
         return null;
     };
 
@@ -8267,6 +11700,15 @@ $root.oTouchScreenReq = (function() {
                 message.timestamp = object.timestamp;
             else if (typeof object.timestamp === "object")
                 message.timestamp = new $util.LongBits(object.timestamp.low >>> 0, object.timestamp.high >>> 0).toNumber(true);
+        if (object.userid != null)
+            if ($util.Long)
+                (message.userid = $util.Long.fromValue(object.userid)).unsigned = true;
+            else if (typeof object.userid === "string")
+                message.userid = parseInt(object.userid, 10);
+            else if (typeof object.userid === "number")
+                message.userid = object.userid;
+            else if (typeof object.userid === "object")
+                message.userid = new $util.LongBits(object.userid.low >>> 0, object.userid.high >>> 0).toNumber(true);
         return message;
     };
 
@@ -8291,6 +11733,11 @@ $root.oTouchScreenReq = (function() {
                 object.timestamp = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
             } else
                 object.timestamp = options.longs === String ? "0" : 0;
+            if ($util.Long) {
+                var long = new $util.Long(0, 0, true);
+                object.userid = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+            } else
+                object.userid = options.longs === String ? "0" : 0;
         }
         if (message.touchType != null && message.hasOwnProperty("touchType"))
             object.touchType = options.enums === String ? $root.eTouchType[message.touchType] === undefined ? message.touchType : $root.eTouchType[message.touchType] : message.touchType;
@@ -8301,6 +11748,11 @@ $root.oTouchScreenReq = (function() {
                 object.timestamp = options.longs === String ? String(message.timestamp) : message.timestamp;
             else
                 object.timestamp = options.longs === String ? $util.Long.prototype.toString.call(message.timestamp) : options.longs === Number ? new $util.LongBits(message.timestamp.low >>> 0, message.timestamp.high >>> 0).toNumber(true) : message.timestamp;
+        if (message.userid != null && message.hasOwnProperty("userid"))
+            if (typeof message.userid === "number")
+                object.userid = options.longs === String ? String(message.userid) : message.userid;
+            else
+                object.userid = options.longs === String ? $util.Long.prototype.toString.call(message.userid) : options.longs === Number ? new $util.LongBits(message.userid.low >>> 0, message.userid.high >>> 0).toNumber(true) : message.userid;
         return object;
     };
 
@@ -8576,6 +12028,692 @@ $root.oTouchScreenPush = (function() {
     return oTouchScreenPush;
 })();
 
+$root.oGetImagesInfoReq = (function() {
+
+    /**
+     * Properties of a oGetImagesInfoReq.
+     * @exports IoGetImagesInfoReq
+     * @interface IoGetImagesInfoReq
+     * @property {number|Long|null} [videoId] oGetImagesInfoReq videoId
+     * @property {Array.<number|Long>|null} [imageId] oGetImagesInfoReq imageId
+     */
+
+    /**
+     * Constructs a new oGetImagesInfoReq.
+     * @exports oGetImagesInfoReq
+     * @classdesc Represents a oGetImagesInfoReq.
+     * @implements IoGetImagesInfoReq
+     * @constructor
+     * @param {IoGetImagesInfoReq=} [properties] Properties to set
+     */
+    function oGetImagesInfoReq(properties) {
+        this.imageId = [];
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oGetImagesInfoReq videoId.
+     * @member {number|Long} videoId
+     * @memberof oGetImagesInfoReq
+     * @instance
+     */
+    oGetImagesInfoReq.prototype.videoId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+    /**
+     * oGetImagesInfoReq imageId.
+     * @member {Array.<number|Long>} imageId
+     * @memberof oGetImagesInfoReq
+     * @instance
+     */
+    oGetImagesInfoReq.prototype.imageId = $util.emptyArray;
+
+    /**
+     * Creates a new oGetImagesInfoReq instance using the specified properties.
+     * @function create
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {IoGetImagesInfoReq=} [properties] Properties to set
+     * @returns {oGetImagesInfoReq} oGetImagesInfoReq instance
+     */
+    oGetImagesInfoReq.create = function create(properties) {
+        return new oGetImagesInfoReq(properties);
+    };
+
+    /**
+     * Encodes the specified oGetImagesInfoReq message. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
+     * @function encode
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {IoGetImagesInfoReq} message oGetImagesInfoReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oGetImagesInfoReq.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.videoId != null && Object.hasOwnProperty.call(message, "videoId"))
+            writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.videoId);
+        if (message.imageId != null && message.imageId.length) {
+            writer.uint32(/* id 2, wireType 2 =*/18).fork();
+            for (var i = 0; i < message.imageId.length; ++i)
+                writer.uint64(message.imageId[i]);
+            writer.ldelim();
+        }
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oGetImagesInfoReq message, length delimited. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {IoGetImagesInfoReq} message oGetImagesInfoReq message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oGetImagesInfoReq.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oGetImagesInfoReq message from the specified reader or buffer.
+     * @function decode
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oGetImagesInfoReq.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oGetImagesInfoReq();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.videoId = reader.uint64();
+                    break;
+                }
+            case 2: {
+                    if (!(message.imageId && message.imageId.length))
+                        message.imageId = [];
+                    if ((tag & 7) === 2) {
+                        var end2 = reader.uint32() + reader.pos;
+                        while (reader.pos < end2)
+                            message.imageId.push(reader.uint64());
+                    } else
+                        message.imageId.push(reader.uint64());
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oGetImagesInfoReq message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oGetImagesInfoReq.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oGetImagesInfoReq message.
+     * @function verify
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oGetImagesInfoReq.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.videoId != null && message.hasOwnProperty("videoId"))
+            if (!$util.isInteger(message.videoId) && !(message.videoId && $util.isInteger(message.videoId.low) && $util.isInteger(message.videoId.high)))
+                return "videoId: integer|Long expected";
+        if (message.imageId != null && message.hasOwnProperty("imageId")) {
+            if (!Array.isArray(message.imageId))
+                return "imageId: array expected";
+            for (var i = 0; i < message.imageId.length; ++i)
+                if (!$util.isInteger(message.imageId[i]) && !(message.imageId[i] && $util.isInteger(message.imageId[i].low) && $util.isInteger(message.imageId[i].high)))
+                    return "imageId: integer|Long[] expected";
+        }
+        return null;
+    };
+
+    /**
+     * Creates a oGetImagesInfoReq message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
+     */
+    oGetImagesInfoReq.fromObject = function fromObject(object) {
+        if (object instanceof $root.oGetImagesInfoReq)
+            return object;
+        var message = new $root.oGetImagesInfoReq();
+        if (object.videoId != null)
+            if ($util.Long)
+                (message.videoId = $util.Long.fromValue(object.videoId)).unsigned = true;
+            else if (typeof object.videoId === "string")
+                message.videoId = parseInt(object.videoId, 10);
+            else if (typeof object.videoId === "number")
+                message.videoId = object.videoId;
+            else if (typeof object.videoId === "object")
+                message.videoId = new $util.LongBits(object.videoId.low >>> 0, object.videoId.high >>> 0).toNumber(true);
+        if (object.imageId) {
+            if (!Array.isArray(object.imageId))
+                throw TypeError(".oGetImagesInfoReq.imageId: array expected");
+            message.imageId = [];
+            for (var i = 0; i < object.imageId.length; ++i)
+                if ($util.Long)
+                    (message.imageId[i] = $util.Long.fromValue(object.imageId[i])).unsigned = true;
+                else if (typeof object.imageId[i] === "string")
+                    message.imageId[i] = parseInt(object.imageId[i], 10);
+                else if (typeof object.imageId[i] === "number")
+                    message.imageId[i] = object.imageId[i];
+                else if (typeof object.imageId[i] === "object")
+                    message.imageId[i] = new $util.LongBits(object.imageId[i].low >>> 0, object.imageId[i].high >>> 0).toNumber(true);
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oGetImagesInfoReq message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {oGetImagesInfoReq} message oGetImagesInfoReq
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oGetImagesInfoReq.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.arrays || options.defaults)
+            object.imageId = [];
+        if (options.defaults)
+            if ($util.Long) {
+                var long = new $util.Long(0, 0, true);
+                object.videoId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+            } else
+                object.videoId = options.longs === String ? "0" : 0;
+        if (message.videoId != null && message.hasOwnProperty("videoId"))
+            if (typeof message.videoId === "number")
+                object.videoId = options.longs === String ? String(message.videoId) : message.videoId;
+            else
+                object.videoId = options.longs === String ? $util.Long.prototype.toString.call(message.videoId) : options.longs === Number ? new $util.LongBits(message.videoId.low >>> 0, message.videoId.high >>> 0).toNumber(true) : message.videoId;
+        if (message.imageId && message.imageId.length) {
+            object.imageId = [];
+            for (var j = 0; j < message.imageId.length; ++j)
+                if (typeof message.imageId[j] === "number")
+                    object.imageId[j] = options.longs === String ? String(message.imageId[j]) : message.imageId[j];
+                else
+                    object.imageId[j] = options.longs === String ? $util.Long.prototype.toString.call(message.imageId[j]) : options.longs === Number ? new $util.LongBits(message.imageId[j].low >>> 0, message.imageId[j].high >>> 0).toNumber(true) : message.imageId[j];
+        }
+        return object;
+    };
+
+    /**
+     * Converts this oGetImagesInfoReq to JSON.
+     * @function toJSON
+     * @memberof oGetImagesInfoReq
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oGetImagesInfoReq.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oGetImagesInfoReq
+     * @function getTypeUrl
+     * @memberof oGetImagesInfoReq
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oGetImagesInfoReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oGetImagesInfoReq";
+    };
+
+    return oGetImagesInfoReq;
+})();
+
+$root.oGetImagesInfoPush = (function() {
+
+    /**
+     * Properties of a oGetImagesInfoPush.
+     * @exports IoGetImagesInfoPush
+     * @interface IoGetImagesInfoPush
+     * @property {eError|null} [code] oGetImagesInfoPush code
+     */
+
+    /**
+     * Constructs a new oGetImagesInfoPush.
+     * @exports oGetImagesInfoPush
+     * @classdesc Represents a oGetImagesInfoPush.
+     * @implements IoGetImagesInfoPush
+     * @constructor
+     * @param {IoGetImagesInfoPush=} [properties] Properties to set
+     */
+    function oGetImagesInfoPush(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oGetImagesInfoPush code.
+     * @member {eError} code
+     * @memberof oGetImagesInfoPush
+     * @instance
+     */
+    oGetImagesInfoPush.prototype.code = 0;
+
+    /**
+     * Creates a new oGetImagesInfoPush instance using the specified properties.
+     * @function create
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {IoGetImagesInfoPush=} [properties] Properties to set
+     * @returns {oGetImagesInfoPush} oGetImagesInfoPush instance
+     */
+    oGetImagesInfoPush.create = function create(properties) {
+        return new oGetImagesInfoPush(properties);
+    };
+
+    /**
+     * Encodes the specified oGetImagesInfoPush message. Does not implicitly {@link oGetImagesInfoPush.verify|verify} messages.
+     * @function encode
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {IoGetImagesInfoPush} message oGetImagesInfoPush message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oGetImagesInfoPush.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.code != null && Object.hasOwnProperty.call(message, "code"))
+            writer.uint32(/* id 1, wireType 0 =*/8).int32(message.code);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oGetImagesInfoPush message, length delimited. Does not implicitly {@link oGetImagesInfoPush.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {IoGetImagesInfoPush} message oGetImagesInfoPush message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oGetImagesInfoPush.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oGetImagesInfoPush message from the specified reader or buffer.
+     * @function decode
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oGetImagesInfoPush} oGetImagesInfoPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oGetImagesInfoPush.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oGetImagesInfoPush();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.code = reader.int32();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oGetImagesInfoPush message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oGetImagesInfoPush} oGetImagesInfoPush
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oGetImagesInfoPush.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oGetImagesInfoPush message.
+     * @function verify
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oGetImagesInfoPush.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.code != null && message.hasOwnProperty("code"))
+            switch (message.code) {
+            default:
+                return "code: enum value expected";
+            case 0:
+            case 1:
+            case 2:
+            case 41:
+            case 42:
+            case 43:
+            case 44:
+            case 51:
+            case 52:
+            case 53:
+            case 61:
+            case 62:
+            case 63:
+            case 64:
+            case 65:
+            case 71:
+            case 72:
+            case 73:
+            case 74:
+            case 75:
+            case 76:
+            case 77:
+            case 78:
+            case 80:
+            case 81:
+            case 82:
+            case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
+                break;
+            }
+        return null;
+    };
+
+    /**
+     * Creates a oGetImagesInfoPush message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oGetImagesInfoPush} oGetImagesInfoPush
+     */
+    oGetImagesInfoPush.fromObject = function fromObject(object) {
+        if (object instanceof $root.oGetImagesInfoPush)
+            return object;
+        var message = new $root.oGetImagesInfoPush();
+        switch (object.code) {
+        default:
+            if (typeof object.code === "number") {
+                message.code = object.code;
+                break;
+            }
+            break;
+        case "UNKNOWN":
+        case 0:
+            message.code = 0;
+            break;
+        case "SUCCESS":
+        case 1:
+            message.code = 1;
+            break;
+        case "FAILD":
+        case 2:
+            message.code = 2;
+            break;
+        case "ERROR_REQ_PARAM":
+        case 41:
+            message.code = 41;
+            break;
+        case "ERROR_OTHER_ROOM_OPEN":
+        case 42:
+            message.code = 42;
+            break;
+        case "ERROR_CREATE_ROOM_FAIL":
+        case 43:
+            message.code = 43;
+            break;
+        case "ERROR_ENTER_ROOM_FAIL":
+        case 44:
+            message.code = 44;
+            break;
+        case "EMPTY_INS_TOKEN":
+        case 51:
+            message.code = 51;
+            break;
+        case "UNSET_INS_TOKEN":
+        case 52:
+            message.code = 52;
+            break;
+        case "ERROR_INS_TOKEN":
+        case 53:
+            message.code = 53;
+            break;
+        case "ERROR_APP_SERVER_CONNECT_FAIL":
+        case 61:
+            message.code = 61;
+            break;
+        case "ERROR_APP_SERVER_RET_NOT_200":
+        case 62:
+            message.code = 62;
+            break;
+        case "ERROR_APP_SERVER_RET_NOT_JSON":
+        case 63:
+            message.code = 63;
+            break;
+        case "ERROR_APP_SERVER_RET_AUTH_FAIL":
+        case 64:
+            message.code = 64;
+            break;
+        case "ERROR_APP_SERVER_RET_CODE_FAIL":
+        case 65:
+            message.code = 65;
+            break;
+        case "ERROR_NO_ROOM":
+        case 71:
+            message.code = 71;
+            break;
+        case "ERROR_NOT_IN_ROOM":
+        case 72:
+            message.code = 72;
+            break;
+        case "ERROR_ALREADY_IN_STAGE":
+        case 73:
+            message.code = 73;
+            break;
+        case "ERROR_ALREADY_IN_QUEUE":
+        case 74:
+            message.code = 74;
+            break;
+        case "ERROR_ENTER_STAGE_FAIL":
+        case 75:
+            message.code = 75;
+            break;
+        case "ERROR_ENTER_STAGE_TIMEOUT":
+        case 76:
+            message.code = 76;
+            break;
+        case "ERROR_NOT_IN_STAGE":
+        case 77:
+            message.code = 77;
+            break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
+        case "ERROR_INVITER_NOT_IN_UE":
+        case 80:
+            message.code = 80;
+            break;
+        case "ERROR_INVITEE_NOT_IN_STAGE":
+        case 81:
+            message.code = 81;
+            break;
+        case "ERROR_INVITE_CONTEXT_NOT_EXIST":
+        case 82:
+            message.code = 82;
+            break;
+        case "ERROR_INVITEE_NOT_YOU":
+        case 83:
+            message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
+            break;
+        }
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oGetImagesInfoPush message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {oGetImagesInfoPush} message oGetImagesInfoPush
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oGetImagesInfoPush.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            object.code = options.enums === String ? "UNKNOWN" : 0;
+        if (message.code != null && message.hasOwnProperty("code"))
+            object.code = options.enums === String ? $root.eError[message.code] === undefined ? message.code : $root.eError[message.code] : message.code;
+        return object;
+    };
+
+    /**
+     * Converts this oGetImagesInfoPush to JSON.
+     * @function toJSON
+     * @memberof oGetImagesInfoPush
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oGetImagesInfoPush.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oGetImagesInfoPush
+     * @function getTypeUrl
+     * @memberof oGetImagesInfoPush
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oGetImagesInfoPush.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oGetImagesInfoPush";
+    };
+
+    return oGetImagesInfoPush;
+})();
+
 $root.oEnterRoomReq = (function() {
 
     /**
@@ -8583,6 +12721,7 @@ $root.oEnterRoomReq = (function() {
      * @exports IoEnterRoomReq
      * @interface IoEnterRoomReq
      * @property {number|Long|null} [roomId] oEnterRoomReq roomId
+     * @property {string|null} [content] oEnterRoomReq content
      */
 
     /**
@@ -8607,6 +12746,14 @@ $root.oEnterRoomReq = (function() {
      * @instance
      */
     oEnterRoomReq.prototype.roomId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+    /**
+     * oEnterRoomReq content.
+     * @member {string} content
+     * @memberof oEnterRoomReq
+     * @instance
+     */
+    oEnterRoomReq.prototype.content = "";
 
     /**
      * Creates a new oEnterRoomReq instance using the specified properties.
@@ -8634,6 +12781,8 @@ $root.oEnterRoomReq = (function() {
             writer = $Writer.create();
         if (message.roomId != null && Object.hasOwnProperty.call(message, "roomId"))
             writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.roomId);
+        if (message.content != null && Object.hasOwnProperty.call(message, "content"))
+            writer.uint32(/* id 2, wireType 2 =*/18).string(message.content);
         return writer;
     };
 
@@ -8674,6 +12823,10 @@ $root.oEnterRoomReq = (function() {
                     message.roomId = reader.uint64();
                     break;
                 }
+            case 2: {
+                    message.content = reader.string();
+                    break;
+                }
             default:
                 reader.skipType(tag & 7);
                 break;
@@ -8712,6 +12865,9 @@ $root.oEnterRoomReq = (function() {
         if (message.roomId != null && message.hasOwnProperty("roomId"))
             if (!$util.isInteger(message.roomId) && !(message.roomId && $util.isInteger(message.roomId.low) && $util.isInteger(message.roomId.high)))
                 return "roomId: integer|Long expected";
+        if (message.content != null && message.hasOwnProperty("content"))
+            if (!$util.isString(message.content))
+                return "content: string expected";
         return null;
     };
 
@@ -8736,6 +12892,8 @@ $root.oEnterRoomReq = (function() {
                 message.roomId = object.roomId;
             else if (typeof object.roomId === "object")
                 message.roomId = new $util.LongBits(object.roomId.low >>> 0, object.roomId.high >>> 0).toNumber(true);
+        if (object.content != null)
+            message.content = String(object.content);
         return message;
     };
 
@@ -8752,17 +12910,21 @@ $root.oEnterRoomReq = (function() {
         if (!options)
             options = {};
         var object = {};
-        if (options.defaults)
+        if (options.defaults) {
             if ($util.Long) {
                 var long = new $util.Long(0, 0, true);
                 object.roomId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
             } else
                 object.roomId = options.longs === String ? "0" : 0;
+            object.content = "";
+        }
         if (message.roomId != null && message.hasOwnProperty("roomId"))
             if (typeof message.roomId === "number")
                 object.roomId = options.longs === String ? String(message.roomId) : message.roomId;
             else
                 object.roomId = options.longs === String ? $util.Long.prototype.toString.call(message.roomId) : options.longs === Number ? new $util.LongBits(message.roomId.low >>> 0, message.roomId.high >>> 0).toNumber(true) : message.roomId;
+        if (message.content != null && message.hasOwnProperty("content"))
+            object.content = message.content;
         return object;
     };
 
@@ -8825,6 +12987,7 @@ $root.oStageInfo = (function() {
      * @property {number|Long|null} [onStageUserId] oStageInfo onStageUserId
      * @property {string|null} [rtcToken] oStageInfo rtcToken
      * @property {eStageType|null} [stageType] oStageInfo stageType
+     * @property {number|null} [ueId] oStageInfo ueId
      */
 
     /**
@@ -8875,6 +13038,14 @@ $root.oStageInfo = (function() {
     oStageInfo.prototype.stageType = 0;
 
     /**
+     * oStageInfo ueId.
+     * @member {number} ueId
+     * @memberof oStageInfo
+     * @instance
+     */
+    oStageInfo.prototype.ueId = 0;
+
+    /**
      * Creates a new oStageInfo instance using the specified properties.
      * @function create
      * @memberof oStageInfo
@@ -8906,6 +13077,8 @@ $root.oStageInfo = (function() {
             writer.uint32(/* id 3, wireType 2 =*/26).string(message.rtcToken);
         if (message.stageType != null && Object.hasOwnProperty.call(message, "stageType"))
             writer.uint32(/* id 4, wireType 0 =*/32).int32(message.stageType);
+        if (message.ueId != null && Object.hasOwnProperty.call(message, "ueId"))
+            writer.uint32(/* id 5, wireType 0 =*/40).int32(message.ueId);
         return writer;
     };
 
@@ -8956,6 +13129,10 @@ $root.oStageInfo = (function() {
                 }
             case 4: {
                     message.stageType = reader.int32();
+                    break;
+                }
+            case 5: {
+                    message.ueId = reader.int32();
                     break;
                 }
             default:
@@ -9013,6 +13190,9 @@ $root.oStageInfo = (function() {
             case 4:
                 break;
             }
+        if (message.ueId != null && message.hasOwnProperty("ueId"))
+            if (!$util.isInteger(message.ueId))
+                return "ueId: integer expected";
         return null;
     };
 
@@ -9076,6 +13256,8 @@ $root.oStageInfo = (function() {
             message.stageType = 4;
             break;
         }
+        if (object.ueId != null)
+            message.ueId = object.ueId | 0;
         return message;
     };
 
@@ -9105,6 +13287,7 @@ $root.oStageInfo = (function() {
                 object.onStageUserId = options.longs === String ? "0" : 0;
             object.rtcToken = "";
             object.stageType = options.enums === String ? "StageTypeFree" : 0;
+            object.ueId = 0;
         }
         if (message.stageId != null && message.hasOwnProperty("stageId"))
             if (typeof message.stageId === "number")
@@ -9120,6 +13303,8 @@ $root.oStageInfo = (function() {
             object.rtcToken = message.rtcToken;
         if (message.stageType != null && message.hasOwnProperty("stageType"))
             object.stageType = options.enums === String ? $root.eStageType[message.stageType] === undefined ? message.stageType : $root.eStageType[message.stageType] : message.stageType;
+        if (message.ueId != null && message.hasOwnProperty("ueId"))
+            object.ueId = message.ueId;
         return object;
     };
 
@@ -9168,6 +13353,7 @@ $root.oEnterRoomAsw = (function() {
      * @property {string|null} [scene] oEnterRoomAsw scene
      * @property {boolean|null} [allMute] oEnterRoomAsw allMute
      * @property {Array.<number|Long>|null} [muteUsers] oEnterRoomAsw muteUsers
+     * @property {string|null} [content] oEnterRoomAsw content
      */
 
     /**
@@ -9270,6 +13456,14 @@ $root.oEnterRoomAsw = (function() {
     oEnterRoomAsw.prototype.muteUsers = $util.emptyArray;
 
     /**
+     * oEnterRoomAsw content.
+     * @member {string} content
+     * @memberof oEnterRoomAsw
+     * @instance
+     */
+    oEnterRoomAsw.prototype.content = "";
+
+    /**
      * Creates a new oEnterRoomAsw instance using the specified properties.
      * @function create
      * @memberof oEnterRoomAsw
@@ -9323,6 +13517,8 @@ $root.oEnterRoomAsw = (function() {
                 writer.uint64(message.muteUsers[i]);
             writer.ldelim();
         }
+        if (message.content != null && Object.hasOwnProperty.call(message, "content"))
+            writer.uint32(/* id 11, wireType 2 =*/90).string(message.content);
         return writer;
     };
 
@@ -9417,6 +13613,10 @@ $root.oEnterRoomAsw = (function() {
                         message.muteUsers.push(reader.uint64());
                     break;
                 }
+            case 11: {
+                    message.content = reader.string();
+                    break;
+                }
             default:
                 reader.skipType(tag & 7);
                 break;
@@ -9478,10 +13678,23 @@ $root.oEnterRoomAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.roomId != null && message.hasOwnProperty("roomId"))
@@ -9531,6 +13744,9 @@ $root.oEnterRoomAsw = (function() {
                 if (!$util.isInteger(message.muteUsers[i]) && !(message.muteUsers[i] && $util.isInteger(message.muteUsers[i].low) && $util.isInteger(message.muteUsers[i].high)))
                     return "muteUsers: integer|Long[] expected";
         }
+        if (message.content != null && message.hasOwnProperty("content"))
+            if (!$util.isString(message.content))
+                return "content: string expected";
         return null;
     };
 
@@ -9641,6 +13857,10 @@ $root.oEnterRoomAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -9656,6 +13876,54 @@ $root.oEnterRoomAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.roomId != null)
@@ -9723,6 +13991,8 @@ $root.oEnterRoomAsw = (function() {
                 else if (typeof object.muteUsers[i] === "object")
                     message.muteUsers[i] = new $util.LongBits(object.muteUsers[i].low >>> 0, object.muteUsers[i].high >>> 0).toNumber(true);
         }
+        if (object.content != null)
+            message.content = String(object.content);
         return message;
     };
 
@@ -9756,6 +14026,7 @@ $root.oEnterRoomAsw = (function() {
             object.stageCount = 0;
             object.scene = "";
             object.allMute = false;
+            object.content = "";
         }
         if (message.code != null && message.hasOwnProperty("code"))
             object.code = options.enums === String ? $root.eError[message.code] === undefined ? message.code : $root.eError[message.code] : message.code;
@@ -9798,6 +14069,8 @@ $root.oEnterRoomAsw = (function() {
                 else
                     object.muteUsers[j] = options.longs === String ? $util.Long.prototype.toString.call(message.muteUsers[j]) : options.longs === Number ? new $util.LongBits(message.muteUsers[j].low >>> 0, message.muteUsers[j].high >>> 0).toNumber(true) : message.muteUsers[j];
         }
+        if (message.content != null && message.hasOwnProperty("content"))
+            object.content = message.content;
         return object;
     };
 
@@ -10427,10 +14700,23 @@ $root.oLeaveRoomAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         return null;
@@ -10543,6 +14829,10 @@ $root.oLeaveRoomAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -10558,6 +14848,54 @@ $root.oLeaveRoomAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         return message;
@@ -10829,6 +15167,225 @@ $root.oLeaveRoomPush = (function() {
     };
 
     return oLeaveRoomPush;
+})();
+
+$root.oSetUserControlledStageActor = (function() {
+
+    /**
+     * Properties of a oSetUserControlledStageActor.
+     * @exports IoSetUserControlledStageActor
+     * @interface IoSetUserControlledStageActor
+     * @property {number|Long|null} [userId] oSetUserControlledStageActor userId
+     */
+
+    /**
+     * Constructs a new oSetUserControlledStageActor.
+     * @exports oSetUserControlledStageActor
+     * @classdesc Represents a oSetUserControlledStageActor.
+     * @implements IoSetUserControlledStageActor
+     * @constructor
+     * @param {IoSetUserControlledStageActor=} [properties] Properties to set
+     */
+    function oSetUserControlledStageActor(properties) {
+        if (properties)
+            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                if (properties[keys[i]] != null)
+                    this[keys[i]] = properties[keys[i]];
+    }
+
+    /**
+     * oSetUserControlledStageActor userId.
+     * @member {number|Long} userId
+     * @memberof oSetUserControlledStageActor
+     * @instance
+     */
+    oSetUserControlledStageActor.prototype.userId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+    /**
+     * Creates a new oSetUserControlledStageActor instance using the specified properties.
+     * @function create
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {IoSetUserControlledStageActor=} [properties] Properties to set
+     * @returns {oSetUserControlledStageActor} oSetUserControlledStageActor instance
+     */
+    oSetUserControlledStageActor.create = function create(properties) {
+        return new oSetUserControlledStageActor(properties);
+    };
+
+    /**
+     * Encodes the specified oSetUserControlledStageActor message. Does not implicitly {@link oSetUserControlledStageActor.verify|verify} messages.
+     * @function encode
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {IoSetUserControlledStageActor} message oSetUserControlledStageActor message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oSetUserControlledStageActor.encode = function encode(message, writer) {
+        if (!writer)
+            writer = $Writer.create();
+        if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
+            writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.userId);
+        return writer;
+    };
+
+    /**
+     * Encodes the specified oSetUserControlledStageActor message, length delimited. Does not implicitly {@link oSetUserControlledStageActor.verify|verify} messages.
+     * @function encodeDelimited
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {IoSetUserControlledStageActor} message oSetUserControlledStageActor message or plain object to encode
+     * @param {$protobuf.Writer} [writer] Writer to encode to
+     * @returns {$protobuf.Writer} Writer
+     */
+    oSetUserControlledStageActor.encodeDelimited = function encodeDelimited(message, writer) {
+        return this.encode(message, writer).ldelim();
+    };
+
+    /**
+     * Decodes a oSetUserControlledStageActor message from the specified reader or buffer.
+     * @function decode
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @param {number} [length] Message length if known beforehand
+     * @returns {oSetUserControlledStageActor} oSetUserControlledStageActor
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oSetUserControlledStageActor.decode = function decode(reader, length, error) {
+        if (!(reader instanceof $Reader))
+            reader = $Reader.create(reader);
+        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oSetUserControlledStageActor();
+        while (reader.pos < end) {
+            var tag = reader.uint32();
+            if (tag === error)
+                break;
+            switch (tag >>> 3) {
+            case 1: {
+                    message.userId = reader.uint64();
+                    break;
+                }
+            default:
+                reader.skipType(tag & 7);
+                break;
+            }
+        }
+        return message;
+    };
+
+    /**
+     * Decodes a oSetUserControlledStageActor message from the specified reader or buffer, length delimited.
+     * @function decodeDelimited
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+     * @returns {oSetUserControlledStageActor} oSetUserControlledStageActor
+     * @throws {Error} If the payload is not a reader or valid buffer
+     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+     */
+    oSetUserControlledStageActor.decodeDelimited = function decodeDelimited(reader) {
+        if (!(reader instanceof $Reader))
+            reader = new $Reader(reader);
+        return this.decode(reader, reader.uint32());
+    };
+
+    /**
+     * Verifies a oSetUserControlledStageActor message.
+     * @function verify
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {Object.<string,*>} message Plain object to verify
+     * @returns {string|null} `null` if valid, otherwise the reason why it is not
+     */
+    oSetUserControlledStageActor.verify = function verify(message) {
+        if (typeof message !== "object" || message === null)
+            return "object expected";
+        if (message.userId != null && message.hasOwnProperty("userId"))
+            if (!$util.isInteger(message.userId) && !(message.userId && $util.isInteger(message.userId.low) && $util.isInteger(message.userId.high)))
+                return "userId: integer|Long expected";
+        return null;
+    };
+
+    /**
+     * Creates a oSetUserControlledStageActor message from a plain object. Also converts values to their respective internal types.
+     * @function fromObject
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {Object.<string,*>} object Plain object
+     * @returns {oSetUserControlledStageActor} oSetUserControlledStageActor
+     */
+    oSetUserControlledStageActor.fromObject = function fromObject(object) {
+        if (object instanceof $root.oSetUserControlledStageActor)
+            return object;
+        var message = new $root.oSetUserControlledStageActor();
+        if (object.userId != null)
+            if ($util.Long)
+                (message.userId = $util.Long.fromValue(object.userId)).unsigned = true;
+            else if (typeof object.userId === "string")
+                message.userId = parseInt(object.userId, 10);
+            else if (typeof object.userId === "number")
+                message.userId = object.userId;
+            else if (typeof object.userId === "object")
+                message.userId = new $util.LongBits(object.userId.low >>> 0, object.userId.high >>> 0).toNumber(true);
+        return message;
+    };
+
+    /**
+     * Creates a plain object from a oSetUserControlledStageActor message. Also converts values to other types if specified.
+     * @function toObject
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {oSetUserControlledStageActor} message oSetUserControlledStageActor
+     * @param {$protobuf.IConversionOptions} [options] Conversion options
+     * @returns {Object.<string,*>} Plain object
+     */
+    oSetUserControlledStageActor.toObject = function toObject(message, options) {
+        if (!options)
+            options = {};
+        var object = {};
+        if (options.defaults)
+            if ($util.Long) {
+                var long = new $util.Long(0, 0, true);
+                object.userId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+            } else
+                object.userId = options.longs === String ? "0" : 0;
+        if (message.userId != null && message.hasOwnProperty("userId"))
+            if (typeof message.userId === "number")
+                object.userId = options.longs === String ? String(message.userId) : message.userId;
+            else
+                object.userId = options.longs === String ? $util.Long.prototype.toString.call(message.userId) : options.longs === Number ? new $util.LongBits(message.userId.low >>> 0, message.userId.high >>> 0).toNumber(true) : message.userId;
+        return object;
+    };
+
+    /**
+     * Converts this oSetUserControlledStageActor to JSON.
+     * @function toJSON
+     * @memberof oSetUserControlledStageActor
+     * @instance
+     * @returns {Object.<string,*>} JSON object
+     */
+    oSetUserControlledStageActor.prototype.toJSON = function toJSON() {
+        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+    };
+
+    /**
+     * Gets the default type url for oSetUserControlledStageActor
+     * @function getTypeUrl
+     * @memberof oSetUserControlledStageActor
+     * @static
+     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+     * @returns {string} The default type url
+     */
+    oSetUserControlledStageActor.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+        if (typeUrlPrefix === undefined) {
+            typeUrlPrefix = "type.googleapis.com";
+        }
+        return typeUrlPrefix + "/oSetUserControlledStageActor";
+    };
+
+    return oSetUserControlledStageActor;
 })();
 
 $root.oDissolveRoomReq = (function() {
@@ -11224,10 +15781,23 @@ $root.oDissolveRoomAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.roomId != null && message.hasOwnProperty("roomId"))
@@ -11343,6 +15913,10 @@ $root.oDissolveRoomAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -11358,6 +15932,54 @@ $root.oDissolveRoomAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.roomId != null)
@@ -12044,10 +16666,23 @@ $root.oQuitRoomAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.roomId != null && message.hasOwnProperty("roomId"))
@@ -12163,6 +16798,10 @@ $root.oQuitRoomAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -12178,6 +16817,54 @@ $root.oQuitRoomAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.roomId != null)
@@ -12940,10 +17627,23 @@ $root.oKickUserOutRoomAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.kickUserId != null && message.hasOwnProperty("kickUserId"))
@@ -13059,6 +17759,10 @@ $root.oKickUserOutRoomAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -13074,6 +17778,54 @@ $root.oKickUserOutRoomAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.kickUserId != null)
@@ -13807,10 +18559,23 @@ $root.oChangeRoomNameAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         return null;
@@ -13923,6 +18688,10 @@ $root.oChangeRoomNameAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -13938,6 +18707,54 @@ $root.oChangeRoomNameAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         return message;
@@ -14790,10 +19607,23 @@ $root.oMuteUserAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.roomId != null && message.hasOwnProperty("roomId"))
@@ -14923,6 +19753,10 @@ $root.oMuteUserAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -14938,6 +19772,54 @@ $root.oMuteUserAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.roomId != null)
@@ -15823,10 +20705,23 @@ $root.oRoomSetMaxStageCountAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.roomId != null && message.hasOwnProperty("roomId"))
@@ -15945,6 +20840,10 @@ $root.oRoomSetMaxStageCountAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -15960,6 +20859,54 @@ $root.oRoomSetMaxStageCountAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.roomId != null)
@@ -16051,225 +20998,6 @@ $root.oRoomSetMaxStageCountAsw = (function() {
     };
 
     return oRoomSetMaxStageCountAsw;
-})();
-
-$root.oGetImagesInfoReq = (function() {
-
-    /**
-     * Properties of a oGetImagesInfoReq.
-     * @exports IoGetImagesInfoReq
-     * @interface IoGetImagesInfoReq
-     * @property {number|Long|null} [videoId] oGetImagesInfoReq videoId
-     */
-
-    /**
-     * Constructs a new oGetImagesInfoReq.
-     * @exports oGetImagesInfoReq
-     * @classdesc Represents a oGetImagesInfoReq.
-     * @implements IoGetImagesInfoReq
-     * @constructor
-     * @param {IoGetImagesInfoReq=} [properties] Properties to set
-     */
-    function oGetImagesInfoReq(properties) {
-        if (properties)
-            for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                if (properties[keys[i]] != null)
-                    this[keys[i]] = properties[keys[i]];
-    }
-
-    /**
-     * oGetImagesInfoReq videoId.
-     * @member {number|Long} videoId
-     * @memberof oGetImagesInfoReq
-     * @instance
-     */
-    oGetImagesInfoReq.prototype.videoId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
-
-    /**
-     * Creates a new oGetImagesInfoReq instance using the specified properties.
-     * @function create
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {IoGetImagesInfoReq=} [properties] Properties to set
-     * @returns {oGetImagesInfoReq} oGetImagesInfoReq instance
-     */
-    oGetImagesInfoReq.create = function create(properties) {
-        return new oGetImagesInfoReq(properties);
-    };
-
-    /**
-     * Encodes the specified oGetImagesInfoReq message. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
-     * @function encode
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {IoGetImagesInfoReq} message oGetImagesInfoReq message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    oGetImagesInfoReq.encode = function encode(message, writer) {
-        if (!writer)
-            writer = $Writer.create();
-        if (message.videoId != null && Object.hasOwnProperty.call(message, "videoId"))
-            writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.videoId);
-        return writer;
-    };
-
-    /**
-     * Encodes the specified oGetImagesInfoReq message, length delimited. Does not implicitly {@link oGetImagesInfoReq.verify|verify} messages.
-     * @function encodeDelimited
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {IoGetImagesInfoReq} message oGetImagesInfoReq message or plain object to encode
-     * @param {$protobuf.Writer} [writer] Writer to encode to
-     * @returns {$protobuf.Writer} Writer
-     */
-    oGetImagesInfoReq.encodeDelimited = function encodeDelimited(message, writer) {
-        return this.encode(message, writer).ldelim();
-    };
-
-    /**
-     * Decodes a oGetImagesInfoReq message from the specified reader or buffer.
-     * @function decode
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @param {number} [length] Message length if known beforehand
-     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    oGetImagesInfoReq.decode = function decode(reader, length, error) {
-        if (!(reader instanceof $Reader))
-            reader = $Reader.create(reader);
-        var end = length === undefined ? reader.len : reader.pos + length, message = new $root.oGetImagesInfoReq();
-        while (reader.pos < end) {
-            var tag = reader.uint32();
-            if (tag === error)
-                break;
-            switch (tag >>> 3) {
-            case 1: {
-                    message.videoId = reader.uint64();
-                    break;
-                }
-            default:
-                reader.skipType(tag & 7);
-                break;
-            }
-        }
-        return message;
-    };
-
-    /**
-     * Decodes a oGetImagesInfoReq message from the specified reader or buffer, length delimited.
-     * @function decodeDelimited
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
-     * @throws {Error} If the payload is not a reader or valid buffer
-     * @throws {$protobuf.util.ProtocolError} If required fields are missing
-     */
-    oGetImagesInfoReq.decodeDelimited = function decodeDelimited(reader) {
-        if (!(reader instanceof $Reader))
-            reader = new $Reader(reader);
-        return this.decode(reader, reader.uint32());
-    };
-
-    /**
-     * Verifies a oGetImagesInfoReq message.
-     * @function verify
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {Object.<string,*>} message Plain object to verify
-     * @returns {string|null} `null` if valid, otherwise the reason why it is not
-     */
-    oGetImagesInfoReq.verify = function verify(message) {
-        if (typeof message !== "object" || message === null)
-            return "object expected";
-        if (message.videoId != null && message.hasOwnProperty("videoId"))
-            if (!$util.isInteger(message.videoId) && !(message.videoId && $util.isInteger(message.videoId.low) && $util.isInteger(message.videoId.high)))
-                return "videoId: integer|Long expected";
-        return null;
-    };
-
-    /**
-     * Creates a oGetImagesInfoReq message from a plain object. Also converts values to their respective internal types.
-     * @function fromObject
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {Object.<string,*>} object Plain object
-     * @returns {oGetImagesInfoReq} oGetImagesInfoReq
-     */
-    oGetImagesInfoReq.fromObject = function fromObject(object) {
-        if (object instanceof $root.oGetImagesInfoReq)
-            return object;
-        var message = new $root.oGetImagesInfoReq();
-        if (object.videoId != null)
-            if ($util.Long)
-                (message.videoId = $util.Long.fromValue(object.videoId)).unsigned = true;
-            else if (typeof object.videoId === "string")
-                message.videoId = parseInt(object.videoId, 10);
-            else if (typeof object.videoId === "number")
-                message.videoId = object.videoId;
-            else if (typeof object.videoId === "object")
-                message.videoId = new $util.LongBits(object.videoId.low >>> 0, object.videoId.high >>> 0).toNumber(true);
-        return message;
-    };
-
-    /**
-     * Creates a plain object from a oGetImagesInfoReq message. Also converts values to other types if specified.
-     * @function toObject
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {oGetImagesInfoReq} message oGetImagesInfoReq
-     * @param {$protobuf.IConversionOptions} [options] Conversion options
-     * @returns {Object.<string,*>} Plain object
-     */
-    oGetImagesInfoReq.toObject = function toObject(message, options) {
-        if (!options)
-            options = {};
-        var object = {};
-        if (options.defaults)
-            if ($util.Long) {
-                var long = new $util.Long(0, 0, true);
-                object.videoId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-            } else
-                object.videoId = options.longs === String ? "0" : 0;
-        if (message.videoId != null && message.hasOwnProperty("videoId"))
-            if (typeof message.videoId === "number")
-                object.videoId = options.longs === String ? String(message.videoId) : message.videoId;
-            else
-                object.videoId = options.longs === String ? $util.Long.prototype.toString.call(message.videoId) : options.longs === Number ? new $util.LongBits(message.videoId.low >>> 0, message.videoId.high >>> 0).toNumber(true) : message.videoId;
-        return object;
-    };
-
-    /**
-     * Converts this oGetImagesInfoReq to JSON.
-     * @function toJSON
-     * @memberof oGetImagesInfoReq
-     * @instance
-     * @returns {Object.<string,*>} JSON object
-     */
-    oGetImagesInfoReq.prototype.toJSON = function toJSON() {
-        return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
-    };
-
-    /**
-     * Gets the default type url for oGetImagesInfoReq
-     * @function getTypeUrl
-     * @memberof oGetImagesInfoReq
-     * @static
-     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
-     * @returns {string} The default type url
-     */
-    oGetImagesInfoReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
-        if (typeUrlPrefix === undefined) {
-            typeUrlPrefix = "type.googleapis.com";
-        }
-        return typeUrlPrefix + "/oGetImagesInfoReq";
-    };
-
-    return oGetImagesInfoReq;
 })();
 
 $root.oRoomSetMaxStageCountPush = (function() {
@@ -16923,10 +21651,23 @@ $root.oEnterStageAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.roomId != null && message.hasOwnProperty("roomId"))
@@ -17045,6 +21786,10 @@ $root.oEnterStageAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -17060,6 +21805,54 @@ $root.oEnterStageAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.roomId != null)
@@ -17761,10 +22554,23 @@ $root.oLeaveStageAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.stageId != null && message.hasOwnProperty("stageId"))
@@ -17880,6 +22686,10 @@ $root.oLeaveStageAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -17895,6 +22705,54 @@ $root.oLeaveStageAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.stageId != null)
@@ -18994,10 +23852,23 @@ $root.oLeaveQueueAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         return null;
@@ -19110,6 +23981,10 @@ $root.oLeaveQueueAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -19125,6 +24000,54 @@ $root.oLeaveQueueAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         return message;
@@ -19764,10 +24687,23 @@ $root.oLeaveUeAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         if (message.index != null && message.hasOwnProperty("index"))
@@ -19886,6 +24822,10 @@ $root.oLeaveUeAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -19901,6 +24841,54 @@ $root.oLeaveUeAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         if (object.index != null)
@@ -20801,10 +25789,23 @@ $root.oUpdateEnterStageContextAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         return null;
@@ -20917,6 +25918,10 @@ $root.oUpdateEnterStageContextAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -20932,6 +25937,54 @@ $root.oUpdateEnterStageContextAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         return message;
@@ -21999,10 +27052,23 @@ $root.oMultiActionAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         return null;
@@ -22115,6 +27181,10 @@ $root.oMultiActionAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -22130,6 +27200,54 @@ $root.oMultiActionAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         return message;
@@ -22829,10 +27947,23 @@ $root.oMultiActionReplyAsw = (function() {
             case 75:
             case 76:
             case 77:
+            case 78:
             case 80:
             case 81:
             case 82:
             case 83:
+            case 90:
+            case 91:
+            case 11001:
+            case 11002:
+            case 11003:
+            case 11004:
+            case 11005:
+            case 11006:
+            case 11007:
+            case 11008:
+            case 11009:
+            case 11010:
                 break;
             }
         return null;
@@ -22945,6 +28076,10 @@ $root.oMultiActionReplyAsw = (function() {
         case 77:
             message.code = 77;
             break;
+        case "ERROR_NOT_IN_UE":
+        case 78:
+            message.code = 78;
+            break;
         case "ERROR_INVITER_NOT_IN_UE":
         case 80:
             message.code = 80;
@@ -22960,6 +28095,54 @@ $root.oMultiActionReplyAsw = (function() {
         case "ERROR_INVITEE_NOT_YOU":
         case 83:
             message.code = 83;
+            break;
+        case "ERROR_UE_IS_REQUESTING":
+        case 90:
+            message.code = 90;
+            break;
+        case "ERROR_UE_REQ_TIMEOUT":
+        case 91:
+            message.code = 91;
+            break;
+        case "ERROR_ALREADY_ON_STAGE":
+        case 11001:
+            message.code = 11001;
+            break;
+        case "ERROR_OUT_OF_CURRENCY":
+        case 11002:
+            message.code = 11002;
+            break;
+        case "ERROR_PARAMETER_NOT_MATCH":
+        case 11003:
+            message.code = 11003;
+            break;
+        case "ERROR_NO_AVATAR_MODEL":
+        case 11004:
+            message.code = 11004;
+            break;
+        case "ERROR_NO_EMPTY_STAGE":
+        case 11005:
+            message.code = 11005;
+            break;
+        case "ERROR_ALREADY_LEAVE_STAGE":
+        case 11006:
+            message.code = 11006;
+            break;
+        case "ERROR_INITIAL_AVATAR_FAILED":
+        case 11007:
+            message.code = 11007;
+            break;
+        case "ERROR_ROOM_IS_NOT_EMPTY":
+        case 11008:
+            message.code = 11008;
+            break;
+        case "ERROR_CLOSE_ROOM_ID_IS_INVALID":
+        case 11009:
+            message.code = 11009;
+            break;
+        case "ERROR_CATPURE_IMAGE_NOT_COMPLETE":
+        case 11010:
+            message.code = 11010;
             break;
         }
         return message;

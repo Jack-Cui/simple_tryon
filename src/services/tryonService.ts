@@ -114,7 +114,23 @@ export class TryonService {
     if (shareScene !== "onshare") {
       try {
         if(isTronLog) console.log('校验模型列表...');
-        const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+
+        //chao:2025.10.15  
+        const loginCache: any = getLoginCache();
+        let qUserId = '';
+        if(loginCache && loginCache.userId){
+            if(loginCache.coUserId){
+                qUserId = loginCache.coUserId;
+            } else {
+                qUserId = loginCache.userId;
+            }
+        }else {
+            console.log('获取用户信息失败！');
+            return;
+        }
+        console.log('获取模型列表3，用户ID：' + qUserId); 
+        const response = await modelAPI.getModelList(this.accessToken, qUserId);
+        // const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
         if(isTronLog) console.log('模型列表校验完成', response);
         
         if (response.ok) {
@@ -287,7 +303,23 @@ export class TryonService {
         // 0. 校验模型列表（如果已经校验过则跳过）
         if (!this.modelListChecked) {
           console.log('校验模型列表...');
-          const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
+
+        //chao:2025.10.15  
+        const loginCache: any = getLoginCache();
+        let qUserId = '';
+        if(loginCache && loginCache.userId){
+            if(loginCache.coUserId){
+                qUserId = loginCache.coUserId;
+            } else {
+                qUserId = loginCache.userId;
+            }
+        }else {
+            console.log('获取用户信息失败！');
+            return;
+        }
+        console.log('获取模型列表3，用户ID：' + qUserId);  
+        const response = await modelAPI.getModelList(this.accessToken, qUserId);
+          // const response = await modelAPI.getModelList(this.accessToken, this.config.userId);
           console.log('模型列表校验完成', response);
           
           if (response.ok) {

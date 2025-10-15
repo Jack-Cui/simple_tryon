@@ -209,8 +209,23 @@ const CreateModel = (props?: { onBack?: any}) => {
 
   // 获取模型列表
   const getModelList = async () => {
+    //chao:2025.10.15  
     const loginCache: any = getLoginCache();
-    const response = await modelAPI.getModelList(loginCache.token, loginCache.userId);
+    let qUserId = '';
+    if(loginCache && loginCache.userId){
+        if(loginCache.coUserId){
+            qUserId = loginCache.coUserId;
+        } else {
+            qUserId = loginCache.userId;
+        }
+    }else {
+        console.log('获取用户信息失败！');
+        return;
+    }
+    console.log('获取模型列表2，用户ID：' + qUserId);   
+
+    const response = await modelAPI.getModelList(loginCache.token, qUserId);
+
     const dataObj = JSON.parse(response.data);
     if (!(dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0)) {
       setStep(2);

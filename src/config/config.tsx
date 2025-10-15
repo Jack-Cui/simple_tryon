@@ -73,7 +73,9 @@ export const API_ENDPOINTS = {
   // 获取房间信息
   GET_ROOM_INFO_BY_ROOM_ID: (room_id: string) => `/admin/room/query?id=${room_id}`,
   
-  GET_MODEL_LIST: (user_id: string) => `/admin/model/list?user_id=${user_id}`,
+  //chao:2025.10.15 修改获取模型接口(改为按内部userId获取)
+  // GET_MODEL_LIST: (user_id: string) => `/admin/model/list?user_id=${user_id}`,
+  GET_MODEL_LIST: (user_id: string) => `/admin/model/listByUserId?userId=${user_id}`,
 
   // 创建房间
   CREATE_ROOM: () => `/admin/room/create`,
