@@ -2,6 +2,7 @@ import { Button } from 'tdesign-mobile-react';
 
 import EmptyImg from '../../../../assets/empty.png';
 import './index.css';
+
 interface Props {
     toPage?: () => void;
     applyStatus?: number | null;
