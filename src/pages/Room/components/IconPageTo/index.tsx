@@ -29,6 +29,7 @@ import { modelAPI, uploadAPI } from '../../../../services/api';
 import { getClothDefaultSizeFromCache, getLoginCache } from '../../../../utils/loginCache';
 import { rtcVideoService } from '../../../../services/rtcVideoService';
 import { IconFont } from 'tdesign-icons-react';
+import jsweixin from 'weixin-js-sdk';
 interface Props {
     hotClick?: (flag: boolean) => void;
     actionClick?: (msg: any) => void;
@@ -166,6 +167,13 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
             props?.toPage && props.toPage('browse-historry');
         }
     
+        const goBackWx = () => {
+            const wx = jsweixin;
+            wx.miniProgram.navigateTo({
+                url: '/pages/index/index'
+            });
+        }
+    
         useImperativeHandle(ref, () => ({
             closeOpen: () => {
                 // 关闭打开的页面
@@ -198,7 +206,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
 
     return (
         <div className="icon-page-to">
-            <div className='back'>
+            <div className='back' onClick={goBackWx}>
                 <IconFont size="20px" name="arrow-left" />
                 <span>返回商品页</span>
             </div>
