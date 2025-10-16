@@ -69,7 +69,6 @@ const Vedio = (props: Props) => {
     }, []);
 
     const handleVideoEnded = () => {
-        console.log('监听视频播放完毕', 123);
         switch (videoNum) {
             case 0:
                 // 

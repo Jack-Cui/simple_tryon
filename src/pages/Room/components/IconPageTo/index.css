@@ -1,6 +1,27 @@
 .icon-page-to {
     
 }
+.icon-page-to > .back {
+    position: fixed;
+    top: 30px;
+    left: 20px;
+    width: 123px;
+    height: 36px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 18px;
+    backdrop-filter: blur(3px);
+    font-family: PingFangSC, PingFang SC;
+    font-weight: 400;
+    font-size: 12px;
+    color: #373737;
+    line-height: 17px;
+    text-align: center;
+    font-style: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+}
 .icon-page-to > .left > .exm {
     position: fixed;
     left: 25px;

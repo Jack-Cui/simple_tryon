@@ -28,6 +28,7 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { modelAPI, uploadAPI } from '../../../../services/api';
 import { getClothDefaultSizeFromCache, getLoginCache } from '../../../../utils/loginCache';
 import { rtcVideoService } from '../../../../services/rtcVideoService';
+import { IconFont } from 'tdesign-icons-react';
 interface Props {
     hotClick?: (flag: boolean) => void;
     actionClick?: (msg: any) => void;
@@ -197,6 +198,10 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
 
     return (
         <div className="icon-page-to">
+            <div className='back'>
+                <IconFont size="20px" name="arrow-left" />
+                <span>返回商品页</span>
+            </div>
             <div className='left'  style={props?.showLeft ? {}: {display: 'none'}}>
                 {showHot && <div className='exm'>
                     <span>紧</span>
