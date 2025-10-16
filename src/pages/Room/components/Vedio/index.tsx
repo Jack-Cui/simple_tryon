@@ -12,7 +12,7 @@ const Vedio = (props: Props) => {
     const [videoPathFrontUrl, setVideoPathFrontUrl] = useState<string>('');
     //动态获取视频地址-背身视频
     const [videoPathBackUrl, setVideoPathBack] = useState<string>('');  //动态获取视频地址-详细视频
-    const [videoPathClothUrl, setVideoPathClothUrl] = useState<string>('https://admins3.tos-cn-shanghai.volces.com/xinyu5.mp4');
+    const [videoPathClothUrl, setVideoPathClothUrl] = useState<string>('');
     const [videoNum, setVideoNum] = useState<number>(0);
     const initSingleVideo = (video: HTMLVideoElement | null): Promise<void> => {
         return new Promise((resolve) => {
@@ -54,19 +54,23 @@ const Vedio = (props: Props) => {
 
     useEffect(() => {
         getVideoInfo();
-        const initVideos = async () => {
-            await Promise.all([
-                initSingleVideo(videoRefMain.current),
-                initSingleVideo(videoRefSmall.current)
-            ]);
-        };
-
-        if (typeof WeixinJSBridge !== 'undefined') {
-            WeixinJSBridge.invoke('getNetworkType', {}, initVideos);
-        } else {
-            document.addEventListener('WeixinJSBridgeReady', initVideos);
+    }, [])
+    useEffect(() => {
+        if (videoPathFrontUrl) {
+            const initVideos = async () => {
+                await Promise.all([
+                    initSingleVideo(videoRefMain.current),
+                    initSingleVideo(videoRefSmall.current)
+                ]);
+            };
+    
+            if (typeof WeixinJSBridge !== 'undefined') {
+                WeixinJSBridge.invoke('getNetworkType', {}, initVideos);
+            } else {
+                document.addEventListener('WeixinJSBridgeReady', initVideos);
+            }
         }
-    }, []);
+    }, [videoPathFrontUrl]);
 
     //针对安卓微信环境的control属性特殊处理：
     const needControls = isWeixinAndroid();
@@ -75,14 +79,16 @@ const Vedio = (props: Props) => {
         return /micromessenger/.test(ua) && /android/.test(ua);
     }
     useEffect(() => {
-        // 安卓微信环境下主动调用 play
-        if (needControls && videoRefMain.current) {
-            videoRefMain.current.play().catch(() => { });
+        if (videoPathFrontUrl) {
+            // 安卓微信环境下主动调用 play
+            if (needControls && videoRefMain.current) {
+                videoRefMain.current.play().catch(() => { });
+            }
+            if (needControls && videoRefSmall.current) {
+                videoRefSmall.current.play().catch(() => { });
+            }
         }
-        if (needControls && videoRefSmall.current) {
-            videoRefSmall.current.play().catch(() => { });
-        }
-    }, []);
+    }, [videoPathFrontUrl]);
 
     const handleVideoEnded = () => {
         switch (videoNum) {
