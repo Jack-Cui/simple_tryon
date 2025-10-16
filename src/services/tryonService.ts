@@ -994,7 +994,7 @@ export class TryonService {
               throw new Error('解析房间信息失败111');
             }
             clothId = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothesId || '';
-            videoPathCloth = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.videoPath || '';
+            videoPathCloth = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.detailVideo || '';
             console.log('初始化参数值 clothId:', clothId);
             console.log('初始化参数值 videoPathCloth:', videoPathCloth);
           
