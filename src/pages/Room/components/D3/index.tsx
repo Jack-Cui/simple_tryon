@@ -48,7 +48,9 @@ interface Props {
 //     </div>
 // };
 
+
 const Long = require('long');
+
 // add by chao 2025.09.30 增加日志开关
 const isHotMapLog = false;
 const isVideoPlayLog = false;
@@ -61,6 +63,35 @@ const isRtcLog = false;
 // const MyContext = React.createContext({});
 
 const D3 = forwardRef((props: {goToPage?: (str: string) => void; isShow?: boolean}, ref) => {
+
+
+  const [musicVolume, setMusicVolume] = useState(0.1); // 初始音量较低
+  const fadeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  useEffect(() => {
+    // 组件卸载时清理定时器
+    return () => {
+      if (fadeTimerRef.current) clearInterval(fadeTimerRef.current);
+    };
+  }, []);
+  const handleMusicLoad = () => {
+    // 渐入到目标音量（如 1），持续5秒
+    const duration = 5000;
+    const steps = 50;
+    const stepTime = duration / steps;
+    let currentStep = 0;
+
+    if (fadeTimerRef.current) clearInterval(fadeTimerRef.current);
+
+    fadeTimerRef.current = setInterval(() => {
+      currentStep += 1;
+      const newVolume = Math.min(1, 0.1 + (0.9 * currentStep) / steps);
+      setMusicVolume(newVolume);
+      if (currentStep >= steps) {
+        if (fadeTimerRef.current) clearInterval(fadeTimerRef.current);
+      }
+    }, stepTime);
+  }; 
+
 const location = useLocation();
 
 //add by chao 2025.09.29 增加路由监听事件
@@ -2581,6 +2612,8 @@ const location = useLocation();
         <ReactHowler
           src={musicUrl}
           playing={musicPlay}
+            volume={musicVolume}
+            onLoad={handleMusicLoad}
         />
         {/* 音乐结束 */}
         {/* 顶部标题区域 - 与视频播放界面对齐 */}
@@ -3106,6 +3139,8 @@ const location = useLocation();
       <ReactHowler
         src={musicUrl}
         playing={musicPlay}
+        volume={musicVolume}
+        onLoad={handleMusicLoad}        
       />
       {/* 音乐结束 */}
       {/* 顶部标题区域 - 放在正中间 */}
