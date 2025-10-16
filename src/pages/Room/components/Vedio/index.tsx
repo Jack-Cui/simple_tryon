@@ -30,10 +30,26 @@ const Vedio = (props: Props) => {
         });
     };
 
+    //测试预加载视频loading效果
     const getVideoInfo = () => {
+        // setTimeout(() => {
+        //     setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/xinyu.mp4')
+        // }, 3000)
+        //加载背身视频
         setTimeout(() => {
-            setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/xinyu.mp4')
-        }, 3000)
+            setVideoPathBack('https://admins3.tos-cn-shanghai.volces.com/xinyu5.mp4');
+            console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu5.mp4');
+        }, 5000); // 5秒、10秒、15秒...        
+        //加载正面视频
+        setTimeout(() => {
+            setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/xinyu3.mp4');
+            console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu3.mp4');
+        }, 10000); // 5秒、10秒、15秒...     
+        //加载细节视频
+        setTimeout(() => {
+            setVideoPathClothUrl('https://admins3.tos-cn-shanghai.volces.com/xinyu2.mp4');
+            console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu2.mp4');
+        }, 15000); // 5秒、10秒、15秒...            
     }
 
     useEffect(() => {

@@ -127,7 +127,6 @@ const Poster = (props: Props) => {
         });
     }
 
-
     useEffect(() => {
         getImgList();
     }, []);
