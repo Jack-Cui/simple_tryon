@@ -1,10 +1,79 @@
 import { useEffect, useRef, useState } from 'react';
 import './index.css';
 import RoomLoad from '../Loading';
+import { tryonService } from "../../../../services/tryonService";
+import { modelAPI, roomAPI } from "../../../../services/api";
+import { getLoginCache } from "../../../../utils/loginCache";
+
 interface Props {
     isShow?: boolean;
 }
 const Vedio = (props: Props) => {
+//自动轮询事件，加载所需的图片和视频
+    const pollRef = useRef<number | null>(null);
+    useEffect(() => {
+        const poll = () => {
+            const { imageIds, videoId } = tryonService.getMediaIds();
+            console.log('轮询结果2:', { imageIds, videoId });
+            // 1.获取imageIds, videoId
+            if ((imageIds && imageIds.length > 0) && (videoId && videoId !== "")) {
+                const loginCache = getLoginCache();
+                console.log('获取到数据，停止轮询2');
+                console.log('最终结果:', { imageIds, videoId });
+                if (!loginCache?.token) {
+                    throw new Error('用户未登录或登录信息缺失');
+                }                
+  
+                //3. 轮询获取视频地址
+                //videoPathFront ， videoPathBack ， videoPathCloth
+                const videoTimer = setInterval(async () => {
+                    const res = await modelAPI.getUserStartVideo(videoId,loginCache.token); // 你的接口
+                    if (res.ok) {
+                        const dataObj = JSON.parse(res.data);
+                        console.log('轮询videoId查询AI视频地址:', videoId +' '+ performance.now());
+                        console.log('获取到视频:', ',dataObj.data.videoPathBack:',dataObj.data.videoPathBack,',dataObj.data.videoPathFront:',dataObj.data.videoPathFront,',dataObj.data.videoPathCloth:',dataObj.data.videoPathCloth);
+                        if((!videoPathBackUrl) || videoPathBackUrl === "" ){
+                            if(dataObj.data.videoPathBack){
+                               setVideoPathBack(dataObj.data.videoPathBack);                               
+                            }                            
+                        }
+                         if((!videoPathFrontUrl) || videoPathFrontUrl === "" ){
+                            if(dataObj.data.videoPathFront){
+                               setVideoPathFrontUrl(dataObj.data.videoPathFront);
+                            }                            
+                        }
+                        if((!videoPathClothUrl) || videoPathClothUrl === "" ){
+                            if(dataObj.data.videoPathCloth){
+                               setVideoPathClothUrl(dataObj.data.videoPathCloth);
+                            }                            
+                        }
+                        if(videoPathFrontUrl && videoPathFrontUrl !== "" && videoPathBackUrl && videoPathBackUrl !== "" && videoPathClothUrl && videoPathClothUrl !== ""){
+                            //都获取到，再停止轮询
+                            clearInterval(videoTimer);
+                        }                                                                       
+                    }
+                }, 5000);
+                
+                if (pollRef.current) {
+                    clearTimeout(pollRef.current);
+                }
+                // 这里可以处理获取到的数据，比如 setImageList(imageIds)
+                return;
+            }
+            // 继续轮询
+            pollRef.current = window.setTimeout(poll, 1000);
+        };
+        // 开始轮询
+        pollRef.current = window.setTimeout(poll, 1000);
+
+        // 清理函数
+        return () => {
+            if (pollRef.current) {
+                clearTimeout(pollRef.current);
+            }
+        };
+    }, []);
+    
     // // update by chao 2025.10.04 安卓微信环境下 video 标签无法自动播放，需手动调用 play 方法    
     const videoRefMain = useRef<HTMLVideoElement>(null);
     const videoRefSmall = useRef<HTMLVideoElement>(null);
@@ -37,24 +106,26 @@ const Vedio = (props: Props) => {
         // }, 3000)
         //加载背身视频
         setTimeout(() => {
-            setVideoPathBack('https://admins3.tos-cn-shanghai.volces.com/xinyu5.mp4');
+            setVideoPathBack('https://admins3.tos-cn-shanghai.volces.com/aigc/video/1058_1760621239689.mp4');
             console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu5.mp4');
         }, 5000); // 5秒、10秒、15秒...        
         //加载正面视频
         setTimeout(() => {
-            setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/xinyu3.mp4');
+            setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/aigc/video/1057_1760621015780.mp4');
             console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu3.mp4');
         }, 10000); // 5秒、10秒、15秒...     
         //加载细节视频
         setTimeout(() => {
-            setVideoPathClothUrl('https://admins3.tos-cn-shanghai.volces.com/xinyu2.mp4');
+            setVideoPathClothUrl('http://admins3.tos-s3-cn-shanghai.volces.com/4b976c0e7da549d5807116da687f79c7.mp4');
             console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu2.mp4');
         }, 15000); // 5秒、10秒、15秒...            
     }
 
+    //测试预加载视频
     useEffect(() => {
         getVideoInfo();
     }, [])
+
     useEffect(() => {
         if (videoPathFrontUrl) {
             const initVideos = async () => {
