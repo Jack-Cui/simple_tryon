@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { uploadAPI, modelAPI } from '../services/api';
 import { getLoginCache } from '../utils/loginCache';
 import { tosUploadService, TosCredentials } from '../services/tosUploadService';

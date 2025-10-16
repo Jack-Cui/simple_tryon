@@ -156,6 +156,30 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     });
     }
 
+    //add by chao:2025.10.16 添加倒计时效果
+    const [countdown, setCountdown] = useState(180); // 3分钟=180秒
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        // 开始倒计时
+        timerRef.current = setInterval(() => {
+        setCountdown(prev => {
+            if (prev <= 1) {
+            if (timerRef.current) clearInterval(timerRef.current);
+            return 0;
+            }
+            return prev - 1;
+        });
+        }, 1000);
+
+        return () => {
+        if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, []);
+
+    const minutes = Math.floor(countdown / 60);
+    const seconds = countdown % 60;
+
     const fileChange = async (event: any) => {
         console.log('fileChange..1');
         if (!event.target.files[0]) return;
@@ -170,7 +194,15 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
             // 调用父组件传递的上传方法
             if (props.onIOSUploadVideo) {
                 Toast({
-                    message: '视频上传中,请稍后...',
+                    // message: '视频正在上传审核中...',
+                      message: (
+                        <div>
+                        <div>视频正在上传审核中...</div>
+                        <div style={{ marginTop: 8, fontSize: 14, color: '#666' }}>
+                            预估时间：{minutes}分{seconds.toString().padStart(2, '0')}秒
+                        </div>
+                        </div>
+                    ),
                     direction: 'column',
                     placement: 'middle',
                     duration: 0,

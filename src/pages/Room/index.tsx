@@ -102,7 +102,7 @@ const Room = () => {
                             <Poster isShow={value === 'poster'} />
                             <Vedio isShow={value === 'vedio'} />
                             <D3 ref={d3El} isShow={value === '3d'} />
-                            <div className='room-bottom-tab-bar'>
+                            <div className='room-bottom-tab-bar' style={{ zIndex: value === 'poster' ? 99 : 1099 }} >
                                 <TabBar value={value} onChange={change} shape="round" style={{ width: '50%' }} theme="tag" fixed={false} split={false}>
                                     {list.map((item, i) => (
                                         <TabBarItem key={item.value || i} value={item.value}>

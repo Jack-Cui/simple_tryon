@@ -107,35 +107,45 @@ const Poster = (props: Props) => {
         console.log('videoId', videoId);
     }, 5000);
 
-    const imgUrls = [
-        'https://admins3.tos-cn-shanghai.volces.com/20250904-01.jpg',
-        'https://admins3.tos-cn-shanghai.volces.com/20250904-04.jpg',
-        'https://admins3.tos-cn-shanghai.volces.com/20250904-07.jpg'
-    ];
-    
-    /*
-       预加载逻辑：
-       1.有第一张图片，就先展示一张，没有全部生成完之前，不支持滑动。
-       2.四张图片全部生成完了，再出来轮播图。
-    */
-    const getImgList = () => {
-        imgUrls.forEach((item, index) => {
-            setTimeout(() => {
-                setImageList(prevList => [...prevList, item]);
-                console.log('轮询设置图片', item);
-            }, (index + 1) * 5000); // 5秒、10秒、15秒...
-        });
-    }
+    //<---------  测试开场图加载效果，用下面这段代码 --------->    
+    // const imgUrls = [
+    //     'https://admins3.tos-cn-shanghai.volces.com/aigc/video/1041_1760620009077.jpeg',
+    //     'https://admins3.tos-cn-shanghai.volces.com/aigc/video/1042_1760620112078.jpeg',
+    //     'https://admins3.tos-cn-shanghai.volces.com/aigc/video/1043_1760620220078.jpeg'
+    // ];    
+    // /*
+    //    预加载逻辑：
+    //    1.有第一张图片，就先展示一张，没有全部生成完之前，不支持滑动。
+    //    2.四张图片全部生成完了，再出来轮播图。
+    // */
+    // const getImgList = () => {
+    //     imgUrls.forEach((item, index) => {
+    //         setTimeout(() => {
+    //             setImageList(prevList => [...prevList, item]);
+    //             console.log('轮询设置图片', item);
+    //         }, (index + 1) * 5000); // 5秒、10秒、15秒...
+    //     });
+    // }
 
-    useEffect(() => {
-        getImgList();
-    }, []);
+    // useEffect(() => {
+    //     getImgList();
+    // }, []);
+    //<---------  测试开场图加载效果，用上面这段代码 --------->  
+
 
     const swiperItems = () => (
         <>
             {imageList.map((item, index) => (
                 <Swiper.SwiperItem key={index}>
-                    <img style={{ height: '100%' }} src={item} />
+                    {/* <img style={{ height: '100%' }} src={item} /> */}
+                    <div style={{
+                    backgroundImage: `url(${item})`,
+                    backgroundSize: 'cover',        // 背景图覆盖整个容器
+                    backgroundPosition: 'center',   // 背景图居中显示
+                    backgroundRepeat: 'no-repeat',  // 不重复显示背景图
+                    width: '100vw',                 // 宽度占满视口宽度
+                    height: '100vh'                 // 高度占满视口高度
+                    }} />
                 </Swiper.SwiperItem>
             ))}
         </>

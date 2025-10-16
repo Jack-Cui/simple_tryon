@@ -99,32 +99,36 @@ const Vedio = (props: Props) => {
         });
     };
 
-    //测试预加载视频loading效果
-    const getVideoInfo = () => {
-        // setTimeout(() => {
-        //     setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/xinyu.mp4')
-        // }, 3000)
-        //加载背身视频
-        setTimeout(() => {
-            setVideoPathBack('https://admins3.tos-cn-shanghai.volces.com/aigc/video/1058_1760621239689.mp4');
-            console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu5.mp4');
-        }, 5000); // 5秒、10秒、15秒...        
-        //加载正面视频
-        setTimeout(() => {
-            setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/aigc/video/1057_1760621015780.mp4');
-            console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu3.mp4');
-        }, 10000); // 5秒、10秒、15秒...     
-        //加载细节视频
-        setTimeout(() => {
-            setVideoPathClothUrl('http://admins3.tos-s3-cn-shanghai.volces.com/4b976c0e7da549d5807116da687f79c7.mp4');
-            console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu2.mp4');
-        }, 15000); // 5秒、10秒、15秒...            
-    }
 
-    //测试预加载视频
-    useEffect(() => {
-        getVideoInfo();
-    }, [])
+    // //<---------  测试开场视频加载效果，用下面这段代码 --------->  
+    // //测试预加载视频loading效果
+    // const getVideoInfo = () => {
+    //     // setTimeout(() => {
+    //     //     setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/xinyu.mp4')
+    //     // }, 3000)
+    //     //加载背身视频
+    //     setTimeout(() => {
+    //         setVideoPathBack('https://admins3.tos-cn-shanghai.volces.com/aigc/video/1058_1760621239689.mp4');
+    //         console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu5.mp4');
+    //     }, 5000); // 5秒、10秒、15秒...        
+    //     //加载正面视频
+    //     setTimeout(() => {
+    //         setVideoPathFrontUrl('https://admins3.tos-cn-shanghai.volces.com/aigc/video/1057_1760621015780.mp4');
+    //         console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu3.mp4');
+    //     }, 10000); // 5秒、10秒、15秒...     
+    //     //加载细节视频
+    //     setTimeout(() => {
+    //         setVideoPathClothUrl('http://admins3.tos-s3-cn-shanghai.volces.com/4b976c0e7da549d5807116da687f79c7.mp4');
+    //         console.log('轮询设置视频', 'https://admins3.tos-cn-shanghai.volces.com/xinyu2.mp4');
+    //     }, 1000); // 5秒、10秒、15秒...            
+    // }
+
+    // //测试预加载视频
+    // useEffect(() => {
+    //     getVideoInfo();
+    // }, [])
+    //<---------  测试开场视频加载效果，用上面这段代码 ---------> 
+
 
     useEffect(() => {
         if (videoPathFrontUrl) {
@@ -165,16 +169,16 @@ const Vedio = (props: Props) => {
         switch (videoNum) {
             case 0:
                 // 
-                if (videoPathBackUrl) {
+                if (videoPathClothUrl) {
                     setVideoNum(1);
-                } else if (videoPathClothUrl) {
+                } else if (videoPathBackUrl) {
                     setVideoNum(2);
                 } else {
                     setVideoNum(0);
                 }
                 break;
             case 1:
-                if (videoPathClothUrl) {
+                if (videoPathBackUrl) {
                     setVideoNum(2);
                 } else {
                     setVideoNum(0);
@@ -192,21 +196,41 @@ const Vedio = (props: Props) => {
     return <div className="vedio" style={{ display: props.isShow ? 'block' : 'none' }}>
         {
             videoPathFrontUrl ?
-                <video src={videoNum === 0 ? videoPathFrontUrl : (videoNum === 1 ? videoPathBackUrl : videoPathClothUrl)} width="100%" height="100%"
-                    ref={videoRefMain}
-                    controls={needControls}
-                    autoPlay
-                    // loop
-                    onEnded={handleVideoEnded}
-                    muted
-                    playsInline
-                    webkit-playsinline
-                    x5-video-player-type="h5-page"
-                    x5-video-orientation="portraint"
-                    x5-video-player-fullscreen="false"
-                    preload="auto">
-                    您的浏览器不支持 video 标签。
-                </video>
+                // <video src={videoNum === 0 ? videoPathFrontUrl : (videoNum === 1 ? videoPathBackUrl : videoPathClothUrl)} width="100%" height="100%"
+                //     ref={videoRefMain}
+                //     controls={needControls}
+                //     autoPlay
+                //     // loop
+                //     onEnded={handleVideoEnded}
+                //     muted
+                //     playsInline
+                //     webkit-playsinline
+                //     x5-video-player-type="h5-page"
+                //     x5-video-orientation="portraint"
+                //     x5-video-player-fullscreen="false"
+                //     preload="auto">
+                //     您的浏览器不支持 video 标签。
+                // </video>
+                <video 
+                src={videoNum === 0 ? videoPathFrontUrl : (videoNum === 1 ? videoPathClothUrl : videoPathBackUrl)}
+                style={{
+                    width: '100vw',
+                    height: '100vh',
+                    objectFit: 'cover'
+                }}
+                ref={videoRefMain}
+                autoPlay
+                muted
+                playsInline
+                webkit-playsinline="true"
+                x5-video-player-type="h5-page"
+                x5-video-orientation="portraint"
+                x5-video-player-fullscreen="false"
+                preload="auto"
+                onEnded={handleVideoEnded}
+                >
+                您的浏览器不支持 video 标签。
+                </video>                
                 :
                 <RoomLoad />
         }
