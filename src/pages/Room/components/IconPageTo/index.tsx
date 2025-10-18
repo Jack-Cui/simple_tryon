@@ -170,9 +170,9 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
         const goBackWx = () => {
             const wx = jsweixin;
             // wx.miniProgram.navigateTo({
-            wx.miniProgram.redirectTo({    
             // wx.miniProgram.navigateBack({
-                //  delta: 1
+            //小程序返回上级方法
+            wx.miniProgram.redirectTo({                
                 url: '/pages/index/index'
             });
         }

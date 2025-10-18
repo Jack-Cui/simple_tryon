@@ -360,7 +360,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
             <div className="title">{props.title}</div>
             <div className="btn" id='selectVideoBtn'>
                 <img src={firstFrame || UploadIcon} onClick={uploadFile} />
-                <input ref={uploadFileEl} accept={getAccept()} type="file" style={{ display: 'none' }} onChange={fileChange} />
+                <input ref={uploadFileEl} accept={getAccept()} type="file" style={{ display: 'none' }} onChange={fileChange}  />
                 {/* <input ref={uploadFileEl}  type="file" style={{ display: 'none' }} onChange={fileChange} /> */}
             </div>
             {props.isRing && <Input className='input' value={perHeight} onChange={(value: any) => setPerHeight(value)} label={<img src={HeightIcon} />} suffix={<div>厘米</div>} type="number"  borderless placeholder="请输入您的身高" />}

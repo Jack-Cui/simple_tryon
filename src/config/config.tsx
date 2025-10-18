@@ -149,7 +149,7 @@ export const API_ENDPOINTS = {
   GET_USER_START_IMAGE: (id: string) => `/admin/sysopeningimageuser/getByUser/${id}`,
 
   //查询用户开场图片接口-分享模式
-  GET_USER_START_IMAGE_ONSHARE: (userid:string, picid: string) => `/admin/sysopeningimageuser/getByUser?userId=${userid}&id=${picid}`,
+  GET_USER_START_IMAGE_ONSHARE: (userid:string, picid: string) => `/admin/sysopeningimageuser/getByUserId?userId=${userid}&id=${picid}`,
 
   //查询用户开场视频接口
   GET_USER_START_VIDEO: (id: string) => `/admin/sysaivideo/${id}`,

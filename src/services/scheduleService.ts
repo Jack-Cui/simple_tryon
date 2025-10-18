@@ -1,5 +1,5 @@
 import { SCHEDULE_CONFIG, API_ENDPOINTS } from '../config/config';
-
+import jsweixin from 'weixin-js-sdk';
 // 浏览器环境中使用 Web Crypto API
 
 export interface ScheduleRequest {
@@ -153,6 +153,12 @@ export class ScheduleService {
       return responseData;
     } catch (error) {
       alert('服务器已满，请稍后再试');
+        //add by chao 2025.10.18 房间满自动返回
+        const wx = jsweixin;
+        //小程序返回上级方法
+        wx.miniProgram.redirectTo({                
+            url: '/pages/index/index'
+        });
       console.error('调度请求失败:', error);
       throw error;
     }

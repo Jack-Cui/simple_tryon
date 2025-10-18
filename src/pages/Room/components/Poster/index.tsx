@@ -13,12 +13,15 @@ const Poster = (props: Props) => {
     //自动轮询事件，加载所需的图片和视频
     const pollRef = useRef<number | null>(null);
     useEffect(() => {
+    const loginCache = getLoginCache();
+    const shareScene = loginCache?.shareScene || "";
+
         const poll = () => {
             const { imageIds, videoId } = tryonService.getMediaIds();
             console.log('轮询结果:', { imageIds, videoId });
             // 1.获取imageIds, videoId
             if ((imageIds && imageIds.length > 0) && (videoId && videoId !== "")) {
-                const loginCache = getLoginCache();
+                
                 console.log('获取到数据，停止轮询');
                 console.log('最终结果:', { imageIds, videoId });
                 if (!loginCache?.token) {
@@ -29,7 +32,15 @@ const Poster = (props: Props) => {
                     const timer = setInterval(async () => {
 
                             console.log('轮询imgId查询AI图片地址:', imgId +' '+ performance.now());
-                            const res = await modelAPI.getUserStartImage(imgId,loginCache.token); // 你的接口
+                            let res = null;
+                            //区分试衣模式和分享模式
+                            if (shareScene !== "onshare") {
+                                //试衣模式下
+                                res = await modelAPI.getUserStartImage(imgId,loginCache.token); // 你的接口
+                            }else{
+                                res = await modelAPI.getUserStartImageOnShare(loginCache.coUserId, imgId, loginCache.token); // 你的接口
+                            }
+                            
                             if (res.ok ) {
                                 const dataObj = JSON.parse(res.data);
                                 if(dataObj.data && dataObj.data.imgUrl && dataObj.data.imgUrl !== ""){
@@ -40,36 +51,7 @@ const Poster = (props: Props) => {
                                 }                                
                             }
                     }, 2000); // 每2秒轮询一次
-                });
-                // //3. 轮询获取视频地址
-                // //videoPathFront ， videoPathBack ， videoPathCloth
-                // const videoTimer = setInterval(async () => {
-                //     const res = await modelAPI.getUserStartVideo(videoId,loginCache.token); // 你的接口
-                //     if (res.ok) {
-                //         const dataObj = JSON.parse(res.data);
-                //         console.log('轮询videoId查询AI视频地址:', videoId +' '+ performance.now());
-                //         console.log('获取到视频:', ',dataObj.data.videoPathBack:',dataObj.data.videoPathBack,',dataObj.data.videoPathFront:',dataObj.data.videoPathFront,',dataObj.data.videoPathCloth:',dataObj.data.videoPathCloth);
-                //         if((!videoPathBackUrl) || videoPathBackUrl === "" ){
-                //             if(dataObj.data.videoPathBack){
-                //                setVideoPathBack(dataObj.data.videoPathBack);
-                //             }                            
-                //         }
-                //          if((!videoPathFrontUrl) || videoPathFrontUrl === "" ){
-                //             if(dataObj.data.videoPathFront){
-                //                setVideoPathFrontUrl(dataObj.data.videoPathFront);
-                //             }                            
-                //         }
-                //         if((!videoPathClothUrl) || videoPathClothUrl === "" ){
-                //             if(dataObj.data.videoPathCloth){
-                //                setVideoPathClothUrl(dataObj.data.videoPathCloth);
-                //             }                            
-                //         }
-                //         if(videoPathFrontUrl && videoPathFrontUrl !== "" && videoPathBackUrl && videoPathBackUrl !== "" && videoPathClothUrl && videoPathClothUrl !== ""){
-                //             //都获取到，再停止轮询
-                //             clearInterval(videoTimer);
-                //         }                                                                       
-                //     }
-                // }, 2000);
+                });                
                 
                 if (pollRef.current) {
                     clearTimeout(pollRef.current);
@@ -93,12 +75,6 @@ const Poster = (props: Props) => {
     
     //动态获取图片地址
     const [imageList, setImageList] = useState<any[]>([])
-    // //动态获取视频地址-正面视频（只有获取到正面视频，才结束loading状态）
-    // const [videoPathFrontUrl, setVideoPathFrontUrl] = useState<string>('')
-    // //动态获取视频地址-背身视频
-    // const [videoPathBackUrl, setVideoPathBack] = useState<string>('')   //动态获取视频地址-详细视频
-    // const [videoPathClothUrl, setVideoPathClothUrl] = useState<string>('')
-
 
     setTimeout(() => {
         const { imageIds, videoId } = tryonService.getMediaIds(); // 你自己的接口

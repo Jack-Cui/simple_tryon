@@ -13,11 +13,12 @@ const Vedio = (props: Props) => {
     const pollRef = useRef<number | null>(null);
     useEffect(() => {
         const poll = () => {
+            const loginCache = getLoginCache();
+            const shareScene = loginCache?.shareScene || "";            
             const { imageIds, videoId } = tryonService.getMediaIds();
             console.log('轮询结果2:', { imageIds, videoId });
             // 1.获取imageIds, videoId
             if ((imageIds && imageIds.length > 0) && (videoId && videoId !== "")) {
-                const loginCache = getLoginCache();
                 console.log('获取到数据，停止轮询2');
                 console.log('最终结果:', { imageIds, videoId });
                 if (!loginCache?.token) {
@@ -27,7 +28,14 @@ const Vedio = (props: Props) => {
                 //3. 轮询获取视频地址
                 //videoPathFront ， videoPathBack ， videoPathCloth
                 const videoTimer = setInterval(async () => {
-                    const res = await modelAPI.getUserStartVideo(videoId,loginCache.token); // 你的接口
+                    let res = null;
+                    //区分试衣模式和分享模式
+                    if (shareScene !== "onshare") {
+                        //试衣模式下
+                        res = await modelAPI.getUserStartVideo(videoId,loginCache.token); // 你的接口
+                    }else{
+                        res = await modelAPI.getUserStartVideoOnShare(loginCache.coUserId, videoId, loginCache.token); // 你的接口
+                    }
                     if (res.ok) {
                         const dataObj = JSON.parse(res.data);
                         console.log('轮询videoId查询AI视频地址:', videoId +' '+ performance.now());

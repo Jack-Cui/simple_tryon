@@ -1354,7 +1354,7 @@ export const roomAPI = {
   },
 
   // add by chao 2025.10.15 增加开场视频
-  async sendStartVideoToUE(modelId:string, clothId: string, roomId: string, beautyPic: string,videoPathCloth: string, access_token: string): Promise<ApiResponse> {
+  async sendStartVideoToUE(modelId:string, clothId: string, roomId: string, beautyPic: string,videoPathCloth: string, access_token: string,actionPath:string,actionPathBack:string): Promise<ApiResponse> {
     // if(isRecLog) 
       console.log('开始增加开场视频， modelId:', modelId, 'clothId:', clothId, 'roomId:', roomId, 'beautyPic:', beautyPic, 'videoPathCloth:', videoPathCloth);
     const endpoint = API_ENDPOINTS.ADD_USER_START_VIDEO();
@@ -1368,8 +1368,8 @@ export const roomAPI = {
       roomId: roomId,
       beautyPic: beautyPic,
       title: clothId,
-      actionPath: 'https://admins3.tos-cn-shanghai.volces.com/video_20251013/front.mp4',
-      actionPathBack:'https://admins3.tos-cn-shanghai.volces.com/video_20251013/back.mp4',
+      actionPath: actionPath, //'https://admins3.tos-cn-shanghai.volces.com/video_20251013/front.mp4',
+      actionPathBack: actionPathBack, //'https://admins3.tos-cn-shanghai.volces.com/video_20251013/back.mp4',
       videoPathCloth: videoPathCloth,
       modelId: modelId
     });

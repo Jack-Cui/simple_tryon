@@ -1028,6 +1028,10 @@ export class TryonService {
         let videoPathCloth = '';
         let imageIds: string[] = [];
         let videoId:string = '';
+        let figurePosePic:string = '';
+        let actionPath:string = '';
+        let actionPathBack:string = '';
+
         //初始化参数值
         try{
               const response1 = await roomAPI.getRoomInfoByRoomId(roomId, loginCache.token);
@@ -1040,8 +1044,15 @@ export class TryonService {
               }
               clothId = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothesId || '';
               videoPathCloth = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.detailVideo || '';
+              figurePosePic = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.figurePose || '';
+              actionPath = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.referAction1 || '';
+              actionPathBack = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.referAction2 || '';
+
               console.log('初始化参数值 clothId:', clothId);
               console.log('初始化参数值 videoPathCloth:', videoPathCloth);
+              console.log('初始化参数值 figurePosePic:', figurePosePic);
+              console.log('初始化参数值 actionPath:', actionPath);
+              console.log('初始化参数值 actionPathBack:', actionPathBack);
             
         }catch(error){
             console.error('❌ 初始化参数值失败111:', error);
@@ -1071,8 +1082,13 @@ export class TryonService {
 
         //add by chao 2025.10.15 增加开场动画同步UE逻辑
         //1.调用4次 新增用户试衣开场图片接口
-        for (let i = 1; i <= 4; i++) {
-          const figurePose = `https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/figure_pose${i}.jpg`;
+        const figurePoseUrls = figurePosePic.split(',');
+        console.log('动态解析房间信息figurePoseUrls: ', figurePoseUrls);
+        for (let i = 0;  i < figurePoseUrls.length; i++) {
+        const figurePose = figurePoseUrls[i].trim();
+        console.log('动态解析房间信息figurePose: ', i,' :',figurePose);
+        // for (let i = 1; i <= 4; i++) {
+        //   const figurePose = `https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/figure_pose${i}.jpg`;
 
           try{
             const resultResponse = await roomAPI.sendStartPicToUE(clothId, modelId, beautyPic, figurePose, loginCache.token);
@@ -1095,7 +1111,7 @@ export class TryonService {
 
         //2.调用1次 新增视频接口
         try{
-            const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token);
+            const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token,actionPath,actionPathBack);
             if (resultResponse.ok) {
                 const resultData = JSON.parse(resultResponse.data);
                 console.log('新增开场视频结果:', resultData);

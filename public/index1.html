@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
 
@@ -6,68 +6,51 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!-- <video src="https://ssl.resource.synconize.com/cf99abd63eba493883a44a7d5f03cfe1.mp4" width="100%" height="100%" autoplay="" loop="" playsinline="" x5-video-player-type="h5-page" x5-video-orientation="portraint" x5-video-player-fullscreen="false" preload="auto">您的浏览器不支持 video 标签。</video> -->
-  
-  <input type="file" id="videoFile" accept="video/*">
-<div id="result"></div>
+<video src="https://ssl.resource.synconize.com/cf99abd63eba493883a44a7d5f03cfe1.mp4" width="100%" height="100%" autoplay="" loop="" playsinline="" x5-video-player-type="h5-page" x5-video-orientation="portraint" x5-video-player-fullscreen="false" preload="auto">您的浏览器不支持 video 标签。</video> 
+-->
+   
 
-<script>
-  const videoFileInput = document.getElementById('videoFile');
-  const resultDiv = document.getElementById('result');
 
-  videoFileInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
 
-    // 清理之前的临时 URL（避免内存泄漏）
-    if (window.previousVideoUrl) {
-      URL.revokeObjectURL(window.previousVideoUrl);
-    }
 
-    // 生成临时 URL 并加载视频
-    const videoUrl = URL.createObjectURL(file);
-    window.previousVideoUrl = videoUrl; // 保存以便后续清理
 
-    const video = document.createElement('video');
-    video.src = videoUrl;
-    video.muted = true; // 静音避免自动播放限制
-    video.preload = 'metadata'; // 仅加载元数据，不加载完整视频
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+</head>
+<body>
+    <script>
+        wx.chooseMedia({
+            count: 1,
+            mediaType: ['video'],
+            sourceType: ['album'], // 强制相册
+            success(res) {
+                console.log(res.tempFiles[0].tempFilePath)
+            }
+        });
+    </script>
 
-    // 监听元数据加载完成事件
-    video.addEventListener('loadedmetadata', () => {
-      const width = video.videoWidth;
-      const height = video.videoHeight;
-      console.log('width:', width, 'height:', height);
-      
-      // 判断是否为 4K（支持 UHD 3840×2160 或 DCI 4K 4096×2160）
-      const is4K = 
-        (width >= 3840 && height >= 2160) || // UHD 4K
-        (width >= 4096 && height >= 2160);   // DCI 4K
+    <script src="https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js"></script>
+    <script>
+        var vConsole = new window.VConsole();
+    </script>
+</body>
+</html>
 
-      resultDiv.textContent = `视频分辨率：${width}×${height}，是否为 4K：${is4K ? '是' : '否'}`;
-      
 
-      // 清理临时 URL（可选，页面卸载时会自动回收）
-      // URL.revokeObjectURL(videoUrl);
-    });
 
-    // 处理加载失败（如文件损坏或格式不支持）
-    video.addEventListener('error', () => {
-      resultDiv.textContent = '无法读取视频元数据，请检查文件格式';
-    });
-  });
-</script>
-  </body>
+
+
+  <!-- </body>
 
 
   <script src="https://cdn.jsdelivr.net/npm/vconsole@latest/dist/vconsole.min.js"></script>
     <script>
         var vConsole = new window.VConsole();
-    </script>
-    <!-- <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script> -->
+    </script> -->
 
-
-
+    
     <!-- <button onclick="selectFile()">选择文件</button>
 
 <script>
@@ -86,4 +69,4 @@
   }
 </script> -->
 
-</html>
+<!-- </html> -->
