@@ -90,6 +90,8 @@ export interface CreateSysRoomShareRequest {
   userId: string;
   extra1: string;
   extra2: string;
+  videoIds: string;
+  openImgIds: string;
   clothId: string;
   actionId: string;
   scenarioId: string;

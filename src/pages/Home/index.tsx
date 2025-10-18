@@ -1313,155 +1313,155 @@ const location = useLocation();
     });
   };
 
-  // 处理分享按钮点击 - 创建分享并显示分享弹窗
-  const handleShareClick = async () => {
-    try {
-      console.log('📤 点击分享按钮，开始创建分享...');
+  // // 处理分享按钮点击 - 创建分享并显示分享弹窗
+  // const handleShareClick = async () => {
+  //   try {
+  //     console.log('📤 点击分享按钮，开始创建分享...');
 
-      // 调用创建分享接口
-      const shareResult = await tryonService.createShare();
+  //     // 调用创建分享接口
+  //     const shareResult = await tryonService.createShare();
 
-      console.log('✅ 创建分享成功:', shareResult);
+  //     console.log('✅ 创建分享成功:', shareResult);
 
-      // 显示分享弹窗
-      setShowShareModal(true);
+  //     // 显示分享弹窗
+  //     setShowShareModal(true);
 
-    } catch (error) {
-      console.error('❌ 创建分享失败:', error);
-      // 即使创建分享失败，也显示分享弹窗
-      setShowShareModal(true);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('❌ 创建分享失败:', error);
+  //     // 即使创建分享失败，也显示分享弹窗
+  //     setShowShareModal(true);
+  //   }
+  // };
 
-  // 关闭分享弹窗
-  const handleCloseShareModal = () => {
-    setShowShareModal(false);
-  };
+  // // 关闭分享弹窗
+  // const handleCloseShareModal = () => {
+  //   setShowShareModal(false);
+  // };
 
-  // 分享给好友
-  const handleShareToFriend = async () => {
-    try {
-      console.log('📤 分享给好友...');
+  // // 分享给好友
+  // const handleShareToFriend = async () => {
+  //   try {
+  //     console.log('📤 分享给好友...');
 
-      // 检测是否在微信浏览器中
-      const isWechatBrowser = /MicroMessenger/i.test(navigator.userAgent);
+  //     // 检测是否在微信浏览器中
+  //     const isWechatBrowser = /MicroMessenger/i.test(navigator.userAgent);
 
-      if (isWechatBrowser) {
-        // 微信浏览器：使用微信选择好友发送功能
-        console.log('📱 检测到微信浏览器，使用微信选择好友发送');
+  //     if (isWechatBrowser) {
+  //       // 微信浏览器：使用微信选择好友发送功能
+  //       console.log('📱 检测到微信浏览器，使用微信选择好友发送');
 
-        // 检查微信分享服务是否已初始化
-        if (!wechatShareService.isInitialized()) {
-          console.log('🔧 初始化微信分享服务...');
+  //       // 检查微信分享服务是否已初始化
+  //       if (!wechatShareService.isInitialized()) {
+  //         console.log('🔧 初始化微信分享服务...');
 
-          // 初始化微信分享服务
-          await wechatShareService.initialize({
-            appId: WECHAT_CONFIG.APP_ID,
-            title: WECHAT_CONFIG.DEFAULT_SHARE.title,
-            desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
-            link: WECHAT_CONFIG.DEFAULT_SHARE.link,
-            imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
-          });
-        }
+  //         // 初始化微信分享服务
+  //         await wechatShareService.initialize({
+  //           appId: WECHAT_CONFIG.APP_ID,
+  //           title: WECHAT_CONFIG.DEFAULT_SHARE.title,
+  //           desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
+  //           link: WECHAT_CONFIG.DEFAULT_SHARE.link,
+  //           imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
+  //         });
+  //       }
 
-        // 执行微信选择好友发送
-        try {
-          await wechatShareService.chooseAndShareToFriend({
-            title: WECHAT_CONFIG.DEFAULT_SHARE.title,
-            desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
-            link: WECHAT_CONFIG.DEFAULT_SHARE.link,
-            imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
-          });
+  //       // 执行微信选择好友发送
+  //       try {
+  //         await wechatShareService.chooseAndShareToFriend({
+  //           title: WECHAT_CONFIG.DEFAULT_SHARE.title,
+  //           desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
+  //           link: WECHAT_CONFIG.DEFAULT_SHARE.link,
+  //           imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
+  //         });
 
-          console.log('✅ 微信选择好友发送完成');
-          setShowShareModal(false);
-        } catch (error) {
-          console.warn('⚠️ 微信选择好友发送失败，显示手动分享提示:', error);
-          // 不抛出错误，让微信分享服务显示友好的提示
-        }
+  //         console.log('✅ 微信选择好友发送完成');
+  //         setShowShareModal(false);
+  //       } catch (error) {
+  //         console.warn('⚠️ 微信选择好友发送失败，显示手动分享提示:', error);
+  //         // 不抛出错误，让微信分享服务显示友好的提示
+  //       }
 
-      } else {
-        // 手机浏览器：复制链接并提示
-        console.log('🌐 检测到手机浏览器，复制分享链接');
+  //     } else {
+  //       // 手机浏览器：复制链接并提示
+  //       console.log('🌐 检测到手机浏览器，复制分享链接');
 
-        const shareData = {
-          title: 'airU-3D试衣间',
-          desc: '快来和我一起共创动画',
-          link: window.location.href.split('#')[0],
-          imgUrl: 'https://dev-h5.ai1010.cn/logo192.png'
-        };
+  //       const shareData = {
+  //         title: 'airU-3D试衣间',
+  //         desc: '快来和我一起共创动画',
+  //         link: window.location.href.split('#')[0],
+  //         imgUrl: 'https://dev-h5.ai1010.cn/logo192.png'
+  //       };
 
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(shareData.link);
-            console.log('✅ 分享链接已复制到剪贴板');
-          } else {
-            // 降级方案：使用传统方法
-            const textArea = document.createElement('textarea');
-            textArea.value = shareData.link;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            console.log('✅ 分享链接已复制到剪贴板（降级方案）');
-          }
+  //       try {
+  //         if (navigator.clipboard && navigator.clipboard.writeText) {
+  //           await navigator.clipboard.writeText(shareData.link);
+  //           console.log('✅ 分享链接已复制到剪贴板');
+  //         } else {
+  //           // 降级方案：使用传统方法
+  //           const textArea = document.createElement('textarea');
+  //           textArea.value = shareData.link;
+  //           textArea.style.position = 'fixed';
+  //           textArea.style.left = '-999999px';
+  //           textArea.style.top = '-999999px';
+  //           document.body.appendChild(textArea);
+  //           textArea.focus();
+  //           textArea.select();
+  //           document.execCommand('copy');
+  //           document.body.removeChild(textArea);
+  //           console.log('✅ 分享链接已复制到剪贴板（降级方案）');
+  //         }
 
-          // 显示成功提示
-          setShareTipMessage('分享链接已复制到剪贴板！');
-          setShareTipType('success');
-          setShowShareTip(true);
-          setTimeout(() => setShowShareTip(false), 3000);
-          setShowShareModal(false);
+  //         // 显示成功提示
+  //         setShareTipMessage('分享链接已复制到剪贴板！');
+  //         setShareTipType('success');
+  //         setShowShareTip(true);
+  //         setTimeout(() => setShowShareTip(false), 3000);
+  //         setShowShareModal(false);
 
-        } catch (copyError) {
-          console.error('❌ 复制分享链接失败:', copyError);
-          setShareTipMessage('复制失败，请手动复制链接');
-          setShareTipType('error');
-          setShowShareTip(true);
-          setTimeout(() => setShowShareTip(false), 3000);
-        }
-      }
+  //       } catch (copyError) {
+  //         console.error('❌ 复制分享链接失败:', copyError);
+  //         setShareTipMessage('复制失败，请手动复制链接');
+  //         setShareTipType('error');
+  //         setShowShareTip(true);
+  //         setTimeout(() => setShowShareTip(false), 3000);
+  //       }
+  //     }
 
-    } catch (error) {
-      console.error('❌ 分享给好友失败:', error);
-      setShareTipMessage(`分享失败: ${error instanceof Error ? error.message : String(error)}`);
-      setShareTipType('error');
-      setShowShareTip(true);
-      setTimeout(() => setShowShareTip(false), 3000);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('❌ 分享给好友失败:', error);
+  //     setShareTipMessage(`分享失败: ${error instanceof Error ? error.message : String(error)}`);
+  //     setShareTipType('error');
+  //     setShowShareTip(true);
+  //     setTimeout(() => setShowShareTip(false), 3000);
+  //   }
+  // };
 
 
-  // 监听微信分享准备就绪事件
-  useEffect(() => {
-    const handleWechatShareReady = (event: CustomEvent) => {
-      console.log('📤 微信分享准备就绪:', event.detail);
-      setIsWechatShareReady(true);
+  // // 监听微信分享准备就绪事件
+  // useEffect(() => {
+  //   const handleWechatShareReady = (event: CustomEvent) => {
+  //     console.log('📤 微信分享准备就绪:', event.detail);
+  //     setIsWechatShareReady(true);
 
-      // 根据不同类型显示不同的提示信息
-      const { message, type } = event.detail;
-      console.log('📤 分享提示类型:', type, '消息:', message);
+  //     // 根据不同类型显示不同的提示信息
+  //     const { message, type } = event.detail;
+  //     console.log('📤 分享提示类型:', type, '消息:', message);
 
-      setShareTipMessage(message || '请在微信中点击右上角菜单进行分享');
-      setShareTipType(type || 'wechat');
-      setShowShareTip(true);
+  //     setShareTipMessage(message || '请在微信中点击右上角菜单进行分享');
+  //     setShareTipType(type || 'wechat');
+  //     setShowShareTip(true);
 
-      // 3秒后自动隐藏提示
-      setTimeout(() => {
-        setShowShareTip(false);
-      }, 3000);
-    };
+  //     // 3秒后自动隐藏提示
+  //     setTimeout(() => {
+  //       setShowShareTip(false);
+  //     }, 3000);
+  //   };
 
-    window.addEventListener('wechatShareReady', handleWechatShareReady as EventListener);
+  //   window.addEventListener('wechatShareReady', handleWechatShareReady as EventListener);
 
-    return () => {
-      window.removeEventListener('wechatShareReady', handleWechatShareReady as EventListener);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('wechatShareReady', handleWechatShareReady as EventListener);
+  //   };
+  // }, []);
 
   // 监听更新右侧顶部图片事件
   useEffect(() => {
@@ -3822,18 +3822,8 @@ const location = useLocation();
         showCloseButton={true}
       />
 
-      {/* 分享弹窗 */}
-      <ShareModal
-        isOpen={showShareModal}
-        onClose={handleCloseShareModal}
-        onShare={handleShareToFriend}
-        shareData={{
-          title: WECHAT_CONFIG.DEFAULT_SHARE.title,
-          desc: WECHAT_CONFIG.DEFAULT_SHARE.desc,
-          link: WECHAT_CONFIG.DEFAULT_SHARE.link,
-          imgUrl: WECHAT_CONFIG.DEFAULT_SHARE.imgUrl
-        }}
-      />
+      
+
 
         {/* 创建模型弹窗 */}
         <CreateModelModal

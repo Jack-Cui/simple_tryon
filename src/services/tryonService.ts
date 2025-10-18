@@ -246,10 +246,11 @@ export class TryonService {
         updateRoomNameInCache(this.roomName);
       }
 
-      if (shareScene !== "onshare") {
-        const shareResult = await tryonService.createShare();
-        console.log('✅ 创建分享成功:', shareResult);
-      }
+      //2025.10.17 注释：分享节点改为创建海报后
+      // if (shareScene !== "onshare") {
+      //   const shareResult = await tryonService.createShare();
+      //   console.log('✅ 创建分享成功:', shareResult);
+      // }
 
       
     } catch (error) {
@@ -974,6 +975,7 @@ export class TryonService {
       if (!loginCache?.token) {
         throw new Error('token missing');
       }
+      console.log('loginCache.shareScene: ', loginCache.shareScene);
 
       let roomId = loginCache.roomId;
       console.log('loginCache.roomId:', roomId);
@@ -1071,6 +1073,12 @@ export class TryonService {
       //3.通知UE前两次的结果
       rtcVideoService.sendStartInfoToUE(imageIds,videoId);
       console.log('通知UE开场动画参数已发送！','imageIds:',imageIds,'videoId:',videoId);
+
+      if (loginCache.shareScene !== "onshare") {
+        console.log('非查看分享模式，创建新的分享！');
+        const shareResult = await tryonService.createShare();
+        console.log('✅ 创建分享成功:', shareResult);
+      }
   }
 
 
@@ -1211,14 +1219,25 @@ export class TryonService {
       if (!loginCache?.userId) {
         throw new Error('用户未登录或登录信息缺失');
       }
+
+      const imageIdsArray = Array.isArray(this.tsImageIds)
+        ? this.tsImageIds.filter(id => typeof id === 'string' && id.trim() !== '')
+        : [];
+      const imageIdsCsv = imageIdsArray.length > 0 ? imageIdsArray.join(',') : '';
+
       //console.log('性能调优 a1.2.1：' + new Date().toLocaleString() +' '+ performance.now() )
       // 2. 构建分享数据
       const shareData: CreateSysRoomShareRequest = {
         id: Long.fromString(this.config.coCreationId).toString(),
         roomId: this.roomPrimaryId.toString(),
-        userId: loginCache.userId,
+        userId: loginCache.userId,        
         extra1: '', //roomInfo.data.extra1 || '新视频',
         extra2: '', //roomInfo.data.extra2 || '',
+
+        //2025.10.17 增加分享海报、视频参数
+        videoIds: this.tsVideoId || '',
+        openImgIds: imageIdsCsv || '',
+
         clothId: '', 
         // roomInfo.data.clothId || '',
         actionId: '', //roomInfo.data.actionId || '',

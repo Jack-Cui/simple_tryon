@@ -1351,25 +1351,25 @@ const location = useLocation();
     });
   };
 
-  // 处理分享按钮点击 - 创建分享并显示分享弹窗
-  const handleShareClick = async () => {
-    try {
-      console.log('📤 点击分享按钮，开始创建分享...');
+  // // 处理分享按钮点击 - 创建分享并显示分享弹窗
+  // const handleShareClick = async () => {
+  //   try {
+  //     console.log('📤 点击分享按钮，开始创建分享...');
 
-      // 调用创建分享接口
-      const shareResult = await tryonService.createShare();
+  //     // 调用创建分享接口
+  //     const shareResult = await tryonService.createShare();
 
-      console.log('✅ 创建分享成功:', shareResult);
+  //     console.log('✅ 创建分享成功:', shareResult);
 
-      // 显示分享弹窗
-      setShowShareModal(true);
+  //     // 显示分享弹窗
+  //     setShowShareModal(true);
 
-    } catch (error) {
-      console.error('❌ 创建分享失败:', error);
-      // 即使创建分享失败，也显示分享弹窗
-      setShowShareModal(true);
-    }
-  };
+  //   } catch (error) {
+  //     console.error('❌ 创建分享失败:', error);
+  //     // 即使创建分享失败，也显示分享弹窗
+  //     setShowShareModal(true);
+  //   }
+  // };
 
   // 关闭分享弹窗
   const handleCloseShareModal = () => {
