@@ -4,7 +4,7 @@ import { webSocketService, WebSocketConfig } from './websocketService';
 import { RTCVideoService, RTCVideoConfig, rtcVideoService } from './rtcVideoService';
 import { RTC_CONFIG } from '../config/config';
 import { AccessToken, Privilege } from '../token/AccessToken';
-import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache, updateCoRoomIdFromCache } from '../utils/loginCache';
+import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache, updateCoRoomIdFromCache, updateCoPicsIdFromCache,updateCoVideoIdFromCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 import { log } from 'console';
 import { useState } from 'react';
@@ -539,6 +539,39 @@ export class TryonService {
       updateCoUserIdFromCache( roomInfo.data.userId);
       //add by chao 2025.10.07 增加共创房间id
       updateCoRoomIdFromCache( roomInfo.data.roomId);
+
+      //add by chao 2025.10.18 增加共创图片id和视频id
+      const sharePics:string = roomInfo.data.openImgIds ||'';
+      const shareVideo = roomInfo.data.videoIds || ''
+      console.log('🔍 更新缓存中的coPicsId为房间的 openImgIds:', roomInfo.data.openImgIds);
+      // updateCoPicsIdFromCache( roomInfo.data.openImgIds);
+      console.log('🔍 更新缓存中的coVideoId为房间的 videoIds:', roomInfo.data.videoIds);
+      // updateCoVideoIdFromCache( roomInfo.data.videoIds);
+
+      //如果是分享模式，直接查询海报、视频数据
+        if(sharePics){  
+          console.log('查看分享模式，获取已有的分享海报IDs！:', sharePics);
+          try{
+            const pics: string[] = sharePics
+              ? sharePics.split(',').map(s => s.trim()).filter(s => s !== '')
+              : [];            
+            this.tsImageIds = pics;
+            console.log('获取分享海报IDs成功！:', pics);
+          } catch(error){
+              console.error('❌ 获取分享海报IDs失败！:', error);
+          }          
+        }else {
+            console.log('获取分享海报失败！');
+            return;
+        }
+        if(shareVideo){
+            this.tsVideoId = shareVideo;
+            console.log('获取分享视频ID成功！:', shareVideo);
+        }else {
+            console.log('获取分享视频失败！');
+            return;
+        }  
+
       //update by chao 2025.10.02 注释这部分：
       //这里直接根据共享id获取到的原房间号，使用和普通登台方式一样的登台数据
       // // 构建登台信息
@@ -966,6 +999,12 @@ export class TryonService {
     }
   }
 
+/**
+ * 初始化开场海报、视频参数
+ * 区分去试试、去看看2种场景
+ * 1）去试试，用户A登录后，登台成功，基于A的数据通知后台生成图片、视频，记录IDs，通知UE，并创建共创记录
+ * 2）去看看，用户B登录后，基于用户A的共创记录，直接获取图片、视频IDs，传递给视频海报页面轮询结果
+ */
   private async initTryonParams() {
       //add by chao 2025.10.15 增加开场动画同步UE逻辑
       const loginCache = getLoginCache();
@@ -976,109 +1015,137 @@ export class TryonService {
         throw new Error('token missing');
       }
       console.log('loginCache.shareScene: ', loginCache.shareScene);
+    
+    //update by chao 2025.10.18:修改创建分享的功能，增加新字段，并调整创建位置  
+    if (loginCache.shareScene !== "onshare") {
+      console.log('非查看分享模式，创建新的分享！');
 
-      let roomId = loginCache.roomId;
-      console.log('loginCache.roomId:', roomId);
-      let modelId = '';
-      let beautyPic = '';
-      let clothId = '';      
-      let videoPathCloth = '';
-      let imageIds: string[] = [];
-      let videoId:string = '';
-      //初始化参数值
-      try{
-            const response1 = await roomAPI.getRoomInfoByRoomId(roomId, loginCache.token);
-            if (!response1.ok) {
-              throw new Error(`获取房间信息失败111: HTTP ${response1.status}`);
-            }
-            const roomInfo1 = roomAPI.parseRoomInfoResponse(response1);
-            if (!roomInfo1) {
-              throw new Error('解析房间信息失败111');
-            }
-            clothId = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothesId || '';
-            videoPathCloth = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.detailVideo || '';
-            console.log('初始化参数值 clothId:', clothId);
-            console.log('初始化参数值 videoPathCloth:', videoPathCloth);
-          
-      }catch(error){
-          console.error('❌ 初始化参数值失败111:', error);
-      }
-      
-      try {
-        const response = await modelAPI.getModelList(loginCache.token, loginCache.userId);          
-          if (response.ok) {
-              const dataObj = JSON.parse(response.data);
-              // // 判断如果失败或者data长度是空，则弹窗提示请创建模型
-              // if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
-              // }
-              
-              // 检查是否有 modelStatus=4 的模型
-              const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
-              if (hasValidModel) {
-                  modelId = dataObj.data[0]?.id || '';
-                  beautyPic = dataObj.data[0]?.modelPictureUrl || '';                  
+        let roomId = loginCache.roomId;
+        console.log('loginCache.roomId:', roomId);
+        let modelId = '';
+        let beautyPic = '';
+        let clothId = '';      
+        let videoPathCloth = '';
+        let imageIds: string[] = [];
+        let videoId:string = '';
+        //初始化参数值
+        try{
+              const response1 = await roomAPI.getRoomInfoByRoomId(roomId, loginCache.token);
+              if (!response1.ok) {
+                throw new Error(`获取房间信息失败111: HTTP ${response1.status}`);
               }
-              console.log('初始化参数值 modelId:', modelId);
-              console.log('初始化参数值 beautyPic:', beautyPic);
-          }
+              const roomInfo1 = roomAPI.parseRoomInfoResponse(response1);
+              if (!roomInfo1) {
+                throw new Error('解析房间信息失败111');
+              }
+              clothId = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothesId || '';
+              videoPathCloth = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.detailVideo || '';
+              console.log('初始化参数值 clothId:', clothId);
+              console.log('初始化参数值 videoPathCloth:', videoPathCloth);
+            
         }catch(error){
-            console.error('❌ 初始化参数值失败222:', error);
+            console.error('❌ 初始化参数值失败111:', error);
         }
         
+        try {
+          const response = await modelAPI.getModelList(loginCache.token, loginCache.userId);          
+            if (response.ok) {
+                const dataObj = JSON.parse(response.data);
+                // // 判断如果失败或者data长度是空，则弹窗提示请创建模型
+                // if (dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0) {
+                // }
+                
+                // 检查是否有 modelStatus=4 的模型
+                const hasValidModel = dataObj.data.some((model: any) => model.modelStatus === 4);
+                if (hasValidModel) {
+                    modelId = dataObj.data[0]?.id || '';
+                    beautyPic = dataObj.data[0]?.modelPictureUrl || '';                  
+                }
+                console.log('初始化参数值 modelId:', modelId);
+                console.log('初始化参数值 beautyPic:', beautyPic);
+            }
+          }catch(error){
+              console.error('❌ 初始化参数值失败222:', error);
+          }
+          
 
-      //add by chao 2025.10.15 增加开场动画同步UE逻辑
-      //1.调用4次 新增用户试衣开场图片接口
-      for (let i = 1; i <= 4; i++) {
-        const figurePose = `https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/figure_pose${i}.jpg`;
+        //add by chao 2025.10.15 增加开场动画同步UE逻辑
+        //1.调用4次 新增用户试衣开场图片接口
+        for (let i = 1; i <= 4; i++) {
+          const figurePose = `https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/figure_pose${i}.jpg`;
 
+          try{
+            const resultResponse = await roomAPI.sendStartPicToUE(clothId, modelId, beautyPic, figurePose, loginCache.token);
+
+            if (resultResponse.ok) {
+                const resultData = JSON.parse(resultResponse.data);
+                console.log('新增开场图片结果:', resultData);
+                if (resultData.data) {
+                    console.log('resultData.data.id:', resultData.data?.id);
+                    imageIds.push(resultData.data?.id);
+                }else{
+                    console.log('resultData.data不存在:', resultData);
+                }   
+            }
+          }catch(error){
+              console.error('❌ 调用新增用户试衣开场图片接口失败:', error);
+          }
+        }
+        console.log('图片IDs:', imageIds);
+
+        //2.调用1次 新增视频接口
         try{
-          const resultResponse = await roomAPI.sendStartPicToUE(clothId, modelId, beautyPic, figurePose, loginCache.token);
-
-          if (resultResponse.ok) {
-              const resultData = JSON.parse(resultResponse.data);
-              console.log('新增开场图片结果:', resultData);
-              if (resultData.data) {
-                  console.log('resultData.data.id:', resultData.data?.id);
-                  imageIds.push(resultData.data?.id);
-              }else{
-                  console.log('resultData.data不存在:', resultData);
-              }   
+            const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token);
+            if (resultResponse.ok) {
+                const resultData = JSON.parse(resultResponse.data);
+                console.log('新增开场视频结果:', resultData);
+                if (resultData.data) {
+                    console.log('resultData.data.id:', resultData.data?.id);
+                    videoId = resultData.data?.id;
+                }else{
+                    console.log('resultData.data不存在:', resultData);
+                }   
+            }
+          }catch(error){
+              console.error('❌ 调用新增用户试衣开场视频接口失败:', error);
           }
-        }catch(error){
-            console.error('❌ 调用新增用户试衣开场图片接口失败:', error);
-        }
-      }
-      console.log('图片IDs:', imageIds);
+        this.tsImageIds = imageIds;
+        this.tsVideoId = videoId;
+        console.log('设置变量1111');  
 
-      //2.调用1次 新增视频接口
-      try{
-          const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token);
-          if (resultResponse.ok) {
-              const resultData = JSON.parse(resultResponse.data);
-              console.log('新增开场视频结果:', resultData);
-              if (resultData.data) {
-                  console.log('resultData.data.id:', resultData.data?.id);
-                  videoId = resultData.data?.id;
-              }else{
-                  console.log('resultData.data不存在:', resultData);
-              }   
-          }
-        }catch(error){
-            console.error('❌ 调用新增用户试衣开场视频接口失败:', error);
-        }
-      this.tsImageIds = imageIds;
-      this.tsVideoId = videoId;
-      console.log('设置变量1111');  
+        //3.通知UE前两次的结果
+        rtcVideoService.sendStartInfoToUE(imageIds,videoId);
+        console.log('通知UE开场动画参数已发送！','imageIds:',imageIds,'videoId:',videoId);
 
-      //3.通知UE前两次的结果
-      rtcVideoService.sendStartInfoToUE(imageIds,videoId);
-      console.log('通知UE开场动画参数已发送！','imageIds:',imageIds,'videoId:',videoId);
-
-      if (loginCache.shareScene !== "onshare") {
-        console.log('非查看分享模式，创建新的分享！');
+      
         const shareResult = await tryonService.createShare();
         console.log('✅ 创建分享成功:', shareResult);
-      }
+     }else{
+      //代码调整到初始化判断分享位置，不用等待登台，不然可能登台失败
+      // //如果是分享模式，直接查询海报、视频数据
+      //   if(loginCache.coPicsId){  
+      //     console.log('查看分享模式，获取已有的分享海报IDs！:', loginCache.coPicsId);
+      //     try{
+      //       const pics: string[] = loginCache.coPicsId
+      //         ? loginCache.coPicsId.split(',').map(s => s.trim()).filter(s => s !== '')
+      //         : [];            
+      //       this.tsImageIds = pics;
+      //       console.log('获取分享海报IDs成功！:', pics);
+      //     } catch(error){
+      //         console.error('❌ 获取分享海报IDs失败！:', error);
+      //     }          
+      //   }else {
+      //       console.log('获取分享海报失败！');
+      //       return;
+      //   }
+      //   if(loginCache.coVideoId){
+      //       this.tsVideoId = loginCache.coVideoId;
+      //       console.log('获取分享视频ID成功！:', loginCache.coVideoId);
+      //   }else {
+      //       console.log('获取分享视频失败！');
+      //       return;
+      //   }        
+     }
   }
 
 

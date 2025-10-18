@@ -1583,16 +1583,41 @@ export const modelAPI = {
     return await apiService.get(endpoint, headers);
   },
 
-  // 获取开场视频
-  async getUserStartVideo(picId: string, access_token: string): Promise<ApiResponse> {
+  // 获取开场图片-分享模式
+  async getUserStartImageOnShare(userId: string, picId: string, access_token: string): Promise<ApiResponse> {
     // if(isRecLog) 
-      console.log('自动获取开场视频: ', picId);
-    const endpoint = API_ENDPOINTS.GET_USER_START_VIDEO(picId);
+    console.log('自动获取开场图片1: ');
+    console.log('用户ID: ', userId, '图片ID: ', picId);
+    const endpoint = API_ENDPOINTS.GET_USER_START_IMAGE_ONSHARE(userId, picId);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  },
+
+  // 获取开场视频
+  async getUserStartVideo(videoId: string, access_token: string): Promise<ApiResponse> {
+    // if(isRecLog) 
+      console.log('自动获取开场视频: ', videoId);
+    const endpoint = API_ENDPOINTS.GET_USER_START_VIDEO(videoId);
     const headers = {
       'Authorization': `Bearer ${access_token}`
     };
     return await apiService.get(endpoint, headers);
   },  
+
+  // 获取开场视频-分享模式
+  async getUserStartVideoOnShare(userId: string, videoId: string, access_token: string): Promise<ApiResponse> {
+    // if(isRecLog) 
+    console.log('自动获取开场视频1: ');
+    console.log('用户ID: ', userId, '视频ID: ', videoId);
+    const endpoint = API_ENDPOINTS.GET_USER_START_VIDEO_ONSHARE(userId, videoId);
+    const headers = {
+      'Authorization': `Bearer ${access_token}`
+    };
+    return await apiService.get(endpoint, headers);
+  },  
+  
 };
 
 export const uploadAPI = {

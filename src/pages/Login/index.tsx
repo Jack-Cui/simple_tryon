@@ -202,7 +202,9 @@ const Login = () => {
             shareScene: "",
             coUserId: '',
             coRoomId: '',
-            clothDefaultSize:''
+            clothDefaultSize:'',
+            coPicsId: '',
+            coVideoId:''
           });
           
           // 登录成功后立即初始化房间信息

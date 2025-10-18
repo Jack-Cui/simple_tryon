@@ -32,7 +32,7 @@ const Poster = (props: Props) => {
                             const res = await modelAPI.getUserStartImage(imgId,loginCache.token); // 你的接口
                             if (res.ok ) {
                                 const dataObj = JSON.parse(res.data);
-                                if(dataObj.data.imgUrl && dataObj.data.imgUrl !== ""){
+                                if(dataObj.data && dataObj.data.imgUrl && dataObj.data.imgUrl !== ""){
                                     console.log('获取到图片:', dataObj.data.imgUrl);
                                     setImageList(prevList => [...prevList, dataObj.data.imgUrl]);
                                     console.log('停止轮询imgId:', imgId);
