@@ -85,6 +85,48 @@ const Vedio = (props: Props) => {
     // // update by chao 2025.10.04 安卓微信环境下 video 标签无法自动播放，需手动调用 play 方法    
     const videoRefMain = useRef<HTMLVideoElement>(null);
     const videoRefSmall = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const video = videoRefMain.current;
+      if (!video) return;
+
+      // 检查视频是否意外暂停
+      if (video.paused && !video.ended) {
+        console.log('检测到视频暂停，尝试恢复播放...');
+        video.play().catch(error => {
+          console.log('恢复播放失败:', error);
+        });
+      }
+    }, 500); // 每秒检查一次
+
+    return () => {
+      clearInterval(interval); // 清理interval
+    };
+  }, []);
+
+
+    // useEffect(() => {
+    //     const video = videoRefMain.current;
+
+    //     if (!video) {
+    //         alert('video 元素未找到');
+    //         return;
+    //     };
+    //     const handleVisibilityChange = () => {        
+    //     if (!document.hidden && video.paused) {
+    //         alert('页面可见，尝试播放视频!');
+    //         video.play().catch(e => console.log('Autoplay prevented:', e));
+    //     }
+    //     };
+
+    //     document.addEventListener('visibilitychange', handleVisibilityChange);
+        
+    //     return () => {
+    //     document.removeEventListener('visibilitychange', handleVisibilityChange);
+    //     };
+    // }, []);
+
     //动态获取视频地址-正面视频（只有获取到正面视频，才结束loading状态）
     const [videoPathFrontUrl, setVideoPathFrontUrl] = useState<string>('');
     //动态获取视频地址-背身视频
@@ -104,6 +146,8 @@ const Vedio = (props: Props) => {
                     })
                     .catch(() => { });
             }, 300);
+
+
         });
     };
 
@@ -152,6 +196,44 @@ const Vedio = (props: Props) => {
             } else {
                 document.addEventListener('WeixinJSBridgeReady', initVideos);
             }
+
+        // const video = videoRefMain.current;
+        //     if (!video) {
+        //     alert('video 元素未找到1');
+        //     return;
+        // };
+
+        // const handleVisibilityChange = () => {        
+        // if (!document.hidden && video.paused) {
+        //     alert('页面可见，尝试播放视频!');
+        //     video.play().catch(e => console.log('Autoplay prevented:', e));
+        // }
+        // };
+
+        // document.addEventListener('visibilitychange', handleVisibilityChange);
+        
+        // return () => {
+        // document.removeEventListener('visibilitychange', handleVisibilityChange);
+        // };
+
+            // 页面显示时恢复播放
+        // window.addEventListener('pageshow', function(event) {
+        //     this.alert('页面显示事件触发1!');
+        //     if (event.persisted) {
+        //         console.log('页面从缓存恢复!!!');
+        //         // 从缓存恢复的页面
+        //         const video = videoRefMain.current;
+        //         if (video) {
+        //             try {
+        //                 video.play().catch(e => {
+        //                     console.log('页面恢复后播放失败');
+        //                 });
+        //             } catch (e) {
+        //                 console.log('播放异常:', e);
+        //             }
+        //         }
+        //     }
+        // });
         }
     }, [videoPathFrontUrl]);
 
@@ -172,6 +254,7 @@ const Vedio = (props: Props) => {
             }
         }
     }, [videoPathFrontUrl]);
+    
 
     const handleVideoEnded = () => {
         switch (videoNum) {
@@ -230,6 +313,7 @@ const Vedio = (props: Props) => {
                 autoPlay
                 muted
                 playsInline
+                // controls
                 webkit-playsinline="true"
                 x5-video-player-type="h5-page"
                 x5-video-orientation="portraint"
