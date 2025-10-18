@@ -16,7 +16,8 @@ import {
   CreateSysRoomShareResponse,
   ClotheSizeResponse
 } from '../types/api';
-import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache, updateClothesDetailsInCache, updateCoUserIdFromCache, getCoUserIdFromCache, updateClothDefaultSizeFromCache } from '../utils/loginCache';
+import { getLoginCache, updateDefaultSceneNameInCache, getClothesDetailFromCache, updateClothesDetailsInCache, updateCoUserIdFromCache, getCoUserIdFromCache, updateClothDefaultSizeFromCache, getClothDefaultSizeFromCache,getCoDefaultSizeFromCache } from '../utils/loginCache';
+import { log } from 'console';
 // import { getEndpoint } from '@volcengine/tos-sdk/dist/utils';
 // import { get } from 'http';
 
@@ -727,6 +728,21 @@ export const roomAPI = {
         }
         updateClothDefaultSizeFromCache(String(sizeName));
     }
+
+    const loginCache = getLoginCache();
+    if(loginCache){
+      const shareScene = loginCache.shareScene || "";
+      if (shareScene === "onshare") {
+        //TODO
+        garment1Size = getCoDefaultSizeFromCache();
+        const sizeTmp:number = Number(garment1Size);
+        console.log('设置garment1Size：', garment1Size);
+        const item = ['XS','S', 'M', 'L', 'XL', 'XXL'][sizeTmp];
+        updateClothDefaultSizeFromCache(item);
+        console.log('设置默认尺码到缓存：', item);
+      }
+    }
+
 
     console.log('👕 构建的服装参数:', {
       garment1Id: garment1Id.toString(), 

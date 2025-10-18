@@ -4,7 +4,7 @@ import { webSocketService, WebSocketConfig } from './websocketService';
 import { RTCVideoService, RTCVideoConfig, rtcVideoService } from './rtcVideoService';
 import { RTC_CONFIG } from '../config/config';
 import { AccessToken, Privilege } from '../token/AccessToken';
-import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache, updateCoRoomIdFromCache, updateCoPicsIdFromCache,updateCoVideoIdFromCache } from '../utils/loginCache';
+import { updateRoomNameInCache, updateClothesListInCache, updateRoomIdInCache, updateScenesListInCache, updateCoUserIdFromCache, getLoginCache, saveLoginCache, updateCoRoomIdFromCache, updateCoPicsIdFromCache,updateCoVideoIdFromCache,getClothDefaultSizeFromCache,updatCoDefaultSizeFromCache,getCoDefaultSizeFromCache } from '../utils/loginCache';
 import { ClothesItem, CreateSysRoomShareRequest } from '../types/api';
 import { log } from 'console';
 import { useState } from 'react';
@@ -547,6 +547,9 @@ export class TryonService {
       // updateCoPicsIdFromCache( roomInfo.data.openImgIds);
       console.log('🔍 更新缓存中的coVideoId为房间的 videoIds:', roomInfo.data.videoIds);
       // updateCoVideoIdFromCache( roomInfo.data.videoIds);
+
+      updatCoDefaultSizeFromCache( roomInfo.data.clothesSize || 0 );
+      console.log('🔍 更新缓存中的默认服饰尺码为房间的 clothesSize:', roomInfo.data.clothesSize || 0 );
 
       //如果是分享模式，直接查询海报、视频数据
         if(sharePics){  
@@ -1308,6 +1311,22 @@ export class TryonService {
         : [];
       const imageIdsCsv = imageIdsArray.length > 0 ? imageIdsArray.join(',') : '';
 
+      const defaultSize = getClothDefaultSizeFromCache();
+      let coClothSize:number = 0;
+        const sizeMap: { [key: string]: number } = {
+            'XS': 1,
+            'S': 2,
+            'M': 3,
+            'L': 4,
+            'XL': 5,
+            'XXL': 6,
+            '3XL': 7
+        };
+        if(sizeMap[defaultSize]){
+          coClothSize = sizeMap[defaultSize];
+        }      
+      console.log('defaultSize:', defaultSize, '=> coClothSize:', coClothSize);
+
       //console.log('性能调优 a1.2.1：' + new Date().toLocaleString() +' '+ performance.now() )
       // 2. 构建分享数据
       const shareData: CreateSysRoomShareRequest = {
@@ -1338,7 +1357,8 @@ export class TryonService {
         createBy: '',
         updateTime: null,
         updateBy: '',
-        tenantId: null
+        tenantId: null,
+        clothesSize: coClothSize //TODO clothesSize
       };
 
       if(isTronLog) console.log('📋 构建的分享数据:', shareData);

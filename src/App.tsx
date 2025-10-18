@@ -126,7 +126,8 @@ function App() {
               coRoomId: '',
               clothDefaultSize:'',
               coPicsId: '',
-              coVideoId:''
+              coVideoId:'',
+              coDefaultSize:0
             });
             
             // 登录成功后立即初始化房间信息

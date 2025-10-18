@@ -109,6 +109,7 @@ export interface CreateSysRoomShareRequest {
   updateTime: string | null;
   updateBy: string;
   tenantId: string | null;
+  clothesSize: number | null;
 }
 
 // 创建分享响应类型

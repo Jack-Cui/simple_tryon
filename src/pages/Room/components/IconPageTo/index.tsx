@@ -53,7 +53,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
         'M': 2, 
         'L': 3, 
         'XL': 4,
-        'XLL': 5
+        'XXL': 5
     };
     const sizeList = [SizeXs1, SizeS1, SizeM1, SizeL1, SizeXl1, SizeXll1];
     const sizeCheckList = [SizeXs, SizeS, SizeM, SizeL, SizeXl, SizeXll];
@@ -119,7 +119,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
     }
 
     const checkSize = (num: number) => {
-        const item = ['XS','S', 'M', 'L', 'XL', 'XLL'][num];
+        const item = ['XS','S', 'M', 'L', 'XL', 'XXL'][num];
         console.log('选中尺寸', item);
         if (item === showSize) {
             return setShowIcon(false);

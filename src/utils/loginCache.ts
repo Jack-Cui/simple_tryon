@@ -20,7 +20,7 @@ export interface LoginCacheData {
   clothDefaultSize: string;//衣服默认尺码 add by chao:2025.10.12
   coPicsId: string;//共创图片ID add by chao:2025.10.18
   coVideoId: string;//共创视频ID add by chao:2025.10.18
-
+  coDefaultSize: number;//共创默认尺码 add by chao:2025.10.18
 }
 
 const CACHE_KEY = 'loginCache';
@@ -441,5 +441,41 @@ export const updateCoVideoIdFromCache = (coVideoId: string): void => {
     }
   } catch (error) {
     console.error('❌ 更新缓存中的 coVideoId 失败:', error);
+  }
+};
+
+/**
+ * 获取缓存中的默认衣服尺寸
+ * @param CoDefaultSize 默认衣服尺寸
+ * @returns 默认衣服尺寸，如果没有则返回null
+ */
+export const getCoDefaultSizeFromCache = (): any | null => {
+  try {
+    const cachedData = getLoginCache();
+    if (cachedData?.coDefaultSize ) {
+      return cachedData.coDefaultSize;
+    }
+    return null;
+  } catch (error) {
+    console.error('❌ 从缓存获取 共创 默认衣服尺寸 失败:', error);
+    return null;
+  }
+}; 
+  /**
+ * 更新缓存中的默认衣服尺寸
+ * @param CoDefaultSize 默认衣服尺寸
+ */
+export const updatCoDefaultSizeFromCache = (coDefaultSize: number): void => {
+  try {
+    const cachedData = getLoginCache();
+    if (cachedData) {
+      const updatedData = { ...cachedData, coDefaultSize };
+      // const cacheDurationStr = localStorage.getItem(CACHE_KEY + '_duration');
+      // const cacheDuration = cacheDurationStr ? parseInt(cacheDurationStr) : DEFAULT_CACHE_DURATION;      
+      localStorage.setItem(CACHE_KEY, JSON.stringify(updatedData));
+      console.log('✅ coDefaultSize 已更新到缓存:', coDefaultSize);
+    }
+  } catch (error) {
+    console.error('❌ 更新缓存中的 coDefaultSize 失败:', error);
   }
 };
