@@ -59,9 +59,11 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     const getAccept = () => {
         let accept = '';
         if (props?.isRing) {
-            accept = 'video/*';
+            // accept = 'video/*';
+            accept = '.mov,.mp4';
         } else if (props?.isPersonal) {
-            accept = 'video/*';
+            // accept = 'video/*';
+            accept = '.mov,.mp4';
         } else if (props?.is3DBeauty) {
             accept = 'image/jpeg, image/png';
         }
