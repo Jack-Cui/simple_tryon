@@ -108,8 +108,19 @@ const Poster = (props: Props) => {
     // }, []);
     //<---------  测试开场图加载效果，用上面这段代码 --------->  
 
-
+    function disableDrag() {
+    document.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+    }, { passive: false });
+    
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    }
+    useEffect(() => {
+        disableDrag();
+    }, []);
     const swiperItems = () => (
+        
         <>
             {imageList.map((item, index) => (
                 <Swiper.SwiperItem key={index}>

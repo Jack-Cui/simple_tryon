@@ -18,7 +18,7 @@ import { getLoginCache } from '../../utils/loginCache';
 
 const Room = () => {
 
-    const [applyStatus, setApplyStatus] = useState<number | null>(null);    
+    const [applyStatus, setApplyStatus] = useState<number | null>(null);
     const homeOptEl = useRef(null);
     const d3El = useRef(null);
     const { loginScene } = useLoginScene();
@@ -38,7 +38,7 @@ const Room = () => {
     const handleHotClick = (flag: boolean) => {
         if (d3El?.current) {
             (d3El?.current as any).handleHotClick(flag);
-          }
+        }
     }
 
     useEffect(() => {
@@ -49,17 +49,17 @@ const Room = () => {
     }, [])
 
     // 获取模型列表
-      const getModelList = async () => {
-      //chao:2025.10.15  
+    const getModelList = async () => {
+        //chao:2025.10.15  
         const loginCache: any = getLoginCache();
         let qUserId = '';
-        if(loginCache && loginCache.userId){
-            if(loginCache.coUserId){
+        if (loginCache && loginCache.userId) {
+            if (loginCache.coUserId) {
                 qUserId = loginCache.coUserId;
             } else {
                 qUserId = loginCache.userId;
             }
-        }else {
+        } else {
             console.log('获取用户信息失败！');
             return;
         }
@@ -71,28 +71,28 @@ const Room = () => {
         console.log('dataObj', dataObj);
 
         //页面跳转逻辑：是否展示无模型页面
-        if( dataObj.data && dataObj.data.length > 0 && dataObj.data[0].modelStatus === 4 )  {
+        if (dataObj.data && dataObj.data.length > 0 && dataObj.data[0].modelStatus === 4) {
             setIsEmpty(false)
         } else {
             setIsEmpty(true)
         }
         console.log('dataObj.data.applyStatus', dataObj.data[0].applyStatus);
-        if( dataObj.data && dataObj.data.length > 0 && dataObj.data[0].applyStatus){
+        if (dataObj.data && dataObj.data.length > 0 && dataObj.data[0].applyStatus) {
             setApplyStatus(dataObj.data[0].applyStatus);
         }
 
-      }
+    }
     return (
         <>
-            <div className="room" 
-            style={page === 'room' ? {}: {display: 'none'}}
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (homeOptEl?.current) {
-                  (homeOptEl?.current as any).closeOpen();
-                }
-            }}
+            <div className="room"
+                style={page === 'room' ? {} : { display: 'none' }}
+                onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (homeOptEl?.current) {
+                        (homeOptEl?.current as any).closeOpen();
+                    }
+                }}
             >
                 {
                     isEmpty ?
@@ -103,22 +103,27 @@ const Room = () => {
                             <Vedio isShow={value === 'vedio'} />
                             <D3 ref={d3El} isShow={value === '3d'} />
                             <div className='room-bottom-tab-bar' style={{ zIndex: value === 'poster' ? 99 : 1099 }} >
-                                <TabBar value={value} onChange={change} shape="round" style={{ width: '50%' }} theme="tag" fixed={false} split={false}>
+                                <div className='room-page-fix'>
+                                    <div onClick={() => change('poster')} className={value === 'poster' ? 'active' : ''}>海报</div>
+                                    <div onClick={() => change('vedio')} className={value === 'vedio' ? 'active' : ''}>视频</div>
+                                    <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>3D</div>
+                                </div>
+                                {/* <TabBar value={value} onChange={change} shape="round" style={{ width: '50%' }} theme="tag" fixed={false} split={false}>
                                     {list.map((item, i) => (
                                         <TabBarItem key={item.value || i} value={item.value}>
                                             {item.label}
                                         </TabBarItem>
                                     ))}
-                                </TabBar>
+                                </TabBar> */}
                             </div>
                         </>
                 }
                 <IconPageTo ref={homeOptEl} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
             </div>
-            {page === 'create-model' && <CreateModel onBack={() => setPage('room')}/>}
-            {page === 'upload-action' && <UploadAction onBack={() => setPage('room')}/>}
-            {page === 'subs-package' && <SubscribePackage onBack={() => setPage('room')}/>}
-            <BrowseHistory isShow={page === 'browse-historry'} onBack={() => setPage('room')}/>
+            {page === 'create-model' && <CreateModel onBack={() => setPage('room')} />}
+            {page === 'upload-action' && <UploadAction onBack={() => setPage('room')} />}
+            {page === 'subs-package' && <SubscribePackage onBack={() => setPage('room')} />}
+            <BrowseHistory isShow={page === 'browse-historry'} onBack={() => setPage('room')} />
         </>
     )
 }
