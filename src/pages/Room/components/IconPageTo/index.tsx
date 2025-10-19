@@ -61,6 +61,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
     const [showSize, setShowSize] = useState('');
     const [aigcList, setAigcList] = useState<any[]>([]); // 点击过的动作
     const [showError, setShowError] = useState(false);
+    const [isHideRight, setIsHideRight] = useState(false); // 是否隐藏模型等
     useEffect(() => {
         showAction && getActionList();
     }, [showAction])
@@ -245,7 +246,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                     }
                 </div>
             </div>
-            <div className='right'>
+            <div className='right' style={isHideRight ? {display: 'none'} : {}}>
                 <div>
                     <img src={Models} alt="" onClick={goToModel}  />
                     <span>模型</span>
