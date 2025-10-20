@@ -85,7 +85,10 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
     }
     useEffect(() => {
         getUserDefaultSize();
-
+        if(loginScene === 'onshare') {
+            setIsHideRight(true);
+            console.log('分享场景，隐藏右侧模型等按钮');
+        }
     }, [])
 
 

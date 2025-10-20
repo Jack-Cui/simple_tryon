@@ -5,7 +5,7 @@ import HeightIcon from '../../assets/height.png';
 import ActionIcon from '../../assets//action.png';
 import UploadIcon from '../../assets//upload.png';
 import Example2Icon from '../../assets//example2.png';
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, use, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { checkVideo } from '../../utils/videoCheck';
 import {checkImg} from '../../utils/imgCheck';
 import { getVideoFirstFrame } from '../../utils/vedioToImg';
@@ -158,29 +158,9 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     });
     }
 
-    //add by chao:2025.10.16 添加倒计时效果
-    const [countdown, setCountdown] = useState(180); // 3分钟=180秒
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    // 倒计时相关状态
+    const [countdown, setCountdown] = useState(180); // 默认3分钟
 
-    useEffect(() => {
-        // 开始倒计时
-        timerRef.current = setInterval(() => {
-        setCountdown(prev => {
-            if (prev <= 1) {
-            if (timerRef.current) clearInterval(timerRef.current);
-            return 0;
-            }
-            return prev - 1;
-        });
-        }, 1000);
-
-        return () => {
-        if (timerRef.current) clearInterval(timerRef.current);
-        };
-    }, []);
-
-    const minutes = Math.floor(countdown / 60);
-    const seconds = countdown % 60;
 
     const fileChange = async (event: any) => {
         console.log('fileChange..1');
@@ -195,13 +175,13 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         if(isIOS){
             // 调用父组件传递的上传方法
             if (props.onIOSUploadVideo) {
+          
                 Toast({
-                    // message: '视频正在上传审核中...',
-                      message: (
+                    message: (
                         <div>
                         <div>视频正在上传审核中...</div>
                         <div style={{ marginTop: 8, fontSize: 14, color: '#666' }}>
-                            预估时间：{minutes}分{seconds.toString().padStart(2, '0')}秒
+                            预估时间：{Math.floor(countdown / 60)}分{(countdown % 60).toString().padStart(2, '0')}秒
                         </div>
                         </div>
                     ),
@@ -211,9 +191,9 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                     preventScrollThrough: true,
                     showOverlay: true,
                     icon: <Loading />,
-                  });
+                });
                 const { modelVideoUrlRes, videoResultsRes }= await props.onIOSUploadVideo(event.target.files[0]);
-                Toast.clear();                
+                Toast.clear();
                 console.log('uploadVideo result:', modelVideoUrlRes);
 
                 if(modelVideoUrlRes){
@@ -339,6 +319,8 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         }
     }
 
+    // 原始代码没有组件卸载时的清理逻辑
+    
     // 使用useImperativeHandle自定义暴露给父组件的内容
     useImperativeHandle(ref, () => ({
         // 暴露给父组件的方法，用于获取数据
