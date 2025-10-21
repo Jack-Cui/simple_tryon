@@ -153,7 +153,7 @@ export class ScheduleService {
       
       return responseData;
     } catch (error) {
-
+      // throw error;
       
       alert('服务器已满，请稍后再试');
         //add by chao 2025.10.18 房间满自动返回

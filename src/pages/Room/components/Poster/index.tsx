@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Swiper,Dialog } from "tdesign-mobile-react";
+import { Swiper } from "tdesign-mobile-react";
 // import '@t-design/mobile/dist/css/tdesign-mobile.css';
 import './index.css';
-import RoomLoad from "../Loading";
+import RoomLoad from "../Loading/index";
 import { tryonService } from "../../../../services/tryonService";
 import { modelAPI, roomAPI } from "../../../../services/api";
 import { getLoginCache } from "../../../../utils/loginCache";
@@ -110,16 +110,22 @@ const Poster = (props: Props) => {
     // }, []);
     //<---------  测试开场图加载效果，用上面这段代码 --------->  
 
-    function disableDrag() {
-    document.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-    }, { passive: false });
-    
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    }
     useEffect(() => {
-        disableDrag();
+        // 添加事件监听器阻止滚动
+        const preventScroll = (e: Event) => {
+            e.preventDefault();
+        };
+        
+        document.addEventListener('touchmove', preventScroll, false);
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        
+        // 清理函数，移除滚动限制
+        return () => {
+            document.removeEventListener('touchmove', preventScroll, false);
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+        };
     }, []);
     const swiperItems = () => (
         
@@ -141,6 +147,7 @@ const Poster = (props: Props) => {
     );
     return <div className="poster" style={{display: props.isShow ? 'block' : 'none'}}>
         {imageList.length > 0 ? 
+            <>
             <Swiper
             height="100%"
             interval={3000}
@@ -151,6 +158,18 @@ const Poster = (props: Props) => {
         >
             {swiperItems()}
         </Swiper>
+        {/* 透明水印层 */}
+        <div className="watermark-container">
+            <div className="watermark-content">
+                <div className="watermark-icon">i</div>
+                <div className="watermark-text">
+                    内容使用AI技术个性化生成，由于技术局限性，<br/>
+                    部分商品细节可能与实物存在差异，建议您以<br/>
+                    实物为准。
+                </div>
+            </div>
+        </div>
+        </>
         :
         <RoomLoad />
         }

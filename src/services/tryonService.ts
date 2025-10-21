@@ -1036,6 +1036,10 @@ export class TryonService {
         let actionPathBack:string = '';
         let clothMaterialImg:string='';
         let shoesImg:string='';
+        let clothCoatImg:string='';
+        let clothDownImg:string='';
+        let clothInnerImg:string='';
+
         //初始化参数值
         try{
               const response1 = await roomAPI.getRoomInfoByRoomId(roomId, loginCache.token);
@@ -1053,12 +1057,20 @@ export class TryonService {
               actionPathBack = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.referAction2 || '';
               clothMaterialImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothesSourceUrl || '';
               shoesImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.referShoes1 || '';
+              clothCoatImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothCoatImg || '';
+              clothDownImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothDownImg || '';
+              clothInnerImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothInnerImg || '';
 
               console.log('初始化参数值 clothId:', clothId);
               console.log('初始化参数值 videoPathCloth:', videoPathCloth);
               console.log('初始化参数值 figurePosePic:', figurePosePic);
               console.log('初始化参数值 actionPath:', actionPath);
               console.log('初始化参数值 actionPathBack:', actionPathBack);
+              console.log('初始化参数值 clothMaterialImg:', clothMaterialImg);
+              console.log('初始化参数值 shoesImg:', shoesImg);
+              console.log('初始化参数值 clothCoatImg:', clothCoatImg);
+              console.log('初始化参数值 clothDownImg:', clothDownImg);
+              console.log('初始化参数值 clothInnerImg:', clothInnerImg);
             
         }catch(error){
             console.error('❌ 初始化参数值失败111:', error);
@@ -1097,7 +1109,7 @@ export class TryonService {
         //   const figurePose = `https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/figure_pose${i}.jpg`;
 
           try{
-            const resultResponse = await roomAPI.sendStartPicToUE(clothId, modelId, beautyPic, figurePose, loginCache.token, clothMaterialImg,shoesImg);
+            const resultResponse = await roomAPI.sendStartPicToUE(clothId, modelId, beautyPic, figurePose, loginCache.token, clothMaterialImg,shoesImg,clothCoatImg,clothDownImg,clothInnerImg);
 
             if (resultResponse.ok) {
                 const resultData = JSON.parse(resultResponse.data);

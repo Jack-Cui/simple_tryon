@@ -2,18 +2,66 @@
     width: 100vw;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
+/* 轮播图容器样式 */
+.carousel-container {
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 轮播图项样式 */
+.carousel-item {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 加载动画区域 */
+.loading-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* 加载动画样式 */
 .room-load .t-loading__spinner--line:before {
     background-color: #fff;
 }
+
 .room-load .t-loading__spinner {
     width: 32px;
     height: 32px;
 }
+
 .room-load .t-loading__text {
     color: #fff;
     font-size: 18px;
+    margin-top: 10px;
+}
+
+/* 轮播图导航点样式 */
+.room-load .t-swiper-nav--bottom {
+    bottom: -20px !important;
+}
+
+.room-load .t-swiper-nav-dots-item {
+    width: 8px;
+    height: 8px;
+    margin: 0 4px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.room-load .t-swiper-nav-dots-item--active {
+    background-color: #fff;
+    width: 24px;
+    border-radius: 4px;
 }

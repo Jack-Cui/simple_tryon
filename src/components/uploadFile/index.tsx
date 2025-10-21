@@ -360,13 +360,48 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
             {props.isPersonal && <Input className='input' value={perActionName} onChange={(value: any) => setPerActionName(value)} maxlength={4} label={<img src={ActionIcon} />} borderless placeholder="请输入动作名称" />}
             <div className="info">
                 {/* <div className='info_title'>环拍视频要求：</div> */}
+                {/* 环拍视频要求标题 */}
+                {props.isRing && (
+                    <div className="info_title">环拍视频教程：</div>
+                )}
+                
+                {/* 环拍视频教程播放区域 */}
+                {props.isRing && (
+                    <div style={{ 
+                        margin: '15px 0', 
+                        padding: '10px', 
+                        backgroundColor: '#f8f9fa', 
+                        borderRadius: '8px',
+                        textAlign: 'center'
+                    }}>
+                        <video 
+                            style={{
+                                width: '100%',
+                                maxWidth: '300px',
+                                borderRadius: '4px',
+                                cursor: 'pointer'
+                            }}
+                            controls 
+                            poster=""
+                        >
+                            <source src="https://admins3.tos-cn-shanghai.volces.com/Panoramic%20video%20tutorial.mp4" type="video/mp4" />
+                            您的浏览器不支持视频播放。请使用更新的浏览器。
+                        </video>
+                        {/* <div style={{ 
+                            marginTop: '8px', 
+                            fontSize: '12px', 
+                            color: '#666'
+                        }}>点击播放环拍视频教程</div> */}
+                    </div>
+                )}                
+
                 <div className="info_title">
                     {props.isRing
                         ? '环拍视频要求：'
                         : props.is3DBeauty
                         ? '拍照要求：'
                         : '动作视频要求：'}
-                </div>
+                </div>                
                 {(props?.info || []).map((item) => {
                     return <div className='info_item'>{item}</div>
                 })}

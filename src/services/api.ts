@@ -1350,7 +1350,7 @@ export const roomAPI = {
   },
 
   // add by chao 2025.10.15 增加开场图
-  async sendStartPicToUE(clothId: string, modelId: string, beautyPic: string,figurePose: string, access_token: string,clothMaterialImg: string,shoesImg:string): Promise<ApiResponse> {
+  async sendStartPicToUE(clothId: string, modelId: string, beautyPic: string,figurePose: string, access_token: string,clothMaterialImg: string,shoesImg:string,clothCoatImg:string,clothDownImg:string,clothInnerImg:string): Promise<ApiResponse> {
     // if(isRecLog) 
       console.log('开始增加开场图，clothId:', clothId, 'modelId:', modelId, 'beautyPic:', beautyPic);
     const endpoint = API_ENDPOINTS.ADD_USER_START_IMAGE();
@@ -1366,7 +1366,10 @@ export const roomAPI = {
       figurePose: figurePose,
       accessoriesImg: 'https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/blank.png',
       clothMaterialImg:clothMaterialImg,
-      shoesImg:shoesImg
+      shoesImg:shoesImg,
+      clothCoatImg:clothCoatImg,
+      clothDownImg:clothDownImg,
+      clothInnerImg:clothInnerImg
     });
     return await apiService.post(endpoint, data, headers);
   },
