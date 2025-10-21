@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Swiper } from "tdesign-mobile-react";
+import { Swiper,Dialog } from "tdesign-mobile-react";
+import '@t-design/mobile/dist/css/tdesign-mobile.css';
 import './index.css';
 import RoomLoad from "../Loading";
 import { tryonService } from "../../../../services/tryonService";
 import { modelAPI, roomAPI } from "../../../../services/api";
 import { getLoginCache } from "../../../../utils/loginCache";
+
 
 interface Props {
     isShow?: boolean;
