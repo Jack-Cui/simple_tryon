@@ -159,8 +159,19 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     }
 
     // 倒计时相关状态
-    const [countdown, setCountdown] = useState(180); // 默认3分钟
+    const [countdown, setCountdown] = useState(0); // 默认3分钟 180
 
+    useEffect(() => {
+        if (countdown > 0) {
+            console.log(countdown);
+            const timerId = setInterval(() => {
+                setCountdown(prevCount => prevCount - 1);
+            }, 1000);
+            return () => {
+                clearInterval(timerId);
+            };
+        }
+    }, [countdown])
 
     const fileChange = async (event: any) => {
         console.log('fileChange..1');
@@ -175,7 +186,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         if(isIOS){
             // 调用父组件传递的上传方法
             if (props.onIOSUploadVideo) {
-          
+                setCountdown(180);
                 Toast({
                     message: (
                         <div>
@@ -352,9 +363,9 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                 <div className="info_title">
                     {props.isRing
                         ? '环拍视频要求：'
-                        : props.isPersonal
-                        ? '拍照要求'
-                        : ''}
+                        : props.is3DBeauty
+                        ? '拍照要求：'
+                        : '动作视频要求：'}
                 </div>
                 {(props?.info || []).map((item) => {
                     return <div className='info_item'>{item}</div>

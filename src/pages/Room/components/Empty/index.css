@@ -9,7 +9,7 @@
 }
 .empty > .img {
     width: 173px;
-    height: 173px;
+    height: auto;
 }
 .empty > .tip {
     width: 168px;

@@ -108,9 +108,9 @@ const Room = () => {
                             <D3 ref={d3El} isShow={value === '3d'} />
                             <div className='room-bottom-tab-bar' style={{ zIndex: value === 'poster' ? 99 : 1099 }} >
                                 <div className='room-page-fix'>
-                                    <div onClick={() => change('poster')} className={value === 'poster' ? 'active' : ''}>海报</div>
-                                    <div onClick={() => change('vedio')} className={value === 'vedio' ? 'active' : ''}>视频</div>
-                                    <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>3D</div>
+                                    <div onClick={() => change('poster')} className={value === 'poster' ? 'active' : ''}>试穿海报</div>
+                                    <div onClick={() => change('vedio')} className={value === 'vedio' ? 'active' : ''}>动感模拟</div>
+                                    <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>尺码松紧</div>
                                 </div>
                                 {/* <TabBar value={value} onChange={change} shape="round" style={{ width: '50%' }} theme="tag" fixed={false} split={false}>
                                     {list.map((item, i) => (

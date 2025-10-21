@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Swiper,Dialog } from "tdesign-mobile-react";
-import '@t-design/mobile/dist/css/tdesign-mobile.css';
+// import '@t-design/mobile/dist/css/tdesign-mobile.css';
 import './index.css';
 import RoomLoad from "../Loading";
 import { tryonService } from "../../../../services/tryonService";
