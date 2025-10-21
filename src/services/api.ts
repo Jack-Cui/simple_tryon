@@ -1350,7 +1350,7 @@ export const roomAPI = {
   },
 
   // add by chao 2025.10.15 增加开场图
-  async sendStartPicToUE(clothId: string, modelId: string, beautyPic: string,figurePose: string, access_token: string): Promise<ApiResponse> {
+  async sendStartPicToUE(clothId: string, modelId: string, beautyPic: string,figurePose: string, access_token: string,clothMaterialImg: string,shoesImg:string): Promise<ApiResponse> {
     // if(isRecLog) 
       console.log('开始增加开场图，clothId:', clothId, 'modelId:', modelId, 'beautyPic:', beautyPic);
     const endpoint = API_ENDPOINTS.ADD_USER_START_IMAGE();
@@ -1364,15 +1364,17 @@ export const roomAPI = {
       beautyPic: beautyPic,
       note: '',//非必传
       figurePose: figurePose,
-      accessoriesImg: 'https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/blank.png'
+      accessoriesImg: 'https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/blank.png',
+      clothMaterialImg:clothMaterialImg,
+      shoesImg:shoesImg
     });
     return await apiService.post(endpoint, data, headers);
   },
 
   // add by chao 2025.10.15 增加开场视频
-  async sendStartVideoToUE(modelId:string, clothId: string, roomId: string, beautyPic: string,videoPathCloth: string, access_token: string,actionPath:string,actionPathBack:string): Promise<ApiResponse> {
+  async sendStartVideoToUE(modelId:string, clothId: string, roomId: string, beautyPic: string,videoPathCloth: string, access_token: string,actionPath:string,actionPathBack:string,beginImgId:string): Promise<ApiResponse> {
     // if(isRecLog) 
-      console.log('开始增加开场视频， modelId:', modelId, 'clothId:', clothId, 'roomId:', roomId, 'beautyPic:', beautyPic, 'videoPathCloth:', videoPathCloth);
+      console.log('开始增加开场视频， modelId:', modelId, 'clothId:', clothId, 'roomId:', roomId, 'beautyPic:', beautyPic, 'videoPathCloth:', videoPathCloth, 'actionPath:', actionPath, 'actionPathBack:', actionPathBack, 'beginImgId:', beginImgId);
     const endpoint = API_ENDPOINTS.ADD_USER_START_VIDEO();
     const headers = {
       'Authorization': `Bearer ${access_token}`,
@@ -1387,7 +1389,8 @@ export const roomAPI = {
       actionPath: actionPath, //'https://admins3.tos-cn-shanghai.volces.com/video_20251013/front.mp4',
       actionPathBack: actionPathBack, //'https://admins3.tos-cn-shanghai.volces.com/video_20251013/back.mp4',
       videoPathCloth: videoPathCloth,
-      modelId: modelId
+      modelId: modelId,
+      beginImgId:beginImgId
     });
     return await apiService.post(endpoint, data, headers);
   }  

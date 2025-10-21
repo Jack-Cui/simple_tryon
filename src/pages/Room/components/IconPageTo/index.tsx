@@ -176,9 +176,25 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
             // wx.miniProgram.navigateTo({
             // wx.miniProgram.navigateBack({
             //小程序返回上级方法
-            wx.miniProgram.redirectTo({                
-                url: '/pages/index/index'
-            });
+
+            const loginCache: any = getLoginCache();
+            if (!loginCache?.token) {
+                throw new Error('用户未登录或登录信息缺失');
+            }
+            //add by chao 2025.10.20 跳转回商品详情页
+            const goodsId = loginCache.goodsId;
+            console.log('返回商品页，goodsId=',goodsId);
+            if(goodsId){
+                wx.miniProgram.redirectTo({                
+                    // url: '/pages/index/index'
+                    url: '/pages/detail/detail?goodsId='+goodsId
+                });
+            }else{
+                    wx.miniProgram.redirectTo({                
+                    url: '/pages/index/index'
+                });     
+            }
+
         }
     
         useImperativeHandle(ref, () => ({

@@ -21,6 +21,7 @@ export interface LoginCacheData {
   coPicsId: string;//共创图片ID add by chao:2025.10.18
   coVideoId: string;//共创视频ID add by chao:2025.10.18
   coDefaultSize: number;//共创默认尺码 add by chao:2025.10.18
+  goodsId?: string; // 商品ID，可选
 }
 
 const CACHE_KEY = 'loginCache';

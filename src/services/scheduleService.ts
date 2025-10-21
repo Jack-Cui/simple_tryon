@@ -1,5 +1,6 @@
 import { SCHEDULE_CONFIG, API_ENDPOINTS } from '../config/config';
 import jsweixin from 'weixin-js-sdk';
+import { getLoginCache } from '../utils/loginCache';
 // 浏览器环境中使用 Web Crypto API
 
 export interface ScheduleRequest {
@@ -152,13 +153,30 @@ export class ScheduleService {
       
       return responseData;
     } catch (error) {
+
+      
       alert('服务器已满，请稍后再试');
         //add by chao 2025.10.18 房间满自动返回
         const wx = jsweixin;
-        //小程序返回上级方法
-        wx.miniProgram.redirectTo({                
-            url: '/pages/index/index'
-        });
+        
+        const loginCache: any = getLoginCache();
+            if (!loginCache?.token) {
+                throw new Error('用户未登录或登录信息缺失');
+            }
+            //add by chao 2025.10.20 跳转回商品详情页
+            const goodsId = loginCache.goodsId;
+            console.log('返回商品页，goodsId=',goodsId);
+            if(goodsId){
+                wx.miniProgram.redirectTo({                
+                    // url: '/pages/index/index'
+                    url: '/pages/detail/detail?goodsId='+goodsId
+                });
+            }else{
+                    wx.miniProgram.redirectTo({                
+                    url: '/pages/index/index'
+                });     
+            }
+
       console.error('调度请求失败:', error);
       throw error;
     }

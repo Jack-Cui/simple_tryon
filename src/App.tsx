@@ -51,7 +51,7 @@ function App() {
         const tenant_id = urlParams.get('tenant_id');
         const room_id = urlParams.get('room_id') || '';
         const co_creation_id = urlParams.get('co_creation_id') || '123';
-
+        
         //<---- update by chao 2025.09.27
         //增加参数，支持小程序拉新操作
         //注册时间 register_time ：小程序品牌方传入 10位unix时间戳
@@ -60,6 +60,8 @@ function App() {
         const register_time = urlParams.get('register_time') || '';
         const inviteUserId = urlParams.get('inviteUserId') || '';
         const login_scene = urlParams.get('login_scene') || '';
+        const goods_id = urlParams.get('goods_id') || '';
+        console.log('goods_id:', goods_id);
         setLoginScene(login_scene);
         
         if(isRecLog) console.log('🔍 解析URL参数:', { user_id, tenant_id, room_id, login_scene, inviteUserId, register_time });
@@ -127,7 +129,8 @@ function App() {
               clothDefaultSize:'',
               coPicsId: '',
               coVideoId:'',
-              coDefaultSize:0
+              coDefaultSize:0,
+              goodsId: goods_id // 保存商品ID
             });
             
             // 登录成功后立即初始化房间信息

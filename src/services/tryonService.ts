@@ -1034,7 +1034,8 @@ export class TryonService {
         let figurePosePic:string = '';
         let actionPath:string = '';
         let actionPathBack:string = '';
-
+        let clothMaterialImg:string='';
+        let shoesImg:string='';
         //初始化参数值
         try{
               const response1 = await roomAPI.getRoomInfoByRoomId(roomId, loginCache.token);
@@ -1050,6 +1051,8 @@ export class TryonService {
               figurePosePic = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.figurePose || '';
               actionPath = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.referAction1 || '';
               actionPathBack = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.referAction2 || '';
+              clothMaterialImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothesSourceUrl || '';
+              shoesImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.referShoes1 || '';
 
               console.log('初始化参数值 clothId:', clothId);
               console.log('初始化参数值 videoPathCloth:', videoPathCloth);
@@ -1094,7 +1097,7 @@ export class TryonService {
         //   const figurePose = `https://admins3.tos-cn-shanghai.volces.com/img_input_20251013/figure_pose${i}.jpg`;
 
           try{
-            const resultResponse = await roomAPI.sendStartPicToUE(clothId, modelId, beautyPic, figurePose, loginCache.token);
+            const resultResponse = await roomAPI.sendStartPicToUE(clothId, modelId, beautyPic, figurePose, loginCache.token, clothMaterialImg,shoesImg);
 
             if (resultResponse.ok) {
                 const resultData = JSON.parse(resultResponse.data);
@@ -1114,7 +1117,8 @@ export class TryonService {
 
         //2.调用1次 新增视频接口
         try{
-            const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token,actionPath,actionPathBack);
+            const picNo = imageIds[0];
+            const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token,actionPath,actionPathBack,picNo);
             if (resultResponse.ok) {
                 const resultData = JSON.parse(resultResponse.data);
                 console.log('新增开场视频结果:', resultData);
