@@ -80,8 +80,9 @@ const Room = () => {
         } else {
             setIsEmpty(true)
         }
-        console.log('dataObj.data.applyStatus', dataObj.data[0].applyStatus);
+        
         if (dataObj.data && dataObj.data.length > 0 && dataObj.data[0].applyStatus) {
+            console.log('dataObj.data.applyStatus', dataObj.data[0].applyStatus);
             setApplyStatus(dataObj.data[0].applyStatus);
         }
 
