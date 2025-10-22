@@ -159,7 +159,7 @@ const Poster = (props: Props) => {
             {swiperItems()}
         </Swiper>
         {/* 透明水印层 */}
-        <div className="watermark-container">
+        {/* <div className="watermark-container">
             <div className="watermark-content">
                 
             <div className="watermark-icon-tryon"><img src={logoPic} alt="airU logo" style={{ width: '100%', height: '100%', borderRadius: '50%' }} /></div>
@@ -177,7 +177,7 @@ const Poster = (props: Props) => {
                     实物为准。
                 </div>
             </div>
-        </div>
+        </div> */}
         </>
         :
         <RoomLoad />

@@ -30,15 +30,18 @@ const RoomLoad = (props: Props) => {
 
     useEffect(() => {
         if (percentage < 100) {
+            //chen提的需求:需要按80秒钟跑到99%
             const timerId = setInterval(() => {
                 setPercentage(prevCount => prevCount + 1);
-            }, 500);
+            }, 800);
             return () => {
                 clearInterval(timerId);
             };
-        } else {
-            setPercentage(0);
         }
+        //注释说明：当percentage达到100时，停止转圈
+        // else {
+        //     setPercentage(0);
+        // }
     }, [percentage]);
 
     // 生成轮播项

@@ -13,7 +13,8 @@ import SubscribePackage from '../SubscribePackage';
 import BrowseHistory from '../BrowseHistory';
 import { modelAPI } from '../../services/api';
 import { getLoginCache } from '../../utils/loginCache';
-
+import WatermarkMsg from '../../assets/watermark-msg.png';
+import WatermarkTitle from '../../assets/watermark-title.png';
 
 
 const Room = () => {
@@ -88,7 +89,9 @@ const Room = () => {
 
     }
     return (
+        
         <>
+
             <div className="room"
                 style={page === 'room' ? {} : { display: 'none' }}
                 onClick={(e) => {

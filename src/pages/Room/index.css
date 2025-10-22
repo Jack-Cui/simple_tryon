@@ -43,3 +43,39 @@
     border-radius: 18px;
     color: #1F1F1F;
   }
+
+  .room-page-fix > .watermark {
+    position: fixed;
+    bottom: 100px;
+    left: 15px;
+    z-index: 99;
+}
+.room-page-fix > .watermark > .item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 500;
+    font-size: 12px;
+    color: #727272;
+    line-height: 17px;
+    text-align: justify;
+    font-style: normal;
+}
+.room-page-fix > .watermark > .item > img {
+    margin-right: 10px;
+}
+.room-page-fix > .watermark > .title > img {
+    width: 22px;
+    height: 24px;
+}
+.room-page-fix > .watermark > .msg {
+    align-items: flex-start;
+}
+.room-page-fix > .watermark > .msg > img {
+    width: 12px;
+    height: 12px;
+}
+.room-page-fix > .watermark > .msg > div {
+    width: 250px;
+}
