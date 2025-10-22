@@ -126,7 +126,7 @@ const Room = () => {
                             </div>
                         </>
                 }
-                <IconPageTo ref={homeOptEl} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
+                <IconPageTo ref={homeOptEl} hideWatermark={isEmpty} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
             </div>
             {page === 'create-model' && <CreateModel onBack={() => setPage('room')} />}
             {page === 'upload-action' && <UploadAction onBack={() => setPage('room')} />}

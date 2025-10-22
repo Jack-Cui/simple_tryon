@@ -40,9 +40,10 @@ interface Props {
     loginScene?: string;
     toPage?: (type: string) => void;
     showLeft?: boolean;
+    hideWatermark?: boolean;
 }
 const IconPageTo = forwardRef((props: Props, ref: any) => {
-    const { hotClick, actionClick, sizeClick, loginScene } = props;
+    const { hotClick, actionClick, sizeClick, loginScene, hideWatermark } = props;
     const navigate = useNavigate();
     const [showHot, setShowHot] = useState(false);
     const [showAction, setShowAction] = useState(false);
@@ -268,7 +269,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                     }
                 </div>
             </div>
-             <div className='watermark'>
+             {!hideWatermark && <div className='watermark'>
                 <div className='item title'>
                     <img src={WatermarkTitle} />
                     <div>airU</div>
@@ -279,7 +280,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                     内容使用AI技术个性化生成，由于技术局限性， 部分商品细节可能与实物存在差异，建议您以 实物为准。
                     </div>
                 </div>
-            </div>
+            </div>}
             <div className='right' style={isHideRight ? {display: 'none'} : {}}>
                 <div>
                     <img src={Models} alt="" onClick={goToModel}  />
