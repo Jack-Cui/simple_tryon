@@ -8,13 +8,11 @@
     bottom: 100px !important;
 }
 
-/* 水印容器样式 */
 .watermark-container {
     position: absolute;
     bottom: 30px;
     left: 0;
     right: 0;
-    /* background: rgba(255, 255, 255, 0.8); */
     padding: 20px 15px;
     z-index: 10;
 }
@@ -26,8 +24,8 @@
 }
 
 .watermark-icon {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background: rgba(128, 128, 128, 0.6);
     color: white;
@@ -37,9 +35,21 @@
     font-size: 14px;
     flex-shrink: 0;
 }
-
+.watermark-icon-tryon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    /* background: rgba(128, 128, 128, 0.6); */
+    /* color: white; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
 .watermark-text {
-    color: rgba(0, 0, 0, 0.6);
+    color: #666666;
     font-size: 12px;
     line-height: 1.5;
+    text-align: left;
 }

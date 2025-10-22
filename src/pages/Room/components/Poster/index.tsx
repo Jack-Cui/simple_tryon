@@ -6,7 +6,7 @@ import RoomLoad from "../Loading/index";
 import { tryonService } from "../../../../services/tryonService";
 import { modelAPI, roomAPI } from "../../../../services/api";
 import { getLoginCache } from "../../../../utils/loginCache";
-
+import logoPic from "../../../../assets/watermark/tryon_logo.png";
 
 interface Props {
     isShow?: boolean;
@@ -160,6 +160,15 @@ const Poster = (props: Props) => {
         </Swiper>
         {/* 透明水印层 */}
         <div className="watermark-container">
+            <div className="watermark-content">
+                
+            <div className="watermark-icon-tryon"><img src={logoPic} alt="airU logo" style={{ width: '100%', height: '100%', borderRadius: '50%' }} /></div>
+                 
+                                
+                <div className="watermark-text">
+                    airU
+                </div>
+            </div>
             <div className="watermark-content">
                 <div className="watermark-icon">i</div>
                 <div className="watermark-text">
