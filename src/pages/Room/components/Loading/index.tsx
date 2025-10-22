@@ -36,6 +36,8 @@ const RoomLoad = (props: Props) => {
             return () => {
                 clearInterval(timerId);
             };
+        } else {
+            setPercentage(0);
         }
     }, [percentage]);
 
