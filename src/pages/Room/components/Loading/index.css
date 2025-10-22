@@ -33,7 +33,7 @@
 }
 
 /* 加载动画样式 */
-.room-load .t-loading__spinner--line:before {
+/* .room-load .t-loading__spinner--line:before {
     background-color: #fff;
 }
 
@@ -46,6 +46,32 @@
     color: #fff;
     font-size: 18px;
     margin-top: 10px;
+} */
+.loading-content .tips1 {
+    font-weight: 400;
+    font-size: 12px;
+    color: #FFFFFF;
+    line-height: 17px;
+    text-align: justify;
+    font-style: normal;
+}
+.loading-content .tips2 {
+    font-weight: 400;
+    font-size: 16px;
+    color: #FFFFFF;
+    line-height: 22px;
+    text-align: justify;
+    font-style: normal;
+}
+.loading-content  .load-back {
+    width: 72px;
+    height: 84px;
+    background: #EDECEA;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
 }
 
 /* 轮播图导航点样式 */
@@ -65,3 +91,7 @@
     width: 24px;
     border-radius: 4px;
 }
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

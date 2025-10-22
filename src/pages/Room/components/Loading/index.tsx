@@ -1,4 +1,4 @@
-import { Loading, Overlay, Swiper } from 'tdesign-mobile-react';
+import { Loading, Overlay, Progress, Swiper } from 'tdesign-mobile-react';
 import './index.css';
 import { useEffect, useState } from 'react';
 // 导入轮播图目录下的所有图片
@@ -20,13 +20,24 @@ interface Props {
 
 const RoomLoad = (props: Props) => {
     const [imageList, setImageList] = useState<any[]>([]);
-
+    const [percentage, setPercentage] = useState<number>(0);
     useEffect(() => {
         // 初始化轮播图片列表，包含所有loadSwaperPic目录下的图片
         setImageList([
             img1, img2, img3, img4, img5, img6, img7, img8, img9, img10
         ]);
     }, []);
+
+    useEffect(() => {
+        if (percentage < 100) {
+            const timerId = setInterval(() => {
+                setPercentage(prevCount => prevCount + 1);
+            }, 500);
+            return () => {
+                clearInterval(timerId);
+            };
+        }
+    }, [percentage]);
 
     // 生成轮播项
     const swiperItems = () => (
@@ -69,19 +80,17 @@ const RoomLoad = (props: Props) => {
                 {/* 加载动画区域 */}
                 <div className="loading-content">
                     <div style={{ textAlign: 'center' }}>
-                        <div style={{ color: '#fff', fontSize: '18px', marginBottom: '5px' }}>
+                        <div className='tips1' style={{ color: '#fff', fontSize: '18px', marginBottom: '5px' }}>
                             AI正在全力为您打造试衣效果...
                         </div>
-                        <div style={{ color: '#fff', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>
+                        <div className='tips2' style={{ color: '#fff', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>
                             完成后即可为您呈现试穿效果
                         </div>
-                        <Loading
-                            theme="spinner"
-                            inheritColor
-                            size="26px"
-                            style={{ color: '#fff' }}
-                            text=""
-                        />
+                        <div className='load-back'>
+                        {/* <Loading/> */}
+                            {/* <div style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #3498db', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> */}
+                            <Progress theme="circle" size={42} percentage={percentage} label={false} color='#545151' />
+                        </div>
                     </div>
                 </div>
             </div>

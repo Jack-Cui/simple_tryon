@@ -23,6 +23,8 @@ import Models from '../../../../assets/models.png';
 import Foot from '../../../../assets/foot.png';
 import Sub from '../../../../assets/sub.png';
 import HotsExp from '../../../../assets/hots-exm.png';
+import WatermarkMsg from '../../../../assets/watermark-msg.png';
+import WatermarkTitle from '../../../../assets/watermark-title.png';
 import { useNavigate } from 'react-router-dom';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { modelAPI, uploadAPI } from '../../../../services/api';
@@ -263,6 +265,18 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                         </div>
                         })
                     }
+                </div>
+            </div>
+            <div className='watermark'>
+                <div className='item title'>
+                    <img src={WatermarkTitle} />
+                    <div>airU</div>
+                </div> 
+                <div className='item msg'>
+                    <img src={WatermarkMsg} />
+                    <div>
+                    内容使用AI技术个性化生成，由于技术局限性， 部分商品细节可能与实物存在差异，建议您以 实物为准。
+                    </div>
                 </div>
             </div>
             <div className='right' style={isHideRight ? {display: 'none'} : {}}>
