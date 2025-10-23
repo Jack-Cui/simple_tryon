@@ -128,7 +128,7 @@
 }
 .icon-page-to > .watermark {
     position: fixed;
-    bottom: 100px;
+    bottom: 50px;
     left: 15px;
     z-index: 99;
 }

@@ -114,7 +114,8 @@ const Room = () => {
                                 <div className='room-page-fix'>
                                     <div onClick={() => change('poster')} className={value === 'poster' ? 'active' : ''}>试穿海报</div>
                                     <div onClick={() => change('vedio')} className={value === 'vedio' ? 'active' : ''}>动感模拟</div>
-                                    {/* <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>尺码松紧</div> */}
+                                    {/* 隐藏/展示3D试穿功能 */}
+                                    <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>尺码松紧</div>
                                 </div>
                                 {/* <TabBar value={value} onChange={change} shape="round" style={{ width: '50%' }} theme="tag" fixed={false} split={false}>
                                     {list.map((item, i) => (

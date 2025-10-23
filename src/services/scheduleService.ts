@@ -167,12 +167,12 @@ export class ScheduleService {
             const goodsId = loginCache.goodsId;
             console.log('返回商品页，goodsId=',goodsId);
             if(goodsId){
-                wx.miniProgram.redirectTo({                
+                wx.miniProgram.navigateBack({                
                     // url: '/pages/index/index'
                     url: '/pages/detail/detail?goodsId='+goodsId
                 });
             }else{
-                    wx.miniProgram.redirectTo({                
+                    wx.miniProgram.navigateBack({                
                     url: '/pages/index/index'
                 });     
             }

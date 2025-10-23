@@ -4,7 +4,7 @@ import { getLoginCache } from '../utils/loginCache';
 import { tosUploadService, TosCredentials } from '../services/tosUploadService';
 import { ttpUploadService, TTPCredentials } from '../services/ttpUploadService';
 import './UploadModelModal.css';
-
+import SuccessToast from '../components/successToast';
 interface UploadModelModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -22,6 +22,13 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadingActionVideo, setIsUploadingActionVideo] = useState(false);
   const [actionVideoResults, setActionVideoResults] = useState<any[]>([]);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [successToastTitle, setSuccessToastTitle] = useState<React.ReactNode>(
+    <>
+      <div>美颜照及视频上传成功,</div>
+      <div>正在为您创建专属模型!</div>
+    </>
+  );
   
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -242,10 +249,35 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
         if (createModelResponse.ok) {
           const createResult = JSON.parse(createModelResponse.data);
           console.log('创建模型响应:', createResult);
-          
+          //视频、美颜图都上传的情况
           if (createResult.code === 0) {
             console.log('创建模型成功:', createResult.data);
-            alert(`模型创建成功！\n图片: ${modelPictureUrl ? '已上传' : '无'}\n视频: ${modelVideoUrl ? '已上传' : '无'}`);
+            // 动态设置SuccessToast的标题内容，包含图片和视频上传状态信息
+            const hasVideoOnly = modelVideoUrl && !modelPictureUrl;
+            const hasImageOnly = modelPictureUrl && !modelVideoUrl;
+            const hasBoth = modelPictureUrl && modelVideoUrl;
+            
+            if (hasVideoOnly) {
+              // 只有视频上传成功的情况
+              setSuccessToastTitle(
+                <>
+                  <div>环拍视频上传成功</div>
+                  <div>正在为您创建专属模型!</div>
+                </>
+              );
+            } else if (hasBoth) {
+              // 图片和视频都上传成功的情况
+              setSuccessToastTitle(
+                <>
+                  <div>美颜照及视频上传成功</div>
+                  <div>正在为您创建专属模型!</div>
+                </>
+              );
+            }
+            
+            setShowSuccessToast(true);
+
+
             
             // 调用原来的上传回调
             await onUpload({
@@ -613,6 +645,13 @@ const UploadModelModal: React.FC<UploadModelModalProps> = ({
           </div>
         </div>
       </div>
+      {/* 成功提示 */}
+      <SuccessToast 
+        visible={showSuccessToast} 
+        // visible={true} 
+        title={successToastTitle} 
+        onConfirm={() => setShowSuccessToast(false)} 
+      />
     </div>
   );
 };

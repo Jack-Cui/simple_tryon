@@ -189,8 +189,8 @@ function App() {
           flexDirection: 'column',
           gap: '20px'
         }}>
-          <div style={{ fontSize: '18px', color: '#666' }}>正在自动登录...</div>
-          <div style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #3498db', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+          {/* <div style={{ fontSize: '18px', color: '#666' }}>正在自动登录...</div>
+          <div style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #3498db', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> */}
         </div>
         <style>{`
           @keyframes spin {

@@ -189,12 +189,14 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
             const goodsId = loginCache.goodsId;
             console.log('返回商品页，goodsId=',goodsId);
             if(goodsId){
-                wx.miniProgram.redirectTo({                
+                // wx.miniProgram.redirectTo({ 
+                wx.miniProgram.navigateBack({
                     // url: '/pages/index/index'
                     url: '/pages/detail/detail?goodsId='+goodsId
                 });
             }else{
-                    wx.miniProgram.redirectTo({                
+                // wx.miniProgram.redirectTo({   
+                    wx.miniProgram.navigateBack({                
                     url: '/pages/index/index'
                 });     
             }
@@ -233,10 +235,10 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
 
     return (
         <div className="icon-page-to">
-            <div className='back' onClick={goBackWx}>
+            {/* <div className='back' onClick={goBackWx}>
                 <IconFont size="20px" name="arrow-left" />
                 <span>返回商品页</span>
-            </div>
+            </div> */}
             <div className='left'  style={props?.showLeft ? {}: {display: 'none'}}>
                 {showHot && <div className='exm'>
                     <span>紧</span>
@@ -272,13 +274,14 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
              {!hideWatermark && <div className='watermark'>
                 <div className='item title'>
                     <img src={WatermarkTitle} />
-                    <div>airU</div>
+                     <div style={{ color: '#727272' }}>airU</div>
                 </div> 
                 <div className='item msg'>
                     <img src={WatermarkMsg} />
                     <div>
-                    内容使用AI技术个性化生成，由于技术局限性， 部分商品细节可能与实物存在差异，建议您以 实物为准。
+                    内容使用AI技术个性化生成，由于技术局限性，/n 部分商品细节可能与实物存在差异，建议您以/n实物为准。
                     </div>
+                    
                 </div>
             </div>}
             <div className='right' style={isHideRight ? {display: 'none'} : {}}>

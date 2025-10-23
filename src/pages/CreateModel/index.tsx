@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { checkVideo } from '../../utils/videoCheck';
 import UploadFile from '../../components/uploadFile';
 import ErrorToast from '../../components/errorToast';
+import SuccessToast from '../../components/successToast';
 import { getLoginCache } from '../../utils/loginCache';
 import { modelAPI, uploadAPI } from '../../services/api';
 import { TosCredentials, tosUploadService } from '../../services/tosUploadService';
@@ -95,6 +96,13 @@ const CreateModel = (props?: { onBack?: any}) => {
   const [isUploadIOSVideo, setIsUploadIOSVideo] = useState(0);
   const [showError, setShowError] = useState(false);
   const [errorInfo, setErrorInfo] = useState('');
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [successToastTitle, setSuccessToastTitle] = useState<React.ReactNode>(
+    <>
+      <div>美颜照及视频上传成功,</div>
+      <div>正在为您创建专属模型!</div>
+    </>
+  );
   const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
   const [modelList, setModelList] = useState<any[]>([]);
   const [selectedImages, setSelectedImages] = useState<any[]>([]);
@@ -431,9 +439,50 @@ const CreateModel = (props?: { onBack?: any}) => {
                 const createResult = JSON.parse(createModelResponse.data);
                 console.log('创建模型响应:', createResult);
                 
+                //直接上传视频，不上传美颜图的情况
                 if (createResult.code === 0) {
+                  //创建模型页面
                   console.log('创建模型成功:', createResult.data);
-                  alert(`模型创建成功！\n图片: ${modelPictureUrl ? '已上传' : '无'}\n视频: ${modelVideoUrl ? '已上传' : '无'}`);
+                  // alert(`模型创建成功！\n图片: ${modelPictureUrl ? '已上传' : '无'}\n视频: ${modelVideoUrl ? '已上传' : '无'}`);
+                  // 动态设置SuccessToast的标题内容 - 示例1: 标准成功消息
+                  // setSuccessToastTitle(
+                  //   <>
+                  //     <div>美颜照及视频上传成功</div>
+                  //     <div>正在为您创建专属模型!</div>
+                  //   </>
+                  // );
+                  
+                  // 动态设置SuccessToast的标题内容 - 示例2: 根据不同情况设置不同标题
+                  const hasVideoOnly = modelVideoUrl && !modelPictureUrl;
+                  const hasImageOnly = modelPictureUrl && !modelVideoUrl;
+                  
+                  if (hasVideoOnly) {
+                    // 只有视频上传成功的情况
+                    setSuccessToastTitle(
+                      <>
+                        <div>环拍视频上传成功</div>
+                        <div>正在为您创建专属模型!</div>
+                      </>
+                    );
+                  } else if (hasImageOnly) {
+                    // 只有图片上传成功的情况
+                    setSuccessToastTitle(
+                      <>
+                        <div>美颜照上传成功</div>
+                        <div>正在为您创建专属模型!</div>
+                      </>
+                    );
+                  } else {
+                    // 图片和视频都上传成功的情况
+                    setSuccessToastTitle(
+                      <>
+                        <div>美颜照及视频上传成功</div>
+                        <div>正在为您创建专属模型!</div>
+                      </>
+                    );
+                  }
+                  
+                  setShowSuccessToast(true);
                   
                   // // 调用原来的上传回调
                   // await onUpload({
@@ -550,8 +599,18 @@ const CreateModel = (props?: { onBack?: any}) => {
   // }, [isUploadIOSVideo]); 
 
 
+  const handleSuccessToastConfirm = () => {
+    setShowSuccessToast(false);
+  };
+
   return (
     <>
+      <SuccessToast
+        title={successToastTitle}
+        // visible={true}
+        visible={showSuccessToast}
+        onConfirm={handleSuccessToastConfirm}
+      />
     {step === 2 ?
       <MyModel status={status} list={modelList} backStep={goBackStep} handleBack={goToBack}/>
       :

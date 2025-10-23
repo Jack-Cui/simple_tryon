@@ -159,11 +159,14 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
     }
 
     // 倒计时相关状态
-    const [countdown, setCountdown] = useState(0); // 默认3分钟 180
+    const [countdown, setCountdown] = useState(40); // 默认3分钟 180
+    const [showToast, setShowToast] = useState(false); // 控制是否显示Toast
+    const countdownRef = useRef<HTMLDivElement>(null); // 引用倒计时文本元素
+    const timeTextRef = useRef<HTMLDivElement>(null); // 引用时间文本元素
 
     useEffect(() => {
+        // 更新倒计时
         if (countdown > 0) {
-            console.log(countdown);
             const timerId = setInterval(() => {
                 setCountdown(prevCount => prevCount - 1);
             }, 1000);
@@ -171,9 +174,46 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                 clearInterval(timerId);
             };
         }
-    }, [countdown])
+    }, [countdown]);
+
+    // 监听countdown变化，直接更新DOM文本而不重建Toast
+    useEffect(() => {
+        if (countdownRef.current && timeTextRef.current) {
+            // 直接更新DOM元素的文本内容
+            countdownRef.current.textContent = `视频正在上传审核中...`;
+            // const minutes = Math.floor(countdown / 60);
+            const seconds = (countdown % 60).toString().padStart(2, '0');
+            // timeTextRef.current.textContent = `预估时间：${minutes}分${seconds}秒`;
+            timeTextRef.current.textContent = `预估时间：${seconds}秒`;
+        }
+    }, [countdown]);
+
+    // 监听showToast状态，只在显示/隐藏时操作Toast
+    useEffect(() => {
+        if (showToast) {
+            // 只创建一次Toast
+            Toast({
+                message: (
+                    <div>                    
+                    <div ref={countdownRef}>视频正在上传审核中...</div>
+                    {/* <div style={{ marginTop: 8, fontSize: 14, color: '#666' }}></div> */}
+                    <div ref={timeTextRef} style={{ marginTop: 8, fontSize: 14, color: '#666' }}>
+                        {/* {countdown}预估时间11：{Math.floor(countdown / 60)}分{(countdown % 60).toString().padStart(2, '0')}秒 */}
+                    </div>
+                    </div>
+                ),
+                direction: 'column',
+                placement: 'middle',
+                duration: 0,
+                preventScrollThrough: true,
+                showOverlay: true,
+                icon: <Loading size="large" />,
+            });
+        }
+    }, [showToast]);
 
     const fileChange = async (event: any) => {
+        
         console.log('fileChange..1');
         if (!event.target.files[0]) return;
         console.log('fileChange..2');
@@ -186,25 +226,24 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
         if(isIOS){
             // 调用父组件传递的上传方法
             if (props.onIOSUploadVideo) {
-                setCountdown(180);
-                Toast({
-                    message: (
-                        <div>
-                        <div>视频正在上传审核中...</div>
-                        <div style={{ marginTop: 8, fontSize: 14, color: '#666' }}>
-                            预估时间：{Math.floor(countdown / 60)}分{(countdown % 60).toString().padStart(2, '0')}秒
-                        </div>
-                        </div>
-                    ),
-                    direction: 'column',
-                    placement: 'middle',
-                    duration: 0,
-                    preventScrollThrough: true,
-                    showOverlay: true,
-                    icon: <Loading />,
-                });
-                const { modelVideoUrlRes, videoResultsRes }= await props.onIOSUploadVideo(event.target.files[0]);
-                Toast.clear();
+                setCountdown(40);
+                console.log("{countdown}:",countdown);
+                // 设置showToast为true，触发Toast的显示和更新
+                // setCountdown(180); // 重置倒计时
+                setShowToast(true);
+                
+                let modelVideoUrlRes: string = '';
+                let videoResultsRes: any = null;
+                
+                try {
+                    const result = await props.onIOSUploadVideo(event.target.files[0]);
+                    modelVideoUrlRes = result.modelVideoUrlRes;
+                    videoResultsRes = result.videoResultsRes;
+                } finally {
+                    // 无论上传成功还是失败，都清除Toast
+                    setShowToast(false);
+                    Toast.clear();
+                }
                 console.log('uploadVideo result:', modelVideoUrlRes);
 
                 if(modelVideoUrlRes){
