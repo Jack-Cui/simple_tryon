@@ -32,10 +32,11 @@ const Room = () => {
     const [isEmpty, setIsEmpty] = useState(false);
     const [value, setValue] = useState('poster');
     const change = (changeValue: any) => {
-        if (changeValue === '3d') {
-            alert('功能正在开发中，敬请期待！');
-            return;
-        }
+        // 隐藏/展示3D试穿功能
+        // if (changeValue === '3d') {
+        //     alert('功能正在开发中，敬请期待！');
+        //     return;
+        // }
         setValue(changeValue);
         console.log('TabBar 值改变为：', changeValue);
     };
