@@ -61,7 +61,7 @@ const HomeOpt = forwardRef((props: Props, ref: any) => {
 
     //add by chao: 2025.10.12
     // 获取当前用户的默认尺码,动态加载尺码控件效果
-    //TODO:根据尺码设置选中状态
+    //根据尺码设置选中状态
     const getUserDefaultSize = () => {
         const clothDefaultSize: string = getClothDefaultSizeFromCache();
         if (!clothDefaultSize) {

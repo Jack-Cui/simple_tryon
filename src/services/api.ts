@@ -733,7 +733,7 @@ export const roomAPI = {
     if(loginCache){
       const shareScene = loginCache.shareScene || "";
       if (shareScene === "onshare") {
-        //TODO
+        
         garment1Size = getCoDefaultSizeFromCache();
         const sizeTmp:number = Number(garment1Size);
         console.log('设置garment1Size：', garment1Size);
@@ -1477,7 +1477,7 @@ export const modelAPI = {
       formData.append(`videos[${index}]`, file);
     });
     
-    // TODO: 这里需要实际的API端点
+    // 这里需要实际的API端点
     // 暂时使用占位端点
     const endpoint = '/api/model/upload'; // 占位端点
     
@@ -1527,7 +1527,7 @@ export const modelAPI = {
   async getModelProcessingStatus(access_token: string, model_id: string): Promise<ApiResponse> {
     console.log('获取模型处理状态:', model_id);
     
-    // TODO: 这里需要实际的API端点
+    //  这里需要实际的API端点
     const endpoint = `/api/model/status/${model_id}`;
     
     const headers = {

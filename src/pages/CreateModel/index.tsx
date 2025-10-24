@@ -238,6 +238,8 @@ const CreateModel = (props?: { onBack?: any}) => {
     if (!(dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0)) {
       setStep(2);
       setModelList(dataObj.data);
+      //2025.10.24 模型列表的原有判断逻辑
+      //TODO: 仅考虑单个模型的历史逻辑，补全所有逻辑后可注释
       if (dataObj.data[dataObj.data.length - 1].modelStatus === 4) {
         setStatus(0); // 成功
       } else if (dataObj.data[dataObj.data.length - 1].modelStatus === 0) {
@@ -583,7 +585,7 @@ const CreateModel = (props?: { onBack?: any}) => {
         
   };
 
-  // //TODO:chao
+  // //chao
   //  useEffect(() => {
   //     const loginCache = getLoginCache();
   //   if(loginCache){

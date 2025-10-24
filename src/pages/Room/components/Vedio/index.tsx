@@ -39,26 +39,34 @@ const Vedio = (props: Props) => {
                     if (res.ok) {
                         const dataObj = JSON.parse(res.data);
                         console.log('轮询videoId查询AI视频地址:', videoId +' '+ performance.now());
-                        console.log('获取到视频:', ',dataObj.data.videoPathBack:',dataObj.data.videoPathBack,',dataObj.data.videoPathFront:',dataObj.data.videoPathFront,',dataObj.data.videoPathCloth:',dataObj.data.videoPathCloth);
-                        if((!videoPathBackUrl) || videoPathBackUrl === "" ){
-                            if(dataObj.data.videoPathBack){
-                               setVideoPathBack(dataObj.data.videoPathBack);                               
-                            }                            
-                        }
-                         if((!videoPathFrontUrl) || videoPathFrontUrl === "" ){
-                            if(dataObj.data.videoPathFront){
-                               setVideoPathFrontUrl(dataObj.data.videoPathFront);
-                            }                            
-                        }
-                        if((!videoPathClothUrl) || videoPathClothUrl === "" ){
-                            if(dataObj.data.videoPathCloth){
-                               setVideoPathClothUrl(dataObj.data.videoPathCloth);
-                            }                            
-                        }
-                        if(videoPathFrontUrl && videoPathFrontUrl !== "" && videoPathBackUrl && videoPathBackUrl !== "" && videoPathClothUrl && videoPathClothUrl !== ""){
-                            //都获取到，再停止轮询
+                        console.log('获取到视频:', ',dataObj.data.videoPath:',dataObj.data.videoPath);
+                        if(dataObj.data && dataObj.data.videoPath){
+                            setVideoPathUrl(dataObj.data.videoPath);
                             clearInterval(videoTimer);
-                        }                                                                       
+                        }
+
+                        //2025.10.23 chao 注释：变更获取视频地址的逻辑，不再分3个视频查询，直接查询统一的视频地址
+                        // console.log('轮询videoId查询AI视频地址:', videoId +' '+ performance.now());
+                        // console.log('获取到视频:', ',dataObj.data.videoPathBack:',dataObj.data.videoPathBack,',dataObj.data.videoPathFront:',dataObj.data.videoPathFront,',dataObj.data.videoPathCloth:',dataObj.data.videoPathCloth);
+                        // if((!videoPathBackUrl) || videoPathBackUrl === "" ){
+                        //     if(dataObj.data.videoPathBack){
+                        //        setVideoPathBack(dataObj.data.videoPathBack);                               
+                        //     }                            
+                        // }
+                        //  if((!videoPathFrontUrl) || videoPathFrontUrl === "" ){
+                        //     if(dataObj.data.videoPathFront){
+                        //        setVideoPathFrontUrl(dataObj.data.videoPathFront);
+                        //     }                            
+                        // }
+                        // if((!videoPathClothUrl) || videoPathClothUrl === "" ){
+                        //     if(dataObj.data.videoPathCloth){
+                        //        setVideoPathClothUrl(dataObj.data.videoPathCloth);
+                        //     }                            
+                        // }
+                        // if(videoPathFrontUrl && videoPathFrontUrl !== "" && videoPathBackUrl && videoPathBackUrl !== "" && videoPathClothUrl && videoPathClothUrl !== ""){
+                        //     //都获取到，再停止轮询
+                        //     clearInterval(videoTimer);
+                        // }                                                                       
                     }
                 }, 5000);
                 
@@ -112,6 +120,8 @@ const Vedio = (props: Props) => {
     };
   }, []);
 
+
+    const [videoPathUrl, setVideoPathUrl] = useState<string>('');
     //动态获取视频地址-正面视频（只有获取到正面视频，才结束loading状态）
     const [videoPathFrontUrl, setVideoPathFrontUrl] = useState<string>('');
     //动态获取视频地址-背身视频
@@ -166,24 +176,40 @@ const Vedio = (props: Props) => {
     // }, [])
     //<---------  测试开场视频加载效果，用上面这段代码 ---------> 
 
-
-    useEffect(() => {
-        if (videoPathFrontUrl) {
-            const initVideos = async () => {
-                await Promise.all([
-                    initSingleVideo(videoRefMain.current),
-                    initSingleVideo(videoRefSmall.current)
-                ]);
-            };
+    //2025.10.23 chao 注释：变更获取视频地址的逻辑，不再分3个视频查询，直接查询统一的视频地址
+    // useEffect(() => {
+    //     if (videoPathFrontUrl) {
+    //         const initVideos = async () => {
+    //             await Promise.all([
+    //                 initSingleVideo(videoRefMain.current),
+    //                 initSingleVideo(videoRefSmall.current)
+    //             ]);
+    //         };
     
-            if (typeof WeixinJSBridge !== 'undefined') {
-                WeixinJSBridge.invoke('getNetworkType', {}, initVideos);
-            } else {
-                document.addEventListener('WeixinJSBridgeReady', initVideos);
-            }
+    //         if (typeof WeixinJSBridge !== 'undefined') {
+    //             WeixinJSBridge.invoke('getNetworkType', {}, initVideos);
+    //         } else {
+    //             document.addEventListener('WeixinJSBridgeReady', initVideos);
+    //         }
+    //     }
+    // }, [videoPathFrontUrl]);
+    useEffect(() => {
+    if (videoPathUrl) {
+        const initVideos = async () => {
+            await Promise.all([
+                initSingleVideo(videoRefMain.current),
+                // initSingleVideo(videoRefSmall.current)
+            ]);
+        };
 
+        if (typeof WeixinJSBridge !== 'undefined') {
+            WeixinJSBridge.invoke('getNetworkType', {}, initVideos);
+        } else {
+            document.addEventListener('WeixinJSBridgeReady', initVideos);
         }
-    }, [videoPathFrontUrl]);
+
+    }
+    }, [videoPathUrl]);
 
     //针对安卓微信环境的control属性特殊处理：
     const needControls = isWeixinAndroid();
@@ -192,66 +218,54 @@ const Vedio = (props: Props) => {
         return /micromessenger/.test(ua) && /android/.test(ua);
     }
     useEffect(() => {
-        if (videoPathFrontUrl) {
+        if (videoPathUrl) {
             // 安卓微信环境下主动调用 play        
             if (needControls && videoRefMain.current) {
                  videoRefMain.current.play().catch(() => { });
             }
-            if (needControls && videoRefSmall.current) {
-                videoRefSmall.current.play().catch(() => { });
-            }
+            // if (needControls && videoRefSmall.current) {
+            //     videoRefSmall.current.play().catch(() => { });
+            // }
         }
-    }, [videoPathFrontUrl]);
+    }, [videoPathUrl]);
     
 
     const handleVideoEnded = () => {
-        switch (videoNum) {
-            case 0:
-                // 
-                if (videoPathClothUrl) {
-                    setVideoNum(1);
-                } else if (videoPathBackUrl) {
-                    setVideoNum(2);
-                } else {
-                    setVideoNum(0);
-                }
-                break;
-            case 1:
-                if (videoPathBackUrl) {
-                    setVideoNum(2);
-                } else {
-                    setVideoNum(0);
-                }
-                break;
-            case 2:
-                setVideoNum(0);
-                break;
+        // switch (videoNum) {
+        //     case 0:
+        //         // 
+        //         if (videoPathClothUrl) {
+        //             setVideoNum(1);
+        //         } else if (videoPathBackUrl) {
+        //             setVideoNum(2);
+        //         } else {
+        //             setVideoNum(0);
+        //         }
+        //         break;
+        //     case 1:
+        //         if (videoPathBackUrl) {
+        //             setVideoNum(2);
+        //         } else {
+        //             setVideoNum(0);
+        //         }
+        //         break;
+        //     case 2:
+        //         setVideoNum(0);
+        //         break;
 
-            default:
-                break;
-        }
+        //     default:
+        //         break;
+        // }
         videoRefMain.current && videoRefMain.current.play();
     }
     return <div className="vedio" style={{ display: props.isShow ? 'block' : 'none' }}>
         {
-            videoPathFrontUrl ?
-                // <video src={videoNum === 0 ? videoPathFrontUrl : (videoNum === 1 ? videoPathBackUrl : videoPathClothUrl)} width="100%" height="100%"
-                //     ref={videoRefMain}
-                //     controls={needControls}
-                //     autoPlay
-                //     // loop
-                //     onEnded={handleVideoEnded}
-                //     muted
-                //     playsInline
-                //     webkit-playsinline
-                //     x5-video-player-type="h5-page"
-                //     x5-video-orientation="portraint"
-                //     x5-video-player-fullscreen="false"
-                //     preload="auto">
-                //     您的浏览器不支持 video 标签。
-                // </video>
+            videoPathUrl ?
+            // videoPathFrontUrl ?      
                 <video 
-                src={videoNum === 0 ? videoPathFrontUrl : (videoNum === 1 ? videoPathClothUrl : videoPathBackUrl)}
+                //2025.10.23 chao 注释：变更获取视频地址的逻辑，不再分3个视频查询，直接查询统一的视频地址
+                // src={videoNum === 0 ? videoPathFrontUrl : (videoNum === 1 ? videoPathClothUrl : videoPathBackUrl)}
+                src={videoPathUrl}
                 style={{
                     width: '100vw',
                     height: '100vh',

@@ -76,7 +76,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
 
     //add by chao: 2025.10.12
     // 获取当前用户的默认尺码,动态加载尺码控件效果
-    //TODO:根据尺码设置选中状态
+    //根据尺码设置选中状态
     const getUserDefaultSize = () => {
         const clothDefaultSize: string = getClothDefaultSizeFromCache();
         if (!clothDefaultSize) {
@@ -279,7 +279,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                 <div className='item msg'>
                     <img src={WatermarkMsg} />
                     <div>
-                    内容使用AI技术个性化生成，由于技术局限性，/n 部分商品细节可能与实物存在差异，建议您以/n实物为准。
+                    内容使用AI技术个性化生成，由于技术局限性， 部分商品细节可能与实物存在差异，建议您以  实物为准。
                     </div>
                     
                 </div>

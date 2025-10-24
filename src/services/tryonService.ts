@@ -1374,7 +1374,7 @@ export class TryonService {
         updateTime: null,
         updateBy: '',
         tenantId: null,
-        clothesSize: coClothSize //TODO clothesSize
+        clothesSize: coClothSize //clothesSize
       };
 
       if(isTronLog) console.log('📋 构建的分享数据:', shareData);

@@ -15,7 +15,8 @@ const root = ReactDOM.createRoot(
 //console.log('性能调优 a0.0.1：' + new Date().toLocaleString() +' '+ performance.now() )
 root.render(
   // <React.StrictMode>
-    <Suspense fallback={<div>Loading...</div>}>
+    // <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div></div>}>
         <App />
     </Suspense>    
   // </React.StrictMode>
