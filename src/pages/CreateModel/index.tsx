@@ -113,6 +113,7 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
   const ringRefEl = useRef(null);
   const beautyRefEl = useRef(null);
   useEffect(() => {
+    //2025.10.25 如果有模型，就进入到列表页？
     step === 0 && getModelList();
   },[step])
   useEffect(() => {

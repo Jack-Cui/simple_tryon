@@ -1039,6 +1039,8 @@ export class TryonService {
         let clothCoatImg:string='';
         let clothDownImg:string='';
         let clothInnerImg:string='';
+        //2025.10.25
+        let bgm:string='';
 
         //初始化参数值
         try{
@@ -1060,6 +1062,7 @@ export class TryonService {
               clothCoatImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothCoatImg || '';
               clothDownImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothDownImg || '';
               clothInnerImg = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.clothInnerImg || '';
+              bgm = roomInfo1?.data?.clothesList[0]?.clothesItems[0]?.bgm || '';
 
               console.log('初始化参数值 clothId:', clothId);
               console.log('初始化参数值 videoPathCloth:', videoPathCloth);
@@ -1071,6 +1074,7 @@ export class TryonService {
               console.log('初始化参数值 clothCoatImg:', clothCoatImg);
               console.log('初始化参数值 clothDownImg:', clothDownImg);
               console.log('初始化参数值 clothInnerImg:', clothInnerImg);
+              console.log('初始化参数值 bgm:', bgm);
             
         }catch(error){
             console.error('❌ 初始化参数值失败111:', error);
@@ -1130,7 +1134,7 @@ export class TryonService {
         //2.调用1次 新增视频接口
         try{
             const picNo = imageIds[0];
-            const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token,actionPath,actionPathBack,picNo);
+            const resultResponse = await roomAPI.sendStartVideoToUE(modelId,clothId, roomId,beautyPic,videoPathCloth, loginCache.token,actionPath,actionPathBack,picNo,bgm);
             if (resultResponse.ok) {
                 const resultData = JSON.parse(resultResponse.data);
                 console.log('新增开场视频结果:', resultData);

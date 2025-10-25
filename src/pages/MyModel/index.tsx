@@ -284,9 +284,9 @@ const MyModel = (props: Props) => {
                 
             </div>
 
-            <div className='create-model-btn'>
+            {/* <div className='create-model-btn'>
                 <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={gotoCreate}>添加个人模型</Button>
-            </div>
+            </div> */}
 
             <ErrorToast isConfirm info={'确认删除该模型？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)} />
         </div>
