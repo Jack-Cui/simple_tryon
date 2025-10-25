@@ -22,7 +22,8 @@
     width: 60%;
     height: auto;
     margin: 0 auto;
-    margin-top: 30vh;
+    /* 2025.10.25 修改弹窗高度 */
+    /* margin-top: 30vh; */
     background: #fff;
     background: linear-gradient(to bottom, #F2FFF9 30%, #fff 100%);
     border-radius: 12px;

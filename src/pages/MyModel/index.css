@@ -80,6 +80,7 @@
     line-height: 17px;
     margin-bottom: 20px;
 }
+
 .my-model-content-detail-mask > .mask-upload-error {
     width: 100%;
     /* height: 100%; */
@@ -102,11 +103,24 @@
     margin-top: 8px;
     margin-right: 10px;
 }
+.my-model-content-detail-mask > .mask-upload-error > .applyErrInfo {
+    overflow-wrap: break-word;
+    color: rgba(255, 33, 33, 1);
+    font-size: 12px;
+    font-family: PingFangSC-Regular;
+    font-weight: normal;
+    text-align: justify;
+    line-height: 17px;
+    margin-top: 8px;
+    margin-right: 10px;
+    width:260px;
+}
 .my-model-content-detail-mask > .mask-upload-error > .info > div {
     margin-top: 10px;
 }
 .my-model-content-detail-mask > .mask-upload-error > .btn > button {
     margin-bottom: 10px;
+    margin-top: 50%;
 }
 .my-model-content-detail-img {
     width: 90px;
@@ -131,6 +145,9 @@
 }
 .my-model-content-detail-blur {
     filter: blur(5px);
+}
+.my-model-content-detail-blur-plus {
+    filter: blur(80px);
 }
 .my-model-content-detail-info-item {
     font-family: PingFangSC, PingFang SC;
@@ -159,4 +176,18 @@
     position: absolute;
     bottom: 0px;
     right: 10px;
+}
+.create-model-btn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 0 5vw;
+    height: 80px;
+    background: #fff;
+    box-shadow: 0px -4px 8px 0px #0000000D;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }

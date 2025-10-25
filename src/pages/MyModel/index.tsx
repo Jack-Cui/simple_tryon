@@ -1,6 +1,7 @@
 import './index.css';
 import { Button, Navbar, Progress, CountDown } from 'tdesign-mobile-react';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CheckCircleIcon, IconFont } from 'tdesign-icons-react';
 import ErrorToast from '../../components/errorToast';
 import { modelAPI } from '../../services/api';
@@ -10,10 +11,12 @@ interface Props {
     status: number;
     errorMsg?: string;
     list: any[];
+    setStep?: any;
     backStep?: any;
     handleBack?: any;
 }
 const MyModel = (props: Props) => {
+    const navigate = useNavigate();
     // const [status, setStatus] = useState(0); // 0 成功 1上传中 2审核中 3 审核失败
     const [loadRogress, setLoadRogress] = useState(0); // 上传进度
     const [countdown, setCountdown] = useState(24 * 60 * 60 * 1000);
@@ -23,6 +26,12 @@ const MyModel = (props: Props) => {
     const handleClick = () => {
         // setStatus(status === 2 ? 1 : 2)
         props?.handleBack && props.handleBack();
+    }
+
+    //TODO 2025.10.25
+    // 跳转到创建模型页面的函数
+    const gotoCreate = () => {
+        props?.backStep && props.backStep();
     }
 
     useEffect(() => {
@@ -90,138 +99,257 @@ const MyModel = (props: Props) => {
         }
     }
 
+    // 根据模型创建时间计算倒计时时间
+    const calculateCountdownTime = (createTimeStr: string,countHours:number) => {
+        // 5小时的毫秒数
+        const FIVE_HOURS = countHours * 60 * 60 * 1000;
+        
+        try {
+            // 解析创建时间字符串（格式：2025-10-24 21:34:59）
+            const createTime = new Date(createTimeStr).getTime();
+            const currentTime = new Date().getTime();
+            
+            // 计算时间差
+            const timeDiff = currentTime - createTime;
+            
+            // 根据条件计算倒计时
+            if (timeDiff >= 0 && timeDiff <= FIVE_HOURS) {
+                // 0<= 当前时间 - 创建时间 <=5个小时，显示剩余时间
+                return FIVE_HOURS - timeDiff;
+            } else if (timeDiff > FIVE_HOURS) {
+                // 当前时间 - 创建时间 >5个小时，显示0
+                return 0;
+            } else {
+                // 其他情况（如时间差为负数），显示5小时
+                return FIVE_HOURS;
+            }
+        } catch (error) {
+            console.error('时间解析错误:', error);
+            // 解析错误时默认显示5小时
+            return FIVE_HOURS;
+        }
+    }
+
     return (
         <div className="my-model">
             <Navbar className='my-model-navbar' leftArrow onLeftClick={handleClick} fixed={false}>我的模型</Navbar>
             <div className="my-model-content">
+                {/* 只有上传状态才显示的内容 */}
+               {props.status === 1 &&  <div className='my-model-content-detail'>
+                    {/* props.status !== 0 && <div className='my-model-content-detail-mask'>  */}
+                    { <div className='my-model-content-detail-mask'>                        
+                            {props.status === 1 && <div className='mask-upload-ing'>
+                            <div className='center'>
+                                <div className='title'>
+                                    <span>正在上传中...</span>
+                                    <span>{loadRogress}%</span>
+                                </div>
+                                <Progress label={false} percentage={loadRogress} />
+                            </div>
+                            <div className='btn'>
+                                {/* <Button size="small" variant="outline" shape="round">取消上传</Button> */}
+                            </div>
+                        </div>}                       
+                    </div>}                            
+                    <div className='my-model-content-detail-img my-model-content-detail-blur'>
+                            <img src={ ModelDefault} alt="" />
+                    </div>                    
+                    <div className={'my-model-content-detail-info my-model-content-detail-blur'}>                    
+                        <div className='my-model-content-detail-info-item'>                      
+                            <span>名称：</span>
+                            我的模型
+                        </div>
+                        <div className='my-model-content-detail-info-item'>
+                            <span>身高：</span>
+                            { ''}
+                        </div>
+                        <div className='my-model-content-detail-info-item'>
+                            <span>时间：</span>
+                            { ''}                           
+                        </div>
+                    </div>
+                </div>}    
+                {<div style={{ height: '5px' }}></div> }
                 {/* 遍历props.list数组，为每个模型渲染一个detail组件 */}
                 {props.list.length > 0 ? (
                     props.list.map((model, index) => (
-                        <div className='my-model-content-detail' key={model.id || index}>
-                            {/* 注意：这里简化了状态管理，实际使用时可能需要为每个模型维护独立状态 */}
-                            {/* 当前状态仍然使用props传入的全局状态，仅做示例 */}
-                            
-                            {model.modelStatus !== 0 && <div className='my-model-content-detail-mask'>
-                                {/* 场景1：上传中 */}               
-                                {model.modelStatus === 1 && <div className='mask-upload-ing'>
-                                <div className='center'>
-                                        <div className='title'>
-                                            <span>正在上传中...</span>
-                                            <span>{loadRogress}%</span>
-                                        </div>
-                                        <Progress label={false} percentage={loadRogress} />            
+                    <div>
+                        {/* 场景5：审核通过，建模成功 */} 
+                        {(model.modelStatus === 4 && model.applyStatus === 3) && <div className='my-model-content-detail' key={model.id || index}>           
+                                {/* 模型图片 */}
+                                <div className='my-model-content-detail-img'>
+                                    <img src={model?.modelPictureUrl || ModelDefault} alt="" />
+                                </div>
+                                <div className={ 'my-model-content-detail-info' }>
+                                    <div className='my-model-content-detail-info-item'>
+                                        <span>名称：</span>
+                                        {/* {model.modelName || '我的模型'} */}
+                                        {'我的模型'}
                                     </div>
-                                    <div className='btn'>
-                                        {/* <Button size="small" variant="outline" shape="round">取消上传</Button> */}
+                                    <div className='my-model-content-detail-info-item'>
+                                        <span>身高：</span>
+                                        { model.height }
                                     </div>
-                                </div>}
-                                {/* 场景2：上传成功，审核中 */}
-                                {model.modelStatus === 0 && (model.applyStatus ===1 || model.applyStatus ===2) && <div className='mask-upload-review'>
+                                    <div className='my-model-content-detail-info-item'>
+                                        <span>时间：</span>
+                                        { model.createTime }
+                                        {<IconFont name='delete-1' onClick={() => closeModel(model)} className='close' style={{ color: 'red' }} size="large" />}
+                                    </div>
+                                </div>                                      
+                        </div>}
+
+                        {/* 场景2：上传成功，审核中 */} 
+                        { (model.modelStatus === 0 && (model.applyStatus === 1 || model.applyStatus === 2)) && <div className='my-model-content-detail' key={model.id || index}>                        
+                            {<div className='my-model-content-detail-mask'>                                
+                                {<div className='mask-upload-review'>
                                     <div className='info'>上传成功，正在审核中，预计等待时间</div>
-                                    <CountDown size='large' time={countdown} />            
+                                    <CountDown size='large' time={calculateCountdownTime(model.createTime,5)} />
                                 </div>}
+                            </div>}
+                                {/* 模型图片 */}
+                                <div className='my-model-content-detail-img my-model-content-detail-blur'>
+                                    <img src={model?.modelPictureUrl || ModelDefault} alt="" />
+                                </div>                                 
+                        </div>}
+
+                        {/* 场景6：审核通过，建模失败 */} 
+                        { (model.applyStatus === 3 && (model.modelStatus === 1 || model.modelStatus === 5)) && <div className='my-model-content-detail' key={model.id || index}>                           
+                            {<div className='my-model-content-detail-mask'>                                
                                 {/* 场景6：建模失败，审核通过 */}
                                 {model.applyStatus === 3 && (model.modelStatus ===1 || model.modelStatus ===5) && <div className='mask-upload-error'>
-                                    <div className='info'>
-                                        <span>审核失败</span>
-                                        <div>{model.applyNote}</div>
+                                    <div className='applyErrInfo'>
+                                        <span>建模失败</span>
+                                        <div>{model.applyNote||'模型创建失败，请更换美颜图并重新上传。'}</div>                                        
                                     </div>
                                     <div className='btn'>
                                         {/* <Button size="small" variant="outline" shape="round" block>重新上传</Button> */}
                                         <Button size="small" variant="outline" shape="round" block onClick={() => closeModel(model)}>删除</Button>
                                     </div>
                                 </div>}
+                            </div>}                                 
+                                {/* 模型图片 */}
+                                <div className='my-model-content-detail-img my-model-content-detail-blur-plus'>
+                                    <img src={model?.modelPictureUrl || ModelDefault} alt="" />
+                                </div> 
+                        </div>}
+
+                        {/* 场景3：上传成功，审核不通过 */} 
+                        { (model.applyStatus === 4 && model.modelStatus === 0) && <div className='my-model-content-detail' key={model.id || index}>                           
+                            {<div className='my-model-content-detail-mask'>                                
+                                {/* 场景6：建模失败，审核通过 */}
+                                {model.applyStatus === 3 && (model.modelStatus ===1 || model.modelStatus ===5) && <div className='mask-upload-error'>
+                                    <div className='applyErrInfo'>
+                                        <span>审核失败</span>
+                                        <div>{model.applyNote||'默认提示文字？？审核未通过，原因可能是模型不符合要求，或其他原因。'}</div>                                        
+                                    </div>
+                                    <div className='btn'>
+                                        {/* <Button size="small" variant="outline" shape="round" block>重新上传</Button> */}
+                                        <Button size="small" variant="outline" shape="round" block onClick={() => closeModel(model)}>删除</Button>
+                                    </div>
+                                </div>}
+                            </div>}                                 
+                                {/* 模型图片 */}
+                                <div className='my-model-content-detail-img my-model-content-detail-blur-plus'>
+                                    <img src={model?.modelPictureUrl || ModelDefault} alt="" />
+                                </div> 
+                        </div>}
+
+                        {/* 场景4：审核通过，建模中 */} 
+                        { (model.applyStatus === 3 && (model.modelStatus === 2 || model.modelStatus === 3 || model.modelStatus === 7 || model.modelStatus === 8)) &&<div className='my-model-content-detail' key={model.id || index}>                        
+                            {<div className='my-model-content-detail-mask'>                                
+                                {<div className='mask-upload-review'>
+                                    <div className='info'>已通过审核，正在为您创建专属模型，预计等待时间</div>
+                                    <CountDown size='large' time={calculateCountdownTime(model.createTime,3.5)} />
+                                </div>}
                             </div>}
+                                {/* 模型图片 */}
+                                <div className='my-model-content-detail-img my-model-content-detail-blur'>
+                                    {/* <img src={model?.modelPictureUrl || ModelDefault} alt="" /> */}
 
-
-                            <div className='my-model-content-detail-img'>
-                                <img src={model?.modelPictureUrl || ModelDefault} alt="" />
-                            </div>
-                            <div className={props.status === 0 ? 'my-model-content-detail-info' : 'my-model-content-detail-info my-model-content-detail-blur'}>
-                                <div className='my-model-content-detail-info-item'>
-                                    <span>名称：</span>
-                                    {model.modelName || '我的模型'}
-                                </div>
-                                <div className='my-model-content-detail-info-item'>
-                                    <span>身高：</span>
-                                    {props.status === 0 ? model.height : ''}
-                                </div>
-                                <div className='my-model-content-detail-info-item'>
-                                    <span>时间：</span>
-                                    {props.status === 0 ? model.createTime : ''}
-                                    {props.status === 0 && <IconFont name='delete-1' onClick={() => closeModel(model)} className='close' style={{ color: 'red' }} size="large" />}
-                                </div>
-                            </div>
-                        </div>
+                                </div>                                 
+                        </div>}
+                        <div style={{ height: '5px' }}></div>    
+                     </div>
                     ))
-                ) : (
+                ) 
+                : null
+                }
+                {/* : (
                     // 当列表为空时显示的内容
                     <div className='my-model-content-empty'>
                         <div className='empty-info'>暂无模型，请先创建</div>
                     </div>
-                )}
+                )
+                } */}
+                
             </div>
+
+            <div className='create-model-btn'>
+                <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={gotoCreate}>添加个人模型</Button>
+            </div>
+
             <ErrorToast isConfirm info={'确认删除该模型？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)} />
         </div>
+        
     )
 
-   // return (
-    //     <div className="my-model">
-    //         <Navbar className='my-model-navbar' leftArrow onLeftClick={handleClick} fixed={false}>我的模型</Navbar>
-    //         <div className="my-model-content">
-    //             <div className='my-model-content-detail'>
-    //                 {props.status !== 0 && <div className='my-model-content-detail-mask'>                        
-    //                         {props.status === 1 && <div className='mask-upload-ing'>
-    //                         <div className='center'>
-    //                             <div className='title'>
-    //                                 <span>正在上传中...</span>
-    //                                 <span>{loadRogress}%</span>
-    //                             </div>
-    //                             <Progress label={false} percentage={loadRogress} />
-    //                         </div>
-    //                         <div className='btn'>
-    //                             {/* <Button size="small" variant="outline" shape="round">取消上传</Button> */}
-    //                         </div>
-    //                     </div>}
-    //                     {props.status === 2 && <div className='mask-upload-review'>
-    //                         <div className='info'>上传成功，正在审核中，预计等待时间</div>
-    //                         <CountDown size='large' time={countdown} />
-    //                     </div>}
-    //                     {props.status === 3 && <div className='mask-upload-error'>
-    //                         <div className='info'>
-    //                             <span>审核失败</span>
-    //                             <div>{props.list.length > 0 && props.list[props.list.length - 1].applyNote}</div>
-    //                         </div>
-    //                         <div className='btn'>
-    //                             {/* <Button size="small" variant="outline" shape="round" block>重新上传</Button> */}
-    //                             <Button size="small" variant="outline" shape="round" block onClick={() => closeModel(props.list.length > 0 ? props.list[props.list.length - 1] : {})}>删除</Button>
-    //                         </div>
-    //                     </div>}
-    //                 </div>}
-    //                 <div className='my-model-content-detail-img'>
-    //                     <img src={(props.list.length > 0 && props.list[props.list.length - 1]?.modelPictureUrl) || ModelDefault} alt="" />
-    //                 </div>
-    //                 <div className={props.status === 0 ? 'my-model-content-detail-info' : 'my-model-content-detail-info my-model-content-detail-blur'}>
-    //                     <div className='my-model-content-detail-info-item'>
-    //                         <span>名称：</span>
-    //                         我的模型
-    //                         {/* {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].modelName) : ''} */}
-    //                     </div>
-    //                     <div className='my-model-content-detail-info-item'>
-    //                         <span>身高：</span>
-    //                         {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].height) : ''}
-    //                     </div>
-    //                     <div className='my-model-content-detail-info-item'>
-    //                         <span>时间：</span>
-    //                         {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].createTime) : ''}
-    //                         {props.status === 0 && <IconFont name='delete-1' onClick={() => closeModel(props.list.length > 0 ? props.list[props.list.length - 1] : {})} className='close' style={{ color: 'red' }} size="large" />}
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //         <ErrorToast isConfirm info={'确认删除该模型？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)} />
-    //     </div>
-    // )    
+//    return (
+//         <div className="my-model">
+//             <Navbar className='my-model-navbar' leftArrow onLeftClick={handleClick} fixed={false}>我的模型</Navbar>
+//             <div className="my-model-content">
+//                 <div className='my-model-content-detail'>
+//                     {props.status !== 0 && <div className='my-model-content-detail-mask'>                        
+//                             {props.status === 1 && <div className='mask-upload-ing'>
+//                             <div className='center'>
+//                                 <div className='title'>
+//                                     <span>正在上传中...</span>
+//                                     <span>{loadRogress}%</span>
+//                                 </div>
+//                                 <Progress label={false} percentage={loadRogress} />
+//                             </div>
+//                             <div className='btn'>
+//                                 {/* <Button size="small" variant="outline" shape="round">取消上传</Button> */}
+//                             </div>
+//                         </div>}
+//                         {props.status === 2 && <div className='mask-upload-review'>
+//                             <div className='info'>上传成功，正在审核中，预计等待时间</div>
+//                             <CountDown size='large' time={countdown} />
+//                         </div>}
+//                         {props.status === 3 && <div className='mask-upload-error'>
+//                             <div className='info'>
+//                                 <span>审核失败</span>
+//                                 <div>{props.list.length > 0 && props.list[props.list.length - 1].applyNote}</div>
+//                             </div>
+//                             <div className='btn'>
+//                                 {/* <Button size="small" variant="outline" shape="round" block>重新上传</Button> */}
+//                                 <Button size="small" variant="outline" shape="round" block onClick={() => closeModel(props.list.length > 0 ? props.list[props.list.length - 1] : {})}>删除</Button>
+//                             </div>
+//                         </div>}
+//                     </div>}
+//                     <div className='my-model-content-detail-img'>
+//                         <img src={(props.list.length > 0 && props.list[props.list.length - 1]?.modelPictureUrl) || ModelDefault} alt="" />
+//                     </div>
+//                     <div className={props.status === 0 ? 'my-model-content-detail-info' : 'my-model-content-detail-info my-model-content-detail-blur'}>
+//                         <div className='my-model-content-detail-info-item'>
+//                             <span>名称：</span>
+//                             我的模型
+//                             {/* {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].modelName) : ''} */}
+//                         </div>
+//                         <div className='my-model-content-detail-info-item'>
+//                             <span>身高：</span>
+//                             {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].height) : ''}
+//                         </div>
+//                         <div className='my-model-content-detail-info-item'>
+//                             <span>时间：</span>
+//                             {props.status === 0 ? (props.list.length > 0 && props.list[props.list.length - 1].createTime) : ''}
+//                             {props.status === 0 && <IconFont name='delete-1' onClick={() => closeModel(props.list.length > 0 ? props.list[props.list.length - 1] : {})} className='close' style={{ color: 'red' }} size="large" />}
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//             <ErrorToast isConfirm info={'确认删除该模型？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)} />
+//         </div>
+//     )    
 }
 
  

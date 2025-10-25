@@ -130,7 +130,9 @@ const Room = () => {
                 }
                 <IconPageTo ref={homeOptEl} hideWatermark={isEmpty} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
             </div>
-            {page === 'create-model' && <CreateModel onBack={() => setPage('room')} />}
+            {/* 2025.10.24 */}
+            {/* {page === 'create-model' && <CreateModel onBack={() => setPage('room')} />} */}
+            {page === 'create-model' && <CreateModel onBack={() => setPage('room')} onModelCreated={getModelList} />}
             {page === 'upload-action' && <UploadAction onBack={() => setPage('room')} />}
             {page === 'subs-package' && <SubscribePackage onBack={() => setPage('room')} />}
             <BrowseHistory isShow={page === 'browse-historry'} onBack={() => setPage('room')} />

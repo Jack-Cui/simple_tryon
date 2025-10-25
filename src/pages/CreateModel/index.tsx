@@ -86,7 +86,9 @@ const BeautyExample = [
     isError: true,
   },
 ]
-const CreateModel = (props?: { onBack?: any}) => {
+//2025.10.24
+//const CreateModel = (props?: { onBack?: any) => {
+const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void>}) => {
   //add by chao:2025.10.12 修改iOS上传
   const [iOSVideoUploadResult, setIOSVideoUploadResult] = useState<VideoUploadResult | null>(null);
   const navigate = useNavigate();
@@ -495,6 +497,13 @@ const CreateModel = (props?: { onBack?: any}) => {
                   // 上传成功后清空选择
                   setSelectedImages([]);
                   setSelectedVideos([]);
+
+                  //2025.10.24 上传成功后，重新查询模型列表
+                  getModelList();
+                  //2025.10.24 上传成功后，通知父组件重新查询模型列表
+                  if (props?.onModelCreated) {
+                    await props.onModelCreated();
+                  }
                 } else {
                   console.error('创建模型失败，响应数据:', createResult);
                   const errorMsg = createResult.msg || createResult.message || '创建模型失败';
