@@ -14,7 +14,7 @@ import { saveLoginCache } from './utils/loginCache';
 import { tryonService } from './services/tryonService';
 // import { isValidCoCreationId, showCoCreationIdError } from './utils/coCreationIdHelper';
 import CreateModel from './pages/CreateModel';
-// import MyModel from './pages/MyModel';
+import MyModel from './pages/MyModel';
 import UploadAction from './pages/UploadAction';
 // import MyAction from './pages/MyAction';
 import SubscribePackage from './pages/SubscribePackage';
@@ -239,6 +239,7 @@ function App() {
             <Route path="/simple-tryon-test" element={<SimpleTryonTest />} />
             <Route path="/rtc-video-test" element={<RTCVideoTest />} />
             <Route path="/create-model" element={<CreateModel />} />
+            {/* 2025.10.26 增加路由  最后没用，因为MyModel需要参数进入*/}
             {/* <Route path="/my-model" element={<MyModel />} /> */}
             <Route path="/upload-action" element={<UploadAction />} />
             <Route path="/subs-package" element={<SubscribePackage />} />

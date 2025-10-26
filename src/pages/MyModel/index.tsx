@@ -236,8 +236,7 @@ const MyModel = (props: Props) => {
                         {/* 场景3：上传成功，审核不通过 */} 
                         { (model.applyStatus === 4 && model.modelStatus === 0) && <div className='my-model-content-detail' key={model.id || index}>                           
                             {<div className='my-model-content-detail-mask'>                                
-                                {/* 场景6：建模失败，审核通过 */}
-                                {model.applyStatus === 3 && (model.modelStatus ===1 || model.modelStatus ===5) && <div className='mask-upload-error'>
+                                { <div className='mask-upload-error'>
                                     <div className='applyErrInfo'>
                                         <span>审核失败</span>
                                         <div>{model.applyNote||'默认提示文字？？审核未通过，原因可能是模型不符合要求，或其他原因。'}</div>                                        
@@ -283,10 +282,10 @@ const MyModel = (props: Props) => {
                 } */}
                 
             </div>
-
-            {/* <div className='create-model-btn'>
+            {/* 2025.10.26 二次创建模型 */}
+            <div className='create-model-btn'>
                 <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={gotoCreate}>添加个人模型</Button>
-            </div> */}
+            </div>
 
             <ErrorToast isConfirm info={'确认删除该模型？'} onBtnClick={comfirmClear} visible={showError} onClick={() => setShowError(false)} />
         </div>

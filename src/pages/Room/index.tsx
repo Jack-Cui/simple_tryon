@@ -54,6 +54,8 @@ const Room = () => {
         getModelList();
     }, [])
 
+    //2025.10.26 现有逻辑：根据模型列表，判断是否进入空页面
+    //TODO: 判断是否显示 “去创建模型”、“去查看建模情况”
     // 获取模型列表
     const getModelList = async () => {
         //chao:2025.10.15  
@@ -76,16 +78,38 @@ const Room = () => {
         // if (!(dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0)) {
         console.log('dataObj', dataObj);
 
+        //2025.10.26 TODO：应该改为：如果查询到成功的记录，就进入正式页面，否则无模型页面
         //页面跳转逻辑：是否展示无模型页面
-        if (dataObj.data && dataObj.data.length > 0 && dataObj.data[0].modelStatus === 4) {
-            setIsEmpty(false)
-        } else {
-            setIsEmpty(true)
-        }
+        // if (dataObj.data && dataObj.data.length > 0 && dataObj.data[0].modelStatus === 4) {
+        //     setIsEmpty(false)
+        // } else {
+        //     setIsEmpty(true)
+        // }
         
-        if (dataObj.data && dataObj.data.length > 0 && dataObj.data[0].applyStatus) {
-            console.log('dataObj.data.applyStatus', dataObj.data[0].applyStatus);
-            setApplyStatus(dataObj.data[0].applyStatus);
+        // if (dataObj.data && dataObj.data.length > 0 && dataObj.data[0].applyStatus) {
+        //     console.log('dataObj.data.applyStatus', dataObj.data[0].applyStatus);
+        //     setApplyStatus(dataObj.data[0].applyStatus);
+        // }
+
+        //2025.10.26：完善判断逻辑1
+        //1）没有返回结果，就提示新建模型
+        //2）有返回结果、但是没有成功的模型，就提示查看模型
+        //3）有返回结果、有成功的模型，就进入正式页面
+        // 处理数据逻辑
+        if (!dataObj.data || dataObj.data.length === 0) {
+            // 情况1：data没有数据            
+            setIsEmpty(true);
+        } else {
+            // 检查是否有modelStatus=4的数据
+            const hasValidModel = dataObj.data.some((item: any) => item.modelStatus === 4);            
+            if (hasValidModel) {
+                // 情况2：有modelStatus=4的数据
+                setIsEmpty(false);
+            } else {
+                // 情况3：有数据但没有modelStatus=4的数据
+                setApplyStatus(1);
+                setIsEmpty(true);
+            }
         }
 
     }
@@ -105,7 +129,7 @@ const Room = () => {
             >
                 {
                     isEmpty ?
-                        <Empty toPage={() => setPage('create-model')} applyStatus={applyStatus} />
+                        <Empty toPageCreateModel={() => setPage('create-model')} applyStatus={applyStatus} />
                         :
                         <>
                             <Poster isShow={value === 'poster'} />
@@ -118,16 +142,12 @@ const Room = () => {
                                     {/* 隐藏/展示3D试穿功能 */}
                                     <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>尺码松紧</div>
                                 </div>
-                                {/* <TabBar value={value} onChange={change} shape="round" style={{ width: '50%' }} theme="tag" fixed={false} split={false}>
-                                    {list.map((item, i) => (
-                                        <TabBarItem key={item.value || i} value={item.value}>
-                                            {item.label}
-                                        </TabBarItem>
-                                    ))}
-                                </TabBar> */}
+                               
                             </div>
                         </>
                 }
+                
+                
                 <IconPageTo ref={homeOptEl} hideWatermark={isEmpty} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
             </div>
             {/* 2025.10.24 */}

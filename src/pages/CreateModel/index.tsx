@@ -60,7 +60,7 @@ const RingExample = [
   },
   {
     img: Example4,
-    name: '背景服装颜色相近',
+    name: '衣景一色',
     isError: true,
   },
 ];
@@ -112,10 +112,20 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
   const [perHeight, setPerHeight] = useState<any>('');
   const ringRefEl = useRef(null);
   const beautyRefEl = useRef(null);
+  //2025.10.26
+  const [isFromGoBack, setIsFromGoBack] = useState(false);
+
+  
+  //2025.10.26 先注释
   useEffect(() => {
     //2025.10.25 如果有模型，就进入到列表页？
-    step === 0 && getModelList();
+    if(isFromGoBack) {
+      setIsFromGoBack(false);      
+    }else{
+      step === 0 && getModelList();
+    }        
   },[step])
+
   useEffect(() => {
     if (showError) {
       const timer: any = setTimeout(() => {
@@ -199,6 +209,8 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
 
   const goBackStep = () => {
     setStep(0);
+    //2025.10.26 从列表页返回，需要重置状态
+    setIsFromGoBack(true);
   }
 
   const goToBack = () => {
@@ -217,6 +229,11 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
       Toast({ message: '请选择时长15秒内的视频', theme: 'error' });
     }
   }
+
+  //2025.10.16: 完善判断逻辑2：
+  //1）没有返回结果，就提示新建模型
+  //2）有返回结果、但是没有成功的模型，就提示查看模型
+  //3）有返回结果、有成功的模型，就进入正式页面
 
   // 获取模型列表
   const getModelList = async () => {
@@ -241,18 +258,24 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
     if (!(dataObj.code !== 0 || !dataObj.data || dataObj.data.length === 0)) {
       setStep(2);
       setModelList(dataObj.data);
+      
+
+
+      //2025.10.26 注释逻辑，改为支持多个模型记录数据
       //2025.10.24 模型列表的原有判断逻辑
       //TODO: 仅考虑单个模型的历史逻辑，补全所有逻辑后可注释
-      if (dataObj.data[dataObj.data.length - 1].modelStatus === 4) {
-        setStatus(0); // 成功
-      } else if (dataObj.data[dataObj.data.length - 1].modelStatus === 0) {
-        if (dataObj.data[dataObj.data.length - 1].applyStatus === 4) {
-          // 审核失败
-          setStatus(3); // 失败
-        } else {
-          setStatus(2); // 审核中
-        }
-      }
+      // if (dataObj.data[dataObj.data.length - 1].modelStatus === 4) {
+      //   setStatus(0); // 成功
+      // } else if (dataObj.data[dataObj.data.length - 1].modelStatus === 0) {
+      //   if (dataObj.data[dataObj.data.length - 1].applyStatus === 4) {
+      //     // 审核失败
+      //     setStatus(3); // 失败
+      //   } else {
+      //     setStatus(2); // 审核中
+      //   }
+      // }
+
+
     }
   }
   // 上传
@@ -292,74 +315,6 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
             uploadResults.push(...videoResultsRes);
         }
       }
-
-      
-
-      //TODEL:2025.10.12
-      // 处理视频上传
-      // if (selectedVideos.length > 0) {
-      //   console.log('开始处理视频上传');
-      //   const tokenResponse = await uploadAPI.getUploadVedioToken(loginCache.token);
-      //   if (tokenResponse.ok) {
-      //     const tokenResult = JSON.parse(tokenResponse.data);
-      //     console.log('获取视频上传token成功:', tokenResult);
-          
-      //     if (tokenResult.code === 0) {
-      //       console.log('视频token数据结构:', tokenResult);
-      //       console.log('credentials路径:', tokenResult.data?.result?.credentials);
-            
-      //       const credentials: TosCredentials = {
-      //         accessKeyId: tokenResult.data.result.credentials.accessKeyId,
-      //         secretAccessKey: tokenResult.data.result.credentials.secretAccessKey,
-      //         sessionToken: tokenResult.data.result.credentials.sessionToken,
-      //         expiredTime: tokenResult.data.result.credentials.expiredTime
-      //       };
-            
-      //       console.log('构建的credentials:', credentials);
-            
-      //       // 对比视频和图片的凭证差异
-      //       console.log('=== 视频上传凭证信息 ===');
-      //       console.log('accessKeyId:', credentials.accessKeyId);
-      //       console.log('secretAccessKey长度:', credentials.secretAccessKey?.length);
-      //       console.log('sessionToken长度:', credentials.sessionToken?.length);
-      //       console.log('expiredTime:', credentials.expiredTime);
-            
-      //       // 检查sessionToken是否包含正确的权限
-      //       if (credentials.sessionToken) {
-      //         try {
-      //           const tokenParts = credentials.sessionToken.split('.');
-      //           if (tokenParts.length >= 2) {
-      //             const payload = JSON.parse(atob(tokenParts[1]));
-      //             console.log('视频sessionToken payload:', payload);
-      //           }
-      //         } catch (e) {
-      //           console.log('无法解析视频sessionToken payload');
-      //         }
-      //       }
-            
-      //       console.log('初始化TOS客户端用于视频上传');
-      //       tosUploadService.initialize(credentials);
-      //       setStatus(1);
-      //       console.log('开始上传视频文件');
-      //       const videoResults = await tosUploadService.uploadFiles(selectedVideos);
-      //       uploadResults.push(...videoResults);
-            
-      //       console.log('视频上传结果:', videoResults);
-      //       setStatus(2);
-      //       // 如果视频上传成功，使用第一个视频的URL
-      //       if (videoResults.length > 0 && videoResults[0].success && videoResults[0].url) {
-      //         modelVideoUrl = videoResults[0].url;
-      //         console.log('设置视频URL:', modelVideoUrl);
-      //       }
-      //     } else {
-      //       setStep(1);
-      //       throw new Error(tokenResult.message || '获取视频上传token失败');
-      //     }
-      //   } else {
-      //     setStep(1);
-      //     throw new Error(`获取视频上传token失败: HTTP ${tokenResponse.status}`);
-      //   }
-      // }
 
       console.log("selectedImages.length:" + selectedImages.length);
       // 处理图片上传
@@ -595,22 +550,6 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
         
   };
 
-  // //chao
-  //  useEffect(() => {
-  //     const loginCache = getLoginCache();
-  //   if(loginCache){
-      
-  //     if (selectedVideos) {
-  //       console.log("正在iOS环境上传环拍视频！");
-  //       (async () => {
-  //         const result = await uploadVideo(loginCache);
-  //         setIOSVideoUploadResult(result); // 保存结果
-  //       })();   
-  //     }    
-  //   }
-  // }, [isUploadIOSVideo]); 
-
-
   const handleSuccessToastConfirm = () => {
     setShowSuccessToast(false);
   };
@@ -647,11 +586,17 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
         <UploadFile example={BeautyExample} isHide={!(step === 1)}  ref={beautyRefEl} is3DBeauty title="上传清晰正面美颜照"  info={infoList2}/>
       </div>
       <div className='create-Model-btn'>
-        {step === 0 && <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={onNext}>下一步</Button>}
+        {
+        step === 0 && <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={onNext}>下一步</Button>
+        }
         {step === 1 && 
             <>
-            <Button className='create-Model-btn-skip' shape="round" onClick={onSkip}>跳过</Button>
-            <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={onCreate}>立刻创建</Button>
+            <Button className='create-Model-btn-skip' shape="round" onClick={onSkip}>跳过</Button>            
+            <Button size="large" theme="light" block shape="round" style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }} onClick={onCreate}>立刻创建</Button><style>{`
+              .t-button--text.t-button--light.t-button--hover::after {
+  background-color: var(--td-button-light-text-active-bg-color, var(--td-bg-color-container-active, var(--td-gray-color-3, #bb1515ff)));
+}
+            `}</style>
             </>
         }
       </div> 

@@ -4,13 +4,14 @@ import EmptyImg from '../../../../assets/empty.png';
 import './index.css';
 
 interface Props {
-    toPage?: () => void;
+    toPageCreateModel?: () => void;
     applyStatus?: number | null;
 }
 const Empty = (props: Props) => {
-    const gotoCreate = () => {
-        props?.toPage && props.toPage();
+    const gotoCreateModel = () => {
+        props?.toPageCreateModel && props.toPageCreateModel();
     }
+ 
     console.log('applyStatus', props?.applyStatus);
     return <div className="empty">
         <img className='img' src={EmptyImg} alt="" />
@@ -20,7 +21,7 @@ const Empty = (props: Props) => {
             theme="light"
             shape="round"
             style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }}
-            onClick={gotoCreate}
+            onClick={gotoCreateModel}
         >{props?.applyStatus ? '查看建模情况' : '去创建模型'}</Button>
     </div>
 }

@@ -87,13 +87,14 @@
     font-family: PingFang SC;
     font-weight: 400;
     font-style: Regular;
-    font-size: 8px;
+    font-size: 12px;
     leading-trim: NONE;
     line-height: 10px;
     letter-spacing: 0px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
+    justify-content: center;
 }
 .example_item > .title > span {
     margin-left: 5px;

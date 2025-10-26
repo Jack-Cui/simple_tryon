@@ -31,3 +31,6 @@
 .create-Model-btn-skip {
     margin-right: 10px;
 }
+.t-button--text.t-button--light.t-button--hover::after {
+  background-color: var(--td-button-light-text-active-bg-color, var(--td-bg-color-container-active, var(--td-gray-color-3, #dd2323)));
+}
