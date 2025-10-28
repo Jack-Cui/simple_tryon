@@ -38,13 +38,13 @@
     font-style: normal;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 .icon-page-to > .left > .exm > img {
     width: 23px;
     height: 175px;
-    margin: 10px;
+    margin: 10px 0;
 }
 .icon-page-to > .left > .hot {
     position: fixed;
