@@ -563,7 +563,19 @@ const CreateModel = (props?: { onBack?: any, onModelCreated?: () => Promise<void
         onConfirm={handleSuccessToastConfirm}
       />
     {step === 2 ?
-      <MyModel status={status} list={modelList} backStep={goBackStep} handleBack={goToBack}/>
+      <MyModel 
+        status={status} 
+        list={modelList} 
+        backStep={goBackStep} 
+        handleBack={goToBack}
+        onRefresh={() => {
+          // 执行刷新操作
+          getModelList();
+          // 刷新完成后调用MyModel组件的finishRefresh方法
+          // 注意：由于我们没有直接引用MyModel组件的实例，
+          // 这里依赖MyModel组件内部的状态管理来自动结束刷新
+        }}
+      />
       :
       <div className="create-Model">
       <Navbar className='create-Model-navbar' fixed={false} leftArrow onLeftClick={handleClick}>{step === 0 ? '创建模型' : '3D美颜'}</Navbar>

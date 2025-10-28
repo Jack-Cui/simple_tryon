@@ -95,30 +95,30 @@ const Vedio = (props: Props) => {
     const videoRefSmall = useRef<HTMLVideoElement>(null);
 
   // 定时检查视频播放状态，尝试恢复播放
-//   useEffect(() => {
-//     const interval = setInterval(() => {
+  useEffect(() => {
+    const interval = setInterval(() => {
      
-//       const video = videoRefMain.current;
-//       if (!video) return;
-//       try{
-//         // 检查视频是否意外暂停
-//         if (video.paused && !video.ended) {
-//             console.log('检测到视频暂停，尝试恢复播放...');
-//             video.play().catch(error => {
-//             console.log('恢复播放失败:', error);
-//             });
-//         }
-//       }
-//       catch(e){
-//         console.log('视频元素获取异常:', e);
-//         return;
-//       }
-//     }, 500); // 每秒检查一次
+      const video = videoRefMain.current;
+      if (!video) return;
+      try{
+        // 检查视频是否意外暂停
+        if (video.paused && !video.ended) {
+            console.log('检测到视频暂停，尝试恢复播放...');
+            video.play().catch(error => {
+            console.log('恢复播放失败:', error);
+            });
+        }
+      }
+      catch(e){
+        console.log('视频元素获取异常:', e);
+        return;
+      }
+    }, 500); // 每秒检查一次
 
-//     return () => {
-//       clearInterval(interval); // 清理interval
-//     };
-//   }, []);
+    return () => {
+      clearInterval(interval); // 清理interval
+    };
+  }, []);
 
 
     const [videoPathUrl, setVideoPathUrl] = useState<string>('');

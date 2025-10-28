@@ -14,6 +14,7 @@ interface Props {
     setStep?: any;
     backStep?: any;
     handleBack?: any;
+    onRefresh?: () => void;
 }
 const MyModel = (props: Props) => {
     const navigate = useNavigate();
@@ -22,6 +23,12 @@ const MyModel = (props: Props) => {
     const [countdown, setCountdown] = useState(24 * 60 * 60 * 1000);
     const [showError, setShowError] = useState(false);
     const [deleteMsg, setDeleteMsg] = useState({});
+    // 下拉刷新相关状态
+    const [isPulling, setIsPulling] = useState(false);
+    const [pullDistance, setPullDistance] = useState(0);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const startY = useRef(0);
+    const pullThreshold = 80; // 下拉触发刷新的阈值
     // 返回
     const handleClick = () => {
         // setStatus(status === 2 ? 1 : 2)
@@ -129,11 +136,119 @@ const MyModel = (props: Props) => {
             return FIVE_HOURS;
         }
     }
+    
+    // 下拉刷新相关函数
+    const handleTouchStart = (e: React.TouchEvent) => {
+        // 只要不在刷新状态就启用下拉刷新，不再限制必须在页面顶部
+        if (!isRefreshing) {
+            startY.current = e.touches[0].clientY;
+            setIsPulling(true);
+        }
+    };
+    
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (!isPulling || isRefreshing) return;
+        
+        const currentY = e.touches[0].clientY;
+        const diff = currentY - startY.current;
+        
+        // 只允许向下拉
+        if (diff > 0) {
+            e.preventDefault(); // 阻止默认滚动行为
+            // 计算下拉距离，添加阻尼效果
+            const distance = Math.min(diff * 0.5, pullThreshold * 1.5);
+            setPullDistance(distance);
+        }
+    };
+    
+    const handleTouchEnd = () => {
+        if (!isPulling) return;
+        
+        if (pullDistance >= pullThreshold && !isRefreshing) {
+            // 触发刷新
+            setIsRefreshing(true);
+            setPullDistance(pullThreshold);
+            
+            // 调用刷新函数
+            if (props.onRefresh) {
+                props.onRefresh();
+            } else {
+                // 如果没有传入刷新函数，模拟刷新
+                setTimeout(() => {
+                    setIsRefreshing(false);
+                    setPullDistance(0);
+                    setIsPulling(false);
+                }, 1500);
+            }
+        } else {
+            // 回弹
+            setPullDistance(0);
+            setIsPulling(false);
+        }
+    };
+    
+    // 结束刷新
+    const finishRefresh = () => {
+        setIsRefreshing(false);
+        setPullDistance(0);
+        setIsPulling(false);
+    };
+    
+    // 监听列表数据变化，当数据更新时自动结束刷新
+    useEffect(() => {
+        if (isRefreshing) {
+            // 延迟一点时间再结束刷新，让用户看到刷新效果
+            const timer = setTimeout(() => {
+                finishRefresh();
+            }, 1000);
+            
+            return () => clearTimeout(timer);
+        }
+    }, [props.list]);
+    
+    // 组件卸载时清理状态
+    useEffect(() => {
+        return () => {
+            setIsPulling(false);
+            setIsRefreshing(false);
+            setPullDistance(0);
+        };
+    }, []);
 
     return (
-        <div className="my-model">
+        <div 
+            className="my-model"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+        >
             <Navbar className='my-model-navbar' leftArrow onLeftClick={handleClick} fixed={false}>我的模型</Navbar>
-            <div className="my-model-content">
+            {/* 下拉刷新指示器 */}
+            {pullDistance > 0 && (
+                <div 
+                    className={`pull-refresh-indicator ${isRefreshing ? 'refreshing' : ''}`}
+                    style={{ height: `${pullDistance}px`, transition: isRefreshing ? 'height 0.2s' : 'none' }}
+                >
+                    <div className="pull-refresh-content">
+                        <IconFont 
+                            name="refresh" 
+                            size="24" 
+                            style={{ 
+                                color: '#27DC9A',
+                                transform: `rotate(${isRefreshing ? '360deg' : pullDistance / pullThreshold * 180}deg)`,
+                                transition: isRefreshing ? 'transform 0.5s linear infinite' : 'transform 0.2s'
+                            }} 
+                        />
+                        <span style={{ marginLeft: '8px', color: '#666' }}>
+                            {isRefreshing ? '刷新中...' : 
+                             pullDistance >= pullThreshold ? '释放刷新' : '下拉刷新'}
+                        </span>
+                    </div>
+                </div>
+            )}
+            <div 
+                className="my-model-content"
+            >
                 {/* 只有上传状态才显示的内容 */}
                {props.status === 1 &&  <div className='my-model-content-detail'>
                     {/* props.status !== 0 && <div className='my-model-content-detail-mask'>  */}
@@ -239,7 +354,7 @@ const MyModel = (props: Props) => {
                                 { <div className='mask-upload-error'>
                                     <div className='applyErrInfo'>
                                         <span>审核失败</span>
-                                        <div>{model.applyNote||'默认提示文字？？审核未通过，原因可能是模型不符合要求，或其他原因。'}</div>                                        
+                                        <div>{model.applyNote||'请您仔细查看教程说明后再重新拍摄上传吧'}</div>                                        
                                     </div>
                                     <div className='btn'>
                                         {/* <Button size="small" variant="outline" shape="round" block>重新上传</Button> */}
