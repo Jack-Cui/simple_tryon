@@ -274,14 +274,20 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
              {!hideWatermark && <div className='watermark'>
                 <div className='item title'>
                     <img src={WatermarkTitle} />
-                     <div style={{ color: '#727272' }}>airU</div>
+                     {/* <div style={{ color: '#727272' }}>airU</div> */}
+                     <div style={{ color: '#d5d5d5' }}>airU</div>
                 </div> 
                 <div className='item msg'>
                     <img src={WatermarkMsg} />
-                    <div>
-                    内容使用AI技术个性化生成，由于技术局限性， 部分商品细节可能与实物存在差异，建议您以  实物为准。
+                    {/* <div>
+                    内容使用AI技术个性化生成，由于技术局限性， 部分商品细节可能与实物存在差异，建议您以实物为准。
+                    </div> */}
+                     <div>
+                        <span>内容使用AI技术个性化生成，由于技术局限性，</span>
+                        <span>部分商品细节可能与实物存在差异，建议您以</span>
+                        <span>实物为准。</span>
+                     
                     </div>
-                    
                 </div>
             </div>}
             <div className='right' style={isHideRight ? {display: 'none'} : {}}>

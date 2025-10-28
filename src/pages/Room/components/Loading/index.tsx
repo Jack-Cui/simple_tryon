@@ -29,7 +29,7 @@ const RoomLoad = (props: Props) => {
     }, []);
 
     useEffect(() => {
-        if (percentage < 100) {
+        if (percentage < 92) {
             //chen提的需求:需要按80秒钟跑到99%
             const timerId = setInterval(() => {
                 setPercentage(prevCount => prevCount + 1);
@@ -94,7 +94,7 @@ const RoomLoad = (props: Props) => {
                         <div className='load-back'>
                         {/* <Loading/> */}
                             {/* <div style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #3498db', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> */}
-                            <Progress theme="circle" size={42} percentage={percentage} label={false} color='#545151' />
+                            <Progress theme="circle" size={42} percentage={percentage} label={false} color='#545151' strokeWidth={4} />
                         </div>
                     </div>
                 </div>

@@ -156,6 +156,27 @@
 
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script>
+	(function() {
+		if (typeof WeixinJSBridge == "object" && typeof WeixinJSBridge.invoke == "function") {
+			handleFontSize();
+		} else {
+			if (document.addEventListener) {
+				document.addEventListener("WeixinJSBridgeReady", handleFontSize, false);
+			} else if (document.attachEvent) {
+                document.attachEvent("onWeixinJSBridgeReady", handleFontSize);
+            }
+		}
+		function handleFontSize() {
+			// 设置网页字体为默认大小
+			WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
+			// 重写设置网页字体大小的事件
+			WeixinJSBridge.on('menu:setfont', function() {
+				WeixinJSBridge.invoke('setFontSizeCallback', { 'fontSize' : 0 });
+			});
+		}
+	})();
+</script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

@@ -29,6 +29,20 @@ const MyModel = (props: Props) => {
     const [isRefreshing, setIsRefreshing] = useState(false);
     const startY = useRef(0);
     const pullThreshold = 80; // 下拉触发刷新的阈值
+    const [lastUpdateTime, setLastUpdateTime] = useState<string>('');
+    
+    // 格式化最后更新时间
+    const formatLastUpdateTime = () => {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        return `今天${hours}:${minutes}`;
+    };
+    
+    // 初始化时设置最后更新时间
+    useEffect(() => {
+        setLastUpdateTime(formatLastUpdateTime());
+    }, []);
     // 返回
     const handleClick = () => {
         // setStatus(status === 2 ? 1 : 2)
@@ -168,6 +182,7 @@ const MyModel = (props: Props) => {
             // 触发刷新
             setIsRefreshing(true);
             setPullDistance(pullThreshold);
+            setLastUpdateTime(formatLastUpdateTime());
             
             // 调用刷新函数
             if (props.onRefresh) {
@@ -234,15 +249,20 @@ const MyModel = (props: Props) => {
                             name="refresh" 
                             size="24" 
                             style={{ 
-                                color: '#27DC9A',
+                                background: 'linear-gradient(135deg, #333 0%, #666 50%, #333 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
                                 transform: `rotate(${isRefreshing ? '360deg' : pullDistance / pullThreshold * 180}deg)`,
-                                transition: isRefreshing ? 'transform 0.5s linear infinite' : 'transform 0.2s'
+                                transition: isRefreshing ? 'transform 0.4s linear infinite' : 'transform 0.2s'
                             }} 
                         />
-                        <span style={{ marginLeft: '8px', color: '#666' }}>
-                            {isRefreshing ? '刷新中...' : 
-                             pullDistance >= pullThreshold ? '释放刷新' : '下拉刷新'}
-                        </span>
+                        <div style={{fontSize: '14px', marginLeft: '8px', color: '#999' }}>
+                            <div>{isRefreshing ? '正在刷新数据中...' : 
+                             pullDistance >= pullThreshold ? '松开立即刷新' : '下拉可以刷新'}</div>
+                            <div style={{ fontSize: '14px', marginTop: '4px', color: '#999' }}>
+                                最后更新：{lastUpdateTime}
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
