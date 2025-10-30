@@ -5,6 +5,7 @@ import HeightIcon from '../../assets/height.png';
 import ActionIcon from '../../assets//action.png';
 import UploadIcon from '../../assets//upload.png';
 import Example2Icon from '../../assets//example2.png';
+import videoPreviewImg from '../../assets/introduction/videoframe0.png';
 import { forwardRef, use, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { checkVideo } from '../../utils/videoCheck';
 import {checkImg} from '../../utils/imgCheck';
@@ -421,7 +422,7 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                                 cursor: 'pointer'
                             }}
                             controls 
-                            poster=""
+                            poster={videoPreviewImg}
                         >
                             <source src="https://admins3.tos-cn-shanghai.volces.com/Panoramic%20video%20tutorial.mp4" type="video/mp4" />
                             您的浏览器不支持视频播放。请使用更新的浏览器。

@@ -140,7 +140,7 @@ const Room = () => {
                                     <div onClick={() => change('poster')} className={value === 'poster' ? 'active' : ''}>试穿海报</div>
                                     <div onClick={() => change('vedio')} className={value === 'vedio' ? 'active' : ''}>动感模拟</div>
                                     {/* 隐藏/展示3D试穿功能 */}
-                                    <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>尺码松紧</div>
+                                    <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>尺码合身</div>
                                 </div>
                                
                             </div>

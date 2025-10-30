@@ -1,5 +1,5 @@
 import { Button, Overlay } from "tdesign-mobile-react";
-import { CloseIcon, CheckCircleIcon } from 'tdesign-icons-react';
+import { CheckCircleIcon, IconFont } from 'tdesign-icons-react';
 import './index.css';
 
 interface Props {
@@ -16,11 +16,8 @@ const SuccessToast = (props: Props) => {
             children={
                 <div className="success-toast-container">
                     <div className="success-toast-content">
-                        <CloseIcon 
-                            className="success-toast-close" 
-                            size="large" 
-                            onClick={props.onConfirm}
-                        />
+                        <IconFont name="close-circle" className="success-toast-close" size="large" onClick={props.onConfirm} />
+                        <CheckCircleIcon style={{color:'#27DC97'}} size="large" />
                         <div className="success-toast-title">
                             {props.title}
                         </div>
@@ -30,11 +27,9 @@ const SuccessToast = (props: Props) => {
                             theme="light" 
                             shape="round" 
                             style={{ 
-                                background: '#27DC97', 
-                                border: 'none',
-                                outline: 'none',
-                                boxShadow: 'none',
-                                color: 'white'
+                                border: 0, 
+                                background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', 
+                                color: '#fff'
                             }}
                             onClick={props.onConfirm}
                         >
