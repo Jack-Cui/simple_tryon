@@ -165,6 +165,13 @@ export class WebSocketService {
     // 错误处理
     this.rtcEngine.on(VERTC.events.onError, (event: any) => {
       console.error('❌ RTC错误:', event);
+
+      //2025.10.30 顶号处理
+      // 检查是否为重复登录错误
+      if (event.errorCode === 'DUPLICATE_LOGIN') {
+        alert('账号已在其他设备登录');
+      }
+
       this.rtcEventHandlers.onError?.(event);
     });
 

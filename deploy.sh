@@ -4,7 +4,7 @@ echo "开始部署 Simple Tryon React应用到nginx..."
 
 # 1. 安装依赖
 echo "安装依赖..."
-#npm install
+npm install
 
 # 2. 构建项目
 echo "构建项目..."

@@ -2,7 +2,7 @@ import VERTC, { MediaType, StreamIndex } from '@volcengine/rtc';
 import { rtcMessageHandler } from './rtcMessageHandler';
 import * as proto from '../proto/xproto';
 import { getLoginCache } from '../utils/loginCache';
-
+import jsweixin from 'weixin-js-sdk';
 const isProtoLog = false; //add by chao 2025.09.30 日志开关
 const isRtcLog = false; //add by chao 2025.09.30 日志开关
 const isRotateLog = false; //add by chao 2025.10.02 日志开关
@@ -247,6 +247,38 @@ export class RTCVideoService {
     // 错误处理
     this.engine.on(VERTC.events.onError, (event: any) => {
       console.error('❌ RTC错误:', event);
+
+      //2025.10.30 顶号处理
+      // 检查是否为重复登录错误
+      if (event.errorCode === 'DUPLICATE_LOGIN') {
+        alert('账号已在其他设备登录');
+
+        const wx = jsweixin;
+            // wx.miniProgram.navigateTo({
+            // wx.miniProgram.navigateBack({
+            //小程序返回上级方法
+
+            const loginCache: any = getLoginCache();
+            if (!loginCache?.token) {
+                throw new Error('用户未登录或登录信息缺失');
+            }
+            //add by chao 2025.10.20 跳转回商品详情页
+            const goodsId = loginCache.goodsId;
+            console.log('返回商品页，goodsId=',goodsId);
+            if(goodsId){
+                // wx.miniProgram.redirectTo({ 
+                wx.miniProgram.navigateBack({
+                    // url: '/pages/index/index'
+                    url: '/pages/detail/detail?goodsId='+goodsId
+                });
+            }else{
+                // wx.miniProgram.redirectTo({   
+                    wx.miniProgram.navigateBack({                
+                    url: '/pages/index/index'
+                });     
+            }         
+      }
+
       this.eventHandlers.onError?.(event);
     });
     

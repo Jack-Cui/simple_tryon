@@ -94,6 +94,9 @@ const UploadFile = forwardRef((props: Props, ref: any) => {
                 }
                 // 环拍视频
                 const res: any = await checkVideo(file);
+                const frameRate = res.frame;
+                alert('帧率：' + frameRate);
+               
                 if (!(res.duration >= 45 && res.duration <= 60)) {
                     setErrorInfo('请上传时长45s-60s的视频');
                     setShowError(true);
