@@ -7,14 +7,41 @@ import { getLoginCache } from "../../../../utils/loginCache";
 
 interface Props {
     isShow?: boolean;
+    onContentReady?: (ready: boolean) => void;
 }
 const Vedio = (props: Props) => {
-//自动轮询事件，加载所需的图片和视频
+    const { isShow, onContentReady } = props;
+    
+    // 声明状态变量
+    const [videoPathUrl, setVideoPathUrl] = useState<string>('');
+    const [videoPathFrontUrl, setVideoPathFrontUrl] = useState<string>('');
+    const [videoPathBackUrl, setVideoPathBack] = useState<string>('');
+    const [videoPathClothUrl, setVideoPathClothUrl] = useState<string>('');
+    const [videoNum, setVideoNum] = useState<number>(0);
+    
+    // 监听videoPathUrl变化，当有视频URL时通知父组件内容已准备就绪
+    useEffect(() => {
+        if (onContentReady && videoPathUrl) {
+            onContentReady(true);
+        }
+    }, [videoPathUrl, onContentReady]);
+    
+    // 组件卸载时重置状态
+    useEffect(() => {
+        return () => {
+            if (onContentReady) {
+                onContentReady(false);
+            }
+        };
+    }, [onContentReady]);
+    
+    // 自动轮询事件，加载所需的图片和视频
     const pollRef = useRef<number | null>(null);
     useEffect(() => {
         const poll = () => {
             const loginCache = getLoginCache();
-            const shareScene = loginCache?.shareScene || "";            
+            const shareScene = loginCache?.shareScene || "";
+            
             const { imageIds, videoId } = tryonService.getMediaIds();
             console.log('轮询结果2:', { imageIds, videoId });
             // 1.获取imageIds, videoId
@@ -23,8 +50,8 @@ const Vedio = (props: Props) => {
                 console.log('最终结果:', { imageIds, videoId });
                 if (!loginCache?.token) {
                     throw new Error('用户未登录或登录信息缺失');
-                }                
-  
+                }
+                
                 //3. 轮询获取视频地址
                 //videoPathFront ， videoPathBack ， videoPathCloth
                 const videoTimer = setInterval(async () => {
@@ -40,7 +67,7 @@ const Vedio = (props: Props) => {
                         const dataObj = JSON.parse(res.data);
                         console.log('轮询videoId查询AI视频地址:', videoId +' '+ performance.now());
                         console.log('获取到视频:', ',dataObj.data.videoPath:',dataObj.data.videoPath);
-                        if(dataObj.data && dataObj.data.videoPath){
+                        if(dataObj.data && dataObj.data.videoPath){ 
                             setVideoPathUrl(dataObj.data.videoPath);
                             clearInterval(videoTimer);
                         }
@@ -50,7 +77,7 @@ const Vedio = (props: Props) => {
                         // console.log('获取到视频:', ',dataObj.data.videoPathBack:',dataObj.data.videoPathBack,',dataObj.data.videoPathFront:',dataObj.data.videoPathFront,',dataObj.data.videoPathCloth:',dataObj.data.videoPathCloth);
                         // if((!videoPathBackUrl) || videoPathBackUrl === "" ){
                         //     if(dataObj.data.videoPathBack){
-                        //        setVideoPathBack(dataObj.data.videoPathBack);                               
+                        //        setVideoPathBack(dataObj.data.videoPathBack);                                
                         //     }                            
                         // }
                         //  if((!videoPathFrontUrl) || videoPathFrontUrl === "" ){
@@ -66,9 +93,9 @@ const Vedio = (props: Props) => {
                         // if(videoPathFrontUrl && videoPathFrontUrl !== "" && videoPathBackUrl && videoPathBackUrl !== "" && videoPathClothUrl && videoPathClothUrl !== ""){
                         //     //都获取到，再停止轮询
                         //     clearInterval(videoTimer);
-                        // }                                                                       
+                        // }                                                                        
                     }
-                }, 5000);
+                }, 1000);
                 
                 if (pollRef.current) {
                     clearTimeout(pollRef.current);
@@ -94,40 +121,32 @@ const Vedio = (props: Props) => {
     const videoRefMain = useRef<HTMLVideoElement>(null);
     const videoRefSmall = useRef<HTMLVideoElement>(null);
 
-  // 定时检查视频播放状态，尝试恢复播放
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-     
-//       const video = videoRefMain.current;
-//       if (!video) return;
-//       try{
-//         // 检查视频是否意外暂停
-//         if (video.paused && !video.ended) {
-//             console.log('检测到视频暂停，尝试恢复播放...');
-//             video.play().catch(error => {
-//             console.log('恢复播放失败:', error);
-//             });
-//         }
-//       }
-//       catch(e){
-//         console.log('视频元素获取异常:', e);
-//         return;
-//       }
-//     }, 500); // 每秒检查一次
+    // 定时检查视频播放状态，尝试恢复播放
+    useEffect(() => {
+        const interval = setInterval(() => {
+          
+          const video = videoRefMain.current;
+          if (!video) return;
+          try{
+            // 检查视频是否意外暂停
+            if (video.paused && !video.ended) {
+                console.log('检测到视频暂停，尝试恢复播放...');
+                video.play().catch(error => {
+                console.log('恢复播放失败:', error);
+                });
+            }
+          }
+          catch(e){
+            console.log('视频元素获取异常:', e);
+            return;
+          }
+        }, 500); // 每秒检查一次
 
-//     return () => {
-//       clearInterval(interval); // 清理interval
-//     };
-//   }, []);
+        return () => {
+          clearInterval(interval); // 清理interval
+        };
+      }, []);
 
-
-    const [videoPathUrl, setVideoPathUrl] = useState<string>('');
-    //动态获取视频地址-正面视频（只有获取到正面视频，才结束loading状态）
-    const [videoPathFrontUrl, setVideoPathFrontUrl] = useState<string>('');
-    //动态获取视频地址-背身视频
-    const [videoPathBackUrl, setVideoPathBack] = useState<string>('');  //动态获取视频地址-详细视频
-    const [videoPathClothUrl, setVideoPathClothUrl] = useState<string>('');
-    const [videoNum, setVideoNum] = useState<number>(0);
     const initSingleVideo = (video: HTMLVideoElement | null): Promise<void> => {
         return new Promise((resolve) => {
             if (!video) return resolve();
@@ -180,116 +199,28 @@ const Vedio = (props: Props) => {
     // useEffect(() => {
     //     if (videoPathFrontUrl) {
     //         const initVideos = async () => {
-    //             await Promise.all([
-    //                 initSingleVideo(videoRefMain.current),
-    //                 initSingleVideo(videoRefSmall.current)
-    //             ]);
-    //         };
-    
-    //         if (typeof WeixinJSBridge !== 'undefined') {
-    //             WeixinJSBridge.invoke('getNetworkType', {}, initVideos);
-    //         } else {
-    //             document.addEventListener('WeixinJSBridgeReady', initVideos);
-    //         }
-    //     }
-    // }, [videoPathFrontUrl]);
-    useEffect(() => {
-    if (videoPathUrl) {
-        const initVideos = async () => {
-            await Promise.all([
-                initSingleVideo(videoRefMain.current),
-                // initSingleVideo(videoRefSmall.current)
-            ]);
-        };
 
-        if (typeof WeixinJSBridge !== 'undefined') {
-            WeixinJSBridge.invoke('getNetworkType', {}, initVideos);
-        } else {
-            document.addEventListener('WeixinJSBridgeReady', initVideos);
-        }
-
-    }
-    }, [videoPathUrl]);
-
-    //针对安卓微信环境的control属性特殊处理：
-    const needControls = isWeixinAndroid();
-    function isWeixinAndroid() {
-        const ua = navigator.userAgent.toLowerCase();
-        return /micromessenger/.test(ua) && /android/.test(ua);
-    }
-    useEffect(() => {
-        if (videoPathUrl) {
-            // 安卓微信环境下主动调用 play        
-            if (needControls && videoRefMain.current) {
-                 videoRefMain.current.play().catch(() => { });
-            }
-            // if (needControls && videoRefSmall.current) {
-            //     videoRefSmall.current.play().catch(() => { });
-            // }
-        }
-    }, [videoPathUrl]);
-    
-
-    const handleVideoEnded = () => {
-        // switch (videoNum) {
-        //     case 0:
-        //         // 
-        //         if (videoPathClothUrl) {
-        //             setVideoNum(1);
-        //         } else if (videoPathBackUrl) {
-        //             setVideoNum(2);
-        //         } else {
-        //             setVideoNum(0);
-        //         }
-        //         break;
-        //     case 1:
-        //         if (videoPathBackUrl) {
-        //             setVideoNum(2);
-        //         } else {
-        //             setVideoNum(0);
-        //         }
-        //         break;
-        //     case 2:
-        //         setVideoNum(0);
-        //         break;
-
-        //     default:
-        //         break;
-        // }
-        videoRefMain.current && videoRefMain.current.play();
-    }
-    return <div className="vedio" style={{ display: props.isShow ? 'block' : 'none' }}>
-        {
-            videoPathUrl ?
-            // videoPathFrontUrl ?      
-                <video 
-                //2025.10.23 chao 注释：变更获取视频地址的逻辑，不再分3个视频查询，直接查询统一的视频地址
-                // src={videoNum === 0 ? videoPathFrontUrl : (videoNum === 1 ? videoPathClothUrl : videoPathBackUrl)}
-                src={videoPathUrl}
-                style={{
-                    width: '100vw',
-                    height: '100vh',
-                    objectFit: 'cover'
-                }}
-                ref={videoRefMain}
-                autoPlay
-                muted
-                playsInline
-                // controls
-                webkit-playsinline="true"
-                x5-video-player-type="h5-page"
-                x5-video-orientation="portraint"
-                x5-video-player-fullscreen="false"
-                preload="auto"
-                onEnded={handleVideoEnded}
-                >
-                您的浏览器不支持 video 标签。
-                </video>                
-                :
+    // 渲染部分（保留原组件的其余渲染逻辑）
+    return (
+        <div className="video-container">
+            {videoPathUrl.length > 0 ? (
+                <div className="video-content">
+                    <video
+                        ref={videoRefMain}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    >
+                        <source src={videoPathUrl} type="video/mp4" />
+                    </video>
+                </div>
+            ) : (
                 <RoomLoad />
-        }
-
-    </div>
-}
+            )}
+        </div>
+    );
+};
 
 export default Vedio;

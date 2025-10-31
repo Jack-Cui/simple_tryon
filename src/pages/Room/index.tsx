@@ -29,8 +29,10 @@ const Room = () => {
         { value: '3d', label: '3D' },
     ];
     const [page, setPage] = useState('room');
-    const [isEmpty, setIsEmpty] = useState(false);
+    const [isEmpty, setIsEmpty] = useState(0);
     const [value, setValue] = useState('poster');
+    const [posterContentReady, setPosterContentReady] = useState<boolean>(false);
+  const [videoContentReady, setVideoContentReady] = useState<boolean>(false);
     const change = (changeValue: any) => {
         // 隐藏/展示3D试穿功能
         // if (changeValue === '3d') {
@@ -98,17 +100,17 @@ const Room = () => {
         // 处理数据逻辑
         if (!dataObj.data || dataObj.data.length === 0) {
             // 情况1：data没有数据            
-            setIsEmpty(true);
+            setIsEmpty(1);
         } else {
             // 检查是否有modelStatus=4的数据
             const hasValidModel = dataObj.data.some((item: any) => item.modelStatus === 4);            
             if (hasValidModel) {
                 // 情况2：有modelStatus=4的数据
-                setIsEmpty(false);
+                setIsEmpty(2);
             } else {
                 // 情况3：有数据但没有modelStatus=4的数据
                 setApplyStatus(1);
-                setIsEmpty(true);
+                setIsEmpty(1);
             }
         }
 
@@ -128,12 +130,18 @@ const Room = () => {
                 }}
             >
                 {
-                    isEmpty ?
+                    isEmpty === 0 ? null :
+                isEmpty === 1 ?
                         <Empty toPageCreateModel={() => setPage('create-model')} applyStatus={applyStatus} />
                         :
                         <>
-                            <Poster isShow={value === 'poster'} />
-                            <Vedio isShow={value === 'vedio'} />
+                            <Poster isShow={value === 'poster'}
+          onContentReady={(ready) => setPosterContentReady(ready)}
+        />
+        <Vedio
+          isShow={value === 'vedio'}
+          onContentReady={(ready) => setVideoContentReady(ready)}
+        />
                             <D3 ref={d3El} isShow={value === '3d'} />
                             <div className='room-bottom-tab-bar' style={{ zIndex: value === 'poster' ? 99 : 1099 }} >
                                 <div className='room-page-fix'>
@@ -142,13 +150,13 @@ const Room = () => {
                                     {/* 隐藏/展示3D试穿功能 */}
                                     <div onClick={() => change('3d')} className={value === '3d' ? 'active' : ''}>尺码合身</div>
                                 </div>
-                               
+                                
                             </div>
                         </>
                 }
                 
                 
-                <IconPageTo ref={homeOptEl} hideWatermark={isEmpty} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
+                <IconPageTo ref={homeOptEl} showWatermark={isEmpty === 2 && ((value === 'poster' && posterContentReady) || (value === 'vedio' && videoContentReady))} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
             </div>
             {/* 2025.10.24 */}
             {/* {page === 'create-model' && <CreateModel onBack={() => setPage('room')} />} */}

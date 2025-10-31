@@ -40,10 +40,10 @@ interface Props {
     loginScene?: string;
     toPage?: (type: string) => void;
     showLeft?: boolean;
-    hideWatermark?: boolean;
+    showWatermark?: boolean;
 }
 const IconPageTo = forwardRef((props: Props, ref: any) => {
-    const { hotClick, actionClick, sizeClick, loginScene, hideWatermark } = props;
+    const { hotClick, actionClick, sizeClick, loginScene, showWatermark } = props;
     const navigate = useNavigate();
     const [showHot, setShowHot] = useState(false);
     const [showAction, setShowAction] = useState(false);
@@ -271,7 +271,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                     }
                 </div>
             </div>
-             {!hideWatermark && <div className='watermark'>
+             {showWatermark && <div className='watermark'>
                 <div className='item title'>
                     <img src={WatermarkTitle} />
                      {/* <div style={{ color: '#727272' }}>airU</div> */}

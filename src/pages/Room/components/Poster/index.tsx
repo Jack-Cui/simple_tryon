@@ -10,8 +10,30 @@ import logoPic from "../../../../assets/watermark/tryon_logo.png";
 
 interface Props {
     isShow?: boolean;
+    onContentReady?: (ready: boolean) => void;
 }
 const Poster = (props: Props) => {
+    const { isShow, onContentReady } = props;
+    
+    //动态获取图片地址
+    const [imageList, setImageList] = useState<any[]>([]);
+    
+    // 监听imageList变化，当有图片时通知父组件内容已准备就绪
+    useEffect(() => {
+        if (onContentReady && imageList.length > 0) {
+            onContentReady(true);
+        }
+    }, [imageList, onContentReady]);
+    
+    // 组件卸载时重置状态
+    useEffect(() => {
+        return () => {
+            if (onContentReady) {
+                onContentReady(false);
+            }
+        };
+    }, [onContentReady]);
+    
     //自动轮询事件，加载所需的图片和视频
     const pollRef = useRef<number | null>(null);
     useEffect(() => {
@@ -22,7 +44,7 @@ const Poster = (props: Props) => {
             const { imageIds, videoId } = tryonService.getMediaIds();
             console.log('轮询结果:', { imageIds, videoId });
             // 1.获取imageIds, videoId
-            if ((imageIds && imageIds.length > 0) && (videoId && videoId !== "")) {
+            if ((imageIds && imageIds.length > 0) ) {
                 
                 console.log('获取到数据，停止轮询');
                 console.log('最终结果:', { imageIds, videoId });
@@ -74,9 +96,6 @@ const Poster = (props: Props) => {
             }
         };
     }, []);  
-    
-    //动态获取图片地址
-    const [imageList, setImageList] = useState<any[]>([])
 
     setTimeout(() => {
         const { imageIds, videoId } = tryonService.getMediaIds(); // 你自己的接口

@@ -39,25 +39,7 @@ import wx from "weixin-js-sdk";
     let doms = document.createElement('video');
         doms.id = 'checktimevideo'
         doms.style.display = 'none'
-    // // iOS 兼容性处理
-    // let isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    // if (isIOS) {
-    //   const reader = new FileReader();
-    //   return new Promise(resolve => {
-    //     reader.onload = async function (e: any) {
-    //       doms.src = e.target.result;
-    //       document.body.appendChild(doms);
-    //       console.log('iOS环境doms：' + doms);
-          
-    //       const result = await gettime(doms); 
-    //       console.log('result:'+result);         
-    //       resolve(result);         
-    //     };       
-    //     reader.readAsDataURL(files[0]);
-    //     console.log('iOS环境doms..4');
-    //   });
-    // } else{
-          //取消iOS特殊处理，因为不生效 chao:2025.10.12 
+    
           const url = URL.createObjectURL(files[0])
           // console.log(url)
           doms.src = url
@@ -68,160 +50,125 @@ import wx from "weixin-js-sdk";
     return await gettime(doms);
   }
   
-  // 获取视频帧率的函数
+  // 获取视频帧率的函数 - 精简版，保留最有效的检测方法
   const getVideoFrameRate = (videoElement: HTMLVideoElement): Promise<number> => {
     return new Promise((resolve) => {
-      console.log('开始获取视频帧率...');
-      
-      // 方法1: 尝试使用videoTracks API
+      // 1. 优先使用原生属性获取实际帧率
       try {
-        const videoWithTracks = videoElement as any;
-        console.log('检查videoTracks属性是否存在:', videoWithTracks.videoTracks ? '是' : '否');
+        const nativeFrameRate = (videoElement as any).frameRate || 
+                               (videoElement as any).mozFrameRate || 
+                               (videoElement as any).webkitDroppedFrameRate;
         
-        if (videoWithTracks.videoTracks && Array.isArray(videoWithTracks.videoTracks) && videoWithTracks.videoTracks.length > 0) {
-          const track = videoWithTracks.videoTracks[0];
-          if (track && track.getSettings && typeof track.getSettings === 'function') {
-            const settings = track.getSettings();
-            if (settings && typeof settings.frameRate === 'number') {
-              console.log('通过VideoTrack获取帧率:', settings.frameRate);
-              resolve(Math.round(settings.frameRate));
-              return;
-            }
-          }
-        }
-      } catch (e) {
-        console.warn('videoTracks API方法失败:', e);
-      }
-      
-      // 方法2: 尝试使用WebKit特有的API (适用于Safari/Chrome)
-      try {
-        const videoWithWebKit = videoElement as any;
-        console.log('尝试使用WebKit API获取帧率...');
-        
-        // 检查是否支持webkitDecodedFrameCount
-        if (typeof videoWithWebKit.webkitDecodedFrameCount === 'number') {
-          console.log('WebKit API可用，尝试计算实际帧率');
-          
-          let frameCount1 = videoWithWebKit.webkitDecodedFrameCount;
-          let startTime = performance.now();
-          
-          // 播放一小段视频然后计算帧率
-          setTimeout(() => {
-            try {
-              let frameCount2 = videoWithWebKit.webkitDecodedFrameCount;
-              let endTime = performance.now();
-              let duration = (endTime - startTime) / 1000;
-              let frameDiff = frameCount2 - frameCount1;
-              
-              if (duration > 0 && frameDiff > 0) {
-                let calculatedFps = frameDiff / duration;
-                console.log('通过WebKit API计算的帧率:', calculatedFps);
-                resolve(Math.round(calculatedFps));
-                return;
-              }
-            } catch (e) {
-              console.warn('WebKit帧率计算失败:', e);
-            }
-            
-            // 如果WebKit方法失败，继续尝试其他方法
-            tryAlternativeMethods();
-          }, 100); // 采样100毫秒
-          
+        if (nativeFrameRate && typeof nativeFrameRate === 'number' && nativeFrameRate > 0) {
+          const fps = Math.round(nativeFrameRate);
+          // 仅对明显异常的原生值进行简单校准
+          resolve(calibrateFrameRate(fps));
           return;
         }
-      } catch (e) {
-        console.warn('WebKit API方法失败:', e);
-      }
+      } catch (e) {}
       
-      // 方法3及其他备选方案
-      function tryAlternativeMethods() {
-        // 尝试计算视频的实际播放帧率
-        try {
-          console.log('尝试使用requestAnimationFrame计算实际播放帧率...');
-          
+      // 2. 尝试使用videoTracks API获取准确的视频轨道信息
+      try {
+        const videoWithTracks = videoElement as any;
+        if (videoWithTracks.videoTracks && videoWithTracks.videoTracks[0] && 
+            videoWithTracks.videoTracks[0].getSettings) {
+          const settings = videoWithTracks.videoTracks[0].getSettings();
+          if (settings && typeof settings.frameRate === 'number' && settings.frameRate > 0) {
+            const fps = Math.round(settings.frameRate);
+            resolve(calibrateFrameRate(fps));
+            return;
+          }
+        }
+      } catch (e) {}
+      
+      // 3. 使用requestAnimationFrame计算实际播放帧率（最可靠的后备方案）
+      calculateActualFrameRate().then(fps => {
+        resolve(calibrateFrameRate(fps));
+      }).catch(() => {
+        // 所有方法都失败时，基于视频分辨率返回合理的默认值
+        resolve(getDefaultFrameRate());
+      });
+      
+      // 计算视频实际播放帧率
+      function calculateActualFrameRate(): Promise<number> {
+        return new Promise((resolve, reject) => {
+          const checkInterval = 800; // 延长采样时间提高准确性
           let frames = 0;
           let startTime = performance.now();
-          let lastTime = startTime;
-          let lastCurrentTime = videoElement.currentTime;
+          let lastVideoTime = videoElement.currentTime;
           
-          const checkInterval = 300; // 采样300毫秒
+          // 尝试播放视频以确保帧计数准确
+          videoElement.play().catch(() => {});
           
           function checkProgress() {
             frames++;
             const currentTime = performance.now();
             const elapsed = currentTime - startTime;
-            const videoTimeDiff = videoElement.currentTime - lastCurrentTime;
-            const realElapsed = currentTime - lastTime;
-            lastTime = currentTime;
-            lastCurrentTime = videoElement.currentTime;
+            const videoTimeDiff = videoElement.currentTime - lastVideoTime;
             
             if (elapsed < checkInterval) {
               requestAnimationFrame(checkProgress);
             } else {
-              // 计算帧率
-              let calculatedFps = frames * (1000 / elapsed);
-              console.log('通过requestAnimationFrame计算的帧率:', calculatedFps);
-              
-              // 如果有有效的视频时间差，可以更准确地计算
-              if (videoTimeDiff > 0 && realElapsed > 0) {
-                const videoBasedFps = (videoTimeDiff * calculatedFps) / (realElapsed / 1000);
-                if (videoBasedFps > 0) {
-                  console.log('通过视频时间差计算的帧率:', videoBasedFps);
-                  resolve(Math.round(videoBasedFps));
-                  return;
-                }
+              // 使用视频时间差计算实际帧率，这比RAF计数更准确反映视频本身
+              if (videoTimeDiff > 0 && elapsed > 0) {
+                // 计算实际帧率 = 经过的视频时间 × 1000 / 实际经过的毫秒数
+                const actualFps = Math.round(videoTimeDiff * 1000 / elapsed);
+                resolve(actualFps);
+              } else {
+                reject(new Error('无法计算实际帧率'));
               }
-              
-              // 使用requestAnimationFrame的结果
-              if (calculatedFps > 0 && calculatedFps < 120) { // 过滤异常值
-                resolve(Math.round(calculatedFps));
-                return;
-              }
-              
-              // 所有方法都失败，使用默认值
-              setDefaultFrameRate();
             }
           }
           
-          // 开始检查
           requestAnimationFrame(checkProgress);
-          return;
-        } catch (e) {
-          console.warn('requestAnimationFrame计算失败:', e);
-        }
-        
-        // 所有方法都失败，使用默认值
-        setDefaultFrameRate();
+        });
       }
       
-      // 使用默认值
-      function setDefaultFrameRate() {
-        // 分析视频元数据，尝试猜测可能的帧率
-        let defaultFrameRate = 30;
+      // 精简的帧率校准函数 - 更倾向于保留实际测量值
+      function calibrateFrameRate(measuredFps: number): number {
+        // 移除极端异常值
+        if (measuredFps < 10 || measuredFps > 120) {
+          return getDefaultFrameRate();
+        }
         
-        // 常见的帧率值
+        // 常见帧率数组
         const commonFrameRates = [24, 25, 30, 50, 60];
         
-        // 基于视频特性猜测可能的帧率
-        try {
-          // 对于高分辨率视频，更可能是高帧率
-          if (videoElement.videoWidth >= 3840 || videoElement.videoHeight >= 2160) {
-            console.log('检测到4K视频，优先尝试60fps');
-            defaultFrameRate = 60;
-          } else if (videoElement.videoWidth >= 1920 || videoElement.videoHeight >= 1080) {
-            console.log('检测到1080p视频，优先尝试30fps或60fps');
-            // 可以根据视频时长等进一步判断
+        // 查找最接近的常见帧率
+        let closestRate = commonFrameRates[0];
+        let minDiff = Math.abs(measuredFps - closestRate);
+        
+        for (const rate of commonFrameRates) {
+          const diff = Math.abs(measuredFps - rate);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closestRate = rate;
           }
-        } catch (e) {
-          console.warn('元数据分析失败:', e);
         }
         
-        console.log('使用默认帧率:', defaultFrameRate);
-        resolve(defaultFrameRate);
+        // 只在测量值非常接近常见帧率时才替换
+        // 15%的容差阈值，允许保留实际非标准帧率
+        if (minDiff / closestRate <= 0.15) {
+          return closestRate;
+        }
+        
+        // 保留测量的实际帧率，仅做范围限制
+        return Math.min(Math.max(measuredFps, 15), 60);
       }
       
-      // 如果前面的异步方法都不需要等待，直接尝试备选方法
-      tryAlternativeMethods();
+      // 获取基于视频特性的默认帧率
+      function getDefaultFrameRate(): number {
+        // 基于分辨率推断可能的帧率
+        try {
+          if (videoElement.videoWidth >= 3840 || videoElement.videoHeight >= 2160) {
+            return 60; // 4K视频通常是60fps
+          } else if (videoElement.videoWidth >= 1920 || videoElement.videoHeight >= 1080) {
+            return 30; // 1080p视频通常是30fps
+          }
+        } catch (e) {}
+        
+        return 30; // 默认帧率
+      }
     });
   };
 
