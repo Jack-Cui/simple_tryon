@@ -25,7 +25,7 @@
 .icon-page-to > .left > .exm {
     position: fixed;
     left: 25px;
-    bottom: 470px;
+    top: 240px;
     z-index: 1001;
     width: 12px;
     height: 17px;
@@ -45,6 +45,7 @@
     width: 23px;
     height: 175px;
     margin: 10px 0;
+    margin-left: 1px;
 }
 .icon-page-to > .left > .hot {
     position: fixed;
