@@ -202,7 +202,7 @@ const Vedio = (props: Props) => {
 
     // 渲染部分（保留原组件的其余渲染逻辑）
     return (
-        <div className="video-container">
+        <div className="video-container" style={{display: props.isShow ? 'block' : 'none'}}>
             {videoPathUrl.length > 0 ? (
                 <div className="video-content">
                     <video
@@ -217,7 +217,7 @@ const Vedio = (props: Props) => {
                     </video>
                 </div>
             ) : (
-                <RoomLoad />
+                <RoomLoad source="video" />
             )}
         </div>
     );

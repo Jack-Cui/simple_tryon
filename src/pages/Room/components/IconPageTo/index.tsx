@@ -290,19 +290,19 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                     </div>
                 </div>
             </div>}
-            <div className='right' style={isHideRight ? {display: 'none'} : {}}>
+            <div className='right' style={isHideRight || !showWatermark ? {display: 'none'} : {}}>
                 <div>
                     <img src={Models} alt="" onClick={goToModel}  />
                     <span>模型</span>
                 </div>
-                <div>
+                {/* <div>
                     <img src={Foot} alt="" onClick={goToHistory} />
                     <span>足迹</span>
-                </div>
-                {/* <div>
+                </div> */}
+                <div>
                     <img src={Sub} alt="" onClick={goToSubs} />
                     <span>订阅包</span>
-                </div> */}
+                </div>
             </div>
         </div>
     )

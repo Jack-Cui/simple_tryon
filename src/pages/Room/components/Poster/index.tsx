@@ -101,7 +101,7 @@ const Poster = (props: Props) => {
         const { imageIds, videoId } = tryonService.getMediaIds(); // 你自己的接口
         console.log('轮询中：');
         console.log('imageIds', imageIds);
-        console.log('videoId', videoId);
+        console.log('imageList', imageList);
     }, 5000);
 
     //<---------  测试开场图加载效果，用下面这段代码 --------->    
@@ -165,6 +165,7 @@ const Poster = (props: Props) => {
         </>
     );
     return <div className="poster" style={{display: props.isShow ? 'block' : 'none'}}>
+        
         {imageList.length > 0 ? 
             <>
             <Swiper
@@ -199,7 +200,7 @@ const Poster = (props: Props) => {
         </div> */}
         </>
         :
-        <RoomLoad />
+        <RoomLoad source="poster" />
         }
     </div>
 }

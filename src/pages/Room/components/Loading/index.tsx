@@ -16,6 +16,7 @@ import img10 from '../../../../assets/loadSwaperPic/dc9a5cd8734841cb4bdab68b6e50
 
 interface Props {
     msg?: string;
+    source?: 'poster' | 'video' | 'default';
 }
 
 const RoomLoad = (props: Props) => {
@@ -86,11 +87,16 @@ const RoomLoad = (props: Props) => {
                 <div className="loading-content">
                     <div style={{ textAlign: 'center' }}>
                         <div className='tips1' style={{ color: '#fff', fontSize: '18px', marginBottom: '5px' }}>
-                            AI正在全力为您打造试衣效果...
+                            {props.source === 'poster' 
+                                ? 'AI正在全力为您打造试穿海报效果'
+                                : props.source === 'video'
+                                ? 'AI正在全力为您打造动感模拟效果'
+                                : 'AI正在全力为您打造试衣效果...'
+                            }
                         </div>
-                        <div className='tips2' style={{ color: '#fff', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>
+                        {/* <div className='tips2' style={{ color: '#fff', fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}>
                             完成后即可为您呈现试穿效果
-                        </div>
+                        </div> */}
                         <div className='load-back'>
                         {/* <Loading/> */}
                             {/* <div style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid #3498db', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div> */}

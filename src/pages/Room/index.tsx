@@ -156,7 +156,7 @@ const Room = () => {
                 }
                 
                 
-                <IconPageTo ref={homeOptEl} showWatermark={isEmpty === 2 && ((value === 'poster' && posterContentReady) || (value === 'vedio' && videoContentReady))} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
+                <IconPageTo ref={homeOptEl} showWatermark={isEmpty === 2 && ((value === '3d') ||(value === 'poster' && posterContentReady) || (value === 'vedio' && videoContentReady))} showLeft={value === '3d'} toPage={(type) => setPage(type)} hotClick={(flag: boolean) => handleHotClick(flag)} loginScene={loginScene} />
             </div>
             {/* 2025.10.24 */}
             {/* {page === 'create-model' && <CreateModel onBack={() => setPage('room')} />} */}
