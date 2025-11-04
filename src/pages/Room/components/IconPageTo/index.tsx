@@ -148,6 +148,21 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
         if (sizeNumber) {
             console.log('发送更换服装尺寸消息:', sizeNumber);
             rtcVideoService.sendChangeGarmentSize(sizeNumber);
+            //2025.11.2 TODO: 如果用户选了热力图，再次发送热力图
+            // if(showHot){
+            //     // 发送热力图RTC消息
+            //     try {
+            //         console.log('🚀 开始发送热力图RTC消息1...', showHot);
+            //         rtcVideoService.sendHeatMap(showHot);
+            //         console.log('✅ 热力图RTC消息已发送1:', showHot);
+            //     } catch (error) {
+            //         console.error('❌ 发送热力图RTC消息失败1:', error);
+            //         // 显示错误提示
+            //         alert(`热力图操作失败: ${error instanceof Error ? error.message : String(error)}`);
+            //     }
+
+            // }
+            setShowHot(false);
         } else {
             console.warn('未知的尺寸:', item);
         }
@@ -291,6 +306,7 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                 </div>
             </div>}
             <div className='right' style={isHideRight || !showWatermark ? {display: 'none'} : {}}>
+            {/* <div className='right' > */}
                 <div>
                     <img src={Models} alt="" onClick={goToModel}  />
                     <span>模型</span>

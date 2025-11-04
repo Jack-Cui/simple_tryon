@@ -65,7 +65,7 @@ const isRtcLog = false;
 const D3 = forwardRef((props: {goToPage?: (str: string) => void; isShow?: boolean}, ref) => {
 
 
-  const [musicVolume, setMusicVolume] = useState(0.1); // 初始音量较低
+  const [musicVolume, setMusicVolume] = useState(0.02); // 初始音量极低 - iOS优化版
   const fadeTimerRef = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
     // 组件卸载时清理定时器
@@ -73,21 +73,52 @@ const D3 = forwardRef((props: {goToPage?: (str: string) => void; isShow?: boolea
       if (fadeTimerRef.current) clearInterval(fadeTimerRef.current);
     };
   }, []);
+  // 检测是否为iOS设备
+  const isIOS = () => {
+    const userAgent = window.navigator.userAgent;
+    return /iPad|iPhone|iPod/.test(userAgent);
+  };
+
   const handleMusicLoad = () => {
-    // 渐入到目标音量（如 1），持续5秒
-    const duration = 5000;
-    const steps = 50;
+    // iOS设备特殊处理
+    const isIOSDevice = isIOS();
+    
+    // 根据设备类型设置不同的渐变参数
+    let duration = 8000;
+    let steps = 80;
+    let initialVolume = 0.02;
+    const targetVolume = isIOSDevice ? 0.3 : 1; // iOS设备目标音量降低
+    
+    // iOS设备需要更保守的音量控制
+    if (isIOSDevice) {
+      duration = 10000; // iOS设备渐变时间延长
+      steps = 100; // iOS设备渐变步数增加
+      initialVolume = 0.01; // iOS设备初始音量更低
+    }
+    
     const stepTime = duration / steps;
     let currentStep = 0;
-
+    
     if (fadeTimerRef.current) clearInterval(fadeTimerRef.current);
 
     fadeTimerRef.current = setInterval(() => {
       currentStep += 1;
-      const newVolume = Math.min(1, 0.1 + (0.9 * currentStep) / steps);
+      
+      // 更平滑的音量曲线，使用缓动函数
+      const progress = currentStep / steps;
+      // iOS设备使用更保守的缓入函数
+      const easedProgress = isIOSDevice 
+        ? 1 - Math.pow(1 - progress, 5) // 更缓慢的缓入
+        : 1 - Math.pow(1 - progress, 3);
+      
+      const newVolume = Math.min(targetVolume, initialVolume + ((targetVolume - initialVolume) * easedProgress));
       setMusicVolume(newVolume);
+      
       if (currentStep >= steps) {
-        if (fadeTimerRef.current) clearInterval(fadeTimerRef.current);
+        if (fadeTimerRef.current) {
+          clearInterval(fadeTimerRef.current);
+          fadeTimerRef.current = null;
+        }
       }
     }, stepTime);
   }; 
@@ -2612,8 +2643,12 @@ const location = useLocation();
         <ReactHowler
           src={musicUrl}
           playing={musicPlay}
-            volume={musicVolume}
-            onLoad={handleMusicLoad}
+          volume={musicVolume}
+          onLoad={handleMusicLoad}
+          html5={true} // 强制使用HTML5 Audio API，提高iOS兼容性
+          preload={true} // 预加载音频
+          mute={false} // 确保不静音
+          loop={false} // 不循环播放
         />
         {/* 音乐结束 */}
         {/* 顶部标题区域 - 与视频播放界面对齐 */}
@@ -3140,7 +3175,11 @@ const location = useLocation();
         src={musicUrl}
         playing={musicPlay}
         volume={musicVolume}
-        onLoad={handleMusicLoad}        
+        onLoad={handleMusicLoad}
+        html5={true} // 强制使用HTML5 Audio API，提高iOS兼容性
+        preload={true} // 预加载音频
+        mute={false} // 确保不静音
+        loop={false} // 不循环播放
       />
       {/* 音乐结束 */}
       {/* 顶部标题区域 - 放在正中间 */}

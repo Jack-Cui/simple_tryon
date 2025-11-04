@@ -202,10 +202,12 @@ const MyModel = (props: Props) => {
         }
     };
     
-    // 结束刷新
+    // 触发刷新后完成刷新的函数
     const finishRefresh = () => {
-        setIsRefreshing(false);
+        // 简化回弹逻辑，直接设置最终状态
+        // 使用更直接的方式避免复杂动画计算导致的卡顿
         setPullDistance(0);
+        setIsRefreshing(false);
         setIsPulling(false);
     };
     
@@ -215,7 +217,8 @@ const MyModel = (props: Props) => {
             // 延迟一点时间再结束刷新，让用户看到刷新效果
             const timer = setTimeout(() => {
                 finishRefresh();
-            }, 1000);
+            //停顿的时间    
+            }, 800);
             
             return () => clearTimeout(timer);
         }
@@ -242,24 +245,55 @@ const MyModel = (props: Props) => {
             {pullDistance > 0 && (
                 <div 
                     className={`pull-refresh-indicator ${isRefreshing ? 'refreshing' : ''}`}
-                    style={{ height: `${pullDistance}px`, transition: isRefreshing ? 'height 0.2s' : 'none' }}
+                    style={{ 
+                        height: `${pullDistance/2}px`, 
+                        opacity: pullDistance > 10 ? 1 : 0,
+                        overflow: 'hidden',
+                        position: 'relative'
+                    }}
                 >
-                    <div className="pull-refresh-content">
+                    {/* 内容容器，使用transformY让内容随着下拉距离逐步显示 */}
+                    <div className="pull-refresh-content" style={{ 
+                        transform: `translateY(${Math.max(0, -pullDistance/2)}px)`, // 修改计算方式，使内容随回弹平滑消失
+                        opacity: pullDistance > 0 ? 1 : 0, // 与指示器同步显示/隐藏
+
+                        position: 'absolute',
+                        top: '0',
+                        left: '0',
+                        right: '0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '10px 0',
+                        height: '60px',
+                        boxSizing: 'border-box'
+                    }}>
                         <IconFont 
                             name="refresh" 
-                            size="24" 
+                            size={20} 
                             style={{ 
-                                background: 'linear-gradient(135deg, #333 0%, #666 50%, #333 100%)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                transform: `rotate(${isRefreshing ? '360deg' : pullDistance / pullThreshold * 180}deg)`,
-                                transition: isRefreshing ? 'transform 0.4s linear infinite' : 'transform 0.2s'
-                            }} 
+                                    transform: isRefreshing ? 'rotate(360deg)' : 'none', 
+                                    opacity: 1,
+                                    transition: isRefreshing ? 'transform 0.5s linear' : 'none'
+                                }} 
                         />
-                        <div style={{fontSize: '14px', marginLeft: '8px', color: '#999' }}>
+                        {/* 下拉刷新文本提示 */}
+                        <div style={{ 
+                            fontSize: '14px', 
+                            marginLeft: '8px', 
+                            opacity: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center'
+                        }}>
                             <div>{isRefreshing ? '正在刷新数据中...' : 
-                             pullDistance >= pullThreshold ? '松开立即刷新' : '下拉可以刷新'}</div>
-                            <div style={{ fontSize: '14px', marginTop: '4px', color: '#999' }}>
+                                 pullDistance >= pullThreshold ? '松开立即刷新' : '下拉可以刷新'}</div>
+                            <div style={{ 
+                                fontSize: '14px', 
+                                marginTop: '4px', 
+                                color: '#999', 
+                                opacity: 1
+                            }}>
                                 最后更新：{lastUpdateTime}
                             </div>
                         </div>

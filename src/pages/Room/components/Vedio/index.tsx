@@ -18,7 +18,23 @@ const Vedio = (props: Props) => {
     const [videoPathBackUrl, setVideoPathBack] = useState<string>('');
     const [videoPathClothUrl, setVideoPathClothUrl] = useState<string>('');
     const [videoNum, setVideoNum] = useState<number>(0);
+
+    // 判断是否在微信环境
+    const isWeixin = () => {
+        const ua = navigator.userAgent.toLowerCase();
+        return /micromessenger/.test(ua);
+    };
     
+    // 判断是否在安卓环境
+    const isAndroid = () => {
+        const ua = navigator.userAgent.toLowerCase();
+        return /android/.test(ua);
+    };
+    
+    // 安卓微信环境下需要特殊处理
+    const needControls = isWeixin() && isAndroid();
+
+
     // 监听videoPathUrl变化，当有视频URL时通知父组件内容已准备就绪
     useEffect(() => {
         if (onContentReady && videoPathUrl) {
@@ -68,7 +84,45 @@ const Vedio = (props: Props) => {
                         console.log('轮询videoId查询AI视频地址:', videoId +' '+ performance.now());
                         console.log('获取到视频:', ',dataObj.data.videoPath:',dataObj.data.videoPath);
                         if(dataObj.data && dataObj.data.videoPath){ 
-                            setVideoPathUrl(dataObj.data.videoPath);
+                            // 延迟10秒后设置视频路径
+                            // setTimeout(() => {
+                                setVideoPathUrl(dataObj.data.videoPath);
+                                // 设置完URL后立即尝试播放
+                                setTimeout(() => {
+                                  const video = videoRefMain.current;
+                                  if (video) {
+                                    try {
+                                      // 确保是静音状态
+                                      video.muted = true;
+                                      
+                                      // 显式设置src以确保更新
+                                      video.src = dataObj.data.videoPath;
+                                      video.load();
+                                      
+                                      // 尝试播放
+                                      video.play().then(() => {
+                                        console.log('延迟设置URL后播放成功');
+                                      }).catch(error => {
+                                        console.log('首次播放失败，添加错误处理并准备重试:', error);
+                                        // 1秒后重试
+                                        setTimeout(() => {
+                                          video.play().catch(err => {
+                                            console.log('第二次播放尝试失败:', err);
+                                            // 2秒后再次重试
+                                            setTimeout(() => {
+                                              video.play().catch(finalErr => {
+                                                console.log('第三次播放尝试失败，等待用户交互:', finalErr);
+                                              });
+                                            }, 2000);
+                                          });
+                                        }, 1000);
+                                      });
+                                    } catch (err) {
+                                      console.log('播放设置错误:', err);
+                                    }
+                                  }
+                                }, 300); // 稍等一下确保video元素更新
+                            // }, 10000);
                             clearInterval(videoTimer);
                         }
 
@@ -117,53 +171,178 @@ const Vedio = (props: Props) => {
         };
     }, []);
     
-    // // update by chao 2025.10.04 安卓微信环境下 video 标签无法自动播放，需手动调用 play 方法    
+    // 视频引用
     const videoRefMain = useRef<HTMLVideoElement>(null);
     const videoRefSmall = useRef<HTMLVideoElement>(null);
-
-    // 定时检查视频播放状态，尝试恢复播放
+    
+    // 简单直接的播放尝试函数
+    const tryPlayVideo = () => {
+        const video = videoRefMain.current;
+        if (!video || !videoPathUrl) return;
+        
+        // 确保静音，这对于移动设备自动播放至关重要
+        video.muted = true;
+        
+        // 尝试播放
+        video.play()
+            .then(() => {
+                console.log('视频播放成功');
+            })
+            .catch((error) => {
+                console.log('视频播放失败，将在用户交互时重试:', error);
+            });
+    };
+    
+    // 当视频URL变化时，尝试播放
     useEffect(() => {
-        const interval = setInterval(() => {
-          
-          const video = videoRefMain.current;
-          if (!video) return;
-          try{
-            // 检查视频是否意外暂停
-            if (video.paused && !video.ended) {
-                console.log('检测到视频暂停，尝试恢复播放...');
-                video.play().catch(error => {
-                console.log('恢复播放失败:', error);
+        if (videoPathUrl && videoRefMain.current) {
+            const video = videoRefMain.current;
+            
+            // 增强的播放尝试函数，包含重试逻辑
+            const enhancedTryPlay = (attempt = 1, maxAttempts = 3) => {
+                if (!video || attempt > maxAttempts) return;
+                
+                // 确保是静音状态
+                video.muted = true;
+                
+                video.play().then(() => {
+                    console.log(`第${attempt}次视频播放成功`);
+                }).catch((error) => {
+                    console.log(`第${attempt}次视频播放失败，将在${attempt * 1000}ms后重试:`, error);
+                    setTimeout(() => {
+                        enhancedTryPlay(attempt + 1, maxAttempts);
+                    }, attempt * 1000); // 指数退避
+                });
+            };
+            
+            // 给视频元素一点时间来更新src属性
+            setTimeout(() => {
+                enhancedTryPlay();
+            }, 500); // 稍长的延迟以确保视频元素完全更新
+            
+            // 监听多个视频加载事件
+            const handleCanPlay = () => {
+                console.log('视频可以播放了');
+                enhancedTryPlay();
+            };
+            
+            const handleLoadedData = () => {
+                console.log('视频数据加载完成');
+                enhancedTryPlay();
+            };
+            
+            video.addEventListener('canplay', handleCanPlay);
+            video.addEventListener('loadeddata', handleLoadedData);
+            
+            // 为视频元素本身添加更多交互监听
+            const handleVideoInteraction = () => {
+                enhancedTryPlay();
+            };
+            
+            video.addEventListener('click', handleVideoInteraction);
+            video.addEventListener('touchstart', handleVideoInteraction);
+            video.addEventListener('pointerdown', handleVideoInteraction);
+            
+            return () => {
+                video.removeEventListener('canplay', handleCanPlay);
+                video.removeEventListener('loadeddata', handleLoadedData);
+                video.removeEventListener('click', handleVideoInteraction);
+                video.removeEventListener('touchstart', handleVideoInteraction);
+                video.removeEventListener('pointerdown', handleVideoInteraction);
+            };
+        }
+    }, [videoPathUrl]);
+    
+    // 用户交互时尝试播放
+    useEffect(() => {
+        if (!videoPathUrl) return;
+        
+        // 增强的播放尝试
+        const enhancedTryPlay = () => {
+            const video = videoRefMain.current;
+            if (!video) return;
+            
+            video.muted = true;
+            video.play().then(() => {
+                console.log('全局交互触发视频播放成功');
+            }).catch((error) => {
+                console.log('全局交互触发播放失败:', error);
+            });
+        };
+        
+        const handleInteraction = () => {
+            enhancedTryPlay();
+            // 对于微信环境，保留监听器以确保可靠播放
+            if (!isWeixin()) {
+                document.removeEventListener('click', handleInteraction);
+                document.removeEventListener('touchstart', handleInteraction);
+                document.removeEventListener('keydown', handleInteraction);
+            }
+        };
+        
+        // 添加更多类型的交互事件监听器
+        document.addEventListener('click', handleInteraction);
+        document.addEventListener('touchstart', handleInteraction);
+        document.addEventListener('keydown', handleInteraction);
+        
+        // 微信环境特殊处理
+        if (isWeixin()) {
+            const wxPlay = () => {
+                setTimeout(enhancedTryPlay, 500); // 延迟播放以提高成功率
+            };
+            
+            if (window.WeixinJSBridge) {
+                WeixinJSBridge.invoke('getNetworkType', {}, wxPlay);
+            } else {
+                document.addEventListener('WeixinJSBridgeReady', () => {
+                    WeixinJSBridge.invoke('getNetworkType', {}, wxPlay);
                 });
             }
-          }
-          catch(e){
-            console.log('视频元素获取异常:', e);
-            return;
-          }
-        }, 500); // 每秒检查一次
-
+        }
+        
         return () => {
-          clearInterval(interval); // 清理interval
+            document.removeEventListener('click', handleInteraction);
+            document.removeEventListener('touchstart', handleInteraction);
+            document.removeEventListener('keydown', handleInteraction);
         };
-      }, []);
-
-    const initSingleVideo = (video: HTMLVideoElement | null): Promise<void> => {
-        return new Promise((resolve) => {
-            if (!video) return resolve();
-
-            video.muted = true;
-            const playAttempt = setInterval(() => {
-                video.play()
-                    .then(() => {
-                        clearInterval(playAttempt);
-                        resolve();
-                    })
-                    .catch(() => { });
-            }, 300);
-
-
-        });
-    };
+    }, [videoPathUrl]);
+    
+    // 智能视频状态监控，确保视频持续播放
+    useEffect(() => {
+        if (!videoPathUrl) return;
+        
+        // 检查并尝试播放的函数
+        const checkAndPlay = () => {
+            const video = videoRefMain.current;
+            if (!video) return;
+            
+            // 检查视频状态并采取相应措施
+            if (videoPathUrl && video.paused && !video.ended) {
+                console.log('检测到视频暂停，尝试恢复播放');
+                
+                // 先检查视频是否已加载
+                if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                    video.muted = true;
+                    video.play().catch(error => {
+                        console.log('恢复播放失败:', error);
+                        // 如果播放失败，尝试重新加载视频
+                        setTimeout(() => {
+                            if (video) {
+                                video.src = videoPathUrl;
+                                video.load();
+                                setTimeout(() => video.play(), 300);
+                            }
+                        }, 1000);
+                    });
+                }
+            }
+        };
+        
+        // 设置较长的检查间隔，减少性能影响
+        const interval = setInterval(checkAndPlay, 2000);
+        
+        return () => clearInterval(interval);
+    }, [videoPathUrl]);
 
 
     // //<---------  测试开场视频加载效果，用下面这段代码 --------->  
@@ -207,11 +386,23 @@ const Vedio = (props: Props) => {
                 <div className="video-content">
                     <video
                         ref={videoRefMain}
-                        autoPlay
+                        // controls={true}
                         muted
+                        autoPlay
                         loop
                         playsInline
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        webkit-playsinline
+                        x5-playsinline
+                        x5-video-player-type="h5-page"
+                        x5-video-orientation="portrait"
+                        x5-video-player-fullscreen="false"
+                        preload="metadata"
+                        style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover',
+                            display: 'block'
+                        }}
                     >
                         <source src={videoPathUrl} type="video/mp4" />
                     </video>
