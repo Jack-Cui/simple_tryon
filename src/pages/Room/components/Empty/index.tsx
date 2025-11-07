@@ -1,13 +1,17 @@
 import { Button } from 'tdesign-mobile-react';
+import { useState } from 'react';
 
 import EmptyImg from '../../../../assets/empty.png';
 import './index.css';
+import DataSafetyMsg from '../../../../components/DataSafetyMsg/index';
 
 interface Props {
     toPageCreateModel?: () => void;
     applyStatus?: number | null;
 }
 const Empty = (props: Props) => {
+    const [showMsg, setShowMsg] = useState(true);
+    
     const gotoCreateModel = () => {
         props?.toPageCreateModel && props.toPageCreateModel();
     }
@@ -23,6 +27,7 @@ const Empty = (props: Props) => {
             style={{ border: 0, background: 'linear-gradient(90deg, #27DC9A 0%, #02DABF 100%)', color: '#fff' }}
             onClick={gotoCreateModel}
         >{props?.applyStatus ? '查看建模情况' : '去创建模型'}</Button>
+        <DataSafetyMsg visible={showMsg} onClick={() => setShowMsg(false)} />
     </div>
 }
 

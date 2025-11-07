@@ -305,7 +305,9 @@ const IconPageTo = forwardRef((props: Props, ref: any) => {
                     </div>
                 </div>
             </div>}
-            <div className='right' style={isHideRight || !showWatermark ? {display: 'none'} : {}}>
+            {/* 2025.11.05 测试修改订阅包 */}
+            {/* <div className='right' style={isHideRight || !showWatermark ? {display: 'none'} : {}}> */}
+             <div className='right' >
             {/* <div className='right' > */}
                 <div>
                     <img src={Models} alt="" onClick={goToModel}  />

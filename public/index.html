@@ -16,6 +16,27 @@
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     
+    <!-- 2025.11.05 订阅包提交 -->
+    <script>
+   (function(w, d, s, q, i) {
+   w[q] = w[q] || [];
+   var f = d.getElementsByTagName(s)[0],j = d.createElement(s);
+   j.async = true;
+   j.id = 'beacon-aplus';
+   j.src = 'https://d.alicdn.com/alilog/mlog/aplus/' + i + '.js';
+   f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'aplus_queue', '203467608');
+    //集成应用的appKey
+    aplus_queue.push({
+      action: 'aplus.setMetaInfo',
+      arguments: ['appKey', '68da069a644c9e2c20401f9d']
+    });
+    aplus_queue.push({
+      action: 'aplus.setMetaInfo',
+      arguments: ['DEBUG', true]
+    });
+  </script>
+
     <!-- Open Graph 元标签 - 用于社交媒体分享卡片 -->
     <!-- <meta property="og:type" content="website" />
     <meta property="og:title" content="airU-3D试衣间" />

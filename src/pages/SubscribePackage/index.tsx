@@ -3,8 +3,14 @@ import './index.css';
 import { useState } from "react";
 import SubsCheck from '../../assets/subs-check.png';
 import Remember from '../../assets/remember.png';
-import DataSafetyMsg from "../../components/DataSafetyMsg";
 import { useNavigate } from "react-router-dom";
+
+// 为window对象添加aplus_queue属性的类型定义
+declare global {
+  interface Window {
+    aplus_queue?: any[];
+  }
+}
 const SubscribePackage = (props?: { onBack?: any}) => {
     const navigate = useNavigate();
     const [subList, setSubList] = useState([
@@ -30,6 +36,31 @@ const SubscribePackage = (props?: { onBack?: any}) => {
         props?.onBack && props.onBack();
     }
     const goToBuy = () => {
+        //2025.11.05 订阅包提交 0:39.9套餐 1:99.9套餐
+        const subNum = checkSubNum === null ? 0 : checkSubNum;
+        //2025.11.05 订阅包提交
+        if(subNum === 0){            
+            // 检查aplus_queue是否存在，避免SDK未加载时的报错
+            if (window.aplus_queue ) {
+                window.aplus_queue.push({
+                    action: 'aplus.record',
+                    arguments: ['buyPackage', 'CLK', {
+                        package: '39.9'
+                    }]
+                });
+            // alert(1);
+            }
+            // alert(2);
+        }else if(subNum === 1){
+            if (window.aplus_queue ) {
+                window.aplus_queue.push({
+                    action: 'aplus.record',
+                    arguments: ['buyPackage', 'CLK', {
+                        package: '99.9'
+                    }]
+                });
+            }            
+        }
         setIsRemember(true);
         setShowMsg(true);
     }
@@ -67,7 +98,7 @@ const SubscribePackage = (props?: { onBack?: any}) => {
                     </div>
                 </>
             }
-            <DataSafetyMsg visible={showMsg} onClick={() => setShowMsg(false)} />
+            
         </div>
     )
 }
